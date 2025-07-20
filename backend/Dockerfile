@@ -22,7 +22,7 @@ ENV POETRY_NO_INTERACTION=1 \
 COPY pyproject.toml ./
 
 # Install dependencies
-RUN poetry install --only=main && rm -rf $POETRY_CACHE_DIR
+RUN poetry install --no-root --only=main && rm -rf $POETRY_CACHE_DIR
 
 # Copy the rest of the application code
 COPY src/ ./src/
