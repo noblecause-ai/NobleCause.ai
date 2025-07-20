@@ -1,6 +1,10 @@
 """Main FastAPI application for Noble Cause Steward."""
 
-from fastapi import FastAPI, HTTPException
+from dotenv import load_dotenv
+load_dotenv()
+
+from fastapi import FastAPI, HTTPException, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from noble_cause_steward.api.models import (
     MemoryIn,
     MemoryQueryIn,
@@ -9,12 +13,31 @@ from noble_cause_steward.api.models import (
     MemoryOut
 )
 from noble_cause_steward.memory.chroma_provider import ChromaMemoryProvider
+from noble_cause_steward.research.research_manager import ResearchManager
+from noble_cause_steward.research.web_adapter import WebAdapter
+from noble_cause_steward.llm.open_router_adapter import OpenRouterAdapter
 
 # Create FastAPI application instance
 app = FastAPI()
 
+# Configure CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # SvelteKit dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Initialize memory provider
 memory_provider = ChromaMemoryProvider()
+
+# Initialize research manager
+def get_research_manager() -> ResearchManager:
+    """Dependency to get ResearchManager instance."""
+    web_adapter = WebAdapter()
+    llm_adapter = OpenRouterAdapter()
+    return ResearchManager(web_adapter, llm_adapter)
 
 
 @app.get("/health")
@@ -54,3 +77,10 @@ def query_memories(query_data: MemoryQueryIn):
         return MemoryQueryResponse(results=formatted_results)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to query memories: {str(e)}")
+
+
+@app.get("/api/steward/status")
+def get_steward_status(research_manager: ResearchManager = Depends(get_research_manager)):
+    """Get the current status of the steward."""
+    # Return live data from the research manager
+    return research_manager.get_current_status()
