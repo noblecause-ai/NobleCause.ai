@@ -15,13 +15,14 @@ RUN pip install poetry
 
 # Configure Poetry: don't create virtual environment, install dependencies globally
 ENV POETRY_NO_INTERACTION=1 \
-    POETRY_VENV_IN_PROJECT=1 \
+    POETRY_VENV_IN_PROJECT=false \
+    POETRY_VIRTUALENVS_CREATE=false \
     POETRY_CACHE_DIR=/tmp/poetry_cache
 
 # Copy Poetry configuration files
 COPY pyproject.toml ./
 
-# Install dependencies
+# Install dependencies only (not the project itself)
 RUN poetry install --no-root --only=main && rm -rf $POETRY_CACHE_DIR
 
 # Copy the rest of the application code
