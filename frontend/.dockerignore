@@ -43,9 +43,9 @@ docs/
 .eslintrc*
 .prettierrc*
 .prettierignore
-tsconfig.json
-vite.config.ts
-svelte.config.js
+# tsconfig.json - NEEDED FOR BUILD
+# vite.config.ts - NEEDED FOR BUILD
+# svelte.config.js - NEEDED FOR BUILD
 eslint.config.js
 
 # Test files

@@ -1,28 +1,32 @@
 # Multi-stage build for SvelteKit frontend
 
 # Stage 1: Build the application
-FROM node:20-alpine AS builder
+FROM node:20 AS builder
 
 # Set working directory
 WORKDIR /app
 
 # Copy package files
-COPY package.json package-lock.json ./
+COPY package.json ./
 
-# Install dependencies
-RUN npm install
+# Clear npm cache and install dependencies
+RUN npm cache clean --force
+# Remove platform-specific dependency that shouldn't be in dependencies
+RUN npm uninstall @rollup/rollup-win32-x64-msvc || true
+RUN npm install --force
 
 # Copy source code
 COPY . .
 
-# Build the SvelteKit application
+# Sync SvelteKit and build the application
+RUN npx svelte-kit sync
 RUN npm run build
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine AS production
 
 # Copy the built application from the builder stage
-COPY --from=builder /app/build /usr/share/nginx/html
+COPY --from=builder /app/.svelte-kit/output/client /usr/share/nginx/html
 
 # Copy custom nginx configuration if needed
 # COPY nginx.conf /etc/nginx/nginx.conf
