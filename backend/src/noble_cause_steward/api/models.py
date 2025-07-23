@@ -30,3 +30,8 @@ class MemoryCreateResponse(BaseModel):
 class MemoryQueryResponse(BaseModel):
     """Response model for memory queries."""
     results: List[MemoryOut]
+
+
+class DeliberationRequest(BaseModel):
+    """Input model for deliberation requests."""
+    topic: str

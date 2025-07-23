@@ -4,6 +4,8 @@ This document provides instructions for running the NobleCause.ai application us
 
 ## Prerequisites
 
+⚠️ **IMPORTANT: Ensure the Docker Desktop application is running before executing any Docker commands.**
+
 - Docker Desktop installed and running
 - Docker Compose (included with Docker Desktop)
 

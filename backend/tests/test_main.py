@@ -114,3 +114,64 @@ class TestMainApplication:
         
         # Assert the memory provider's query_memories method was called with default n_results=4
         mock_memory_provider.query_memories.assert_called_once_with("test query", 4)
+    
+    def test_get_steward_status(self, client):
+        """Test that the steward status endpoint returns the expected status using mocked ResearchManager."""
+        # Create a mock ResearchManager instance
+        mock_research_manager = Mock()
+        
+        # Set up the mock to return the expected status
+        mock_research_manager.get_current_status.return_value = {
+            "status": "researching",
+            "inner_monologue": "Analyzing data from GiveWell..."
+        }
+        
+        # Override the dependency in the FastAPI app
+        from noble_cause_steward.main import app, get_research_manager
+        app.dependency_overrides[get_research_manager] = lambda: mock_research_manager
+        
+        # Make GET request to steward status endpoint
+        response = client.get("/api/steward/status")
+        
+        # Assert response status code is 200
+        assert response.status_code == 200
+        
+        # Assert response JSON matches expected structure from mocked data
+        expected_response = {
+            "status": "researching",
+            "inner_monologue": "Analyzing data from GiveWell..."
+        }
+        assert response.json() == expected_response
+        
+        # Verify that get_current_status was called
+        mock_research_manager.get_current_status.assert_called_once()
+        
+        # Clean up dependency overrides
+        app.dependency_overrides.clear()
+    
+    def test_deliberate_endpoint_streams_events(self, client):
+        """Test that the deliberate endpoint streams SSE events correctly."""
+        # Prepare test payload
+        payload = {"topic": "Test Topic"}
+        
+        # Make POST request to deliberate endpoint
+        response = client.post("/api/deliberate", json=payload)
+        
+        # Assert response status code is 200
+        assert response.status_code == 200
+        
+        # Assert response Content-Type header is correct for SSE
+        assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
+        
+        # Iterate through streaming response content and validate SSE format
+        lines = list(response.iter_lines())
+        
+        # Assert that we received some lines
+        assert len(lines) > 0
+        
+        # Assert that lines are formatted as valid SSE messages (start with "data:")
+        for line in lines:
+            if line.strip():  # Skip empty lines
+                # Decode bytes to string for comparison
+                line_str = line.decode('utf-8') if isinstance(line, bytes) else line
+                assert line_str.startswith("data:"), f"Line should start with 'data:' but got: {line_str}"

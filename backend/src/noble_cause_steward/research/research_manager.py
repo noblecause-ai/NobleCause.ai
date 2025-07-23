@@ -237,3 +237,14 @@ Please create a comprehensive research brief that integrates all the above infor
         except Exception:
             # If any exception occurs during final LLM call, return error message
             return "Failed to synthesize the final research brief."
+    
+    def get_current_status(self):
+        """Get the current status of the research manager.
+        
+        Returns:
+            dict: A dictionary containing the current status and inner monologue.
+        """
+        return {
+            "status": "researching",
+            "inner_monologue": "Analyzing data from GiveWell..."
+        }

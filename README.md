@@ -23,6 +23,8 @@ Key technologies used: SvelteKit, FastAPI, Python, OpenRouter, ChromaDB, Postgre
 
 ## Getting Started
 
+⚠️ **IMPORTANT: Ensure the Docker Desktop application is running before executing any Docker commands.**
+
 1.  **Prerequisites:** Ensure you have Docker installed on your system.
 2.  **Clone the repository:**
     ```bash
