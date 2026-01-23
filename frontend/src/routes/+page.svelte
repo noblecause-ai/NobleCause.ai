@@ -8,7 +8,11 @@
 
 	async function fetchStewardStatus() {
 		try {
-			const response = await fetch('/api/status');
+			const apiUrl =
+				typeof window !== 'undefined'
+					? (import.meta.env?.VITE_API_URL as string | undefined) || 'http://localhost:8000'
+					: 'http://localhost:8000';
+			const response = await fetch(`${apiUrl}/api/steward/status`);
 			if (response.ok) {
 				const data = await response.json();
 				status = data.status;
