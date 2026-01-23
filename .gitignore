@@ -1,13 +1,48 @@
 # Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
 
 # Node.js
 node_modules/
 .DS_Store
+npm-debug.log*
 
 # Editor Specific
 .vscode/
+.idea/
+*.swp
+*.swo
 
-# Environment Variables
+# Environment Variables (IMPORTANT: Never commit API keys!)
+.env
+*.env
+!.env.example
 backend/.env
+frontend/.env
+
+# Test artifacts
+*.tmp
+tmp.txt
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Playwright
+/frontend/test-results/
+/frontend/playwright-report/
+
+# Build outputs
+/frontend/build/
+.aider*
+
+# Debug logs and cursor files
+.cursor/
+*.debug.log
+debug.log
