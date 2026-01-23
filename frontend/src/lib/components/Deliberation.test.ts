@@ -1,170 +1,341 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { get } from 'svelte/store';
-import { deliberationStore, type DeliberationMessage } from '../stores/deliberationStore';
+import {
+	deliberationStore,
+	transcriptByRound,
+	isDeliberating,
+	type WebSocketMessage
+} from '../stores/deliberationStore';
 
-// Mock EventSource
-class MockEventSource {
+// Mock WebSocket
+class MockWebSocket {
 	url: string;
 	readyState: number = 0;
 	onopen: ((event: Event) => void) | null = null;
 	onmessage: ((event: MessageEvent) => void) | null = null;
 	onerror: ((event: Event) => void) | null = null;
-	
+	onclose: ((event: CloseEvent) => void) | null = null;
+
+	static CONNECTING = 0;
+	static OPEN = 1;
+	static CLOSING = 2;
+	static CLOSED = 3;
+
 	constructor(url: string) {
 		this.url = url;
 		// Simulate connection opening
 		setTimeout(() => {
-			this.readyState = 1;
+			this.readyState = MockWebSocket.OPEN;
 			if (this.onopen) {
 				this.onopen(new Event('open'));
 			}
 		}, 0);
 	}
-	
-	close() {
-		this.readyState = 2;
+
+	send(data: string) {
+		// Mock send - do nothing
 	}
-	
+
+	close() {
+		this.readyState = MockWebSocket.CLOSED;
+		if (this.onclose) {
+			this.onclose(new CloseEvent('close'));
+		}
+	}
+
 	// Helper method for tests to simulate receiving messages
-	simulateMessage(data: string) {
+	simulateMessage(data: WebSocketMessage) {
 		if (this.onmessage) {
-			const event = new MessageEvent('message', { data });
+			const event = new MessageEvent('message', { data: JSON.stringify(data) });
 			this.onmessage(event);
 		}
 	}
-}
 
-// Create a mock component class for testing (following existing pattern)
-class MockDeliberation {
-	isConnected: boolean = false;
-	eventSource: EventSource | null = null;
-	hasStartButton: boolean = true;
-	hasTranscriptArea: boolean = true;
-	transcriptContent: string = '';
-
-	startDeliberation() {
-		if (!this.isConnected) {
-			this.eventSource = new EventSource('http://localhost:8000/api/deliberate');
-			this.isConnected = true;
-			
-			// Set up message handler to update store
-			this.eventSource.onmessage = (event) => {
-				try {
-					const message: DeliberationMessage = JSON.parse(event.data);
-					const currentMessages = get(deliberationStore);
-					deliberationStore.set([...currentMessages, message]);
-				} catch (error) {
-					console.error('Failed to parse SSE message:', error);
-				}
-			};
+	// Helper to simulate error
+	simulateError() {
+		if (this.onerror) {
+			this.onerror(new Event('error'));
 		}
 	}
-
-	getTranscriptContent() {
-		const messages = get(deliberationStore);
-		return messages.map(msg => `${msg.agent}: ${msg.content}`).join('\n');
-	}
 }
 
-describe('Deliberation', () => {
-	let mockEventSource: MockEventSource;
-	let originalEventSource: typeof EventSource;
+describe('DeliberationStore', () => {
+	beforeEach(() => {
+		// Reset the deliberation store before each test
+		deliberationStore.reset();
+	});
+
+	it('test_initial_state', () => {
+		const state = get(deliberationStore);
+
+		expect(state.status).toBe('idle');
+		expect(state.currentRound).toBe(0);
+		expect(state.currentRoundName).toBe('');
+		expect(state.currentAgent).toBeNull();
+		expect(state.transcript).toEqual([]);
+		expect(state.consensusReached).toBe(false);
+		expect(state.finalRecommendation).toBeNull();
+		expect(state.sessionId).toBeNull();
+		expect(state.errorMessage).toBeNull();
+	});
+
+	it('test_handles_round_start_message', () => {
+		const message: WebSocketMessage = {
+			type: 'round_start',
+			round: 1,
+			round_name: 'Propose'
+		};
+
+		deliberationStore.handleMessage(message);
+
+		const state = get(deliberationStore);
+		expect(state.status).toBe('deliberating');
+		expect(state.currentRound).toBe(1);
+		expect(state.currentRoundName).toBe('Propose');
+	});
+
+	it('test_handles_agent_start_message', () => {
+		const message: WebSocketMessage = {
+			type: 'agent_start',
+			agent_id: 'claude',
+			agent_name: 'Claude',
+			round: 1,
+			round_name: 'Propose'
+		};
+
+		deliberationStore.handleMessage(message);
+
+		const state = get(deliberationStore);
+		expect(state.currentAgent).toBe('Claude');
+	});
+
+	it('test_handles_agent_response_message', () => {
+		const message: WebSocketMessage = {
+			type: 'agent_response',
+			agent_id: 'claude',
+			agent_name: 'Claude',
+			round: 1,
+			round_name: 'Propose',
+			content: 'This is my proposal.',
+			timestamp: '2024-01-01T00:00:00Z'
+		};
+
+		deliberationStore.handleMessage(message);
+
+		const state = get(deliberationStore);
+		expect(state.transcript).toHaveLength(1);
+		expect(state.transcript[0].agent_name).toBe('Claude');
+		expect(state.transcript[0].content).toBe('This is my proposal.');
+		expect(state.currentAgent).toBeNull();
+	});
+
+	it('test_handles_deliberation_complete_message', () => {
+		const message: WebSocketMessage = {
+			type: 'deliberation_complete',
+			session_id: 'test-session-123',
+			consensus_reached: true,
+			final_recommendation: 'We recommend...'
+		};
+
+		deliberationStore.handleMessage(message);
+
+		const state = get(deliberationStore);
+		expect(state.status).toBe('completed');
+		expect(state.sessionId).toBe('test-session-123');
+		expect(state.consensusReached).toBe(true);
+		expect(state.finalRecommendation).toBe('We recommend...');
+	});
+
+	it('test_handles_error_message', () => {
+		const message: WebSocketMessage = {
+			type: 'error',
+			message: 'Connection failed'
+		};
+
+		deliberationStore.handleMessage(message);
+
+		const state = get(deliberationStore);
+		expect(state.status).toBe('error');
+		expect(state.errorMessage).toBe('Connection failed');
+	});
+
+	it('test_reset_returns_to_initial_state', () => {
+		// First, modify the state
+		deliberationStore.handleMessage({
+			type: 'round_start',
+			round: 1,
+			round_name: 'Propose'
+		});
+
+		// Then reset
+		deliberationStore.reset();
+
+		const state = get(deliberationStore);
+		expect(state.status).toBe('idle');
+		expect(state.currentRound).toBe(0);
+		expect(state.transcript).toEqual([]);
+	});
+});
+
+describe('Derived Stores', () => {
+	beforeEach(() => {
+		deliberationStore.reset();
+	});
+
+	it('test_transcript_by_round_groups_responses', () => {
+		// Add responses from multiple rounds
+		deliberationStore.handleMessage({
+			type: 'agent_response',
+			agent_id: 'claude',
+			agent_name: 'Claude',
+			round: 1,
+			round_name: 'Propose',
+			content: 'Round 1 content',
+			timestamp: '2024-01-01T00:00:00Z'
+		});
+
+		deliberationStore.handleMessage({
+			type: 'agent_response',
+			agent_id: 'gpt4',
+			agent_name: 'GPT-4',
+			round: 1,
+			round_name: 'Propose',
+			content: 'Also round 1',
+			timestamp: '2024-01-01T00:01:00Z'
+		});
+
+		deliberationStore.handleMessage({
+			type: 'agent_response',
+			agent_id: 'claude',
+			agent_name: 'Claude',
+			round: 2,
+			round_name: 'Critique',
+			content: 'Round 2 content',
+			timestamp: '2024-01-01T00:02:00Z'
+		});
+
+		const byRound = get(transcriptByRound);
+
+		expect(Object.keys(byRound)).toHaveLength(2);
+		expect(byRound[1].round_name).toBe('Propose');
+		expect(byRound[1].responses).toHaveLength(2);
+		expect(byRound[2].round_name).toBe('Critique');
+		expect(byRound[2].responses).toHaveLength(1);
+	});
+
+	it('test_is_deliberating_reflects_status', () => {
+		// Initially should be false
+		expect(get(isDeliberating)).toBe(false);
+
+		// Set to connecting
+		deliberationStore.setConnecting();
+		expect(get(isDeliberating)).toBe(true);
+
+		// Set to deliberating
+		deliberationStore.handleMessage({
+			type: 'round_start',
+			round: 1,
+			round_name: 'Propose'
+		});
+		expect(get(isDeliberating)).toBe(true);
+
+		// Set to completed
+		deliberationStore.handleMessage({
+			type: 'deliberation_complete',
+			session_id: 'test',
+			consensus_reached: true,
+			final_recommendation: null
+		});
+		expect(get(isDeliberating)).toBe(false);
+	});
+});
+
+describe('WebSocket Integration', () => {
+	let mockWebSocket: MockWebSocket;
+	let originalWebSocket: typeof WebSocket;
 
 	beforeEach(() => {
-		// Reset all mocks before each test
-		vi.resetAllMocks();
-		
-		// Store original EventSource
-		originalEventSource = globalThis.EventSource;
-		
-		// Mock EventSource globally
-		globalThis.EventSource = vi.fn().mockImplementation((url: string) => {
-			mockEventSource = new MockEventSource(url);
-			return mockEventSource;
-		}) as any;
-		
-		// Reset the deliberation store
-		deliberationStore.set([]);
+		// Reset store
+		deliberationStore.reset();
+
+		// Store original WebSocket
+		originalWebSocket = globalThis.WebSocket;
+
+		// Mock WebSocket globally
+		globalThis.WebSocket = vi.fn().mockImplementation((url: string) => {
+			mockWebSocket = new MockWebSocket(url);
+			return mockWebSocket;
+		}) as unknown as typeof WebSocket;
+
+		// Add static properties
+		(globalThis.WebSocket as unknown as typeof MockWebSocket).CONNECTING = MockWebSocket.CONNECTING;
+		(globalThis.WebSocket as unknown as typeof MockWebSocket).OPEN = MockWebSocket.OPEN;
+		(globalThis.WebSocket as unknown as typeof MockWebSocket).CLOSING = MockWebSocket.CLOSING;
+		(globalThis.WebSocket as unknown as typeof MockWebSocket).CLOSED = MockWebSocket.CLOSED;
 	});
 
 	afterEach(() => {
-		// Restore all mocks after each test
 		vi.restoreAllMocks();
-		
-		// Restore original EventSource
-		globalThis.EventSource = originalEventSource;
+		globalThis.WebSocket = originalWebSocket;
 	});
 
-	it('test_component_renders_initial_state', () => {
-		// Create component instance
-		const component = new MockDeliberation();
+	it('test_websocket_creates_connection_with_correct_url', async () => {
+		// Import the service (after mocking WebSocket)
+		const { websocketService } = await import('../services/websocketService');
 
-		// Assert that it displays an initial state
-		expect(component.hasStartButton).toBe(true);
-		expect(component.hasTranscriptArea).toBe(true);
-		
-		// Assert transcript area is initially empty
-		expect(component.transcriptContent).toBe('');
-		expect(component.isConnected).toBe(false);
+		// Start deliberation
+		websocketService.startDeliberation('Test topic');
+
+		// Wait for async connection
+		await new Promise((resolve) => setTimeout(resolve, 10));
+
+		// Verify WebSocket was created with correct URL pattern
+		expect(globalThis.WebSocket).toHaveBeenCalled();
+		const callUrl = (globalThis.WebSocket as ReturnType<typeof vi.fn>).mock.calls[0][0];
+		expect(callUrl).toContain('/ws/deliberate');
 	});
 
-	it('test_clicking_button_initiates_sse_connection', () => {
-		// Create component instance
-		const component = new MockDeliberation();
-		
-		// Simulate a click on the "Start Deliberation" button
-		component.startDeliberation();
+	it('test_full_deliberation_flow_updates_store', async () => {
+		const { websocketService } = await import('../services/websocketService');
 
-		// Assert that new EventSource was called with correct URL
-		expect(globalThis.EventSource).toHaveBeenCalledWith('http://localhost:8000/api/deliberate');
-		expect(globalThis.EventSource).toHaveBeenCalledTimes(1);
-		expect(component.isConnected).toBe(true);
-	});
+		websocketService.startDeliberation('Should we fund this?');
 
-	it('test_sse_messages_update_transcript_store', () => {
-		// Create component instance
-		const component = new MockDeliberation();
-		
-		// Simulate button click to start SSE connection
-		component.startDeliberation();
+		// Wait for connection
+		await new Promise((resolve) => setTimeout(resolve, 10));
 
-		// Verify EventSource was created
-		expect(mockEventSource).toBeDefined();
-
-		// Dispatch mock SSE message events with JSON data matching backend format
-		const mockMessage1 = JSON.stringify({
-			type: 'agent_response',
-			agent: 'researcher',
-			content: 'I found some interesting data about climate change.',
-			timestamp: '2023-01-01T10:00:00Z'
-		});
-		
-		const mockMessage2 = JSON.stringify({
-			type: 'agent_response',
-			agent: 'analyst',
-			content: 'Based on the research, I can provide analysis.',
-			timestamp: '2023-01-01T10:01:00Z'
+		// Simulate full deliberation flow
+		mockWebSocket.simulateMessage({
+			type: 'round_start',
+			round: 1,
+			round_name: 'Propose'
 		});
 
-		// Simulate receiving messages
-		mockEventSource.simulateMessage(mockMessage1);
-		mockEventSource.simulateMessage(mockMessage2);
+		let state = get(deliberationStore);
+		expect(state.status).toBe('deliberating');
+		expect(state.currentRound).toBe(1);
 
-		// Subscribe to the deliberationStore and assert that the store's value is updated correctly
-		const storeValue = get(deliberationStore);
-		
-		expect(storeValue).toHaveLength(2);
-		expect(storeValue[0]).toEqual({
+		mockWebSocket.simulateMessage({
 			type: 'agent_response',
-			agent: 'researcher',
-			content: 'I found some interesting data about climate change.',
-			timestamp: '2023-01-01T10:00:00Z'
+			agent_id: 'claude',
+			agent_name: 'Claude',
+			round: 1,
+			round_name: 'Propose',
+			content: 'My proposal...',
+			timestamp: '2024-01-01T00:00:00Z'
 		});
-		expect(storeValue[1]).toEqual({
-			type: 'agent_response',
-			agent: 'analyst',
-			content: 'Based on the research, I can provide analysis.',
-			timestamp: '2023-01-01T10:01:00Z'
+
+		state = get(deliberationStore);
+		expect(state.transcript).toHaveLength(1);
+
+		mockWebSocket.simulateMessage({
+			type: 'deliberation_complete',
+			session_id: 'test-123',
+			consensus_reached: true,
+			final_recommendation: 'Final recommendation'
 		});
+
+		state = get(deliberationStore);
+		expect(state.status).toBe('completed');
+		expect(state.consensusReached).toBe(true);
 	});
 });
