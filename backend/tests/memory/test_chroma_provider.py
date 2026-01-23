@@ -20,7 +20,7 @@ class TestChromaMemoryProvider:
         """Create a mock ChromaDB client for testing."""
         mock_client = Mock()
         mock_collection = Mock()
-        mock_client.create_collection.return_value = mock_collection
+        mock_client.get_or_create_collection.return_value = mock_collection
         mock_client.get_collection.return_value = mock_collection
         return mock_client
     
@@ -36,14 +36,14 @@ class TestChromaMemoryProvider:
         # Arrange
         collection_name = "test_memories"
         expected_collection = Mock()
-        mock_chroma_client.create_collection.return_value = expected_collection
+        mock_chroma_client.get_or_create_collection.return_value = expected_collection
         
         # Act & Assert
         with patch('chromadb.Client', return_value=mock_chroma_client):
             provider = ChromaMemoryProvider(collection_name=collection_name)
             
         # Assert that the collection was created with the correct name
-        mock_chroma_client.create_collection.assert_called_once_with(
+        mock_chroma_client.get_or_create_collection.assert_called_once_with(
             name=collection_name,
             metadata={"hnsw:space": "cosine"}
         )
@@ -59,7 +59,7 @@ class TestChromaMemoryProvider:
         test_metadata = {"source": "test", "timestamp": "2024-01-01T00:00:00Z"}
         
         # Get the mock collection from the client
-        mock_collection = mock_chroma_client.create_collection.return_value
+        mock_collection = mock_chroma_client.get_or_create_collection.return_value
         
         # Act
         memory_id = chroma_provider.add_memory(
@@ -93,7 +93,7 @@ class TestChromaMemoryProvider:
         query_text = "What is machine learning?"
         
         # Mock the collection and its query response
-        mock_collection = mock_chroma_client.create_collection.return_value
+        mock_collection = mock_chroma_client.get_or_create_collection.return_value
         mock_query_result = {
             "documents": [[test_document]],
             "metadatas": [[test_metadata]],

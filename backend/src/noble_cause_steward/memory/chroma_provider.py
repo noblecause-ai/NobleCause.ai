@@ -19,8 +19,8 @@ class ChromaMemoryProvider:
         self.collection_name = collection_name
         self.client = chromadb.Client()
         
-        # Create or get the collection with cosine similarity
-        self.collection = self.client.create_collection(
+        # Get or create the collection with cosine similarity
+        self.collection = self.client.get_or_create_collection(
             name=collection_name,
             metadata={"hnsw:space": "cosine"}
         )
