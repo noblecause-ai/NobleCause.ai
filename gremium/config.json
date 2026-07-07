@@ -1,6 +1,14 @@
 {
 	"fx_rate_usd_eur": 0.85,
 	"max_output_tokens": 8192,
+	"summarizer": {
+		"family": "anthropic",
+		"model": "claude-haiku-4-5",
+		"label": "Claude Haiku",
+		"usd_per_1m_input": 1.0,
+		"usd_per_1m_output": 5.0,
+		"max_output_tokens": 1024
+	},
 	"models": [
 		{
 			"family": "anthropic",

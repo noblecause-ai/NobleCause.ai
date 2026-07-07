@@ -41,3 +41,9 @@ export function getSession(id) {
 	const file = path.join(ROOT, 'sessions', id, 'session.json');
 	return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
+
+export function getLatestSession() {
+	const sessions = listSessions();
+	if (sessions.length === 0) return null;
+	return getSession(sessions[0].id);
+}

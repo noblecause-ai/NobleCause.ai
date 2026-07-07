@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "id": "2026-07",
   "number": 1,
   "date": "2026-07-07",
@@ -75,44 +75,97 @@
   "recommendations": [
     {
       "pillar": "A",
+      "has_consensus": false,
       "title": "Kein Konsens — Einzelvoten",
       "organization": null,
       "donation_url": null,
       "confidence": null,
-      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation:\n- **Helen Keller International** — Vitamin-A-Supplementierung für Kinder unter 5 Jahren (Votum Claude Sonnet, Konfidenz 0.7)\n- **Evidence Action – Teaching at the Right Level** — Teaching at the Right Level (TaRL) zur Steigerung von Grundkompetenzen (Votum GPT, Konfidenz 0.63)\n- **Iodine Global Network (IGN)** — Jodierung von Salz zur Bekämpfung von Jodmangelstörungen (Votum Gemini Pro, Konfidenz 0.9)"
+      "individual_votes": [
+        {
+          "title": "Vitamin-A-Supplementierung für Kinder unter 5 Jahren",
+          "organization": "Helen Keller International",
+          "donation_url": "https://www.hki.org/donate/",
+          "confidence": 0.7,
+          "model": "Claude Sonnet"
+        },
+        {
+          "title": "Teaching at the Right Level (TaRL) zur Steigerung von Grundkompetenzen",
+          "organization": "Evidence Action – Teaching at the Right Level",
+          "donation_url": "https://www.evidenceaction.org/donate",
+          "confidence": 0.63,
+          "model": "GPT"
+        },
+        {
+          "title": "Jodierung von Salz zur Bekämpfung von Jodmangelstörungen",
+          "organization": "Iodine Global Network (IGN)",
+          "donation_url": "https://www.ign.org/donate",
+          "confidence": 0.9,
+          "model": "Gemini Pro"
+        }
+      ],
+      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
     },
     {
       "pillar": "B",
+      "has_consensus": true,
       "title": "Saisonale Malaria-Chemoprophylaxe (SMC)",
       "organization": "Malaria Consortium",
       "donation_url": "https://www.malariaconsortium.org/donate/",
       "confidence": 0.81,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "models": [
+          "Claude Sonnet",
+          "GPT",
+          "Gemini Pro"
+        ]
+      },
       "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Sonnet, GPT, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "C",
+      "has_consensus": true,
       "title": "KI-Governance: Standards, Audits & Incident-Reporting für fortgeschrittene KI-Systeme",
       "organization": "Centre for the Governance of AI (GovAI)",
       "donation_url": "https://www.governance.ai/donate",
       "confidence": 0.57,
+      "convergence": {
+        "count": 2,
+        "total": 3,
+        "models": [
+          "GPT",
+          "Gemini Pro"
+        ]
+      },
       "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (GPT, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "D",
+      "has_consensus": true,
       "title": "Reduktion von Bleiexposition durch Politik/Regulierung (v. a. bleihaltige Farben)",
       "organization": "Lead Exposure Elimination Project (LEEP)",
       "donation_url": "https://www.leadelimination.org/donate",
       "confidence": 0.67,
+      "convergence": {
+        "count": 2,
+        "total": 3,
+        "models": [
+          "GPT",
+          "Gemini Pro"
+        ]
+      },
       "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (GPT, Gemini Pro). Begründungen in den Schlussvoten."
     }
   ],
   "costs": {
     "currency": "EUR",
-    "total": 0.31,
+    "total": 0.32,
     "fx_rate_usd_eur": 0.85,
     "by_model": [
       {
         "model": "claude-sonnet-4-5",
+        "label": "Claude Sonnet",
         "input_tokens": 11400,
         "output_tokens": 8492,
         "usd": 0.1616,
@@ -120,6 +173,7 @@
       },
       {
         "model": "gpt-5.2",
+        "label": "GPT",
         "input_tokens": 8174,
         "output_tokens": 4795,
         "usd": 0.0814,
@@ -127,11 +181,28 @@
       },
       {
         "model": "gemini-2.5-pro",
+        "label": "Gemini Pro",
         "input_tokens": 8640,
         "output_tokens": 10922,
         "usd": 0.12,
         "eur": 0.102
+      },
+      {
+        "model": "claude-haiku-4-5",
+        "label": "Claude Haiku",
+        "input_tokens": 7018,
+        "output_tokens": 876,
+        "usd": 0.0114,
+        "eur": 0.0097
       }
     ]
-  }
+  },
+  "summary": "Das Gremium wurde beauftragt, drei Interventionen pro 1'000 EUR mit höchster erwartbarer Wirkung je Säule (Zukunftsinvestition, gegenwärtiges Leid, Existenzrisiko, übersehene Essentials) zu empfehlen. Bei Säule B (Malaria Consortium – SMC) und Säule D (Bleibelastung – LEEP/Pure Earth) erreichte das Gremium weitgehenden Konsens. Bei Säule A spaltet sich die Empfehlung zwischen Vitamin-A-Supplementierung (Claude Sonnet), Salzjodierung (Gemini Pro) und Teaching at the Right Level (GPT), wobei Marginalitätsbedenken und Säulenpassung die Trennlinien markieren. Säule C zeigt ähnliche Fragmentierung zwischen MIRI (technische AI-Alignment), GovAI (Governance) und NTI Biosecurity, begründet in divergierenden Einschätzungen zu Tractability, Vernachlässigung und Zeithorizont. Die Gegenlese führte zu einer Revision von Geminis Position bei Säule B (von LLIN zu SMC) und bestätigte insgesamt, dass robuste Evidenz (GiveWell-Standard bei Gesundheit) stärkere Konvergenz erzeugt als Unsicherheit bei Existenzrisiken.",
+  "dissent_highlights": [
+    "Säule A – Marginalität reifer Interventionen: Während Vitamin A und Jodierung etablierte hohe BCR aufweisen, divergiert die Einschätzung der counterfactual-Wirkung neuer Spenden in gesättigten Märkten (Claude favorisiert Vitamin A; Gemini sieht Jod als robuster; GPT präferiert Bildung als konzeptionell sauberer für »Zukunft«).",
+    "Säule C – Technische Grundlagen vs. Policy-Tractability: Claude/MIRI priorisiert technische AI-Alignment als vorgelagert; GPT/GovAI betont Policy-Durchsetzbarkeit und Timeliness; Gemini/NTI favorisiert Biosecurity als politisch anschlussfähiger post-COVID – bei ähnlichen Risiko-Ausmaßen aber unterschiedlichen Funding-Gaps.",
+    "Säule A – Säulendefinition: Debatte, ob Mikronährstoffe (unmittelbare Mortalitätsreduktion) oder Skills-Training (langfristige Produktivität) konzeptionell zur »Zukunftsinvestition« passen, oder ob beide primär »gegenwärtiges Leid« lindern.",
+    "Säule C – Vernachlässigung seit 2020: Gegensätzliche Bewertung: Claude sieht AI-Safety deutlich unterfinanziert; Gemini argumentiert, dass Biosecurity post-COVID wieder stärker gestützt wird und relative Vernachlässigung gefallen ist.",
+    "Konfidenz-Asymmetrie: Säule B erreicht 72 % Konfidenz (Konsens); Säule C fällt auf 55 % (heterogene Modelle); Säule A auf 63 % – Indikator für höhere Modellunsicherheit bei längeren Kausalketten und älteren Interventionen."
+  ]
 }

@@ -14,37 +14,50 @@ sessions/2026-07/
     ├── r1-openai.json
     ├── r1-google.json
     ├── r2-anthropic.json
-    └── ...
+    ├── r2-openai.json
+    ├── r2-google.json
+    └── summary-anthropic.json   # ab Schema v2
 ```
 
-## Schema `session.json` (Version 1)
+## Schema `session.json` (Version 2)
 
 | Feld | Typ | Bedeutung |
 |---|---|---|
-| `schema_version` | int | immer `1` |
+| `schema_version` | int | `2` (aktuell); `1` = Legacy ohne Kurzfassung |
 | `id` | string | Ordnername, z. B. `"2026-07"` |
 | `number` | int | laufende Sitzungsnummer (1, 2, …) |
 | `date` | string | Datum des Laufs, ISO `YYYY-MM-DD` |
 | `title` | string | Kurztitel der Sitzung |
 | `question` | string | die vollständige Fragestellung |
-| `participants` | array | je Modell: `family`, `model` (exakter API-String), `label` (Anzeigename) |
-| `prompts` | object | `system`, `round1`, `round2` — wörtlich, wie an die APIs gesendet |
+| `summary` | string | Kurzfassung (5–8 Sätze), ab v2 |
+| `dissent_highlights` | array | 3–5 Kernpunkte des Dissenses, ab v2 |
+| `participants` | array | je Modell: `family`, `model`, `label` |
+| `prompts` | object | `system`, `round1`, `round2` |
 | `rounds` | array | 2 Einträge, siehe unten |
-| `dissent_md` | string | Dissens-Abschnitt (Markdown); wo die Schlussvoten auseinanderliegen und warum |
-| `recommendations` | array | je Empfehlung: `pillar` (A–D), `title`, `organization`, `donation_url` (offizieller Spendenweg der Organisation), `rationale_md`, `confidence` (0–1) |
-| `costs` | object | `currency`, `total`, `fx_rate_usd_eur`, `by_model[]` mit `model`, `input_tokens`, `output_tokens`, `usd`, `eur` |
+| `dissent_md` | string | Dissens-Rohfassung (Markdown) |
+| `recommendations` | array | siehe unten |
+| `costs` | object | `currency`, `total`, `fx_rate_usd_eur`, `by_model[]` |
+
+### `recommendations[]` (ab v2)
+
+Bei Konsens (`has_consensus: true`):
+- `pillar`, `title`, `organization`, `donation_url`, `confidence`, `rationale_md`
+- `convergence`: `{ count, total, models[] }` — für Konvergenz-Punkte im Template
+
+Ohne Konsens (`has_consensus: false`):
+- `individual_votes[]`: je `{ title, organization, donation_url, confidence, model }`
 
 ### `rounds[]`
 
 ```json
 {
   "round": 1,
-  "kind": "initial_vote",        // Runde 2: "final_vote"
+  "kind": "initial_vote",
   "votes": [
     {
       "model": "exakter-api-string",
       "content_md": "das Votum als Markdown",
-      "confidence": 0.7           // Selbsteinschätzung des Modells, 0–1
+      "confidence": 0.7
     }
   ]
 }
@@ -52,8 +65,13 @@ sessions/2026-07/
 
 ## Regeln
 
-- **Nichts kürzen:** `raw/` enthält die unveränderten API-Antworten (inkl. Usage-Metadaten). Transparenz schlägt Ordnerschönheit.
+- **Nichts kürzen:** `raw/` enthält die unveränderten API-Antworten. Transparenz schlägt Ordnerschönheit.
 - **Kosten sind Pflicht:** keine Sitzung ohne `costs`-Block.
-- **Dissens ist Pflicht:** wenn es keinen gibt, steht das explizit da („Die Schlussvoten konvergieren in …").
-- Empfehlungen verlinken ausschließlich auf offizielle Spendenwege der Organisationen — durch dieses System fließt kein Geld.
+- **Dissens ist Pflicht:** wenn es keinen gibt, steht das explizit da.
+- Empfehlungen verlinken ausschließlich auf offizielle Spendenwege der Organisationen.
 - Schema-Änderungen erhöhen `schema_version` und werden hier dokumentiert.
+
+## Version 1 (Legacy)
+
+Sitzungen mit `schema_version: 1` haben kein `summary`, `dissent_highlights` oder `convergence`.
+Die Site rendert sie mit Fallbacks; neue Sitzungen nutzen Schema 2.

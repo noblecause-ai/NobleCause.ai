@@ -1,4 +1,6 @@
 <script>
+	import ResultCard from '$lib/components/ResultCard.svelte';
+
 	let { data } = $props();
 	const s = data.session;
 	const pillarNames = {
@@ -16,149 +18,144 @@
 
 <svelte:head>
 	<title>Sitzung {s.number}: {s.title} — NobleCause.ai</title>
-	<meta name="description" content={s.question} />
+	<meta name="description" content={s.summary ?? s.question} />
 </svelte:head>
 
 <p class="kicker">Protokoll · Sitzung {s.number} · {s.date}</p>
 <h1>{s.title}</h1>
+<blockquote class="question">{s.question}</blockquote>
 
-<h2>Fragestellung</h2>
-<blockquote>{s.question}</blockquote>
-
-<h2>Teilnehmer</h2>
-<table>
-	<thead>
-		<tr><th>Familie</th><th>Modell (API-Version)</th></tr>
-	</thead>
-	<tbody>
-		{#each s.participants as p (p.model)}
-			<tr>
-				<td>{p.family}</td>
-				<td><strong>{p.label}</strong> · <code>{p.model}</code></td>
-			</tr>
-		{/each}
-	</tbody>
-</table>
-
-<h2>Prompts</h2>
-<p class="muted">Wörtlich, wie an die APIs gesendet.</p>
-{#each [['System', s.prompts.system], ['Runde 1', s.prompts.round1], ['Runde 2', s.prompts.round2]] as [name, text] (name)}
-	{#if text}
-		<details>
-			<summary>{name}-Prompt</summary>
-			<pre>{text}</pre>
-		</details>
-	{/if}
+<h2>Ergebnis</h2>
+{#each s.recommendations as rec (rec.pillar)}
+	<ResultCard {rec} pillarName={pillarNames[rec.pillar] ?? ''} />
 {/each}
 
+{#if s.summary}
+	<h2>Kurzfassung</h2>
+	<p class="summary">{s.summary}</p>
+{/if}
+
+{#if s.dissent_highlights?.length}
+	<h2>Dissens im Kern</h2>
+	<ul class="highlights">
+		{#each s.dissent_highlights as point (point)}
+			<li>{point}</li>
+		{/each}
+	</ul>
+{/if}
+
+<h2>Vollprotokoll</h2>
+<p class="muted">Standardmäßig eingeklappt — vollständige Transparenz auf Wunsch.</p>
+
+<details>
+	<summary>Fragestellung & Teilnehmer</summary>
+	<blockquote>{s.question}</blockquote>
+	<table>
+		<thead>
+			<tr><th>Familie</th><th>Modell (API-Version)</th></tr>
+		</thead>
+		<tbody>
+			{#each s.participants as p (p.model)}
+				<tr>
+					<td>{p.family}</td>
+					<td><strong>{p.label}</strong> · <code>{p.model}</code></td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</details>
+
+<details>
+	<summary>Prompts (wörtlich)</summary>
+	{#each [['System', s.prompts.system], ['Runde 1', s.prompts.round1], ['Runde 2', s.prompts.round2]] as [name, text] (name)}
+		{#if text}
+			<h3>{name}</h3>
+			<pre>{text}</pre>
+		{/if}
+	{/each}
+</details>
+
 {#each s.rounds as round (round.round)}
-	<h2>Runde {round.round} — {roundTitles[round.kind] ?? round.kind}</h2>
-	{#each round.votes as vote (vote.model)}
-		<details open={round.kind === 'final_vote'}>
-			<summary>
-				<strong>{labelOf(vote.model)}</strong>
+	<details>
+		<summary>Runde {round.round} — {roundTitles[round.kind] ?? round.kind}</summary>
+		{#each round.votes as vote (vote.model)}
+			<h3>
+				{labelOf(vote.model)}
 				{#if vote.confidence != null}
 					<span class="muted">· Konfidenz {Math.round(vote.confidence * 100)} %</span>
 				{/if}
-			</summary>
+			</h3>
 			<div class="vote">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
 				{@html vote.content_html}
 			</div>
-		</details>
-	{/each}
-{/each}
-
-<h2>Dissens</h2>
-<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
-{@html s.dissent_html}
-
-<h2>Empfehlungen</h2>
-{#each s.recommendations as rec, i (i)}
-	<div class="rec">
-		<p class="kicker">Säule {rec.pillar} — {pillarNames[rec.pillar] ?? ''}</p>
-		<h3>
-			{rec.title}
-			{#if rec.confidence != null}
-				<span class="muted conf">Konfidenz {Math.round(rec.confidence * 100)} %</span>
-			{/if}
-		</h3>
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
-		{@html rec.rationale_html}
-		{#if rec.donation_url}
-			<p>
-				<a href={rec.donation_url}>Offizieller Spendenweg: {rec.organization}</a>
-				<span class="muted">(externer Link — durch NobleCause.ai fließt kein Geld)</span>
-			</p>
-		{/if}
-	</div>
-{/each}
-
-<h2>Kosten</h2>
-<table>
-	<thead>
-		<tr><th>Modell</th><th>Input-Tokens</th><th>Output-Tokens</th><th>USD</th><th>EUR</th></tr>
-	</thead>
-	<tbody>
-		{#each s.costs.by_model as c (c.model)}
-			<tr>
-				<td>{labelOf(c.model)}</td>
-				<td>{c.input_tokens.toLocaleString('de-CH')}</td>
-				<td>{c.output_tokens.toLocaleString('de-CH')}</td>
-				<td>{c.usd.toFixed(4)}</td>
-				<td>{c.eur.toFixed(4)}</td>
-			</tr>
 		{/each}
-		<tr>
-			<td><strong>Gesamt</strong></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td><strong>{s.costs.total.toFixed(2)} €</strong></td>
-		</tr>
-	</tbody>
-</table>
-<p class="muted">
-	Umrechnungskurs USD→EUR: {s.costs.fx_rate_usd_eur}. Rohantworten aller API-Calls:
-	<a href="https://github.com/noblecause-ai/NobleCause.ai/tree/master/sessions/{s.id}/raw"
-		>sessions/{s.id}/raw im Repository</a
+	</details>
+{/each}
+
+<details>
+	<summary>Dissens (Rohfassung)</summary>
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+	{@html s.dissent_html}
+</details>
+
+<p class="footnote">
+	Diese Sitzung kostete {s.costs.total.toFixed(2)} € an API-Aufrufen — vollständige Aufschlüsselung
+	und Rohantworten im
+	<a href="https://github.com/noblecause-ai/NobleCause.ai/tree/master/sessions/{s.id}"
+		>Repository (sessions/{s.id}/)</a
 	>.
 </p>
 
 <style>
+	.question {
+		margin: 0.5rem 0 1.5rem;
+		font-size: 0.95rem;
+	}
+	.summary {
+		margin: 0;
+	}
+	.highlights {
+		margin: 0.5rem 0 0;
+		padding-left: 1.2rem;
+	}
+	.highlights li {
+		margin: 0.5rem 0;
+	}
 	details {
-		border: 1px solid #d8d2c4;
-		background: #faf8f3;
+		border: 1px solid var(--line);
+		background: var(--card-bg);
 		padding: 0.55rem 0.9rem;
 		margin: 0.6rem 0;
 	}
 	summary {
 		cursor: pointer;
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 0.88rem;
+	}
+	h3 {
+		margin: 1rem 0 0.3rem;
+		font-size: 0.95rem;
 	}
 	pre {
 		white-space: pre-wrap;
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
 		font-size: 0.78rem;
 		line-height: 1.55;
-		margin: 0.7rem 0 0.3rem;
+		margin: 0.5rem 0;
 	}
 	.vote {
-		margin-top: 0.5rem;
-		border-top: 1px solid #e2ddd1;
+		margin: 0.3rem 0 0.8rem;
+		border-top: 1px solid var(--line);
 		padding-top: 0.3rem;
+		font-size: 0.92rem;
 	}
-	.rec {
-		border-left: 3px solid #1a1916;
-		padding-left: 1rem;
-		margin: 1.4rem 0;
-	}
-	.rec h3 {
-		margin: 0 0 0.3rem;
-		font-size: 1.05rem;
-	}
-	.conf {
-		font-size: 0.8rem;
-		font-weight: 400;
-		margin-left: 0.5rem;
+	.footnote {
+		margin-top: 2.5rem;
+		padding-top: 1rem;
+		border-top: 1px solid var(--line);
+		font-size: 0.82rem;
+		color: var(--muted);
+		font-family: ui-sans-serif, system-ui, sans-serif;
 	}
 </style>

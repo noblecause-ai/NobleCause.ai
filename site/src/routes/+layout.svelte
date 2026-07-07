@@ -31,9 +31,31 @@
 </div>
 
 <style>
+	:global(:root) {
+		--paper: #f4f1ea;
+		--ink: #1a1916;
+		--muted: #6f695c;
+		--line: #d8d2c4;
+		--line-strong: #1a1916;
+		--card-bg: #faf8f3;
+		--code-bg: #ebe6da;
+		--accent: #0f6e56;
+	}
+	@media (prefers-color-scheme: dark) {
+		:global(:root) {
+			--paper: #1a1916;
+			--ink: #f4f1ea;
+			--muted: #9a9189;
+			--line: #3a3630;
+			--line-strong: #f4f1ea;
+			--card-bg: #22201c;
+			--code-bg: #2a2722;
+			--accent: #5dcaa5;
+		}
+	}
 	:global(html) {
-		background: #f4f1ea;
-		color: #1a1916;
+		background: var(--paper);
+		color: var(--ink);
 		font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
 		line-height: 1.65;
 		font-size: 17px;
@@ -54,19 +76,19 @@
 		font-size: 1.25rem;
 		margin: 2.2rem 0 0.6rem;
 		padding-top: 1.2rem;
-		border-top: 1px solid #d8d2c4;
+		border-top: 1px solid var(--line);
 	}
 	:global(a) {
-		color: #1a1916;
-		text-decoration-color: #b0a892;
+		color: var(--accent);
+		text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
 		text-underline-offset: 2px;
 	}
 	:global(a:hover) {
-		text-decoration-color: #1a1916;
+		text-decoration-color: var(--accent);
 	}
 	:global(hr) {
 		border: 0;
-		border-top: 1px solid #d8d2c4;
+		border-top: 1px solid var(--line);
 		margin: 2rem 0;
 	}
 	:global(table) {
@@ -77,7 +99,7 @@
 	:global(th, td) {
 		text-align: left;
 		padding: 0.45rem 0.7rem 0.45rem 0;
-		border-bottom: 1px solid #e2ddd1;
+		border-bottom: 1px solid var(--line);
 		vertical-align: top;
 	}
 	:global(th) {
@@ -85,31 +107,31 @@
 		font-size: 0.72rem;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		color: #6f695c;
+		color: var(--muted);
 		font-weight: 600;
 	}
 	:global(code) {
 		font-family: ui-monospace, 'SF Mono', Menlo, monospace;
 		font-size: 0.85em;
-		background: #ebe6da;
+		background: var(--code-bg);
 		padding: 0.08em 0.35em;
 		border-radius: 3px;
 	}
 	:global(blockquote) {
 		margin: 1rem 0;
 		padding: 0.2rem 0 0.2rem 1rem;
-		border-left: 3px solid #b0a892;
-		color: #45413a;
+		border-left: 3px solid var(--line);
+		color: var(--muted);
 	}
 	:global(.muted) {
-		color: #6f695c;
+		color: var(--muted);
 	}
 	:global(.kicker) {
 		font-family: ui-sans-serif, system-ui, sans-serif;
 		font-size: 0.72rem;
 		text-transform: uppercase;
 		letter-spacing: 0.09em;
-		color: #6f695c;
+		color: var(--muted);
 		margin: 0 0 0.6rem;
 	}
 
@@ -124,7 +146,7 @@
 		gap: 0.4rem 1.4rem;
 		align-items: baseline;
 		padding: 1.6rem 0 1rem;
-		border-bottom: 2px solid #1a1916;
+		border-bottom: 2px solid var(--line-strong);
 		margin-bottom: 2.2rem;
 	}
 	.brand {
@@ -132,6 +154,7 @@
 		font-size: 1.05rem;
 		text-decoration: none;
 		margin-right: auto;
+		color: var(--ink);
 	}
 	nav {
 		display: flex;
@@ -141,9 +164,10 @@
 	}
 	nav a {
 		text-decoration: none;
-		color: #45413a;
+		color: var(--muted);
 	}
 	nav a:hover {
+		color: var(--accent);
 		text-decoration: underline;
 	}
 	main {
@@ -152,13 +176,12 @@
 	footer {
 		margin-top: 3.5rem;
 		padding: 1.2rem 0 2.5rem;
-		border-top: 2px solid #1a1916;
+		border-top: 2px solid var(--line-strong);
 		font-size: 0.85rem;
-		color: #45413a;
+		color: var(--muted);
 	}
 	.fine {
 		font-family: ui-sans-serif, system-ui, sans-serif;
 		font-size: 0.75rem;
-		color: #6f695c;
 	}
 </style>

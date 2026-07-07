@@ -135,11 +135,12 @@ def call_model(spec, system, user, max_tokens, raw_dir, tag):
 
 # ---------------------------------------------------------------- aggregation
 
-def aggregate_recommendations(final_votes):
+def aggregate_recommendations(final_votes, total_models=None):
     """Deterministische Regel: Nennen ≥2 Modelle im Schlussvotum dieselbe
     Organisation für eine Säule, ist das die Gremium-Empfehlung (Konfidenz =
     Mittelwert). Sonst werden alle Kandidaten der Säule mit Attribution
     gelistet — der Orchestrator urteilt nicht selbst."""
+    total = total_models or len(final_votes)
     recs = []
     for pillar in ("A", "B", "C", "D"):
         candidates = []
@@ -159,30 +160,42 @@ def aggregate_recommendations(final_votes):
             recs.append(
                 {
                     "pillar": pillar,
+                    "has_consensus": True,
                     "title": best[0].get("title"),
                     "organization": best[0].get("organization"),
                     "donation_url": best[0].get("donation_url"),
                     "confidence": round(sum(confs) / len(confs), 2) if confs else None,
+                    "convergence": {
+                        "count": len(best),
+                        "total": total,
+                        "models": [c["_model"] for c in best],
+                    },
                     "rationale_md": f"Konvergenz im Schlussvotum: {len(best)} von "
-                    f"{len(final_votes)} Modellen empfehlen diese Organisation "
+                    f"{total} Modellen empfehlen diese Organisation "
                     f"({', '.join(c['_model'] for c in best)}). Begründungen in den Schlussvoten.",
                 }
             )
         else:
-            lines = [
-                f"- **{c.get('organization')}** — {c.get('title')} "
-                f"(Votum {c['_model']}, Konfidenz {c.get('confidence')})"
-                for c in candidates
-            ]
             recs.append(
                 {
                     "pillar": pillar,
+                    "has_consensus": False,
                     "title": "Kein Konsens — Einzelvoten",
                     "organization": None,
                     "donation_url": None,
                     "confidence": None,
+                    "individual_votes": [
+                        {
+                            "title": c.get("title"),
+                            "organization": c.get("organization"),
+                            "donation_url": c.get("donation_url"),
+                            "confidence": c.get("confidence"),
+                            "model": c["_model"],
+                        }
+                        for c in candidates
+                    ],
                     "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht "
-                    "auf eine Organisation:\n" + "\n".join(lines),
+                    "auf eine Organisation.",
                 }
             )
     return recs
@@ -197,6 +210,71 @@ def build_dissent(final_votes):
     if not parts:
         return "Kein Modell hat im Schlussvotum einen Dissens angemeldet."
     return "\n\n".join(parts)
+
+
+def format_aggregation_for_summary(recommendations):
+    lines = []
+    for rec in recommendations:
+        if rec.get("has_consensus"):
+            conv = rec.get("convergence", {})
+            lines.append(
+                f"Säule {rec['pillar']}: Konsens — {rec['organization']} "
+                f"({conv.get('count', '?')}/{conv.get('total', '?')} Modelle)"
+            )
+        else:
+            votes = rec.get("individual_votes") or []
+            parts = [f"{v.get('organization')} ({v.get('model')})" for v in votes]
+            lines.append(f"Säule {rec['pillar']}: Kein Konsens — {', '.join(parts)}")
+    return "\n".join(lines)
+
+
+def generate_summary(question, final_votes, recommendations, dissent_md, summarizer, raw_dir):
+    """Kurzfassung + Dissens-Kernpunkte per günstigem Claude-Modell."""
+    final_excerpt = "\n\n".join(
+        f"### {v['label']}\n{strip_json_block(v['text'])[:4000]}" for v in final_votes
+    )
+    user = prompts.SUMMARY.format(
+        question=question,
+        final_votes=final_excerpt,
+        aggregation=format_aggregation_for_summary(recommendations),
+        dissent_md=dissent_md[:6000],
+    )
+    max_tokens = summarizer.get("max_output_tokens", 1024)
+    text, usage, raw = call_anthropic(
+        summarizer["model"],
+        "Du bist ein nüchterner Protokollredakteur. Antworte nur mit JSON.",
+        user,
+        max_tokens,
+    )
+    (raw_dir / "summary-anthropic.json").write_text(
+        json.dumps(raw, indent=2, ensure_ascii=False, default=str)
+    )
+    parsed = extract_json_block(text)
+    if not parsed or "summary" not in parsed:
+        raise RuntimeError("Summarizer lieferte kein gültiges JSON mit summary")
+    return parsed.get("summary", ""), parsed.get("dissent_highlights", []), usage
+
+
+def compute_costs(usage_by_model, model_specs, fx):
+    by_model = []
+    for spec in model_specs:
+        u = usage_by_model.get(spec["model"], {"input_tokens": 0, "output_tokens": 0})
+        usd = (
+            u["input_tokens"] / 1e6 * spec["usd_per_1m_input"]
+            + u["output_tokens"] / 1e6 * spec["usd_per_1m_output"]
+        )
+        by_model.append(
+            {
+                "model": spec["model"],
+                "label": spec.get("label", spec["model"]),
+                "input_tokens": u["input_tokens"],
+                "output_tokens": u["output_tokens"],
+                "usd": round(usd, 4),
+                "eur": round(usd * fx, 4),
+            }
+        )
+    total_eur = round(sum(c["eur"] for c in by_model), 2)
+    return {"currency": "EUR", "total": total_eur, "fx_rate_usd_eur": fx, "by_model": by_model}
 
 
 # ---------------------------------------------------------------- main
@@ -263,16 +341,22 @@ def main():
         record_usage(spec, usage)
         r2.append({**spec, "text": text, "parsed": extract_json_block(text)})
 
+    # -------- Kurzfassung
+    print("Kurzfassung — Protokollredaktion")
+    dissent_md = build_dissent(r2)
+    recommendations = aggregate_recommendations(r2)
+    summarizer = config["summarizer"]
+    print(f"  {summarizer['label']} ({summarizer['model']}) …")
+    summary, dissent_highlights, sum_usage = generate_summary(
+        args.question, r2, recommendations, dissent_md, summarizer, raw_dir
+    )
+    usage_by_model.setdefault(summarizer["model"], {"input_tokens": 0, "output_tokens": 0})
+    usage_by_model[summarizer["model"]]["input_tokens"] += sum_usage["input_tokens"]
+    usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
+
     # -------- Kosten
-    by_model = []
-    for spec in config["models"]:
-        u = usage_by_model[spec["model"]]
-        usd = (
-            u["input_tokens"] / 1e6 * spec["usd_per_1m_input"]
-            + u["output_tokens"] / 1e6 * spec["usd_per_1m_output"]
-        )
-        by_model.append({"model": spec["model"], **u, "usd": round(usd, 4), "eur": round(usd * fx, 4)})
-    total_eur = round(sum(c["eur"] for c in by_model), 2)
+    all_specs = config["models"] + [summarizer]
+    costs = compute_costs(usage_by_model, all_specs, fx)
 
     # -------- Protokoll
     def votes_of(round_votes):
@@ -286,12 +370,14 @@ def main():
         ]
 
     session = {
-        "schema_version": 1,
+        "schema_version": 2,
         "id": args.session_id,
         "number": number,
         "date": today,
         "title": args.title,
         "question": args.question,
+        "summary": summary,
+        "dissent_highlights": dissent_highlights,
         "participants": [
             {"family": m["family"], "model": m["model"], "label": m["label"]} for m in config["models"]
         ],
@@ -300,18 +386,13 @@ def main():
             {"round": 1, "kind": "initial_vote", "votes": votes_of(r1)},
             {"round": 2, "kind": "final_vote", "votes": votes_of(r2)},
         ],
-        "dissent_md": build_dissent(r2),
-        "recommendations": aggregate_recommendations(r2),
-        "costs": {
-            "currency": "EUR",
-            "total": total_eur,
-            "fx_rate_usd_eur": fx,
-            "by_model": by_model,
-        },
+        "dissent_md": dissent_md,
+        "recommendations": recommendations,
+        "costs": costs,
     }
     (out_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
     print(f"\nProtokoll geschrieben: {out_dir / 'session.json'}")
-    print(f"Kosten der Sitzung: {total_eur} €")
+    print(f"Kosten der Sitzung: {costs['total']} €")
 
 
 if __name__ == "__main__":

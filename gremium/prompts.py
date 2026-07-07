@@ -81,3 +81,39 @@ abweichst, schreibe das explizit.
 Beende deine Antwort mit genau einem JSON-Block im selben Format wie in \
 Runde 1 (Gesamtkonfidenz + Empfehlungen je Säule mit `pillar`, `title`, \
 `organization`, `donation_url`, `confidence`)."""
+
+SUMMARY = """Du schreibst die Leserfassung eines veröffentlichten Gremium-Protokolls \
+für NobleCause.ai. Nüchtern, dokumentarisch, keine Superlative.
+
+## Fragestellung
+
+{question}
+
+## Schlussvoten (Auszug)
+
+{final_votes}
+
+## Aggregation der Empfehlungen
+
+{aggregation}
+
+## Dissens-Rohfassung
+
+{dissent_md}
+
+## Deine Aufgabe
+
+Schreibe:
+1. `summary`: 5–8 Sätze Fließtext auf Deutsch. Was wurde gefragt? Wo \
+konvergieren die Modelle? Wo nicht? Was hat sich durch die Gegenlese bewegt?
+2. `dissent_highlights`: 3–5 kurze Stichpunkte (Strings), die den Kern des \
+Dissenses destillieren.
+
+Antworte ausschließlich mit einem JSON-Objekt:
+
+```json
+{{
+  "summary": "…",
+  "dissent_highlights": ["…", "…"]
+}}
+```"""

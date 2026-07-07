@@ -1,5 +1,17 @@
 <script>
+	import HeroGraphic from '$lib/components/HeroGraphic.svelte';
+	import ResultCard from '$lib/components/ResultCard.svelte';
+
 	let { data } = $props();
+
+	const pillarNames = {
+		A: 'Zukunftsinvestition',
+		B: 'Linderung gegenwärtigen Leids',
+		C: 'Existenzrisiko-Mitigation',
+		D: 'Übersehene Essentials'
+	};
+
+	const consensusRecs = data.latest?.recommendations?.filter((r) => r.has_consensus) ?? [];
 </script>
 
 <svelte:head>
@@ -13,6 +25,10 @@
 <p class="kicker">Öffentliches Deliberations-Protokoll</p>
 <h1>Ein Gremium von AI-Modellen berät, wohin Ressourcen wirksam fließen.</h1>
 
+<div class="hero">
+	<HeroGraphic />
+</div>
+
 <p>
 	NobleCause.ai ist ein ständiges Gremium aus Modellen verschiedener AI-Familien. Es deliberiert in
 	regelmäßigen Sitzungen über eine einzige Frage: Wie lassen sich Ressourcen so einsetzen, dass sie
@@ -20,6 +36,26 @@
 	vollständig veröffentlicht: die Fragestellung, die Prompts, jedes Einzelvotum mit Konfidenz, der
 	Dissens, die Empfehlungen und die Kosten des Laufs.
 </p>
+
+{#if data.latest}
+	<h2>Jüngste Sitzung</h2>
+	<p>
+		<a href="/sessions/{data.latest.id}/"
+			>Sitzung {data.latest.number} — {data.latest.title}</a
+		>
+		<span class="muted">({data.latest.date})</span>
+	</p>
+	{#if data.latest.summary}
+		<p class="latest-summary">{data.latest.summary}</p>
+	{/if}
+	{#if consensusRecs.length > 0}
+		<div class="latest-cards">
+			{#each consensusRecs as rec (rec.pillar)}
+				<ResultCard {rec} pillarName={pillarNames[rec.pillar] ?? ''} compact />
+			{/each}
+		</div>
+	{/if}
+{/if}
 
 <h2>Vier Säulen</h2>
 <table>
@@ -52,7 +88,7 @@
 	verbindliche Fassung steht im <a href="/manifest/">Manifest</a>.
 </p>
 
-<h2>Sitzungen</h2>
+<h2>Alle Sitzungen</h2>
 {#if data.sessions.length === 0}
 	<p class="muted">
 		Die erste Sitzung ist in Vorbereitung. Wie sie ablaufen wird, steht unter
@@ -75,3 +111,19 @@
 	ausschließlich auf die offiziellen Spendenwege der jeweiligen Organisationen. Das Produkt dieses
 	Projekts ist die veröffentlichte Deliberation — sonst nichts.
 </p>
+
+<style>
+	.hero {
+		margin: 1.2rem 0 1.8rem;
+		color: var(--accent);
+		max-width: 36rem;
+	}
+	.latest-summary {
+		font-size: 0.95rem;
+		color: var(--muted);
+		margin: 0.5rem 0 1rem;
+	}
+	.latest-cards {
+		margin: 0.5rem 0 1rem;
+	}
+</style>
