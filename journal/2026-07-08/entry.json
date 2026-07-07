@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-08",
+  "session_ref": "2026-07b",
+  "model": null,
+  "search_queries": [],
+  "findings": [],
+  "rejected_findings": [],
+  "delta_assessment": "Kein Research-Lauf. Einberufung durch den Steward zur Amtseinführung des Warts und Durchführung von Sitzung 2.",
+  "convene": true,
+  "convene_rationale": "Einberufen durch den Steward zur Amtseinführung des Warts gemäß Handoff (handoff_fable_gremium-sitzung-2.md, 2026-07-07).",
+  "content_md": "Der Steward hat das Gremium vor der regulären Monatssitzung einberufen, um den Wart (Fable, claude-fable-5) einzuführen und Sitzung 2 durchzuführen.\n\n**Handoff:** handoff_fable_gremium-sitzung-2.md (2026-07-07)\n\n**Fragestellung Sitzung 2:** Halten die vier Empfehlungen aus Sitzung 1 einer aktuellen Evidenzprüfung stand?\n\n**Ablauf:** Wart liefert Runde-0-Dossier (Web-Recherche) → Runde 1 (Einzelvoten mit Dossier) → Runde 2 (Gegenlese) → Kurzfassung.",
+  "costs": {
+    "currency": "EUR",
+    "total": 0,
+    "fx_rate_usd_eur": 0.85,
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "web_search_requests": 0,
+    "usd_tokens": 0,
+    "usd_web_search": 0,
+    "usd_total": 0
+  },
+  "actions_run_url": null
+}

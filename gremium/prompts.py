@@ -32,6 +32,8 @@ zu kennzeichnen; im Zweifel Enthaltung für diese Säule.
 3. Die Deklaration wird mitveröffentlicht. Deklarieren statt verstecken — das ist \
 die einzige Antwort, die zum Manifest passt."""
 
+SYSTEM_WITH_CONFLICT = SYSTEM + "\n\n" + CONFLICT_OF_INTEREST
+
 ROUND1 = """## Das Manifest (Verfassung des Gremiums, English original)
 
 {manifest}
@@ -46,7 +48,7 @@ Stütze dich, wo möglich, auf diese Quellen (und nenne, welche du nutzt):
 
 {question}
 
-{conflict_rule}
+{dossier_section}
 
 ## Deine Aufgabe (Runde 1 — unabhängiges Einzelvotum)
 
@@ -85,8 +87,6 @@ In Runde 1 hast du folgendes Votum abgegeben:
 ## Die Erstvoten der anderen Gremium-Mitglieder
 
 {other_votes}
-
-{conflict_rule}
 
 ## Deine Aufgabe (Runde 2 — Schlussvotum nach Gegenlese)
 
@@ -196,3 +196,37 @@ Beende mit genau einem JSON-Block:
   "convene_rationale": "…"
 }}
 ```"""
+
+WART_DOSSIER_SYSTEM = """Du bist der Wart des NobleCause-Gremiums — Fable (claude-fable-5), \
+berufen gemäß Handoff vom 2026-07-07. In Sitzung 2 lieferst du das Runde-0-Dossier: \
+Evidenzprüfung der Empfehlungen aus Sitzung 1 per Web-Suche.
+
+Du gibst **keine eigene Spendenempfehlung** ab. Du lieferst Fakten, Quellen und \
+Unsicherheiten für das Gremium.
+
+Regeln:
+- Je Säule (A–D) höchstens 300 Wörter.
+- Jede Zahl mit Quelle und Datum.
+- Dokumentiere alle Suchanfragen wörtlich am Ende.
+- Benenne, was du nicht weißt (Demut-Kanon).
+- Antworte auf Deutsch."""
+
+WART_DOSSIER_USER = """## Fragestellung der Sitzung
+
+{question}
+
+## Empfehlungen aus Sitzung 1 ({prior_session_id}, {prior_session_date})
+
+{prior_recommendations}
+
+## Deine Aufgabe (Runde 0 — Wart-Dossier)
+
+Recherchiere per Web-Suche für jede Empfehlung aus Sitzung 1:
+1. Aktuelle Funding-Lage (room for more funding) der genannten Organisationen.
+2. Neueste Wirksamkeitsdaten.
+3. Relevante Entwicklungen seit den Trainingsdaten der Gremium-Modelle.
+
+Strukturiere dein Dossier je Säule (A–D). Keine Empfehlung, nur Evidenz.
+
+Beende mit einem Abschnitt „## Suchanfragen" (wörtliche Liste) und optional \
+verworfene Funde („geprüft, nicht relevant weil …")."""

@@ -2,12 +2,12 @@
 """Orchestrator einer Gremium-Sitzung.
 
 Deterministischer Ablauf (kein LLM steuert den Prozess):
-  1. Runde 1 — jedes Modell votiert unabhängig (Manifest + Frage + Quellen).
-  2. Runde 2 — jedes Modell liest die Erstvoten der anderen, gibt Schlussvotum
-     und Dissens ab.
-  3. Protokoll + Rohantworten werden nach sessions/YYYY-MM/ geschrieben.
+  0. Runde 0 (optional) — Wart liefert Evidenz-Dossier per Web-Suche.
+  1. Runde 1 — jedes Modell votiert unabhängig (Manifest + Frage + Quellen + Dossier).
+  2. Runde 2 — jedes Modell liest die Erstvoten der anderen, gibt Schlussvotum ab.
+  3. Kurzfassung + Protokoll nach sessions/<id>/.
 
-Aufruf:  python3 run_session.py --question "…" --title "…" [--session-id 2026-07]
+Aufruf:  python3 run_session.py --question "…" --title "…" [--with-dossier]
 Keys:    ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY (oder gremium/.env)
 """
 
@@ -28,9 +28,6 @@ import prompts  # noqa: E402
 # ---------------------------------------------------------------- utilities
 
 def load_env():
-    """Minimaler .env-Loader (keine Abhängigkeit).
-
-    Sucht gremium/.env zuerst, dann den Repo-Root als Rückfall."""
     for env_file in (HERE / ".env", ROOT / ".env"):
         if env_file.exists():
             for line in env_file.read_text().splitlines():
@@ -41,7 +38,28 @@ def load_env():
 
 
 def extract_json_block(text):
-    """Letzten ```json-Block aus einer Antwort ziehen."""
+    start = text.rfind("```json")
+    if start != -1:
+        body = text[start + 7 :]
+        end_fence = body.find("```")
+        if end_fence != -1:
+            body = body[:end_fence]
+        body = body.strip()
+        if not body.startswith("{"):
+            brace = body.find("{")
+            if brace != -1:
+                body = body[brace:]
+        depth = 0
+        for i, ch in enumerate(body):
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(body[: i + 1])
+                    except json.JSONDecodeError:
+                        pass
     matches = re.findall(r"```json\s*(\{.*?\})\s*```", text, re.DOTALL)
     if not matches:
         return None
@@ -52,13 +70,61 @@ def extract_json_block(text):
 
 
 def strip_json_block(text):
-    """Antworttext ohne den abschließenden JSON-Zaun (für content_md)."""
     return re.sub(r"```json\s*\{.*?\}\s*```\s*$", "", text, flags=re.DOTALL).strip()
 
 
 def extract_dissent(text):
     m = re.search(r"##\s*Dissens\s*\n(.*?)(?=\n##\s|\Z)", text, re.DOTALL)
     return m.group(1).strip() if m else None
+
+
+def extract_search_queries(text):
+    section = re.search(r"##\s*Suchanfragen\s*\n(.*?)(?=\n## |\Z)", text, re.DOTALL)
+    if not section:
+        return []
+    queries = []
+    for line in section.group(1).splitlines():
+        line = line.strip().lstrip("-·*").strip()
+        if line.startswith('"') and line.endswith('"'):
+            line = line[1:-1]
+        if line:
+            queries.append(line)
+    return queries
+
+
+def summarize_recommendations(session):
+    lines = []
+    for rec in session.get("recommendations", []):
+        pillar = rec.get("pillar", "?")
+        if rec.get("has_consensus"):
+            lines.append(
+                f"- Säule {pillar} (Konsens): {rec.get('title')} — "
+                f"{rec.get('organization')} (Konfidenz {rec.get('confidence')})"
+            )
+        else:
+            lines.append(f"- Säule {pillar} (kein Konsens):")
+            for v in rec.get("individual_votes") or []:
+                lines.append(
+                    f"  · {v.get('organization')} — {v.get('title')} "
+                    f"({v.get('model')}, Konfidenz {v.get('confidence')})"
+                )
+    return "\n".join(lines)
+
+
+def prior_session():
+    sessions_dir = ROOT / "sessions"
+    entries = []
+    for d in sessions_dir.iterdir():
+        if not d.is_dir():
+            continue
+        f = d / "session.json"
+        if f.exists():
+            s = json.loads(f.read_text())
+            entries.append((s.get("number", 0), s.get("date", ""), d.name, s))
+    if not entries:
+        return None, None
+    entries.sort(key=lambda x: (x[0], x[1]), reverse=True)
+    return entries[0][2], entries[0][3]
 
 
 # ---------------------------------------------------------------- API calls
@@ -76,6 +142,56 @@ def call_anthropic(model, system, user, max_tokens):
     text = "".join(b.text for b in resp.content if b.type == "text")
     usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens}
     return text, usage, resp.model_dump()
+
+
+def call_wart_dossier(wart_cfg, system, user, raw_dir):
+    import anthropic
+
+    client = anthropic.Anthropic()
+    max_uses = wart_cfg.get("max_web_search_uses", 15)
+    print(f"  Modell: {wart_cfg['model']}")
+    print(f"  Web-Suche: max. {max_uses} Anfragen")
+
+    resp = client.messages.create(
+        model=wart_cfg["model"],
+        max_tokens=wart_cfg.get("max_output_tokens", 8192),
+        system=system,
+        messages=[{"role": "user", "content": user}],
+        tools=[
+            {
+                "type": "web_search_20250305",
+                "name": "web_search",
+                "max_uses": max_uses,
+                "allowed_callers": ["direct"],
+            }
+        ],
+    )
+    raw = resp.model_dump()
+    (raw_dir / "r0-wart.json").write_text(
+        json.dumps(raw, indent=2, ensure_ascii=False, default=str)
+    )
+    text = "".join(b.text for b in resp.content if b.type == "text")
+    server = (raw.get("usage") or {}).get("server_tool_use") or {}
+    usage = {
+        "input_tokens": resp.usage.input_tokens,
+        "output_tokens": resp.usage.output_tokens,
+        "web_search_requests": server.get("web_search_requests", 0),
+    }
+    api_queries = []
+    for block in raw.get("content") or []:
+        if block.get("type") == "server_tool_use" and block.get("name") == "web_search":
+            q = (block.get("input") or {}).get("query")
+            if q:
+                api_queries.append(q)
+    if api_queries:
+        print("  Suchanfragen (API):")
+        for q in api_queries:
+            print(f"    · {q}")
+    print(
+        f"  Tokens: {usage['input_tokens']} in / {usage['output_tokens']} out · "
+        f"Suchen: {usage['web_search_requests']}"
+    )
+    return text, usage, raw, api_queries
 
 
 def call_openai(model, system, user, max_tokens):
@@ -117,7 +233,6 @@ CALLERS = {"anthropic": call_anthropic, "openai": call_openai, "google": call_go
 
 
 def call_model(spec, system, user, max_tokens, raw_dir, tag):
-    """Ein API-Call mit einem Retry; Rohantwort wird immer gespeichert."""
     caller = CALLERS[spec["family"]]
     last_err = None
     for attempt in (1, 2):
@@ -127,7 +242,7 @@ def call_model(spec, system, user, max_tokens, raw_dir, tag):
                 json.dumps(raw, indent=2, ensure_ascii=False, default=str)
             )
             return text, usage
-        except Exception as e:  # noqa: BLE001 — Familie egal, wir loggen und retryen einmal
+        except Exception as e:  # noqa: BLE001
             last_err = e
             print(f"    Versuch {attempt} bei {spec['model']} fehlgeschlagen: {e}", file=sys.stderr)
     raise RuntimeError(f"{spec['model']} nach 2 Versuchen nicht erreichbar") from last_err
@@ -136,10 +251,6 @@ def call_model(spec, system, user, max_tokens, raw_dir, tag):
 # ---------------------------------------------------------------- aggregation
 
 def aggregate_recommendations(final_votes, total_models=None):
-    """Deterministische Regel: Nennen ≥2 Modelle im Schlussvotum dieselbe
-    Organisation für eine Säule, ist das die Gremium-Empfehlung (Konfidenz =
-    Mittelwert). Sonst werden alle Kandidaten der Säule mit Attribution
-    gelistet — der Orchestrator urteilt nicht selbst."""
     total = total_models or len(final_votes)
     recs = []
     for pillar in ("A", "B", "C", "D"):
@@ -229,7 +340,6 @@ def format_aggregation_for_summary(recommendations):
 
 
 def generate_summary(question, final_votes, recommendations, dissent_md, summarizer, raw_dir):
-    """Kurzfassung + Dissens-Kernpunkte per günstigem Claude-Modell."""
     final_excerpt = "\n\n".join(
         f"### {v['label']}\n{strip_json_block(v['text'])[:4000]}" for v in final_votes
     )
@@ -255,7 +365,27 @@ def generate_summary(question, final_votes, recommendations, dissent_md, summari
     return parsed.get("summary", ""), parsed.get("dissent_highlights", []), usage
 
 
-def compute_costs(usage_by_model, model_specs, fx):
+def compute_wart_cost(usage, wart_cfg, fx):
+    token_usd = (
+        usage["input_tokens"] / 1e6 * wart_cfg["usd_per_1m_input"]
+        + usage["output_tokens"] / 1e6 * wart_cfg["usd_per_1m_output"]
+    )
+    search_usd = (
+        usage.get("web_search_requests", 0) / 1000 * wart_cfg.get("usd_per_1k_web_searches", 10.0)
+    )
+    total_usd = token_usd + search_usd
+    return {
+        "model": wart_cfg["model"],
+        "label": wart_cfg.get("label", wart_cfg["model"]),
+        "input_tokens": usage["input_tokens"],
+        "output_tokens": usage["output_tokens"],
+        "web_search_requests": usage.get("web_search_requests", 0),
+        "usd": round(total_usd, 4),
+        "eur": round(total_usd * fx, 4),
+    }
+
+
+def compute_costs(usage_by_model, model_specs, fx, wart_cost=None):
     by_model = []
     for spec in model_specs:
         u = usage_by_model.get(spec["model"], {"input_tokens": 0, "output_tokens": 0})
@@ -273,8 +403,17 @@ def compute_costs(usage_by_model, model_specs, fx):
                 "eur": round(usd * fx, 4),
             }
         )
+    if wart_cost:
+        by_model.append(wart_cost)
     total_eur = round(sum(c["eur"] for c in by_model), 2)
     return {"currency": "EUR", "total": total_eur, "fx_rate_usd_eur": fx, "by_model": by_model}
+
+
+def check_budget(costs, cap_eur, label):
+    total = costs["total"]
+    print(f"  Zwischenkosten ({label}): {total:.2f} €")
+    if total > cap_eur:
+        print(f"  WARNUNG: Budgetdeckel {cap_eur} € überschritten ({total:.2f} €)", file=sys.stderr)
 
 
 # ---------------------------------------------------------------- main
@@ -285,6 +424,8 @@ def main():
     parser.add_argument("--title", required=True)
     parser.add_argument("--session-id", default=datetime.date.today().strftime("%Y-%m"))
     parser.add_argument("--number", type=int, default=None)
+    parser.add_argument("--with-dossier", action="store_true")
+    parser.add_argument("--budget-cap", type=float, default=15.0)
     args = parser.parse_args()
 
     load_env()
@@ -305,22 +446,68 @@ def main():
     today = datetime.date.today().isoformat()
     max_tokens = config["max_output_tokens"]
     fx = config["fx_rate_usd_eur"]
-    system = prompts.SYSTEM
+    system = prompts.SYSTEM_WITH_CONFLICT
+    wart_dossier = None
+    wart_dossier_prompt = None
+    dossier_section = ""
+
+    usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
+    wart_cost_entry = None
+
+    def record_usage(spec, usage):
+        u = usage_by_model[spec["model"]]
+        u["input_tokens"] += usage["input_tokens"]
+        u["output_tokens"] += usage["output_tokens"]
+
+    def interim_costs():
+        all_specs = config["models"] + [config["summarizer"]]
+        return compute_costs(usage_by_model, all_specs, fx, wart_cost_entry)
+
+    # -------- Runde 0 (Wart-Dossier)
+    if args.with_dossier:
+        prior_id, prior = prior_session()
+        if not prior:
+            sys.exit("Abbruch: keine Vorgänger-Sitzung für Dossier gefunden.")
+        wart_cfg = config["wart"]
+        wart_dossier_prompt = prompts.WART_DOSSIER_USER.format(
+            question=args.question,
+            prior_session_id=prior_id,
+            prior_session_date=prior.get("date"),
+            prior_recommendations=summarize_recommendations(prior),
+        )
+        (raw_dir / "prompt-r0-wart.txt").write_text(wart_dossier_prompt)
+        print("Runde 0 — Wart-Dossier (Fable + Web-Suche)")
+        text, usage, raw, api_queries = call_wart_dossier(
+            wart_cfg, prompts.WART_DOSSIER_SYSTEM, wart_dossier_prompt, raw_dir
+        )
+        (raw_dir / "r0-wart-content.md").write_text(text)
+        search_queries = extract_search_queries(text) or api_queries
+        content_md = strip_json_block(text)
+        wart_cost_entry = compute_wart_cost(usage, wart_cfg, fx)
+        wart_dossier = {
+            "model": wart_cfg["model"],
+            "label": wart_cfg.get("label", wart_cfg["model"]),
+            "content_md": content_md,
+            "search_queries": search_queries,
+            "costs": wart_cost_entry,
+        }
+        dossier_section = (
+            "## Wart-Dossier (Runde 0)\n\n"
+            "Der Wart (Fable, claude-fable-5) hat vor den Einzelvoten folgendes "
+            "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
+            "und Quellen.\n\n---\n\n"
+            f"{content_md}\n\n---"
+        )
+        check_budget(interim_costs(), args.budget_cap, "nach Runde 0")
+
     round1_prompt = prompts.ROUND1.format(
         manifest=manifest,
         sources=sources,
         number=number,
         date=today,
         question=args.question,
-        conflict_rule=prompts.CONFLICT_OF_INTEREST,
+        dossier_section=dossier_section,
     )
-
-    usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
-
-    def record_usage(spec, usage):
-        u = usage_by_model[spec["model"]]
-        u["input_tokens"] += usage["input_tokens"]
-        u["output_tokens"] += usage["output_tokens"]
 
     # -------- Runde 1
     print("Runde 1 — unabhängige Einzelvoten")
@@ -330,6 +517,7 @@ def main():
         text, usage = call_model(spec, system, round1_prompt, max_tokens, raw_dir, "r1")
         record_usage(spec, usage)
         r1.append({**spec, "text": text, "parsed": extract_json_block(text)})
+    check_budget(interim_costs(), args.budget_cap, "nach Runde 1")
 
     # -------- Runde 2
     print("Runde 2 — Gegenlese und Schlussvoten")
@@ -343,12 +531,12 @@ def main():
         round2_prompt = prompts.ROUND2.format(
             own_vote=strip_json_block(own["text"]),
             other_votes=others,
-            conflict_rule=prompts.CONFLICT_OF_INTEREST,
         )
         print(f"  {spec['label']} ({spec['model']}) …")
         text, usage = call_model(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
         record_usage(spec, usage)
         r2.append({**spec, "text": text, "parsed": extract_json_block(text)})
+    check_budget(interim_costs(), args.budget_cap, "nach Runde 2")
 
     # -------- Kurzfassung
     print("Kurzfassung — Protokollredaktion")
@@ -363,11 +551,10 @@ def main():
     usage_by_model[summarizer["model"]]["input_tokens"] += sum_usage["input_tokens"]
     usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
 
-    # -------- Kosten
     all_specs = config["models"] + [summarizer]
-    costs = compute_costs(usage_by_model, all_specs, fx)
+    costs = compute_costs(usage_by_model, all_specs, fx, wart_cost_entry)
+    check_budget(costs, args.budget_cap, "gesamt")
 
-    # -------- Protokoll
     def votes_of(round_votes):
         return [
             {
@@ -377,6 +564,20 @@ def main():
             }
             for v in round_votes
         ]
+
+    rounds = []
+    if wart_dossier:
+        rounds.append({"round": 0, "kind": "wart_dossier", "wart": wart_dossier})
+    rounds.extend(
+        [
+            {"round": 1, "kind": "initial_vote", "votes": votes_of(r1)},
+            {"round": 2, "kind": "final_vote", "votes": votes_of(r2)},
+        ]
+    )
+
+    prompts_dict = {"system": system, "round1": round1_prompt, "round2": prompts.ROUND2}
+    if wart_dossier_prompt:
+        prompts_dict["wart_dossier"] = wart_dossier_prompt
 
     session = {
         "schema_version": 2,
@@ -390,15 +591,15 @@ def main():
         "participants": [
             {"family": m["family"], "model": m["model"], "label": m["label"]} for m in config["models"]
         ],
-        "prompts": {"system": system, "round1": round1_prompt, "round2": prompts.ROUND2},
-        "rounds": [
-            {"round": 1, "kind": "initial_vote", "votes": votes_of(r1)},
-            {"round": 2, "kind": "final_vote", "votes": votes_of(r2)},
-        ],
+        "prompts": prompts_dict,
+        "rounds": rounds,
         "dissent_md": dissent_md,
         "recommendations": recommendations,
         "costs": costs,
     }
+    if wart_dossier:
+        session["wart_dossier"] = wart_dossier
+
     (out_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
     print(f"\nProtokoll geschrieben: {out_dir / 'session.json'}")
     print(f"Kosten der Sitzung: {costs['total']} €")

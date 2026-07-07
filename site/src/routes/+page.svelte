@@ -18,7 +18,10 @@
 		if (ms <= 0) return 'bald';
 		const d = Math.floor(ms / 86400000);
 		const h = Math.floor((ms % 86400000) / 3600000);
-		return d > 0 ? `in ${d} T ${h} h` : `in ${h} h`;
+		const m = Math.floor((ms % 3600000) / 60000);
+		if (d > 0) return `in ${d} T ${h} h`;
+		if (h > 0) return `in ${h} h ${m} min`;
+		return `in ${m} min`;
 	}
 
 	onMount(async () => {

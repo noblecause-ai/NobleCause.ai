@@ -44,6 +44,26 @@
 	</ul>
 {/if}
 
+{#if s.wart_dossier}
+	<h2>Wart-Dossier (Runde 0)</h2>
+	<p class="muted">
+		Der Wart (<code>{s.wart_dossier.model}</code>, Web-Recherche) lieferte vor den Einzelvoten
+		folgendes Evidenz-Dossier — ohne eigene Empfehlung.
+	</p>
+	{#if s.wart_dossier.search_queries?.length}
+		<p class="kicker">Suchanfragen</p>
+		<ul class="queries">
+			{#each s.wart_dossier.search_queries as q (q)}
+				<li><code>{q}</code></li>
+			{/each}
+		</ul>
+	{/if}
+	<div class="dossier">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+		{@html s.wart_dossier_html}
+	</div>
+{/if}
+
 <h2>Vollprotokoll</h2>
 <p class="muted">Standardmäßig eingeklappt — vollständige Transparenz auf Wunsch.</p>
 
@@ -121,6 +141,17 @@
 	}
 	.highlights li {
 		margin: 0.5rem 0;
+	}
+	.queries {
+		margin: 0.3rem 0 1rem;
+		padding-left: 1.2rem;
+		font-size: 0.85rem;
+	}
+	.dossier {
+		border-left: 3px solid var(--structure);
+		padding: 0.2rem 0 0.2rem 1rem;
+		margin: 0.5rem 0 1.5rem;
+		font-size: 0.92rem;
 	}
 	details {
 		border: 1px solid var(--line);

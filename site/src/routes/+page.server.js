@@ -8,8 +8,10 @@ function formatStaticCountdown(iso) {
 	if (diff <= 0) return 'bald';
 	const days = Math.floor(diff / 86400000);
 	const hours = Math.floor((diff % 86400000) / 3600000);
+	const minutes = Math.floor((diff % 3600000) / 60000);
 	if (days > 0) return `in ${days} T ${hours} h`;
-	return `in ${hours} h`;
+	if (hours > 0) return `in ${hours} h ${minutes} min`;
+	return `in ${minutes} min`;
 }
 
 export function load() {

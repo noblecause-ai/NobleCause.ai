@@ -1,0 +1,24 @@
+## Fragestellung der Sitzung
+
+Halten die vier Empfehlungen aus Sitzung 1 einer aktuellen Evidenzprüfung stand?
+
+## Empfehlungen aus Sitzung 1 (2026-07, 2026-07-07)
+
+- Säule A (kein Konsens):
+  · Helen Keller International — Vitamin-A-Supplementierung für Kinder unter 5 Jahren (Claude Sonnet, Konfidenz 0.7)
+  · Evidence Action – Teaching at the Right Level — Teaching at the Right Level (TaRL) zur Steigerung von Grundkompetenzen (GPT, Konfidenz 0.63)
+  · Iodine Global Network (IGN) — Jodierung von Salz zur Bekämpfung von Jodmangelstörungen (Gemini Pro, Konfidenz 0.9)
+- Säule B (Konsens): Saisonale Malaria-Chemoprophylaxe (SMC) — Malaria Consortium (Konfidenz 0.81)
+- Säule C (Konsens): KI-Governance: Standards, Audits & Incident-Reporting für fortgeschrittene KI-Systeme — Centre for the Governance of AI (GovAI) (Konfidenz 0.57)
+- Säule D (Konsens): Reduktion von Bleiexposition durch Politik/Regulierung (v. a. bleihaltige Farben) — Lead Exposure Elimination Project (LEEP) (Konfidenz 0.67)
+
+## Deine Aufgabe (Runde 0 — Wart-Dossier)
+
+Recherchiere per Web-Suche für jede Empfehlung aus Sitzung 1:
+1. Aktuelle Funding-Lage (room for more funding) der genannten Organisationen.
+2. Neueste Wirksamkeitsdaten.
+3. Relevante Entwicklungen seit den Trainingsdaten der Gremium-Modelle.
+
+Strukturiere dein Dossier je Säule (A–D). Keine Empfehlung, nur Evidenz.
+
+Beende mit einem Abschnitt „## Suchanfragen" (wörtliche Liste) und optional verworfene Funde („geprüft, nicht relevant weil …").
