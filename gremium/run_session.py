@@ -28,14 +28,16 @@ import prompts  # noqa: E402
 # ---------------------------------------------------------------- utilities
 
 def load_env():
-    """Minimaler .env-Loader (keine Abhängigkeit)."""
-    env_file = HERE / ".env"
-    if env_file.exists():
-        for line in env_file.read_text().splitlines():
-            line = line.strip()
-            if line and not line.startswith("#") and "=" in line:
-                k, v = line.split("=", 1)
-                os.environ.setdefault(k.strip(), v.strip().strip('"'))
+    """Minimaler .env-Loader (keine Abhängigkeit).
+
+    Sucht gremium/.env zuerst, dann den Repo-Root als Rückfall."""
+    for env_file in (HERE / ".env", ROOT / ".env"):
+        if env_file.exists():
+            for line in env_file.read_text().splitlines():
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip().strip('"'))
 
 
 def extract_json_block(text):

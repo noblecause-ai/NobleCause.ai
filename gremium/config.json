@@ -1,6 +1,6 @@
 {
 	"fx_rate_usd_eur": 0.85,
-	"max_output_tokens": 4096,
+	"max_output_tokens": 8192,
 	"models": [
 		{
 			"family": "anthropic",
