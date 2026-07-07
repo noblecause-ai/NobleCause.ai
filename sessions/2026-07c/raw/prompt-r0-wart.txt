@@ -1,0 +1,23 @@
+## Fragestellung der Sitzung
+
+Auflösung des Säule-A-Dissens aus Sitzung 2: HKI oder Pratham/TaRL Africa — was sagt die aktuelle Evidenz?
+
+## Säule-A-Dissens aus Sitzung 2 (2026-07b, 2026-07-07)
+
+Kein Konsens — Einzelvoten:
+  · Claude Opus: Helen Keller Intl — Vitamin-A-Supplementierung (VAS) (Konfidenz 0.6)
+  · GPT: Helen Keller International (HKI) — Vitamin-A-Supplementierung (VAS) (Konfidenz 0.65)
+  · Gemini Pro: Pratham — Bildung auf dem richtigen Niveau (TaRL) (Konfidenz 0.85)
+
+## Deine Aufgabe (Runde 0 — Wart-Dossier, fokussiert Säule A)
+
+Recherchiere per Web-Suche die aktuelle Evidenz zu **Helen Keller International (Vitamin-A-Supplementierung)** vs. **Pratham / TaRL Africa (Teaching at the Right Level)**:
+
+1. Aktuelle Funding-Lage (room for more funding) beider Organisationen.
+2. Neueste Wirksamkeitsdaten und Kosteneffektivität.
+3. Thematischer Fit zur Säule A (Zukunftsinvestition vs. Enabler/Gesundheit).
+4. Entwicklungen seit Sitzung 2 (Evidence Action/TaRL-Zuordnung, GiveWell-Updates).
+
+Max. 300 Wörter je Kandidat. Jede Zahl mit Quelle und Datum. Keine Empfehlung.
+
+Beende mit „## Suchanfragen" (wörtliche Liste) und optional verworfene Funde.

@@ -395,6 +395,7 @@ def pillar_a_context(prior):
 def call_wart_simple(wart_cfg, system, user, raw_dir, tag, max_tokens=None):
     import anthropic
 
+    raw_dir.mkdir(parents=True, exist_ok=True)
     client = anthropic.Anthropic()
     tokens = max_tokens or wart_cfg.get("max_output_tokens", 4096)
     resp = client.messages.create(

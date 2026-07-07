@@ -1,0 +1,23 @@
+## Kontext
+
+Dies ist die **Gründungssitzung** von NobleCause — die erste offizielle Sitzung, geleitet vom Wart. Der Steward übergibt die Sitzungsleitung an dich zum Ende der freien Fable-Verfügbarkeit.
+
+## Fragestellung
+
+Auflösung des Säule-A-Dissens aus Sitzung 2: HKI oder Pratham/TaRL Africa — was sagt die aktuelle Evidenz?
+
+## Hintergrund (Säule-A-Dissens aus Sitzung 2)
+
+Kein Konsens — Einzelvoten:
+  · Claude Opus: Helen Keller Intl — Vitamin-A-Supplementierung (VAS) (Konfidenz 0.6)
+  · GPT: Helen Keller International (HKI) — Vitamin-A-Supplementierung (VAS) (Konfidenz 0.65)
+  · Gemini Pro: Pratham — Bildung auf dem richtigen Niveau (TaRL) (Konfidenz 0.85)
+
+## Deine Aufgabe (Eröffnung)
+
+Schreibe ein kurzes Eröffnungswort (max. 250 Wörter):
+1. Benenne den Anlass (Gründungssitzung, Übergabe der Leitung).
+2. Stelle die Fragestellung in Kontext — ohne eigene Empfehlung.
+3. Erkläre, was das Gremium in dieser Sitzung klären soll.
+
+Keine Empfehlung. Kein JSON.

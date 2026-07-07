@@ -1,0 +1,38 @@
+{
+  "id": "msg_011CcoT7xdyaM26CMPuH15ai",
+  "container": null,
+  "content": [
+    {
+      "signature": "CAIS+QEKYggPGAIqQLtPhZ+duBPoxds4mBTp9gvvMDr/1f8m7dMsjC43pbneNBIV134W6qIgLC58kNLe/2cgR1DIE62upGpYpt6rQ4syDmNsYXVkZS1mYWJsZS01OAFCCHRoaW5raW5nEgyuvynbQonIfmaelEMaDG6fTxNlgE+HLGrK2yIwRMyvmlMloHe+C/o0srArHB3i+Hh4ZCDOHUwwjTt20hKbsgeYNuvtBS5Ds9TQUK2CKkXxRaHQUcMKXVz4Y4ceqIBgteWyBYkFv3fWvpcUdvjmdJAhC8wSZohKk/ZEFFMrN/nAyZh7dO5OrcbStKtA54giypOs2o4YAQ==",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "```json\n{\n  \"summary\": \"Gegenstand der Sitzung war die Auflösung des Säule-A-Dissens aus Sitzung 2: Helen Keller International (Vitamin-A-Supplementierung) oder Pratham/TaRL Africa als Empfehlung für die Säule „Investition in die Zukunft“. Durch die Gegenlese hat sich der Dissens weitgehend aufgelöst: Alle drei Modelle empfehlen im Ergebnis HKI für Säule A, wobei Gemini Pro und GPT ihre Erstvoten explizit revidierten. Tragend war die zuerst im Opus-Votum entwickelte Unterscheidung zwischen Interventions-Evidenz (TaRL als Methode ist RCT-gestützt gut belegt) und Marginal-Evidenz (aktuelle Kosteneffektivität, Finanzierungsbedarf und Absorptionskapazität der Organisation), die für TaRL Africa 2025/26 nicht unabhängig verifiziert vorliegt. Zusätzlich verarbeiteten alle Voten die dokumentierten US-Budgetkürzungen bei HKI (rund ein Drittel des Betriebsbudgets, April 2026) als materiellen neuen Faktor, der die Fungibilität einer Spende senkt; Gemini Pro räumte ein, diesen Punkt im Erstvotum übersehen zu haben. Die in Runde 1 vertretene Säulen-Fit-Achse — TaRL passe kategorial besser zu Säule A — wurde von der Mehrheit als nicht hinreichend eingestuft, da sie eine Wirkungsfrage durch eine Definitionsfrage ersetze. Restdissens bleibt in Säule B, wo GPT abweichend HKI statt AMF empfiehlt, sowie in der Konfidenzhöhe: Das Opus-Votum kennzeichnet seine HKI-Empfehlung als konditional und beantragt eine Vertagung mit Evaluationsauftrag für TaRL Africa. Konsens besteht bei NTI | bio (Säule C) und LEEP (Säule D); eine erneute Prüfung von TaRL Africa bei aktualisierter Datenlage wird gremiumsweit unterstützt.\",\n  \"dissent_highlights\": [\n    \"Säule A faktisch konvergiert: Alle drei Modelle empfehlen HKI, aber mit unterschiedlicher Konfidenz (0,55–0,66) und beim Opus-Votum nur konditional mit Vertagungsantrag zugunsten einer erneuten TaRL-Prüfung.\",\n    \"Methodischer Kern: Interventions-Evidenz (TaRL-RCTs) ersetzt keine Marginal-Evidenz (RFMF, aktuelle Kosteneffektivität, Absorptionskapazität) — für TaRL Africa fehlt eine 2025/26-Verifikation.\",\n    \"Säulen-Fit-Achse zurückgewiesen: Kategoriale Zuordnung („TaRL passt reiner zu Säule A“) gilt der Mehrheit als taxonomische, nicht evidenzbasierte Entscheidung.\",\n    \"HKI-Budgetschock (~⅓ durch US-Kürzungen) wirkt zweischneidig: geringere Fungibilität spricht pro HKI, zugleich mögliches operatives Absorptionsrisiko (Opus-Selbstkorrektur).\",\n    \"Restdissens Säule B: GPT vereinheitlicht A und B auf HKI, Gemini Pro und Opus votieren für AMF; zudem offene Formalie zur Familiendeklaration des als „Claude Opus“ gelisteten Votums.\"\n  ]\n}\n```",
+      "type": "text"
+    }
+  ],
+  "model": "claude-fable-5",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 9530,
+    "output_tokens": 1334,
+    "output_tokens_details": {
+      "thinking_tokens": 19
+    },
+    "server_tool_use": null,
+    "service_tier": "standard"
+  }
+}

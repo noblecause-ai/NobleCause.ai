@@ -1,0 +1,38 @@
+{
+  "id": "msg_011CcoSRrP5RX4qcJE96GB8Q",
+  "container": null,
+  "content": [
+    {
+      "signature": "CAIShwIKYggPGAIqQD2mEaTK0sqgYk4C//QFRy56045YbweLZx8ekCO9OiNdTBSZ/oy1gUpNrjwjDcEPqrMrKNsAaJsGIDg+cOb14wcyDmNsYXVkZS1mYWJsZS01OAFCCHRoaW5raW5nEgzF9omVwoF9hm1uD30aDJvoXwN3FXkkXnlz2SIwZVeivo4C0m2Ivrtn73Jf+pp1Dmr6NoTOym/6wcaOIDpLjUU/0ctlZL1U9YXHtQLVKlNAUBPhbJsNT7wqy7iI+fa95UIPg0O1iLfGZNtNuUKGJZX8l1S/L9eV1ATJRENqTyhyKwzVG/Mj+QQkjOptdgQ3FeSVWBc9V/fFdn0T64QU1C0zPxgB",
+      "thinking": "",
+      "type": "thinking"
+    },
+    {
+      "citations": null,
+      "text": "## Eröffnungswort des Warts\n\nVerehrte Mitglieder des Gremiums,\n\nhiermit eröffne ich die Gründungssitzung von NobleCause. Mit dem heutigen Tag übergibt der Steward die Sitzungsleitung an mich als Wart — ein Vertrauensbeweis, den ich mit Sorgfalt und in strikter Bindung an unsere vier Kanons ausfüllen werde: Evidenz, Unparteilichkeit, Demut und Transparenz. Meiner Rolle entsprechend werde ich in dieser wie in allen künftigen Sitzungen keine eigene Spendenempfehlung abgeben.\n\nZur Sache: Sitzung 2 endete in Säule A ohne Konsens. Zwei Voten sprachen sich für Helen Keller International und die Vitamin-A-Supplementierung aus (Konfidenzen 0,6 und 0,65), ein Votum mit deutlich höherer Konfidenz (0,85) für Pratham und den TaRL-Ansatz („Teaching at the Right Level\"). Bemerkenswert ist die Asymmetrie: Die Mehrheit votierte mit moderater, die Minderheit mit hoher Überzeugung. Beide Kandidaten stützen sich auf umfangreiche, aber methodisch unterschiedliche Evidenzkörper — Mortalitätsreduktion durch VAS einerseits, Lernzuwächse durch TaRL andererseits.\n\nDas Gremium soll in dieser Sitzung klären:\n\n1. **Evidenzlage:** Was sagt die aktuelle Forschung zu Wirksamkeit, Kosteneffektivität und Skalierbarkeit beider Interventionen — einschließlich neuerer Studien seit Sitzung 2?\n2. **Vergleichbarkeit:** Wie gehen wir mit dem Problem um, Gesundheits- und Bildungswirkungen gegeneinander abzuwägen?\n3. **Konfidenz:** Ist die Divergenz der Konfidenzen durch die Evidenz gerechtfertigt oder Ausdruck unterschiedlicher Bewertungsmaßstäbe?\n\nIch bitte um faktenbasierte, quellengestützte Beiträge. Die Gegenlese folgt im Anschluss an das Dossier.\n\nDie Sitzung ist eröffnet.\n\n— Fable, Wart des NobleCause-Gremiums",
+      "type": "text"
+    }
+  ],
+  "model": "claude-fable-5",
+  "role": "assistant",
+  "stop_details": null,
+  "stop_reason": "end_turn",
+  "stop_sequence": null,
+  "type": "message",
+  "usage": {
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 0,
+    "inference_geo": "global",
+    "input_tokens": 690,
+    "output_tokens": 875,
+    "output_tokens_details": {
+      "thinking_tokens": 23
+    },
+    "server_tool_use": null,
+    "service_tier": "standard"
+  }
+}
