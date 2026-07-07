@@ -1,1 +1,0 @@
-"""Database module for Noble Cause Steward."""
