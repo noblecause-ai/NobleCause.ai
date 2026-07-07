@@ -1,4 +1,5 @@
 <script>
+	import { onMount } from 'svelte';
 	import HeroGraphic from '$lib/components/HeroGraphic.svelte';
 	import ResultCard from '$lib/components/ResultCard.svelte';
 
@@ -12,6 +13,33 @@
 	};
 
 	const consensusRecs = data.latest?.recommendations?.filter((r) => r.has_consensus) ?? [];
+
+	function fmtDiff(ms) {
+		if (ms <= 0) return 'bald';
+		const d = Math.floor(ms / 86400000);
+		const h = Math.floor((ms % 86400000) / 3600000);
+		return d > 0 ? `in ${d} T ${h} h` : `in ${h} h`;
+	}
+
+	onMount(async () => {
+		try {
+			const res = await fetch('/schedule.json');
+			if (!res.ok) return;
+			const s = await res.json();
+			const tick = () => {
+				const now = Date.now();
+				const r = document.querySelector('[data-target="research"]');
+				const sess = document.querySelector('[data-target="session"]');
+				if (r && s.next_research) r.textContent = fmtDiff(new Date(s.next_research) - now);
+				if (sess && s.next_session) sess.textContent = fmtDiff(new Date(s.next_session) - now);
+			};
+			tick();
+			const id = setInterval(tick, 60000);
+			return () => clearInterval(id);
+		} catch {
+			/* statische Fallback-Werte bleiben */
+		}
+	});
 </script>
 
 <svelte:head>
@@ -54,6 +82,21 @@
 				<ResultCard {rec} pillarName={pillarNames[rec.pillar] ?? ''} compact />
 			{/each}
 		</div>
+	{/if}
+	{#if data.scheduleStatic}
+		<p class="countdown" id="schedule-countdown">
+			Nächster Research des Warts
+			<strong class="life" data-target="research">{data.scheduleStatic.research}</strong>
+			<span class="muted">({data.scheduleStatic.researchDate})</span>
+			· Nächste Sitzung
+			<strong class="life" data-target="session">{data.scheduleStatic.session}</strong>
+			<span class="muted">({data.scheduleStatic.sessionDate})</span>
+		</p>
+		{#if data.schedule?.last_journal}
+			<p class="journal-link">
+				<a href={data.schedule.last_journal}>Jüngster Wart-Eintrag</a>
+			</p>
+		{/if}
 	{/if}
 {/if}
 
@@ -115,7 +158,7 @@
 <style>
 	.hero {
 		margin: 1.2rem 0 1.8rem;
-		color: var(--accent);
+		color: var(--structure);
 		max-width: 36rem;
 	}
 	.latest-summary {
@@ -125,5 +168,13 @@
 	}
 	.latest-cards {
 		margin: 0.5rem 0 1rem;
+	}
+	.countdown {
+		font-size: 0.92rem;
+		margin: 1rem 0 0.3rem;
+	}
+	.journal-link {
+		font-size: 0.85rem;
+		margin: 0.2rem 0 0;
 	}
 </style>

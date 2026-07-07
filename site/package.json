@@ -4,6 +4,7 @@
 	"version": "0.1.0",
 	"type": "module",
 	"scripts": {
+		"prebuild": "mkdir -p static && cp ../schedule.json static/schedule.json",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview"

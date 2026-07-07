@@ -307,7 +307,12 @@ def main():
     fx = config["fx_rate_usd_eur"]
     system = prompts.SYSTEM
     round1_prompt = prompts.ROUND1.format(
-        manifest=manifest, sources=sources, number=number, date=today, question=args.question
+        manifest=manifest,
+        sources=sources,
+        number=number,
+        date=today,
+        question=args.question,
+        conflict_rule=prompts.CONFLICT_OF_INTEREST,
     )
 
     usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
@@ -335,7 +340,11 @@ def main():
             for v in r1
             if v["model"] != spec["model"]
         )
-        round2_prompt = prompts.ROUND2.format(own_vote=strip_json_block(own["text"]), other_votes=others)
+        round2_prompt = prompts.ROUND2.format(
+            own_vote=strip_json_block(own["text"]),
+            other_votes=others,
+            conflict_rule=prompts.CONFLICT_OF_INTEREST,
+        )
         print(f"  {spec['label']} ({spec['model']}) …")
         text, usage = call_model(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
         record_usage(spec, usage)

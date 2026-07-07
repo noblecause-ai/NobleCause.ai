@@ -9,13 +9,23 @@
 		"usd_per_1m_output": 5.0,
 		"max_output_tokens": 1024
 	},
+	"wart": {
+		"family": "anthropic",
+		"model": "claude-fable-5",
+		"label": "Der Wart (Fable)",
+		"usd_per_1m_input": 10.0,
+		"usd_per_1m_output": 50.0,
+		"usd_per_1k_web_searches": 10.0,
+		"max_output_tokens": 8192,
+		"max_web_search_uses": 15
+	},
 	"models": [
 		{
 			"family": "anthropic",
-			"model": "claude-sonnet-4-5",
-			"label": "Claude Sonnet",
-			"usd_per_1m_input": 3.0,
-			"usd_per_1m_output": 15.0
+			"model": "claude-opus-4-8",
+			"label": "Claude Opus",
+			"usd_per_1m_input": 5.0,
+			"usd_per_1m_output": 25.0
 		},
 		{
 			"family": "openai",

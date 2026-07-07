@@ -9,6 +9,7 @@
 			<a href="/manifest/">Manifest</a>
 			<a href="/idee/">Wie eine Sitzung funktioniert</a>
 			<a href="/sessions/">Sitzungen</a>
+			<a href="/journal/">Journal des Warts</a>
 		</nav>
 	</header>
 
@@ -32,29 +33,31 @@
 
 <style>
 	:global(:root) {
-		--paper: #f4f1ea;
+		--bg: #f4f1ea;
 		--ink: #1a1916;
 		--muted: #6f695c;
+		--structure: #0f6e56;
+		--life: #ba7517;
 		--line: #d8d2c4;
 		--line-strong: #1a1916;
 		--card-bg: #faf8f3;
 		--code-bg: #ebe6da;
-		--accent: #0f6e56;
 	}
 	@media (prefers-color-scheme: dark) {
 		:global(:root) {
-			--paper: #1a1916;
-			--ink: #f4f1ea;
-			--muted: #9a9189;
+			--bg: #211e1a;
+			--ink: #ede8dc;
+			--muted: #a89f8f;
+			--structure: #5dcaa5;
+			--life: #fac775;
 			--line: #3a3630;
-			--line-strong: #f4f1ea;
-			--card-bg: #22201c;
-			--code-bg: #2a2722;
-			--accent: #5dcaa5;
+			--line-strong: #ede8dc;
+			--card-bg: #2a2722;
+			--code-bg: #322e28;
 		}
 	}
 	:global(html) {
-		background: var(--paper);
+		background: var(--bg);
 		color: var(--ink);
 		font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
 		line-height: 1.65;
@@ -79,12 +82,12 @@
 		border-top: 1px solid var(--line);
 	}
 	:global(a) {
-		color: var(--accent);
-		text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+		color: var(--life);
+		text-decoration-color: color-mix(in srgb, var(--life) 40%, transparent);
 		text-underline-offset: 2px;
 	}
 	:global(a:hover) {
-		text-decoration-color: var(--accent);
+		text-decoration-color: var(--life);
 	}
 	:global(hr) {
 		border: 0;
@@ -126,6 +129,9 @@
 	:global(.muted) {
 		color: var(--muted);
 	}
+	:global(.life) {
+		color: var(--life);
+	}
 	:global(.kicker) {
 		font-family: ui-sans-serif, system-ui, sans-serif;
 		font-size: 0.72rem;
@@ -158,6 +164,7 @@
 	}
 	nav {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 1.1rem;
 		font-family: ui-sans-serif, system-ui, sans-serif;
 		font-size: 0.82rem;
@@ -167,7 +174,7 @@
 		color: var(--muted);
 	}
 	nav a:hover {
-		color: var(--accent);
+		color: var(--life);
 		text-decoration: underline;
 	}
 	main {

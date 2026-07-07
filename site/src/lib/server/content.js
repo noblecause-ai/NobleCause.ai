@@ -47,3 +47,37 @@ export function getLatestSession() {
 	if (sessions.length === 0) return null;
 	return getSession(sessions[0].id);
 }
+
+export function getSchedule() {
+	const file = path.join(ROOT, 'schedule.json');
+	if (!fs.existsSync(file)) return null;
+	return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+export function listJournalEntries() {
+	const dir = path.join(ROOT, 'journal');
+	if (!fs.existsSync(dir)) return [];
+	return fs
+		.readdirSync(dir, { withFileTypes: true })
+		.filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+		.map((e) => {
+			const file = path.join(dir, e.name, 'entry.json');
+			if (!fs.existsSync(file)) return null;
+			const j = JSON.parse(fs.readFileSync(file, 'utf8'));
+			return {
+				id: e.name,
+				date: j.date ?? e.name,
+				convene: j.convene ?? false,
+				session_ref: j.session_ref ?? null,
+				findings_count: (j.findings ?? []).length,
+				cost_eur: j.costs?.total ?? null
+			};
+		})
+		.filter(Boolean)
+		.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+export function getJournalEntry(id) {
+	const file = path.join(ROOT, 'journal', id, 'entry.json');
+	return JSON.parse(fs.readFileSync(file, 'utf8'));
+}

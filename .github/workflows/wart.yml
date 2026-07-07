@@ -1,0 +1,47 @@
+name: Wart — wöchentlicher Research-Lauf
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: wart-research
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  wart:
+    name: Der Wart recherchiert
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install anthropic SDK
+        run: pip install anthropic
+
+      - name: Wart-Lauf (Fable + Web-Suche)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python3 gremium/run_wart.py
+
+      - name: Commit Journal & schedule
+        run: |
+          git config user.name "noblecause-wart"
+          git config user.email "wart@noblecause.ai"
+          git add journal/ schedule.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen zum Committen."
+            exit 0
+          fi
+          git commit -m "journal: Wart-Eintrag $(date -u +%Y-%m-%d)"
+          git push

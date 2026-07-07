@@ -62,7 +62,7 @@
 		gap: 0.7rem;
 		align-items: flex-start;
 		margin-bottom: 0.5rem;
-		color: var(--accent);
+		color: var(--structure);
 	}
 	.card-meta {
 		flex: 1;
