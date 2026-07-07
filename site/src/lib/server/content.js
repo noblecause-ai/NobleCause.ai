@@ -59,7 +59,7 @@ export function listJournalEntries() {
 	if (!fs.existsSync(dir)) return [];
 	return fs
 		.readdirSync(dir, { withFileTypes: true })
-		.filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+		.filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}[a-z]?$/.test(e.name))
 		.map((e) => {
 			const file = path.join(dir, e.name, 'entry.json');
 			if (!fs.existsSync(file)) return null;

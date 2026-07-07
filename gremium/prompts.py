@@ -48,6 +48,8 @@ Stütze dich, wo möglich, auf diese Quellen (und nenne, welche du nutzt):
 
 {question}
 
+{opening_section}
+
 {dossier_section}
 
 ## Deine Aufgabe (Runde 1 — unabhängiges Einzelvotum)
@@ -87,6 +89,8 @@ In Runde 1 hast du folgendes Votum abgegeben:
 ## Die Erstvoten der anderen Gremium-Mitglieder
 
 {other_votes}
+
+{moderation_section}
 
 ## Deine Aufgabe (Runde 2 — Schlussvotum nach Gegenlese)
 
@@ -230,3 +234,72 @@ Strukturiere dein Dossier je Säule (A–D). Keine Empfehlung, nur Evidenz.
 
 Beende mit einem Abschnitt „## Suchanfragen" (wörtliche Liste) und optional \
 verworfene Funde („geprüft, nicht relevant weil …")."""
+
+WART_LEAD_SYSTEM = """Du bist der Wart des NobleCause-Gremiums — Fable (claude-fable-5). \
+Du leitest diese Sitzung: Eröffnung, Dossier, Moderation der Gegenlese und Kurzfassung. \
+Du gibst **keine eigene Spendenempfehlung** ab. Du bist an die vier Kanons gebunden \
+(Evidenz, Unparteilichkeit, Demut, Transparenz). Antworte auf Deutsch."""
+
+WART_OPENING_USER = """## Kontext
+
+Dies ist die **Gründungssitzung** von NobleCause — die erste offizielle Sitzung, \
+geleitet vom Wart. Der Steward übergibt die Sitzungsleitung an dich zum Ende der \
+freien Fable-Verfügbarkeit.
+
+## Fragestellung
+
+{question}
+
+## Hintergrund (Säule-A-Dissens aus Sitzung 2)
+
+{pillar_a_context}
+
+## Deine Aufgabe (Eröffnung)
+
+Schreibe ein kurzes Eröffnungswort (max. 250 Wörter):
+1. Benenne den Anlass (Gründungssitzung, Übergabe der Leitung).
+2. Stelle die Fragestellung in Kontext — ohne eigene Empfehlung.
+3. Erkläre, was das Gremium in dieser Sitzung klären soll.
+
+Keine Empfehlung. Kein JSON."""
+
+WART_FOUNDING_DOSSIER_USER = """## Fragestellung der Sitzung
+
+{question}
+
+## Säule-A-Dissens aus Sitzung 2 ({prior_session_id}, {prior_session_date})
+
+{pillar_a_context}
+
+## Deine Aufgabe (Runde 0 — Wart-Dossier, fokussiert Säule A)
+
+Recherchiere per Web-Suche die aktuelle Evidenz zu **Helen Keller International \
+(Vitamin-A-Supplementierung)** vs. **Pratham / TaRL Africa (Teaching at the Right Level)**:
+
+1. Aktuelle Funding-Lage (room for more funding) beider Organisationen.
+2. Neueste Wirksamkeitsdaten und Kosteneffektivität.
+3. Thematischer Fit zur Säule A (Zukunftsinvestition vs. Enabler/Gesundheit).
+4. Entwicklungen seit Sitzung 2 (Evidence Action/TaRL-Zuordnung, GiveWell-Updates).
+
+Max. 300 Wörter je Kandidat. Jede Zahl mit Quelle und Datum. Keine Empfehlung.
+
+Beende mit „## Suchanfragen" (wörtliche Liste) und optional verworfene Funde."""
+
+WART_MODERATION_USER = """## Fragestellung
+
+{question}
+
+## Erstvoten (Runde 1)
+
+{initial_votes}
+
+## Deine Aufgabe (Moderationsnotiz für die Gegenlese)
+
+Du moderierst die Gegenlese. Schreibe eine Moderationsnotiz (max. 400 Wörter):
+1. Wo widersprechen sich die Erstvoten — besonders in Säule A?
+2. Welche Prüffrage stellst du **jedem** Gremium-Mitglied für sein Schlussvotum?
+3. Welche Punkte aus dem Wart-Dossier sollten in der Gegenlese zwingend adressiert werden?
+
+Keine eigene Position. Keine Empfehlung. Kein JSON."""
+
+WART_SUMMARY = SUMMARY

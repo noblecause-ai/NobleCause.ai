@@ -11,6 +11,8 @@ export function load({ params }) {
 			...s,
 			dissent_html: md(s.dissent_md),
 			wart_dossier_html: s.wart_dossier ? md(s.wart_dossier.content_md) : null,
+			wart_opening_html: s.wart_opening_md ? md(s.wart_opening_md) : null,
+			wart_moderation_html: s.wart_moderation_md ? md(s.wart_moderation_md) : null,
 			rounds: s.rounds.map((r) => ({
 				...r,
 				votes: (r.votes ?? []).map((v) => ({ ...v, content_html: md(v.content_md) }))

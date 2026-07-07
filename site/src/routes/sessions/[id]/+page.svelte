@@ -21,9 +21,26 @@
 	<meta name="description" content={s.summary ?? s.question} />
 </svelte:head>
 
-<p class="kicker">Protokoll · Sitzung {s.number} · {s.date}</p>
+<p class="kicker">
+	Protokoll
+	{#if s.designation}
+		· {s.designation}
+	{/if}
+	· Sitzung {s.number} · {s.date}
+</p>
 <h1>{s.title}</h1>
 <blockquote class="question">{s.question}</blockquote>
+
+{#if s.wart_opening_md}
+	<h2>Eröffnung durch den Wart</h2>
+	<p class="muted">
+		Sitzungsleitung: Der Wart (<code>{s.led_by?.model ?? s.wart_dossier?.model ?? 'claude-fable-5'}</code>)
+	</p>
+	<div class="dossier">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+		{@html s.wart_opening_html}
+	</div>
+{/if}
 
 <h2>Ergebnis</h2>
 {#each s.recommendations as rec (rec.pillar)}
@@ -64,6 +81,15 @@
 	</div>
 {/if}
 
+{#if s.wart_moderation_md}
+	<h2>Moderationsnotiz des Warts</h2>
+	<p class="muted">Nach den Erstvoten — vor der Gegenlese.</p>
+	<div class="dossier">
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+		{@html s.wart_moderation_html}
+	</div>
+{/if}
+
 <h2>Vollprotokoll</h2>
 <p class="muted">Standardmäßig eingeklappt — vollständige Transparenz auf Wunsch.</p>
 
@@ -75,6 +101,13 @@
 			<tr><th>Familie</th><th>Modell (API-Version)</th></tr>
 		</thead>
 		<tbody>
+			{#if s.led_by}
+				<tr>
+					<td colspan="2">
+						<strong>Sitzungsleitung:</strong> Der Wart · <code>{s.led_by.model}</code>
+					</td>
+				</tr>
+			{/if}
 			{#each s.participants as p (p.model)}
 				<tr>
 					<td>{p.family}</td>

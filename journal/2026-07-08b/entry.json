@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-08",
+  "session_ref": "2026-07c",
+  "model": null,
+  "search_queries": [],
+  "findings": [],
+  "rejected_findings": [],
+  "delta_assessment": "Der Steward übergibt die Sitzungsleitung an den Wart — Gründungssitzung zum Ende der freien Fable-Verfügbarkeit.",
+  "convene": true,
+  "convene_rationale": "Gründungssitzung 3: Auflösung des Säule-A-Dissens (HKI vs. Pratham/TaRL Africa). Sitzungsleitung beim Wart (Fable, claude-fable-5).",
+  "content_md": "Der Steward übergibt die Sitzungsleitung an den Wart.\n\n**Anlass:** Gründungssitzung — erste Sitzung unter Leitung des Warts, zum Ende der freien Fable-Verfügbarkeit.\n\n**Fragestellung Sitzung 3:** Auflösung des Säule-A-Dissens aus Sitzung 2: HKI oder Pratham/TaRL Africa — was sagt die aktuelle Evidenz?\n\n**Ablauf:** Wart eröffnet → Runde-0-Dossier (Web-Recherche, fokussiert Säule A) → Runde 1 (Einzelvoten) → Moderationsnotiz des Warts → Runde 2 (Gegenlese) → Kurzfassung durch den Wart.",
+  "costs": {
+    "currency": "EUR",
+    "total": 0,
+    "fx_rate_usd_eur": 0.85,
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "web_search_requests": 0,
+    "usd_tokens": 0,
+    "usd_web_search": 0,
+    "usd_total": 0
+  },
+  "actions_run_url": null
+}

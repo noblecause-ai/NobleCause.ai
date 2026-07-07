@@ -339,30 +339,106 @@ def format_aggregation_for_summary(recommendations):
     return "\n".join(lines)
 
 
-def generate_summary(question, final_votes, recommendations, dissent_md, summarizer, raw_dir):
+def generate_summary(
+    question, final_votes, recommendations, dissent_md, summarizer, raw_dir, summary_prompt=None
+):
     final_excerpt = "\n\n".join(
         f"### {v['label']}\n{strip_json_block(v['text'])[:4000]}" for v in final_votes
     )
-    user = prompts.SUMMARY.format(
+    template = summary_prompt or prompts.SUMMARY
+    user = template.format(
         question=question,
         final_votes=final_excerpt,
         aggregation=format_aggregation_for_summary(recommendations),
         dissent_md=dissent_md[:6000],
     )
     max_tokens = summarizer.get("max_output_tokens", 1024)
+    system = (
+        prompts.WART_LEAD_SYSTEM
+        if summary_prompt
+        else "Du bist ein nüchterner Protokollredakteur. Antworte nur mit JSON."
+    )
     text, usage, raw = call_anthropic(
         summarizer["model"],
-        "Du bist ein nüchterner Protokollredakteur. Antworte nur mit JSON.",
+        system,
         user,
         max_tokens,
     )
-    (raw_dir / "summary-anthropic.json").write_text(
+    tag = "summary-wart" if summary_prompt else "summary-anthropic"
+    (raw_dir / f"{tag}.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
     )
     parsed = extract_json_block(text)
     if not parsed or "summary" not in parsed:
         raise RuntimeError("Summarizer lieferte kein gültiges JSON mit summary")
     return parsed.get("summary", ""), parsed.get("dissent_highlights", []), usage
+
+
+def pillar_a_context(prior):
+    for rec in prior.get("recommendations", []):
+        if rec.get("pillar") == "A":
+            if rec.get("has_consensus"):
+                return (
+                    f"Konsens: {rec.get('title')} — {rec.get('organization')} "
+                    f"(Konfidenz {rec.get('confidence')})"
+                )
+            lines = ["Kein Konsens — Einzelvoten:"]
+            for v in rec.get("individual_votes") or []:
+                lines.append(
+                    f"  · {v.get('model')}: {v.get('organization')} — {v.get('title')} "
+                    f"(Konfidenz {v.get('confidence')})"
+                )
+            return "\n".join(lines)
+    return "Keine Säule-A-Empfehlungen in der Vorgänger-Sitzung."
+
+
+def call_wart_simple(wart_cfg, system, user, raw_dir, tag, max_tokens=None):
+    import anthropic
+
+    client = anthropic.Anthropic()
+    tokens = max_tokens or wart_cfg.get("max_output_tokens", 4096)
+    resp = client.messages.create(
+        model=wart_cfg["model"],
+        max_tokens=tokens,
+        system=system,
+        messages=[{"role": "user", "content": user}],
+    )
+    raw = resp.model_dump()
+    (raw_dir / f"{tag}.json").write_text(
+        json.dumps(raw, indent=2, ensure_ascii=False, default=str)
+    )
+    text = "".join(b.text for b in resp.content if b.type == "text")
+    usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens}
+    return text, usage, raw
+
+
+def check_fable_available(wart_cfg, raw_dir=None):
+    print("Fable-Verfügbarkeits-Check …")
+    check_dir = raw_dir or Path("/tmp")
+    try:
+        text, usage, _ = call_wart_simple(
+            wart_cfg,
+            "Antworte mit genau einem Wort: bereit.",
+            "Ping.",
+            check_dir,
+            "fable-check",
+            max_tokens=16,
+        )
+        print(f"  OK — Antwort: {text.strip()[:40]}")
+        return True
+    except Exception as e:  # noqa: BLE001
+        print(f"  FEHLGESCHLAGEN: {e}", file=sys.stderr)
+        return False
+
+
+def empty_wart_usage():
+    return {"input_tokens": 0, "output_tokens": 0, "web_search_requests": 0}
+
+
+def accumulate_wart_usage(total, usage):
+    total["input_tokens"] += usage.get("input_tokens", 0)
+    total["output_tokens"] += usage.get("output_tokens", 0)
+    total["web_search_requests"] += usage.get("web_search_requests", 0)
 
 
 def compute_wart_cost(usage, wart_cfg, fx):
@@ -425,8 +501,16 @@ def main():
     parser.add_argument("--session-id", default=datetime.date.today().strftime("%Y-%m"))
     parser.add_argument("--number", type=int, default=None)
     parser.add_argument("--with-dossier", action="store_true")
+    parser.add_argument(
+        "--led-by-wart",
+        action="store_true",
+        help="Gründungssitzung: Wart eröffnet, moderiert, schreibt Kurzfassung (impliziert --with-dossier)",
+    )
     parser.add_argument("--budget-cap", type=float, default=15.0)
     args = parser.parse_args()
+
+    if args.led_by_wart:
+        args.with_dossier = True
 
     load_env()
     config = json.loads((HERE / "config.json").read_text())
@@ -450,31 +534,81 @@ def main():
     wart_dossier = None
     wart_dossier_prompt = None
     dossier_section = ""
+    opening_section = ""
+    wart_opening_md = None
+    wart_moderation_md = None
+    wart_opening_prompt = None
+    wart_moderation_prompt = None
+    moderation_section = ""
+    wart_cfg = config.get("wart")
 
     usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
+    wart_usage = empty_wart_usage()
     wart_cost_entry = None
+
+    def refresh_wart_cost():
+        nonlocal wart_cost_entry
+        if wart_usage["input_tokens"] or wart_usage["output_tokens"] or wart_usage["web_search_requests"]:
+            wart_cost_entry = compute_wart_cost(wart_usage, wart_cfg, fx)
+
+    def interim_costs(summarizer=None):
+        refresh_wart_cost()
+        specs = config["models"] + ([summarizer] if summarizer else [config["summarizer"]])
+        return compute_costs(usage_by_model, specs, fx, wart_cost_entry)
 
     def record_usage(spec, usage):
         u = usage_by_model[spec["model"]]
         u["input_tokens"] += usage["input_tokens"]
         u["output_tokens"] += usage["output_tokens"]
 
-    def interim_costs():
-        all_specs = config["models"] + [config["summarizer"]]
-        return compute_costs(usage_by_model, all_specs, fx, wart_cost_entry)
+    prior_id, prior = prior_session()
+
+    # -------- Eröffnung (Wart-Leitung)
+    if args.led_by_wart:
+        if not prior:
+            sys.exit("Abbruch: keine Vorgänger-Sitzung für Gründungssitzung gefunden.")
+        pa_ctx = pillar_a_context(prior)
+        wart_opening_prompt = prompts.WART_OPENING_USER.format(
+            question=args.question,
+            pillar_a_context=pa_ctx,
+        )
+        (raw_dir / "prompt-r0-opening.txt").write_text(wart_opening_prompt)
+        print("Eröffnung — Wart (Fable)")
+        text, usage, _ = call_wart_simple(
+            wart_cfg,
+            prompts.WART_LEAD_SYSTEM,
+            wart_opening_prompt,
+            raw_dir,
+            "r0-opening",
+            max_tokens=2048,
+        )
+        wart_opening_md = text.strip()
+        (raw_dir / "r0-opening-content.md").write_text(wart_opening_md)
+        accumulate_wart_usage(wart_usage, usage)
+        opening_section = (
+            "## Eröffnung durch den Wart\n\n"
+            f"{wart_opening_md}\n\n---"
+        )
+        check_budget(interim_costs(), args.budget_cap, "nach Eröffnung")
 
     # -------- Runde 0 (Wart-Dossier)
     if args.with_dossier:
-        prior_id, prior = prior_session()
         if not prior:
             sys.exit("Abbruch: keine Vorgänger-Sitzung für Dossier gefunden.")
-        wart_cfg = config["wart"]
-        wart_dossier_prompt = prompts.WART_DOSSIER_USER.format(
-            question=args.question,
-            prior_session_id=prior_id,
-            prior_session_date=prior.get("date"),
-            prior_recommendations=summarize_recommendations(prior),
-        )
+        if args.led_by_wart:
+            wart_dossier_prompt = prompts.WART_FOUNDING_DOSSIER_USER.format(
+                question=args.question,
+                prior_session_id=prior_id,
+                prior_session_date=prior.get("date"),
+                pillar_a_context=pillar_a_context(prior),
+            )
+        else:
+            wart_dossier_prompt = prompts.WART_DOSSIER_USER.format(
+                question=args.question,
+                prior_session_id=prior_id,
+                prior_session_date=prior.get("date"),
+                prior_recommendations=summarize_recommendations(prior),
+            )
         (raw_dir / "prompt-r0-wart.txt").write_text(wart_dossier_prompt)
         print("Runde 0 — Wart-Dossier (Fable + Web-Suche)")
         text, usage, raw, api_queries = call_wart_dossier(
@@ -483,7 +617,8 @@ def main():
         (raw_dir / "r0-wart-content.md").write_text(text)
         search_queries = extract_search_queries(text) or api_queries
         content_md = strip_json_block(text)
-        wart_cost_entry = compute_wart_cost(usage, wart_cfg, fx)
+        accumulate_wart_usage(wart_usage, usage)
+        refresh_wart_cost()
         wart_dossier = {
             "model": wart_cfg["model"],
             "label": wart_cfg.get("label", wart_cfg["model"]),
@@ -506,6 +641,7 @@ def main():
         number=number,
         date=today,
         question=args.question,
+        opening_section=opening_section,
         dossier_section=dossier_section,
     )
 
@@ -519,6 +655,35 @@ def main():
         r1.append({**spec, "text": text, "parsed": extract_json_block(text)})
     check_budget(interim_costs(), args.budget_cap, "nach Runde 1")
 
+    # -------- Moderation (Wart-Leitung)
+    if args.led_by_wart:
+        initial_votes_text = "\n\n".join(
+            f"### Erstvotum {v['label']}\n\n{strip_json_block(v['text'])}"
+            for v in r1
+        )
+        wart_moderation_prompt = prompts.WART_MODERATION_USER.format(
+            question=args.question,
+            initial_votes=initial_votes_text,
+        )
+        (raw_dir / "prompt-moderation-wart.txt").write_text(wart_moderation_prompt)
+        print("Moderation — Wart (Fable)")
+        text, usage, _ = call_wart_simple(
+            wart_cfg,
+            prompts.WART_LEAD_SYSTEM,
+            wart_moderation_prompt,
+            raw_dir,
+            "moderation-wart",
+            max_tokens=4096,
+        )
+        wart_moderation_md = text.strip()
+        (raw_dir / "moderation-wart-content.md").write_text(wart_moderation_md)
+        accumulate_wart_usage(wart_usage, usage)
+        moderation_section = (
+            "## Moderationsnotiz des Warts\n\n"
+            f"{wart_moderation_md}\n\n---"
+        )
+        check_budget(interim_costs(), args.budget_cap, "nach Moderation")
+
     # -------- Runde 2
     print("Runde 2 — Gegenlese und Schlussvoten")
     r2 = []
@@ -531,6 +696,7 @@ def main():
         round2_prompt = prompts.ROUND2.format(
             own_vote=strip_json_block(own["text"]),
             other_votes=others,
+            moderation_section=moderation_section,
         )
         print(f"  {spec['label']} ({spec['model']}) …")
         text, usage = call_model(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
@@ -542,16 +708,35 @@ def main():
     print("Kurzfassung — Protokollredaktion")
     dissent_md = build_dissent(r2)
     recommendations = aggregate_recommendations(r2)
-    summarizer = config["summarizer"]
+    if args.led_by_wart:
+        summarizer = {
+            **wart_cfg,
+            "label": wart_cfg.get("label", "Der Wart"),
+            "max_output_tokens": 2048,
+        }
+        summary_prompt = prompts.WART_SUMMARY
+    else:
+        summarizer = config["summarizer"]
+        summary_prompt = None
     print(f"  {summarizer['label']} ({summarizer['model']}) …")
     summary, dissent_highlights, sum_usage = generate_summary(
-        args.question, r2, recommendations, dissent_md, summarizer, raw_dir
+        args.question,
+        r2,
+        recommendations,
+        dissent_md,
+        summarizer,
+        raw_dir,
+        summary_prompt=summary_prompt,
     )
-    usage_by_model.setdefault(summarizer["model"], {"input_tokens": 0, "output_tokens": 0})
-    usage_by_model[summarizer["model"]]["input_tokens"] += sum_usage["input_tokens"]
-    usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
+    if args.led_by_wart:
+        accumulate_wart_usage(wart_usage, sum_usage)
+        refresh_wart_cost()
+    else:
+        usage_by_model.setdefault(summarizer["model"], {"input_tokens": 0, "output_tokens": 0})
+        usage_by_model[summarizer["model"]]["input_tokens"] += sum_usage["input_tokens"]
+        usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
 
-    all_specs = config["models"] + [summarizer]
+    all_specs = config["models"] + ([] if args.led_by_wart else [summarizer])
     costs = compute_costs(usage_by_model, all_specs, fx, wart_cost_entry)
     check_budget(costs, args.budget_cap, "gesamt")
 
@@ -566,8 +751,12 @@ def main():
         ]
 
     rounds = []
+    if wart_opening_md:
+        rounds.append({"round": -1, "kind": "wart_opening", "content_md": wart_opening_md})
     if wart_dossier:
         rounds.append({"round": 0, "kind": "wart_dossier", "wart": wart_dossier})
+    if wart_moderation_md:
+        rounds.append({"round": 1.5, "kind": "wart_moderation", "content_md": wart_moderation_md})
     rounds.extend(
         [
             {"round": 1, "kind": "initial_vote", "votes": votes_of(r1)},
@@ -578,6 +767,10 @@ def main():
     prompts_dict = {"system": system, "round1": round1_prompt, "round2": prompts.ROUND2}
     if wart_dossier_prompt:
         prompts_dict["wart_dossier"] = wart_dossier_prompt
+    if wart_opening_prompt:
+        prompts_dict["wart_opening"] = wart_opening_prompt
+    if wart_moderation_prompt:
+        prompts_dict["wart_moderation"] = wart_moderation_prompt
 
     session = {
         "schema_version": 2,
@@ -597,6 +790,14 @@ def main():
         "recommendations": recommendations,
         "costs": costs,
     }
+    if args.led_by_wart:
+        session["designation"] = "Gründungssitzung"
+        session["led_by"] = {
+            "model": wart_cfg["model"],
+            "label": wart_cfg.get("label", wart_cfg["model"]),
+        }
+        session["wart_opening_md"] = wart_opening_md
+        session["wart_moderation_md"] = wart_moderation_md
     if wart_dossier:
         session["wart_dossier"] = wart_dossier
 
