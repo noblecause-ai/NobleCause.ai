@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-08",
+  "session_ref": "2026-07c",
+  "model": "kimi-k2",
+  "deputation_note": "Durchgeführt von Kimi K2 (Moonshot AI) in Vertretung des Warts, auf Einberufung des Stewards.",
+  "search_queries": [
+    "Helen Keller International vitamin A funding 2026",
+    "TaRL Africa Pratham funding gap 2026",
+    "Against Malaria Foundation funding 2026 GiveWell",
+    "Lead Exposure Elimination Project LEEP funding 2026",
+    "NTI biosecurity funding 2026 pandemic preparedness",
+    "TaRL Africa room for more funding 2025 2026",
+    "LEEP donate 2026 funding gap",
+    "Helen Keller International USAID cuts 2026"
+  ],
+  "findings": [
+    {
+      "pillar": "A",
+      "topic": "HKI VAS, konditional; TaRL weiter vertagt",
+      "summary": "GiveWell-Grant zu HKI laeuft bis Juni 2026 mit geplanter VAS-Expansion; TaRL Africa skaliert institutionell (u. a. World Bank/FID), aber ohne verifizierte Spenden-RFMF-Daten fuer 2025/26.",
+      "source": "GiveWell, TaRL Africa, GWWC",
+      "source_date": "2026-07"
+    },
+    {
+      "pillar": "B",
+      "topic": "AMF-Revisionslinie gestaerkt",
+      "summary": "AMF-Funding-Gap bleibt substanziell (~200M USD); GiveWell-DRC-Lookback berichtet starke Mortalitaetsreduktion in Netzkampagnen. Das stuetzt die in Sitzung 3 revidierte B-Priorisierung.",
+      "source": "GiveWell",
+      "source_date": "2026-05"
+    },
+    {
+      "pillar": "C",
+      "topic": "NTI bio unveraendert",
+      "summary": "NTI-Biosecurity-Aktivitaeten laufen weiter, aber ohne neue quantifizierte Funding- oder CEA-Daten seit Sitzung 3; kein Evidenzsprung fuer eine erneute Einberufung.",
+      "source": "NTI",
+      "source_date": "2026-03"
+    },
+    {
+      "pillar": "D",
+      "topic": "LEEP mit Timing-Vorbehalt",
+      "summary": "LEEP meldet 2025/26-Funding-Luecke als gefuellt; zugleich bleiben Expansion und neue Kanaele (z. B. Pure Earth Opportunity Fund) relevant. Das ist ein Timing-Thema, keine Widerlegung der Empfehlung.",
+      "source": "LEEP, GWWC, Pure Earth",
+      "source_date": "2026-07"
+    }
+  ],
+  "rejected_findings": [
+    {
+      "query_or_topic": "TaRL Africa Funding-Gap",
+      "reason": "Geprueft, aber keine belastbaren eigenen RFMF-Zahlen seit Founders Pledge (~2021/22); institutionelle Skalierung ersetzt keine Spenden-Marginaldaten."
+    },
+    {
+      "query_or_topic": "HKI-USAID-Kuerzungen (~1/3 Budget)",
+      "reason": "Geprueft, aber konkrete neue Nachweise fuer den Post-Juni-2026-Bedarf im vorliegenden Lauf nicht unabhaengig quantifiziert."
+    },
+    {
+      "query_or_topic": "NTI Funding-Gap",
+      "reason": "Geprueft, aber keine quantifizierbaren marginalen Funding-Daten gefunden; strukturelle Datenluecke im Feld."
+    }
+  ],
+  "delta_assessment": "Keine Empfehlung aus Sitzung 3 wird durch neue Evidenz substantiell widerlegt. B wird durch neue AMF-Evidenz eher gestaerkt, D bleibt wirksam aber mit geschlossenem kurzfristigem Gap timing-sensitiv, A bleibt konditional pro HKI bei fortbestehender TaRL-RFMF-Luecke, C zeigt keinen neuen quantitativen Trigger.",
+  "convene": false,
+  "convene_rationale": "Keine Empfehlung wird durch neue Evidenz widerlegt. HKI bleibt verifiziert auszahlbare Saeule-A-Option; AMF-Evidenz wurde gestaerkt. LEEP meldet geschlossene Luecke, aber ohne unmittelbaren Handlungsdruck fuer eine ausserordentliche Sitzung. Fuer TaRL Africa fehlt weiterhin eine unabhaengige RFMF-Evaluation 2025/26. Keine neuen Risiken oder Chancen von Rang, die nicht in der regulaeren Monatssitzung behandelt werden koennen.",
+  "content_md": "# Wart-Journal — Research-Lauf 2026-07-08\n\nDurchgefuehrt von Kimi K2 (Moonshot AI) in Vertretung des Warts, auf Einberufung des Stewards.\n\n## Suchanfragen\n\n1. Helen Keller International vitamin A funding 2026\n2. TaRL Africa Pratham funding gap 2026\n3. Against Malaria Foundation funding 2026 GiveWell\n4. Lead Exposure Elimination Project LEEP funding 2026\n5. NTI biosecurity funding 2026 pandemic preparedness\n6. TaRL Africa room for more funding 2025 2026\n7. LEEP donate 2026 funding gap\n8. Helen Keller International USAID cuts 2026\n\n## Kernfunde je Saeule\n\n### A — Zukunftsinvestition (HKI VAS, konditional)\n- GiveWell-Grant zu HKI bis Juni 2026; VAS-Expansion weiter in Planung.\n- TaRL-Africa-Skalierung laeuft institutionell (World Bank/FID), aber ohne aktuelle Spenden-RFMF-Verifikation.\n- GWWC fuehrt TaRL Africa weiterhin nicht als empfohlene Organisation.\n\n### B — Gegenwaertiges Leid (AMF, revidiert von SMC)\n- AMF-Grant und verbleibende Funding-Luecke (~200M USD) bleiben signifikant.\n- DRC-Lookback staerkt die Evidenz fuer netzbasierte Mortalitaetsreduktion.\n\n### C — Existenzrisiko (NTI bio, revidiert von GovAI)\n- NTI-Aktivitaeten laufen weiter.\n- Keine neuen quantifizierten RFMF/CEA-Daten seit Sitzung 3.\n\n### D — Uebersehene Essentials (LEEP, Timing-Vorbehalt)\n- LEEP meldet 2025/26-Luecke als gefuellt.\n- Neue indirekte Kanaele (u. a. Pure Earth Opportunity Fund) sind relevant, aber keine unmittelbare Re-Opening-Evidenz.\n\n## Verworfen / nicht relevant\n\n- TaRL Funding-Gap weiterhin unverifiziert auf RFMF-Ebene.\n- HKI-USAID-Kuerzungen nicht neu quantifiziert fuer Post-Juni-2026-Bedarf.\n- NTI-Funding-Gap ohne robuste marginale Kennzahlen.\n\n## Delta-Bewertung\n\n| Saeule | Empfehlung | Neue Evidenz | Widerspruch? |\n| --- | --- | --- | --- |\n| A | HKI (VAS), konditional; TaRL-Vertagung | TaRL skaliert institutionell, aber ohne Spenden-RFMF; HKI-Grant bis Juni 2026 | Nein |\n| B | AMF (revidiert von SMC) | AMF-Lookback staerkt Mortalitaetswirkung; Gap bleibt gross | Nein |\n| C | NTI bio (revidiert von GovAI) | Aktivitaet bestaetigt, aber keine neue marginale CEA | Nein |\n| D | LEEP, timing-abhaengig | 2025/26-Luecke gefuellt, neue indirekte Hebel | Teilweise |\n\n## Einberufungs-Entscheidung: NEIN\n\n1. Keine Empfehlung wird durch neue Evidenz widerlegt.\n2. LEEPs Luecke bleibt geschlossen; kein ausserordentlicher Trigger.\n3. TaRL bleibt ohne unabhaengige RFMF-Evaluation 2025/26.\n4. Keine neuen Risiken/Chancen von Rang ausserhalb des regulaeren Zyklus.\n\n## Empfohlene naechste Schritte (ohne Einberufung)\n\n- LEEP-Donate-Seite quartalsweise auf Re-Opening pruefen.\n- TaRL-RFMF weiter recherchieren (GiveWell Education-Update / Founders Pledge 2025/26).\n- Keine Aenderung der aktiven Empfehlungen erforderlich.",
+  "costs": {
+    "currency": "EUR",
+    "total": null,
+    "fx_rate_usd_eur": 0.85,
+    "model": "kimi-k2",
+    "input_tokens": null,
+    "output_tokens": null,
+    "web_search_requests": null,
+    "usd_tokens": null,
+    "usd_web_search": null,
+    "usd_total": null
+  },
+  "actions_run_url": null
+}

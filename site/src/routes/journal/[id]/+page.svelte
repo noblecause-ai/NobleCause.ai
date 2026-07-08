@@ -24,6 +24,9 @@
 		· Laufkosten {e.costs.total.toFixed(2)} €
 	{/if}
 </p>
+{#if e.deputation_note}
+	<p class="deputation muted">{e.deputation_note}</p>
+{/if}
 
 {#if e.actions_run_url}
 	<p>
@@ -85,6 +88,10 @@
 	.meta {
 		margin: 0 0 1rem;
 		font-size: 0.9rem;
+	}
+	.deputation {
+		margin: -0.4rem 0 1rem;
+		font-size: 0.88rem;
 	}
 	.finding {
 		border-left: 3px solid var(--structure);
