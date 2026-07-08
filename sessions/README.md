@@ -1,6 +1,7 @@
 # sessions/ — Deliberations-Protokolle
 
-Jede Gremium-Sitzung ist ein Ordner `YYYY-MM/` (bei mehreren Sitzungen pro Monat: `YYYY-MM-b/` usw.).
+Jede Gremium-Sitzung ist ein Ordner `YYYY-MM/` (bei mehreren Sitzungen pro Monat:
+Suffix ohne Extra-Bindestrich, z. B. `2026-07b`, `2026-07c`).
 Git ist die Datenbank: Ein Protokoll gilt als veröffentlicht, sobald es auf `master` liegt.
 Die Site rendert alles unter `sessions/` zur Build-Zeit automatisch.
 
@@ -9,14 +10,19 @@ Die Site rendert alles unter `sessions/` zur Build-Zeit automatisch.
 ```
 sessions/2026-07/
 ├── session.json   # das maschinenlesbare Protokoll (Schema unten)
-└── raw/           # Rohantworten der API-Calls, 1 JSON-Datei pro Call
+└── raw/           # Rohartefakte des Laufs
     ├── r1-anthropic.json
     ├── r1-openai.json
     ├── r1-google.json
     ├── r2-anthropic.json
     ├── r2-openai.json
     ├── r2-google.json
-    └── summary-anthropic.json   # ab Schema v2
+    ├── summary-anthropic.json   # Standardmodus
+    ├── summary-wart.json        # Wart-Leitung
+    ├── r0-opening.json          # Wart-Leitung
+    ├── r0-wart.json             # Wart-Dossier (mit Web-Suche)
+    ├── moderation-wart.json     # Wart-Moderation nach Runde 1
+    └── prompt-*.txt             # mitveröffentlichte Prompt-Artefakte
 ```
 
 ## Schema `session.json` (Version 2)
@@ -33,10 +39,15 @@ sessions/2026-07/
 | `dissent_highlights` | array | 3–5 Kernpunkte des Dissenses, ab v2 |
 | `participants` | array | je Modell: `family`, `model`, `label` |
 | `prompts` | object | `system`, `round1`, `round2` |
-| `rounds` | array | 2 Einträge, siehe unten |
+| `rounds` | array | Laufphasen (`initial_vote`, `final_vote`, optional Wart-Phasen), siehe unten |
 | `dissent_md` | string | Dissens-Rohfassung (Markdown) |
 | `recommendations` | array | siehe unten |
 | `costs` | object | `currency`, `total`, `fx_rate_usd_eur`, `by_model[]` |
+| `designation` | string \| null | optional, z. B. `"Gründungssitzung"` |
+| `led_by` | object \| null | optional, z. B. `{ model, label }` |
+| `wart_opening_md` | string \| null | optionaler Eröffnungstext (Wart-Leitung) |
+| `wart_moderation_md` | string \| null | optionale Moderationsnotiz (Wart-Leitung) |
+| `wart_dossier` | object \| null | optionales Dossierobjekt inkl. Suchanfragen/Kosten |
 
 ### `recommendations[]` (ab v2)
 
@@ -48,6 +59,8 @@ Ohne Konsens (`has_consensus: false`):
 - `individual_votes[]`: je `{ title, organization, donation_url, confidence, model }`
 
 ### `rounds[]`
+
+Standardmodus:
 
 ```json
 {
@@ -62,6 +75,17 @@ Ohne Konsens (`has_consensus: false`):
   ]
 }
 ```
+
+Wart-geleitete Sitzung (Beispiel `2026-07c`):
+- `{"round": -1, "kind": "wart_opening", ...}`
+- `{"round": 0, "kind": "wart_dossier", ...}`
+- `{"round": 1, "kind": "initial_vote", ...}`
+- `{"round": 1.5, "kind": "wart_moderation", ...}`
+- `{"round": 2, "kind": "final_vote", ...}`
+
+Hinweis zu Kosten:
+- `costs.by_model[]` kann neben Council/Summarizer auch eine Wart-Zeile
+  enthalten (inklusive Web-Suchkosten).
 
 ## Regeln
 

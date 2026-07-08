@@ -37,6 +37,13 @@ cd gremium && make session   # Details: gremium/README.md
 Das Ergebnis landet als `sessions/YYYY-MM/` im Repo; nach Commit + Push
 rendert die Site es automatisch.
 
+Für Wart-Leitung bei einer Sitzung steht `--led-by-wart` bereit (impliziert
+`--with-dossier`): Eröffnung, Runde-0-Dossier, Moderationsnotiz und
+Kurzfassung laufen dann über Fable.
+
+Zusätzlich läuft der Wart-Research wöchentlich per GitHub Actions
+(`.github/workflows/wart.yml`) und publiziert Einträge unter `journal/`.
+
 ## Lizenzen
 
 Code MIT ([LICENSE](LICENSE)), Inhalte/Protokolle CC BY 4.0
