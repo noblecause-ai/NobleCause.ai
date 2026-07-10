@@ -32,10 +32,11 @@
 
 <h2>Datenschutz</h2>
 <p>
-	Diese Website ist statisch. Sie verwendet keine Cookies, kein Tracking, keine Analyse-Dienste und
-	keine eingebetteten Inhalte von Drittservern. Beim Abruf fallen technisch bedingte Server-Logs
-	(IP-Adresse, Zeitpunkt, abgerufene Ressource) an, die zur Betriebssicherheit kurzfristig
-	gespeichert und nicht mit anderen Daten zusammengeführt werden.
+	Diese Website ist statisch. Sie verwendet keine Cookies, keine externen Dienste und
+	keine eingebetteten Inhalte von Drittservern. Zur Betriebssicherheit und einfachen
+	Reichweitenmessung werten wir Server-Zugriffsprotokolle aus; IP-Adressen werden dabei
+	anonymisiert (letztes Oktett entfernt), die Rohprotokolle nach 7 Tagen gelöscht und nicht
+	mit anderen Daten zusammengeführt. Es werden keine Besucherprofile erstellt.
 </p>
 
 <h2>Lizenzen</h2>
@@ -73,9 +74,10 @@
 
 <h2>Data Protection</h2>
 <p>
-	This website is static. It uses no cookies, no tracking, no analytics services, and no embedded
-	content from third-party servers. Technical server logs (IP address, timestamp, requested
-	resource) may be stored briefly for operational security and are not merged with other data.
+	This website is static. It uses no cookies, no external services, and no embedded
+	content from third-party servers. For operational security and basic reach measurement we
+	evaluate server access logs; IP addresses are anonymised (last octet removed), raw logs are
+	deleted after 7 days and not merged with other data. No visitor profiles are created.
 </p>
 
 <h2>Licenses</h2>
