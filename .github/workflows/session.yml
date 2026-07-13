@@ -1,0 +1,148 @@
+name: Gremium-Sitzung
+
+# Zwei Wege, per Trigger getrennt:
+#  - workflow_dispatch: führt eine ECHTE Sitzung aus. Frage/Titel sind
+#    redaktionell und Pflicht-Inputs — der Orchestrator erfindet nie eine Frage.
+#  - schedule (Cron): erzeugt KEINE Sitzung, sondern erinnert per Issue, sobald
+#    schedule.json.next_session erreicht ist. Der Mensch startet dann dispatch.
+
+on:
+  workflow_dispatch:
+    inputs:
+      question:
+        description: 'Fragestellung der Sitzung (redaktionell, wird veröffentlicht)'
+        required: true
+      title:
+        description: 'Titel der Sitzung'
+        required: true
+      session_id:
+        description: 'Optional: feste session-id (Default: YYYY-MM, Suffix b/c/… bei Kollision)'
+        required: false
+        default: ''
+      with_dossier:
+        description: 'Runde 0 — Wart-Dossier mit Web-Suche'
+        type: boolean
+        default: false
+      led_by_wart:
+        description: 'Gründungssitzung: Wart eröffnet/moderiert (impliziert with_dossier)'
+        type: boolean
+        default: false
+      budget_cap:
+        description: 'Budgetdeckel in EUR'
+        required: false
+        default: '15'
+  schedule:
+    - cron: '0 12 * * *'
+
+concurrency:
+  group: gremium-session
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  session:
+    name: Sitzung ausführen
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r gremium/requirements.txt
+
+      - name: Preflight (Key-Canary)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -o pipefail
+          python3 gremium/preflight.py 2>&1 | tee run.log
+
+      - name: Sitzung (Council + optional Wart)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          IN_QUESTION: ${{ inputs.question }}
+          IN_TITLE: ${{ inputs.title }}
+          IN_SESSION_ID: ${{ inputs.session_id }}
+          IN_WITH_DOSSIER: ${{ inputs.with_dossier }}
+          IN_LED_BY_WART: ${{ inputs.led_by_wart }}
+          IN_BUDGET_CAP: ${{ inputs.budget_cap }}
+        run: |
+          set -o pipefail
+          ARGS=(--question "$IN_QUESTION" --title "$IN_TITLE" --budget-cap "$IN_BUDGET_CAP")
+          if [ -n "$IN_SESSION_ID" ]; then ARGS+=(--session-id "$IN_SESSION_ID"); fi
+          if [ "$IN_WITH_DOSSIER" = "true" ]; then ARGS+=(--with-dossier); fi
+          if [ "$IN_LED_BY_WART" = "true" ]; then ARGS+=(--led-by-wart); fi
+          python3 gremium/run_session.py "${ARGS[@]}" 2>&1 | tee run.log
+
+      - name: Commit Sitzung & schedule
+        run: |
+          git config user.name "noblecause-gremium"
+          git config user.email "gremium@noblecause.ai"
+          git add sessions/ schedule.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen zum Committen."
+            exit 0
+          fi
+          git commit -m "session: Gremium-Sitzung $(date -u +%Y-%m-%d)"
+          git push
+
+      - name: Fehler als Issue melden
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABEL="ci-failure:session"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh label create "$LABEL" --color B60205 --description "Automatischer CI-Fehler" 2>/dev/null || true
+          TAIL=$(tail -c 3000 run.log 2>/dev/null || echo "(kein Log erfasst)")
+          BODY=$(printf '**Sitzungs-Lauf fehlgeschlagen:** %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "$BODY"
+          else
+            gh issue create --title "CI-Fehler: Gremium-Sitzung" --label "$LABEL" --body "$BODY"
+          fi
+
+  reminder:
+    name: Sitzung fällig? (Cron-Erinnerung)
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Prüfen & ggf. Erinnerungs-Issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEXT=$(python3 -c "import json;print(json.load(open('schedule.json'))['next_session'])")
+          NEXT_EPOCH=$(date -u -d "$NEXT" +%s)
+          NOW_EPOCH=$(date -u +%s)
+          if [ "$NOW_EPOCH" -lt "$NEXT_EPOCH" ]; then
+            echo "Noch nicht fällig — nächste Sitzung: $NEXT"
+            exit 0
+          fi
+          LABEL="session-due"
+          gh label create "$LABEL" --color 0E8A16 --description "Sitzung fällig" 2>/dev/null || true
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            echo "Erinnerung existiert bereits (#$NUM) — kein Spam."
+            exit 0
+          fi
+          BODY=$(printf 'Die nächste Gremium-Sitzung ist fällig (Termin: %s).\n\nBitte per **workflow_dispatch** auf „Gremium-Sitzung" mit Frage und Titel starten — die Fragestellung ist redaktionell und wird nicht automatisch erzeugt.' "$NEXT")
+          gh issue create --title "Sitzung fällig ($NEXT)" --label "$LABEL" --body "$BODY"

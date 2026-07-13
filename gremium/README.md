@@ -96,3 +96,41 @@ automatisch. Protokolle sind nach Veröffentlichung unveränderlich
 - **Wart-Research:** wöchentlicher Cron ist aktiv über
   `.github/workflows/wart.yml` (Mo, 06:00 UTC), ruft `run_wart.py` auf und
   committed Journal + `schedule.json`.
+
+## Secrets & CI
+
+Drei API-Keys treiben die Pipeline. Sie kommen aus **zwei getrennten Quellen** —
+das ist Absicht, nicht Zufall:
+
+| Key | Lokal | In CI (GitHub Actions) | Geprüft von |
+|---|---|---|---|
+| `ANTHROPIC_API_KEY` | `gremium/.env` (gitignored) | Repo-Secret | wart, session, preflight |
+| `OPENAI_API_KEY` | `gremium/.env` | Repo-Secret | session, preflight |
+| `GEMINI_API_KEY` | `gremium/.env` | Repo-Secret | session, preflight |
+
+**Warum der `.env`-Fallback in CI aus ist.** `envtools.load_env()` ist ein
+No-op, sobald `CI=true` (GitHub Actions setzt das automatisch). In CI ist die
+Actions-Secret-Umgebung die **einzige** Quelle der Wahrheit. Früher fiel eine
+lokal-gefüllte, in CI leere Key-Lage nicht auf → der erste geplante Lauf starb an
+`401 invalid x-api-key`. Jetzt: kein stiller `.env`-Fallback in CI, und
+`envtools.require_keys(...)` bricht **vor** dem ersten API-Call hart ab (`exit 1`,
+klare Meldung, nur Zeichenzahl — nie der Wert), wenn ein Key fehlt oder leer ist.
+
+**google-genai-Fallstrick.** Das SDK liest `GOOGLE_API_KEY` bevorzugt, sonst
+`GEMINI_API_KEY` (beide gesetzt → Warnung, `GOOGLE_API_KEY` gewinnt). Projekt-
+Konvention und Secret-Name ist **`GEMINI_API_KEY`**. Nicht beide setzen.
+
+**Canary (`preflight.py` / `preflight.yml`).** Läuft täglich 05:30 UTC und macht
+pro Anbieter einen minimalen Live-Call — fängt einen abgelaufenen/rotierten Key,
+bevor ein echter Lauf daran scheitert. Manuell triggern: GitHub → Actions →
+„Preflight — Key-Canary" → **Run workflow** (`workflow_dispatch`). Rot = ein Key
+fehlt/leer oder ein Anbieter nicht erreichbar.
+
+**Fehlersichtbarkeit.** `wart.yml`, `session.yml` und `preflight.yml` haben je einen
+`if: failure()`-Step, der ein Issue mit Run-URL + Log-Auszug anlegt (Label
+`ci-failure:<workflow>`) bzw. ein offenes Issue gleichen Labels aktualisiert —
+kein Duplikat-Spam.
+
+**Secrets setzen:** Repo → Settings → Secrets and variables → Actions → New
+repository secret. `GITHUB_TOKEN` wird von Actions automatisch bereitgestellt
+(nicht manuell setzen).
