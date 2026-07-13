@@ -43,15 +43,20 @@ def ping_google():
     from google import genai
     from google.genai import types
 
-    # Flash + thinking_budget=0: kleinstmöglicher Call ohne dass ein Denkbudget
-    # das 1-Token-Limit sprengt (pro kann Thinking nicht abschalten → Flash).
-    genai.Client().models.generate_content(
-        model="gemini-2.5-flash",
+    # gemini-flash-latest: aktueller, günstiger Flash-Alias. Die gepinnten
+    # 2.x-flash-Varianten sind für neue Keys 404/deprecated; der stabile Alias
+    # überlebt einzelne Modell-Retirements. Das Pipeline-Modell (gemini-2.5-pro)
+    # lebt separat weiter — hier zählt nur die Key-Gültigkeit.
+    #
+    # Client BEWUSST in einer Variable halten: das Inline-genai.Client().…-Muster
+    # lässt den referenzlosen Client im SDK-Fehlerpfad schließen und maskiert den
+    # echten Fehler (z. B. 404/401) als "client has been closed". Die Diagnose
+    # darf sich nicht selbst verschleiern.
+    client = genai.Client()
+    client.models.generate_content(
+        model="gemini-flash-latest",
         contents=".",
-        config=types.GenerateContentConfig(
-            max_output_tokens=1,
-            thinking_config=types.ThinkingConfig(thinking_budget=0),
-        ),
+        config=types.GenerateContentConfig(max_output_tokens=16),
     )
 
 
