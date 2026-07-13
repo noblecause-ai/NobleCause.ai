@@ -20,16 +20,7 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 
 import prompts  # noqa: E402
-
-
-def load_env():
-    for env_file in (HERE / ".env", ROOT / ".env"):
-        if env_file.exists():
-            for line in env_file.read_text().splitlines():
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ.setdefault(k.strip(), v.strip().strip('"'))
+from envtools import load_env, require_keys  # noqa: E402
 
 
 def extract_json_block(text):
@@ -254,9 +245,8 @@ def main():
     parser.add_argument("--date", default=datetime.date.today().isoformat())
     args = parser.parse_args()
 
-    load_env()
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        sys.exit("Abbruch: ANTHROPIC_API_KEY fehlt.")
+    load_env(HERE, ROOT)
+    require_keys("ANTHROPIC_API_KEY")
 
     config = json.loads((HERE / "config.json").read_text())
     wart_cfg = config.get("wart")

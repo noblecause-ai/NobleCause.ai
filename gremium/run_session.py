@@ -14,7 +14,6 @@ Keys:    ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY (oder gremium/.env)
 import argparse
 import datetime
 import json
-import os
 import re
 import sys
 from pathlib import Path
@@ -23,19 +22,10 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 
 import prompts  # noqa: E402
+from envtools import load_env, require_keys  # noqa: E402
 
 
 # ---------------------------------------------------------------- utilities
-
-def load_env():
-    for env_file in (HERE / ".env", ROOT / ".env"):
-        if env_file.exists():
-            for line in env_file.read_text().splitlines():
-                line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ.setdefault(k.strip(), v.strip().strip('"'))
-
 
 def extract_json_block(text):
     start = text.rfind("```json")
@@ -125,6 +115,36 @@ def prior_session():
         return None, None
     entries.sort(key=lambda x: (x[0], x[1]), reverse=True)
     return entries[0][2], entries[0][3]
+
+
+def resolve_session_id(sessions_dir, base):
+    """Ersten freien Kandidaten base, base+'b', base+'c', … zurückgeben.
+
+    Konsistent mit dem bestehenden Schema (2026-07, 2026-07b, 2026-07c). Wird nur
+    genutzt, wenn keine --session-id explizit übergeben wurde.
+    """
+    if not (sessions_dir / base).exists():
+        return base
+    for suffix in "bcdefghijklmnopqrstuvwxyz":
+        candidate = base + suffix
+        if not (sessions_dir / candidate).exists():
+            return candidate
+    sys.exit(f"Abbruch: keine freie session-id für Basis {base} gefunden.")
+
+
+def advance_schedule(session_date):
+    """schedule.json.next_session auf session_date + 30 Tage fortschreiben.
+
+    Nur run_session.py-relevantes Feld ändern; next_research/last_journal bleiben
+    unangetastet (die pflegt run_wart.py). Format wie run_wart.next_regular_session:
+    ISO-Datum + 'T12:00:00Z'.
+    """
+    schedule_path = ROOT / "schedule.json"
+    schedule = json.loads(schedule_path.read_text()) if schedule_path.exists() else {}
+    base = datetime.date.fromisoformat(session_date)
+    schedule["next_session"] = (base + datetime.timedelta(days=30)).isoformat() + "T12:00:00Z"
+    schedule_path.write_text(json.dumps(schedule, indent=2, ensure_ascii=False) + "\n")
+    print(f"schedule.json aktualisiert (nächste Sitzung: {schedule['next_session']})")
 
 
 # ---------------------------------------------------------------- API calls
@@ -499,7 +519,11 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--question", required=True)
     parser.add_argument("--title", required=True)
-    parser.add_argument("--session-id", default=datetime.date.today().strftime("%Y-%m"))
+    parser.add_argument(
+        "--session-id",
+        default=None,
+        help="Ohne Angabe: YYYY-MM des heutigen Tages, bei Kollision Suffix b/c/…",
+    )
     parser.add_argument("--number", type=int, default=None)
     parser.add_argument("--with-dossier", action="store_true")
     parser.add_argument(
@@ -513,12 +537,15 @@ def main():
     if args.led_by_wart:
         args.with_dossier = True
 
-    load_env()
+    load_env(HERE, ROOT)
+    require_keys("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY")
     config = json.loads((HERE / "config.json").read_text())
     manifest = (ROOT / "manifest.md").read_text()
     sources = (HERE / "sources.md").read_text()
 
     sessions_dir = ROOT / "sessions"
+    if args.session_id is None:
+        args.session_id = resolve_session_id(sessions_dir, datetime.date.today().strftime("%Y-%m"))
     out_dir = sessions_dir / args.session_id
     if out_dir.exists():
         sys.exit(f"Abbruch: {out_dir} existiert bereits — Protokolle sind unveränderlich.")
@@ -805,6 +832,8 @@ def main():
     (out_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
     print(f"\nProtokoll geschrieben: {out_dir / 'session.json'}")
     print(f"Kosten der Sitzung: {costs['total']} €")
+
+    advance_schedule(today)
 
 
 if __name__ == "__main__":

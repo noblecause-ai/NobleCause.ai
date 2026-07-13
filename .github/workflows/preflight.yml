@@ -1,23 +1,22 @@
-name: Wart — wöchentlicher Research-Lauf
+name: Preflight — Key-Canary
+
+# Täglicher Canary: prüft, dass ANTHROPIC/OPENAI/GEMINI-Secrets gesetzt und live
+# erreichbar sind — BEVOR ein echter Wart- oder Session-Lauf am Key scheitert.
+# Schlägt der Canary fehl, wird ein Issue angelegt/aktualisiert.
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '30 5 * * *'
   workflow_dispatch:
 
-concurrency:
-  group: wart-research
-  cancel-in-progress: false
-
 permissions:
-  contents: write
   issues: write
 
 jobs:
-  wart:
-    name: Der Wart recherchiert
+  canary:
+    name: Key-Canary (3 Anbieter)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -30,38 +29,28 @@ jobs:
       - name: Install dependencies
         run: pip install -r gremium/requirements.txt
 
-      - name: Wart-Lauf (Fable + Web-Suche)
+      - name: Canary (minimaler Live-Call je Anbieter)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           set -o pipefail
-          python3 gremium/run_wart.py 2>&1 | tee run.log
-
-      - name: Commit Journal & schedule
-        run: |
-          git config user.name "noblecause-wart"
-          git config user.email "wart@noblecause.ai"
-          git add journal/ schedule.json
-          if git diff --staged --quiet; then
-            echo "Keine Änderungen zum Committen."
-            exit 0
-          fi
-          git commit -m "journal: Wart-Eintrag $(date -u +%Y-%m-%d)"
-          git push
+          python3 gremium/preflight.py 2>&1 | tee run.log
 
       - name: Fehler als Issue melden
         if: failure()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LABEL="ci-failure:wart"
+          LABEL="ci-failure:preflight"
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           gh label create "$LABEL" --color B60205 --description "Automatischer CI-Fehler" 2>/dev/null || true
           TAIL=$(tail -c 3000 run.log 2>/dev/null || echo "(kein Log erfasst)")
-          BODY=$(printf '**Wart-Lauf fehlgeschlagen:** %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
+          BODY=$(printf '**Canary fehlgeschlagen** (mind. ein Key fehlt/leer oder Anbieter nicht erreichbar): %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
           NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number')
           if [ -n "$NUM" ]; then
             gh issue comment "$NUM" --body "$BODY"
           else
-            gh issue create --title "CI-Fehler: Wart-Lauf" --label "$LABEL" --body "$BODY"
+            gh issue create --title "CI-Fehler: Key-Canary (preflight)" --label "$LABEL" --body "$BODY"
           fi
