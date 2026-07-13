@@ -110,7 +110,7 @@ jobs:
           gh label create "$LABEL" --color B60205 --description "Automatischer CI-Fehler" 2>/dev/null || true
           TAIL=$(tail -c 3000 run.log 2>/dev/null || echo "(kein Log erfasst)")
           BODY=$(printf '**Sitzungs-Lauf fehlgeschlagen:** %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
-          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number')
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
           if [ -n "$NUM" ]; then
             gh issue comment "$NUM" --body "$BODY"
           else
@@ -139,7 +139,7 @@ jobs:
           fi
           LABEL="session-due"
           gh label create "$LABEL" --color 0E8A16 --description "Sitzung fällig" 2>/dev/null || true
-          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number')
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
           if [ -n "$NUM" ]; then
             echo "Erinnerung existiert bereits (#$NUM) — kein Spam."
             exit 0

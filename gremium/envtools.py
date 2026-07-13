@@ -34,13 +34,33 @@ def load_env(here: Path, root: Path):
 
 
 def require_keys(*names):
-    """Abort (exit 1) if any named env var is unset or empty. Never logs values."""
+    """Abort (exit 1) if any named env var is unset, empty, or has surrounding
+    whitespace. Never logs values — only lengths.
+
+    Leading/trailing whitespace (e.g. a stray \\n from copy-paste) is a real key
+    killer: it survives a naive truthiness check but produces the exact 401 we
+    are hardening against, because the header value is then malformed.
+    """
     missing = [n for n in names if not os.environ.get(n, "").strip()]
     if missing:
         for n in missing:
             print(f"FEHLER: {n} fehlt oder ist leer.", file=sys.stderr)
         print(
             f"Abbruch: {len(missing)} Key(s) fehlen oder sind leer — kein API-Call.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    dirty = [n for n in names if os.environ[n] != os.environ[n].strip()]
+    if dirty:
+        for n in dirty:
+            raw, clean = os.environ[n], os.environ[n].strip()
+            print(
+                f"FEHLER: {n} hat umschließenden Whitespace "
+                f"({len(raw)} Zeichen roh, {len(clean)} getrimmt).",
+                file=sys.stderr,
+            )
+        print(
+            f"Abbruch: {len(dirty)} Key(s) mit Whitespace — kein API-Call.",
             file=sys.stderr,
         )
         sys.exit(1)
