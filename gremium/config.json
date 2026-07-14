@@ -16,7 +16,7 @@
 		"usd_per_1m_input": 10.0,
 		"usd_per_1m_output": 50.0,
 		"usd_per_1k_web_searches": 10.0,
-		"max_output_tokens": 8192,
+		"max_output_tokens": 32768,
 		"max_web_search_uses": 15
 	},
 	"models": [

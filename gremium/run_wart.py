@@ -279,6 +279,14 @@ def main():
     )
     (raw_dir / "wart-content.md").write_text(text)
 
+    stop_reason = raw.get("stop_reason")
+    print(f"  stop_reason: {stop_reason}")
+    if stop_reason == "max_tokens":
+        sys.exit(
+            "Abbruch: Antwort bei max_tokens abgeschnitten — "
+            "max_output_tokens (config.json wart) erhöhen. Kein Parse-Versuch."
+        )
+
     print("\nSchritt 2 — JSON extrahieren")
     parsed = extract_json_block(text)
     if not parsed:
