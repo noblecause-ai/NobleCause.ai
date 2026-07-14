@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "note": "Kuratierte Organisations-Registry. Der deterministische Aggregator löst Modell-Voten ausschließlich hier auf (Alias-Match, kein Fuzzy, kein Modell). donation_url ist die einzige Publikationsquelle für Spendenlinks — niemals die halluzinationsanfällige Modell-URL. Neue, unbekannte Org-Strings in einem Votum werden NICHT stillschweigend verworfen, sondern als 'nicht zuordenbar' gewarnt und hier nachgepflegt. aliases muss jede in einem Schlussvotum vorkommende Schreibweise abdecken.",
+  "organizations": [
+    {
+      "id": "helen-keller-international",
+      "canonical_name": "Helen Keller International",
+      "aliases": [
+        "Helen Keller International",
+        "Helen Keller International (HKI)",
+        "Helen Keller Intl"
+      ],
+      "donation_url": "https://helenkellerintl.org/donate/",
+      "evaluator_source": "GiveWell Top Charity (Vitamin-A-Supplementierung); hki.org leitet auf helenkellerintl.org um"
+    },
+    {
+      "id": "malaria-consortium",
+      "canonical_name": "Malaria Consortium",
+      "aliases": ["Malaria Consortium"],
+      "donation_url": "https://www.malariaconsortium.org/donate",
+      "evaluator_source": "GiveWell Top Charity (Seasonal Malaria Chemoprevention)"
+    },
+    {
+      "id": "against-malaria-foundation",
+      "canonical_name": "Against Malaria Foundation",
+      "aliases": [
+        "Against Malaria Foundation",
+        "Against Malaria Foundation (AMF)"
+      ],
+      "donation_url": "https://www.againstmalaria.com/Donation.aspx",
+      "evaluator_source": "GiveWell Top Charity (insektizidbehandelte Moskitonetze)"
+    },
+    {
+      "id": "lead-exposure-elimination-project",
+      "canonical_name": "Lead Exposure Elimination Project (LEEP)",
+      "aliases": ["Lead Exposure Elimination Project (LEEP)"],
+      "donation_url": "https://leadelimination.org/donate/",
+      "evaluator_source": "GiveWell / Founders Pledge (Bleiexposition)"
+    },
+    {
+      "id": "nuclear-threat-initiative",
+      "canonical_name": "Nuclear Threat Initiative (NTI)",
+      "aliases": [
+        "Nuclear Threat Initiative (NTI)",
+        "NTI | bio (Nuclear Threat Initiative)",
+        "Nuclear Threat Initiative (NTI) – Biosecurity",
+        "Nuclear Threat Initiative (NTI) — Global Biological Policy & Programs",
+        "Nuclear Threat Initiative (NTI), Biosecurity Program"
+      ],
+      "donation_url": "https://www.nti.org/donate/",
+      "evaluator_source": "Founders Pledge / Longview (Biosicherheit)"
+    },
+    {
+      "id": "centre-for-governance-of-ai",
+      "canonical_name": "Centre for the Governance of AI (GovAI)",
+      "aliases": ["Centre for the Governance of AI (GovAI)"],
+      "donation_url": "https://www.every.org/govai#/donate",
+      "evaluator_source": "Longtermist AI-Governance; offizieller Spendenlink von governance.ai (every.org/govai) — Modell-URL /donate war 404"
+    },
+    {
+      "id": "machine-intelligence-research-institute",
+      "canonical_name": "Machine Intelligence Research Institute (MIRI)",
+      "aliases": ["Machine Intelligence Research Institute"],
+      "donation_url": "https://intelligence.org/donate/",
+      "evaluator_source": "AI-Alignment (modellgenannt, Domain geprüft)"
+    },
+    {
+      "id": "pure-earth",
+      "canonical_name": "Pure Earth",
+      "aliases": ["Pure Earth"],
+      "donation_url": "https://www.pureearth.org/donate/",
+      "evaluator_source": "Bleivergiftung / Schwermetalle (modellgenannt, Domain geprüft)"
+    },
+    {
+      "id": "evidence-action",
+      "canonical_name": "Evidence Action",
+      "aliases": ["Evidence Action – Teaching at the Right Level"],
+      "donation_url": "https://www.evidenceaction.org/donate",
+      "evaluator_source": "GiveWell / TaRL (Teaching at the Right Level)"
+    },
+    {
+      "id": "pratham",
+      "canonical_name": "Pratham",
+      "aliases": ["Pratham"],
+      "donation_url": "https://www.pratham.org/donate/",
+      "evaluator_source": "Bildung / TaRL (modellgenannt, Domain geprüft)"
+    },
+    {
+      "id": "iodine-global-network",
+      "canonical_name": "Iodine Global Network (IGN)",
+      "aliases": ["Iodine Global Network (IGN)"],
+      "donation_url": "https://www.ign.org/donate",
+      "evaluator_source": "Jod-Supplementierung (modellgenannt, Domain geprüft)"
+    }
+  ]
+}
