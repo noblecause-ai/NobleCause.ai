@@ -12,7 +12,9 @@
 		D: 'Übersehene Essentials'
 	};
 
-	const consensusRecs = data.latest?.recommendations?.filter((r) => r.has_consensus) ?? [];
+	// ALLE vier Säulen der jüngsten Sitzung — Konsens UND Dissens gleichwertig.
+	// Dissens ist Verfassung, kein Fehlerfall.
+	const latestRecs = data.latest?.recommendations ?? [];
 
 	function fmtDiff(ms) {
 		if (ms <= 0) return 'bald';
@@ -79,10 +81,10 @@
 	{#if data.latest.summary}
 		<p class="latest-summary">{data.latest.summary}</p>
 	{/if}
-	{#if consensusRecs.length > 0}
+	{#if latestRecs.length > 0}
 		<div class="latest-cards">
-			{#each consensusRecs as rec (rec.pillar)}
-				<ResultCard {rec} pillarName={pillarNames[rec.pillar] ?? ''} compact />
+			{#each latestRecs as rec (rec.pillar)}
+				<ResultCard {rec} pillarName={pillarNames[rec.pillar] ?? ''} />
 			{/each}
 		</div>
 	{/if}

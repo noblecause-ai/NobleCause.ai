@@ -34,7 +34,10 @@ export function listSessions() {
 			};
 		})
 		.filter(Boolean)
-		.sort((a, b) => (a.date < b.date ? 1 : -1));
+		// Nach Sitzungsnummer absteigend (deterministisch); Datum nur als Fallback.
+		// Die drei Sitzungen teilen dasselbe Datum — ein reiner Datums-Vergleich
+		// wäre nicht eindeutig und die „jüngste" Sitzung zufällig.
+		.sort((a, b) => (b.number ?? 0) - (a.number ?? 0) || (a.date < b.date ? 1 : -1));
 }
 
 export function getSession(id) {
