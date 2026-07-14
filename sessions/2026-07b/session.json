@@ -333,6 +333,7 @@
   "unresolved_votes": [],
   "correction_notice": {
     "date": "2026-07-14",
-    "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: ⟪COMMIT⟫."
+    "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: 33e6f34b9697c1be3001c166b7820e17c9dfbe14.",
+    "commit": "33e6f34b9697c1be3001c166b7820e17c9dfbe14"
   }
 }
