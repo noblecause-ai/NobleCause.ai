@@ -139,6 +139,38 @@ def test_german_keys_are_counted():
     assert "Opus" in a["convergence"]["models"]
 
 
+def test_conditional_vote_counts_but_is_flagged():
+    votes = [
+        vote("Opus", {"pillar": "A", "organization": "Helen Keller Intl",
+                      "title": "VAS — konditional, mit Vertagungsantrag", "confidence": 0.55}),
+        vote("GPT", rec("A", "Helen Keller International (HKI)")),
+        vote("Gemini", rec("A", "Helen Keller International (HKI)")),
+    ]
+    recs, _ = run_session.aggregate_recommendations(votes)
+    a = pillar(recs, "A")
+    assert a["has_consensus"] is True
+    conv = a["convergence"]
+    assert conv["count"] == 3
+    assert conv["conditional_count"] == 1
+    opus = next(v for v in conv["votes"] if v["model"] == "Opus")
+    assert opus["conditional"] is True
+    assert "konditional" in opus["reservation"]
+    gpt = next(v for v in conv["votes"] if v["model"] == "GPT")
+    assert gpt["conditional"] is False and gpt["reservation"] is None
+    assert "davon 1 konditional" in a["rationale_md"]
+
+
+def test_firm_vote_not_flagged_conditional():
+    votes = [
+        vote("Opus", rec("B", "Against Malaria Foundation", conf=0.78)),
+        vote("Gemini", rec("B", "Against Malaria Foundation (AMF)")),
+    ]
+    recs, _ = run_session.aggregate_recommendations(votes)
+    b = pillar(recs, "B")
+    assert b["has_consensus"] is True
+    assert b["convergence"]["conditional_count"] == 0
+
+
 def test_same_model_twice_is_not_consensus():
     # One model listing the org twice must NOT fake a 2-model consensus.
     votes = [

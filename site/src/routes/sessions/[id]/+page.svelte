@@ -31,6 +31,13 @@
 <h1>{s.title}</h1>
 <blockquote class="question">{s.question}</blockquote>
 
+{#if s.correction_notice}
+	<aside class="correction">
+		<p class="correction-label">Korrektur</p>
+		<p>{s.correction_notice.text}</p>
+	</aside>
+{/if}
+
 {#if s.wart_opening_md}
 	<h2>Eröffnung durch den Wart</h2>
 	<p class="muted">
@@ -164,6 +171,25 @@
 	.question {
 		margin: 0.5rem 0 1.5rem;
 		font-size: 0.95rem;
+	}
+	.correction {
+		border: 1px solid var(--line-strong);
+		border-left: 3px solid var(--structure);
+		background: var(--card-bg);
+		padding: 0.8rem 1rem;
+		margin: 0 0 1.5rem;
+		font-size: 0.9rem;
+	}
+	.correction-label {
+		margin: 0 0 0.3rem;
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 0.72rem;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: var(--structure);
+	}
+	.correction p:last-child {
+		margin: 0;
 	}
 	.summary {
 		margin: 0;

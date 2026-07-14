@@ -22,11 +22,24 @@
 		{#if rec.confidence != null}
 			<ConfidenceBar confidence={rec.confidence} />
 		{/if}
+		{#if rec.convergence?.conditional_count}
+			<p class="conditional-note">
+				{rec.convergence.conditional_count} von {rec.convergence.count} Voten konditional
+				(Vorbehalt, kein Widerruf der Empfehlung):
+			</p>
+			<ul class="reservations">
+				{#each (rec.convergence.votes ?? []).filter((v) => v.conditional) as v (v.model)}
+					<li><strong>{v.model}:</strong> {v.reservation}</li>
+				{/each}
+			</ul>
+		{/if}
 		{#if rec.donation_url && !compact}
 			<p class="donate">
 				<a href={rec.donation_url}>Offizieller Spendenweg</a>
 				<span class="muted">(extern — durch NobleCause.ai fließt kein Geld)</span>
 			</p>
+		{:else if !rec.donation_url && !compact}
+			<p class="donate muted">Kein offizieller Spendenweg auffindbar.</p>
 		{/if}
 	</article>
 {:else}
@@ -82,6 +95,20 @@
 	.donate {
 		margin: 0.6rem 0 0;
 		font-size: 0.85rem;
+	}
+	.conditional-note {
+		margin: 0.5rem 0 0.2rem;
+		font-size: 0.85rem;
+		color: var(--structure);
+	}
+	.reservations {
+		margin: 0 0 0.2rem;
+		padding-left: 1.1rem;
+		font-size: 0.85rem;
+		color: var(--muted);
+	}
+	.reservations li {
+		margin: 0.2rem 0;
 	}
 	.split-row {
 		border-left: 3px solid var(--line-strong);

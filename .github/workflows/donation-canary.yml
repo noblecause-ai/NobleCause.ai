@@ -1,0 +1,51 @@
+name: Spendenlink-Canary
+
+# Wöchentlicher Wächter über die donation_urls in organizations.json — die
+# Spendenwege sind das Einzige, was das Projekt tatsächlich ausliefert. Prüft
+# Statuscode, Redirect-Ziel und Formular-Heuristik. Fail nur bei einem defekten
+# PUBLIZIERTEN Weg (Konsens-Empfehlung); nicht publizierte Brüche = WARN.
+
+on:
+  schedule:
+    - cron: '30 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canary:
+    name: Spendenwege prüfen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Spendenlink-Canary
+        run: |
+          set -o pipefail
+          python3 gremium/donation_canary.py 2>&1 | tee run.log
+
+      - name: Fehler als Issue melden
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABEL="ci-failure:donations"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh label create "$LABEL" --color B60205 --description "Defekter Spendenweg" 2>/dev/null || true
+          TAIL=$(tail -c 3000 run.log 2>/dev/null || echo "(kein Log erfasst)")
+          BODY=$(printf '**Publizierter Spendenweg defekt:** %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "$BODY"
+          else
+            gh issue create --title "CI-Fehler: Spendenweg defekt" --label "$LABEL" --body "$BODY"
+          fi
