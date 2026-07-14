@@ -85,7 +85,7 @@
           "title": "Vitamin-A-Supplementierung für Kinder unter 5 Jahren",
           "organization": "Helen Keller International",
           "organization_id": "helen-keller-international",
-          "donation_url": "https://helenkellerintl.org/donate/",
+          "donation_url": "https://giving.helenkellerintl.org/page/FUNUYQRJGHG",
           "confidence": 0.7,
           "model": "Claude Sonnet",
           "conditional": false,
@@ -157,7 +157,7 @@
       "title": "Förderung von Standards und Governance für fortgeschrittene KI-Systeme",
       "organization": "Centre for the Governance of AI (GovAI)",
       "organization_id": "centre-for-governance-of-ai",
-      "donation_url": null,
+      "donation_url": "https://www.every.org/govai#/donate",
       "confidence": 0.57,
       "convergence": {
         "count": 2,

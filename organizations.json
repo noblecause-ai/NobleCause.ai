@@ -10,9 +10,9 @@
         "Helen Keller International (HKI)",
         "Helen Keller Intl"
       ],
-      "donation_url": "https://helenkellerintl.org/donate/",
-      "donation_url_verified_at": null,
-      "donation_url_source": "hki.org leitet per 301 auf helenkellerintl.org um (Eigen-Domain, technische Korrektur); Endseite bot-403, Sicht-Check ausstehend",
+      "donation_url": "https://giving.helenkellerintl.org/page/FUNUYQRJGHG",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "Ziel der 'Donate Now'-Schaltfläche der Startseite helenkellerintl.org; HTTP 200, gehostetes Spendenformular (das frühere /donate/ leitete auf die Startseite um)",
       "evaluator_source": "GiveWell Top Charity (Vitamin-A-Supplementierung)"
     },
     {
@@ -20,8 +20,8 @@
       "canonical_name": "Malaria Consortium",
       "aliases": ["Malaria Consortium"],
       "donation_url": "https://www.malariaconsortium.org/donate",
-      "donation_url_verified_at": null,
-      "donation_url_source": "kanonische Eigen-Domain; bot-403, Sicht-Check ausstehend",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "Canary HTTP 200 (Chrome-UA); /donate leitet auf /donate-to-malaria-consortium (Spendenseite). Der frühere bot-403 war ein curl/WebFetch-Artefakt.",
       "evaluator_source": "GiveWell Top Charity (Seasonal Malaria Chemoprevention)"
     },
     {
@@ -31,9 +31,9 @@
         "Against Malaria Foundation",
         "Against Malaria Foundation (AMF)"
       ],
-      "donation_url": "https://www.againstmalaria.com/Donation.aspx",
+      "donation_url": "https://www.againstmalaria.com/donate.aspx",
       "donation_url_verified_at": "2026-07-14",
-      "donation_url_source": "curl HTTP 200 (Eigen-Domain)",
+      "donation_url_source": "mehrstufiges Online-Spendenformular (Donation.aspx war nur Methoden-Übersicht)",
       "evaluator_source": "GiveWell Top Charity (insektizidbehandelte Moskitonetze)"
     },
     {
@@ -56,17 +56,17 @@
         "Nuclear Threat Initiative (NTI), Biosecurity Program"
       ],
       "donation_url": "https://www.nti.org/donate/",
-      "donation_url_verified_at": null,
-      "donation_url_source": "kanonische Eigen-Domain; bot-403, Sicht-Check ausstehend",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "Canary HTTP 200 (Chrome-UA). Der frühere bot-403 war ein curl/WebFetch-Artefakt.",
       "evaluator_source": "Founders Pledge / Longview (Biosicherheit)"
     },
     {
       "id": "centre-for-governance-of-ai",
       "canonical_name": "Centre for the Governance of AI (GovAI)",
       "aliases": ["Centre for the Governance of AI (GovAI)"],
-      "donation_url": null,
-      "donation_url_verified_at": null,
-      "donation_url_source": "EMPFEHLUNG, nicht selbst entschieden: governance.ai/donate war 404; die Homepage verlinkt every.org/govai — das leitet Geld auf eine Drittplattform um und ist eine redaktionelle Entscheidung. Bis zur Freigabe kein Spendenlink.",
+      "donation_url": "https://www.every.org/govai#/donate",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "governance.ai verlinkt every.org/govai auf der eigenen Start- UND About-Seite → offizieller Weg (regelkonform); /donate war 404. every.org 429 = Rate-Limit, nicht kaputt.",
       "evaluator_source": "Longtermist AI-Governance"
     },
     {
@@ -100,9 +100,9 @@
       "id": "pratham",
       "canonical_name": "Pratham",
       "aliases": ["Pratham"],
-      "donation_url": "https://www.pratham.org/donate/",
+      "donation_url": null,
       "donation_url_verified_at": null,
-      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
+      "donation_url_source": "pratham.org Spendenseite hat aktuell eine Redirect-Schleife (2026-07-14, curl: 50 Redirects) — kein funktionierender Weg auffindbar. Kein Konsens → nicht publiziert.",
       "evaluator_source": "Bildung / TaRL"
     },
     {

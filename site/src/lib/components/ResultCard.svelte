@@ -38,6 +38,8 @@
 				<a href={rec.donation_url}>Offizieller Spendenweg</a>
 				<span class="muted">(extern — durch NobleCause.ai fließt kein Geld)</span>
 			</p>
+		{:else if !rec.donation_url && !compact}
+			<p class="donate muted">Kein offizieller Spendenweg auffindbar.</p>
 		{/if}
 	</article>
 {:else}
