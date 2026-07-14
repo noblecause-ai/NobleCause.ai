@@ -53,6 +53,18 @@
 				<div class="split-vote">
 					<strong>{vote.organization}</strong> — {vote.title}
 					<span class="muted">({vote.model}{#if vote.confidence != null}, {Math.round(vote.confidence * 100)} %{/if})</span>
+					{#if vote.conditional}
+						<span class="muted"> · konditional: {vote.reservation}</span>
+					{/if}
+					{#if !compact}
+						<span class="split-donate">
+							{#if vote.donation_url}
+								<a href={vote.donation_url}>Offizieller Spendenweg</a>
+							{:else}
+								<span class="muted">Kein offizieller Spendenweg auffindbar</span>
+							{/if}
+						</span>
+					{/if}
 				</div>
 			{/each}
 		</div>
@@ -129,5 +141,10 @@
 	.split-vote {
 		font-size: 0.92rem;
 		margin: 0.35rem 0;
+	}
+	.split-donate {
+		display: block;
+		font-size: 0.85rem;
+		margin: 0.15rem 0 0;
 	}
 </style>
