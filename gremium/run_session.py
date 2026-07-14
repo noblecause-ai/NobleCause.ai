@@ -22,6 +22,7 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 
 import prompts  # noqa: E402
+import organizations  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
 
 
@@ -273,40 +274,79 @@ def call_model(spec, system, user, max_tokens, raw_dir, tag):
 
 # ---------------------------------------------------------------- aggregation
 
+def _vote_recommendations(parsed):
+    """Empfehlungsliste aus einem geparsten Votum — key-tolerant.
+
+    Ein Modell kann von der Prompt-Vorgabe abweichen (Opus 2026-07c nutzte die
+    deutschen Keys 'empfehlungen'/'gesamtkonfidenz'). Solche Voten werden gelesen,
+    NICHT verschluckt. Rein deterministische Key-Alternativen, kein Fuzzy.
+    """
+    if not parsed:
+        return []
+    return parsed.get("recommendations") or parsed.get("empfehlungen") or []
+
+
 def aggregate_recommendations(final_votes, total_models=None):
+    """Deterministische Aggregation gegen die Organisations-Registry.
+
+    Konsens = >=2 VERSCHIEDENE Modelle lösen auf dieselbe org_id auf. Auflösung
+    ausschließlich via organizations.resolve() (Alias-Match, kein Modell, kein
+    Fuzzy). donation_url + canonical_name kommen aus der Registry, nie aus dem
+    Votum (Halluzinationsschutz).
+
+    Gibt (recommendations, unresolved) zurück. `unresolved` sammelt Voten mit
+    unbekannter Organisation — sie werden NIE stillschweigend als Dissens
+    verbucht, sondern explizit ausgewiesen.
+    """
     total = total_models or len(final_votes)
     recs = []
+    unresolved = []
     for pillar in ("A", "B", "C", "D"):
         candidates = []
         for vote in final_votes:
-            for r in (vote["parsed"] or {}).get("recommendations", []):
-                if r.get("pillar") == pillar:
-                    candidates.append({**r, "_model": vote["label"]})
+            for r in _vote_recommendations(vote["parsed"]):
+                if r.get("pillar") != pillar:
+                    continue
+                org_id = organizations.resolve(r.get("organization"))
+                if org_id is None:
+                    unresolved.append(
+                        {
+                            "pillar": pillar,
+                            "organization": r.get("organization"),
+                            "model": vote["label"],
+                        }
+                    )
+                    continue
+                candidates.append({**r, "_model": vote["label"], "_org_id": org_id})
         if not candidates:
             continue
         groups = {}
         for c in candidates:
-            key = re.sub(r"[^a-z0-9]", "", (c.get("organization") or "").lower())
-            groups.setdefault(key, []).append(c)
-        best = max(groups.values(), key=len)
-        if len(best) >= 2:
+            groups.setdefault(c["_org_id"], []).append(c)
+        # Gewinner = Gruppe mit den meisten VERSCHIEDENEN Modellen.
+        best_id = max(groups, key=lambda k: len({c["_model"] for c in groups[k]}))
+        best = groups[best_id]
+        best_models = sorted({c["_model"] for c in best})
+        org = organizations.get(best_id)
+        if len(best_models) >= 2:
             confs = [c.get("confidence") for c in best if c.get("confidence") is not None]
             recs.append(
                 {
                     "pillar": pillar,
                     "has_consensus": True,
                     "title": best[0].get("title"),
-                    "organization": best[0].get("organization"),
-                    "donation_url": best[0].get("donation_url"),
+                    "organization": org["canonical_name"],
+                    "organization_id": best_id,
+                    "donation_url": org.get("donation_url"),
                     "confidence": round(sum(confs) / len(confs), 2) if confs else None,
                     "convergence": {
-                        "count": len(best),
+                        "count": len(best_models),
                         "total": total,
-                        "models": [c["_model"] for c in best],
+                        "models": best_models,
                     },
-                    "rationale_md": f"Konvergenz im Schlussvotum: {len(best)} von "
+                    "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
                     f"{total} Modellen empfehlen diese Organisation "
-                    f"({', '.join(c['_model'] for c in best)}). Begründungen in den Schlussvoten.",
+                    f"({', '.join(best_models)}). Begründungen in den Schlussvoten.",
                 }
             )
         else:
@@ -321,8 +361,9 @@ def aggregate_recommendations(final_votes, total_models=None):
                     "individual_votes": [
                         {
                             "title": c.get("title"),
-                            "organization": c.get("organization"),
-                            "donation_url": c.get("donation_url"),
+                            "organization": organizations.get(c["_org_id"])["canonical_name"],
+                            "organization_id": c["_org_id"],
+                            "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
                             "confidence": c.get("confidence"),
                             "model": c["_model"],
                         }
@@ -332,7 +373,7 @@ def aggregate_recommendations(final_votes, total_models=None):
                     "auf eine Organisation.",
                 }
             )
-    return recs
+    return recs, unresolved
 
 
 def build_dissent(final_votes):
@@ -738,7 +779,17 @@ def main():
     # -------- Kurzfassung
     print("Kurzfassung — Protokollredaktion")
     dissent_md = build_dissent(r2)
-    recommendations = aggregate_recommendations(r2)
+    recommendations, unresolved = aggregate_recommendations(r2)
+    if unresolved:
+        print(f"  WARNUNG: {len(unresolved)} Votum/Voten mit nicht zuordenbarer Organisation:", file=sys.stderr)
+        for u in unresolved:
+            print(f"    Säule {u['pillar']}: {u['organization']!r} ({u['model']})", file=sys.stderr)
+        note = "\n".join(
+            f"- [ ] Säule {u['pillar']}: {u['organization']!r} ({u['model']}) — Session {args.session_id}"
+            for u in unresolved
+        )
+        with (ROOT / "organizations_unresolved.md").open("a") as f:
+            f.write(note + "\n")
     if args.led_by_wart:
         summarizer = {
             **wart_cfg,
@@ -819,6 +870,7 @@ def main():
         "rounds": rounds,
         "dissent_md": dissent_md,
         "recommendations": recommendations,
+        "unresolved_votes": unresolved,
         "costs": costs,
     }
     if args.led_by_wart:
