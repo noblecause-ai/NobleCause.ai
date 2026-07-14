@@ -172,7 +172,9 @@ def call_wart_dossier(wart_cfg, system, user, raw_dir):
     print(f"  Modell: {wart_cfg['model']}")
     print(f"  Web-Suche: max. {max_uses} Anfragen")
 
-    resp = client.messages.create(
+    # Streaming Pflicht bei hohem max_output_tokens (langes Dossier + Web-Suche);
+    # das SDK verweigert sonst den nicht-gestreamten Call (>10 min veranschlagt).
+    with client.messages.stream(
         model=wart_cfg["model"],
         max_tokens=wart_cfg.get("max_output_tokens", 8192),
         system=system,
@@ -185,7 +187,8 @@ def call_wart_dossier(wart_cfg, system, user, raw_dir):
                 "allowed_callers": ["direct"],
             }
         ],
-    )
+    ) as stream:
+        resp = stream.get_final_message()
     raw = resp.model_dump()
     (raw_dir / "r0-wart.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
