@@ -49,6 +49,17 @@ jobs:
           git commit -m "journal: Wart-Eintrag $(date -u +%Y-%m-%d)"
           git push
 
+      - name: Rohantwort sichern (bei Fehlschlag)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wart-raw-${{ github.run_id }}
+          path: |
+            journal/
+            run.log
+          retention-days: 30
+          if-no-files-found: warn
+
       - name: Fehler als Issue melden
         if: failure()
         env:
