@@ -84,23 +84,32 @@
         {
           "title": "Vitamin-A-Supplementierung für Kinder unter 5 Jahren",
           "organization": "Helen Keller International",
-          "donation_url": "https://www.hki.org/donate/",
+          "organization_id": "helen-keller-international",
+          "donation_url": "https://helenkellerintl.org/donate/",
           "confidence": 0.7,
-          "model": "Claude Sonnet"
-        },
-        {
-          "title": "Teaching at the Right Level (TaRL) zur Steigerung von Grundkompetenzen",
-          "organization": "Evidence Action – Teaching at the Right Level",
-          "donation_url": "https://www.evidenceaction.org/donate",
-          "confidence": 0.63,
-          "model": "GPT"
+          "model": "Claude Sonnet",
+          "conditional": false,
+          "reservation": null
         },
         {
           "title": "Jodierung von Salz zur Bekämpfung von Jodmangelstörungen",
           "organization": "Iodine Global Network (IGN)",
+          "organization_id": "iodine-global-network",
           "donation_url": "https://www.ign.org/donate",
           "confidence": 0.9,
-          "model": "Gemini Pro"
+          "model": "Gemini Pro",
+          "conditional": false,
+          "reservation": null
+        },
+        {
+          "title": "Teaching at the Right Level (TaRL) zur Steigerung von Grundkompetenzen",
+          "organization": "Evidence Action",
+          "organization_id": "evidence-action",
+          "donation_url": "https://www.evidenceaction.org/donate",
+          "confidence": 0.63,
+          "model": "GPT",
+          "conditional": false,
+          "reservation": null
         }
       ],
       "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
@@ -110,15 +119,34 @@
       "has_consensus": true,
       "title": "Saisonale Malaria-Chemoprophylaxe (SMC)",
       "organization": "Malaria Consortium",
-      "donation_url": "https://www.malariaconsortium.org/donate/",
+      "organization_id": "malaria-consortium",
+      "donation_url": "https://www.malariaconsortium.org/donate",
       "confidence": 0.81,
       "convergence": {
         "count": 3,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "Claude Sonnet",
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Sonnet",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
       "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Sonnet, GPT, Gemini Pro). Begründungen in den Schlussvoten."
@@ -126,16 +154,30 @@
     {
       "pillar": "C",
       "has_consensus": true,
-      "title": "KI-Governance: Standards, Audits & Incident-Reporting für fortgeschrittene KI-Systeme",
+      "title": "Förderung von Standards und Governance für fortgeschrittene KI-Systeme",
       "organization": "Centre for the Governance of AI (GovAI)",
-      "donation_url": "https://www.governance.ai/donate",
+      "organization_id": "centre-for-governance-of-ai",
+      "donation_url": null,
       "confidence": 0.57,
       "convergence": {
         "count": 2,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
       "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (GPT, Gemini Pro). Begründungen in den Schlussvoten."
@@ -143,16 +185,30 @@
     {
       "pillar": "D",
       "has_consensus": true,
-      "title": "Reduktion von Bleiexposition durch Politik/Regulierung (v. a. bleihaltige Farben)",
+      "title": "Bekämpfung der Bleivergiftung durch politische und regulatorische Maßnahmen",
       "organization": "Lead Exposure Elimination Project (LEEP)",
-      "donation_url": "https://www.leadelimination.org/donate",
+      "organization_id": "lead-exposure-elimination-project",
+      "donation_url": "https://leadelimination.org/donate/",
       "confidence": 0.67,
       "convergence": {
         "count": 2,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
       "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (GPT, Gemini Pro). Begründungen in den Schlussvoten."
@@ -204,5 +260,6 @@
     "Säule A – Säulendefinition: Debatte, ob Mikronährstoffe (unmittelbare Mortalitätsreduktion) oder Skills-Training (langfristige Produktivität) konzeptionell zur »Zukunftsinvestition« passen, oder ob beide primär »gegenwärtiges Leid« lindern.",
     "Säule C – Vernachlässigung seit 2020: Gegensätzliche Bewertung: Claude sieht AI-Safety deutlich unterfinanziert; Gemini argumentiert, dass Biosecurity post-COVID wieder stärker gestützt wird und relative Vernachlässigung gefallen ist.",
     "Konfidenz-Asymmetrie: Säule B erreicht 72 % Konfidenz (Konsens); Säule C fällt auf 55 % (heterogene Modelle); Säule A auf 63 % – Indikator für höhere Modellunsicherheit bei längeren Kausalketten und älteren Interventionen."
-  ]
+  ],
+  "unresolved_votes": []
 }

@@ -286,6 +286,21 @@ def _vote_recommendations(parsed):
     return parsed.get("recommendations") or parsed.get("empfehlungen") or []
 
 
+# Publizierte, feste Markerliste: ein Votum ist konditional, wenn das Modell im
+# title selbst einen expliziten Vorbehalt deklariert. Kein Fuzzy, keine Semantik-
+# Inferenz — der Beleg ist der Titel wörtlich (reservation). Kanon Demut:
+# Unsicherheit wird beziffert, nie verschmolzen. (Robustere Zukunft = strukturiertes
+# Feld im Prompt → redaktionell, Empfehlung an den Steward.)
+_CONDITIONAL_MARKERS = re.compile(r"konditional|conditional|bedingt|vorbehalt|vertag", re.I)
+
+
+def _conditional(rec):
+    title = rec.get("title") or ""
+    if _CONDITIONAL_MARKERS.search(title):
+        return True, title
+    return False, None
+
+
 def aggregate_recommendations(final_votes, total_models=None):
     """Deterministische Aggregation gegen die Organisations-Registry.
 
@@ -317,7 +332,11 @@ def aggregate_recommendations(final_votes, total_models=None):
                         }
                     )
                     continue
-                candidates.append({**r, "_model": vote["label"], "_org_id": org_id})
+                cond, reservation = _conditional(r)
+                candidates.append({
+                    **r, "_model": vote["label"], "_org_id": org_id,
+                    "_conditional": cond, "_reservation": reservation,
+                })
         if not candidates:
             continue
         groups = {}
@@ -330,6 +349,16 @@ def aggregate_recommendations(final_votes, total_models=None):
         org = organizations.get(best_id)
         if len(best_models) >= 2:
             confs = [c.get("confidence") for c in best if c.get("confidence") is not None]
+            # Konditionalität je Modell (ein Modell kann mehrfach votieren).
+            by_model = {}
+            for c in best:
+                d = by_model.setdefault(c["_model"], {"model": c["_model"], "conditional": False, "reservation": None})
+                if c.get("_conditional"):
+                    d["conditional"] = True
+                    d["reservation"] = c.get("_reservation")
+            vote_details = [by_model[m] for m in best_models]
+            conditional_count = sum(1 for v in vote_details if v["conditional"])
+            cond_clause = f", davon {conditional_count} konditional," if conditional_count else ""
             recs.append(
                 {
                     "pillar": pillar,
@@ -342,10 +371,12 @@ def aggregate_recommendations(final_votes, total_models=None):
                     "convergence": {
                         "count": len(best_models),
                         "total": total,
+                        "conditional_count": conditional_count,
                         "models": best_models,
+                        "votes": vote_details,
                     },
                     "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
-                    f"{total} Modellen empfehlen diese Organisation "
+                    f"{total} Modellen{cond_clause} empfehlen diese Organisation "
                     f"({', '.join(best_models)}). Begründungen in den Schlussvoten.",
                 }
             )
@@ -366,6 +397,8 @@ def aggregate_recommendations(final_votes, total_models=None):
                             "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
                             "confidence": c.get("confidence"),
                             "model": c["_model"],
+                            "conditional": c["_conditional"],
+                            "reservation": c["_reservation"],
                         }
                         for c in candidates
                     ],

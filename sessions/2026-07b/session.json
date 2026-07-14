@@ -114,50 +114,68 @@
   "recommendations": [
     {
       "pillar": "A",
-      "has_consensus": false,
-      "title": "Kein Konsens — Einzelvoten",
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "individual_votes": [
-        {
-          "title": "Vitamin-A-Supplementierung (VAS)",
-          "organization": "Helen Keller Intl",
-          "donation_url": "https://helenkellerintl.org/donate/",
-          "confidence": 0.6,
-          "model": "Claude Opus"
-        },
-        {
-          "title": "Vitamin-A-Supplementierung (VAS)",
-          "organization": "Helen Keller International (HKI)",
-          "donation_url": "https://www.hki.org/donate/",
-          "confidence": 0.65,
-          "model": "GPT"
-        },
-        {
-          "title": "Bildung auf dem richtigen Niveau (TaRL)",
-          "organization": "Pratham",
-          "donation_url": "https://www.pratham.org/donate/",
-          "confidence": 0.85,
-          "model": "Gemini Pro"
-        }
-      ],
-      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
+      "has_consensus": true,
+      "title": "Vitamin-A-Supplementierung (VAS)",
+      "organization": "Helen Keller International",
+      "organization_id": "helen-keller-international",
+      "donation_url": "https://helenkellerintl.org/donate/",
+      "confidence": 0.62,
+      "convergence": {
+        "count": 2,
+        "total": 3,
+        "conditional_count": 0,
+        "models": [
+          "Claude Opus",
+          "GPT"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "B",
       "has_consensus": true,
       "title": "Saisonale Malaria-Chemoprävention (SMC)",
       "organization": "Malaria Consortium",
-      "donation_url": "https://www.malariaconsortium.org/donate/",
+      "organization_id": "malaria-consortium",
+      "donation_url": "https://www.malariaconsortium.org/donate",
       "confidence": 0.83,
       "convergence": {
         "count": 3,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "Claude Opus",
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
       "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
@@ -166,33 +184,72 @@
       "pillar": "C",
       "has_consensus": true,
       "title": "Biosecurity & Pandemie-Vorsorge (Feld-Empfehlung; Enthaltung bei GovAI wegen Befangenheit)",
-      "organization": "Nuclear Threat Initiative (NTI) — Global Biological Policy & Programs",
+      "organization": "Nuclear Threat Initiative (NTI)",
+      "organization_id": "nuclear-threat-initiative",
       "donation_url": "https://www.nti.org/donate/",
-      "confidence": 0.38,
+      "confidence": 0.45,
       "convergence": {
-        "count": 2,
+        "count": 3,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "Claude Opus",
-          "GPT"
+          "GPT",
+          "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
-      "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT). Begründungen in den Schlussvoten."
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "D",
       "has_consensus": true,
       "title": "Eliminierung von Bleiexposition (Zusage jetzt, Auszahlung an nächste deklarierte Lücke 2027+ gekoppelt)",
       "organization": "Lead Exposure Elimination Project (LEEP)",
+      "organization_id": "lead-exposure-elimination-project",
       "donation_url": "https://leadelimination.org/donate/",
       "confidence": 0.68,
       "convergence": {
         "count": 3,
         "total": 3,
+        "conditional_count": 0,
         "models": [
           "Claude Opus",
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
       "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
@@ -272,5 +329,10 @@
       "usd": 2.1021,
       "eur": 1.7868
     }
+  },
+  "unresolved_votes": [],
+  "correction_notice": {
+    "date": "2026-07-14",
+    "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: ⟪COMMIT⟫."
   }
 }

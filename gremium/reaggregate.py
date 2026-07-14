@@ -23,6 +23,21 @@ ROOT = HERE.parent
 
 from run_session import extract_json_block, aggregate_recommendations  # noqa: E402
 
+# Deterministischer Korrektur-Vermerk (AUFLAGE 2). Wird NUR gesetzt, keine
+# redaktionelle Prosa (summary/dissent_md) wird je angefasst. {commit} wird nach
+# dem Commit durch den SHA der Re-Aggregation ersetzt (Platzhalter unten).
+CORRECTION_DATE = "2026-07-14"
+CORRECTION_COMMIT_PLACEHOLDER = "⟪COMMIT⟫"
+CORRECTION_TEXT = (
+    "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. "
+    "Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische "
+    "Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines "
+    "Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind "
+    "korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf "
+    "und können der korrigierten Aggregation widersprechen. Diff: "
+    + CORRECTION_COMMIT_PLACEHOLDER + "."
+)
+
 
 def text_of(raw, family):
     """Anbieter-spezifische Text-Extraktion aus einem model_dump()."""
@@ -97,8 +112,12 @@ def diff_session(sid, write):
     if write:
         session["recommendations"] = new_recs
         session["unresolved_votes"] = unresolved
+        if changed:
+            # Vermerk nur bei tatsächlich geänderten Empfehlungen; die publizierte
+            # Prosa bleibt unangetastet.
+            session["correction_notice"] = {"date": CORRECTION_DATE, "text": CORRECTION_TEXT}
         (session_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
-        print(f"  → session.json geschrieben ({sid})")
+        print(f"  → session.json geschrieben ({sid}{', mit Korrektur-Vermerk' if changed else ''})")
     return changed
 
 

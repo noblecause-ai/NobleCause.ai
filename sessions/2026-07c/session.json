@@ -124,95 +124,145 @@
   "recommendations": [
     {
       "pillar": "A",
-      "has_consensus": false,
-      "title": "Kein Konsens — Einzelvoten",
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "individual_votes": [
-        {
-          "title": "Vitamin-A-Supplementierung (VAS) als Zukunftsinvestition über Kinderüberleben und Humankapital",
-          "organization": "Helen Keller International (HKI)",
-          "donation_url": "https://www.hki.org/donate/",
-          "confidence": 0.58,
-          "model": "GPT"
-        },
-        {
-          "title": "Vitamin A Supplementation",
-          "organization": "Helen Keller International",
-          "donation_url": "https://www.givewell.org/charities/helen-keller-international",
-          "confidence": 0.8,
-          "model": "Gemini Pro"
-        }
-      ],
-      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
+      "has_consensus": true,
+      "title": "Vitamin-A-Supplementierung (VAS) — konditional, mit Vertagungsantrag zugunsten erneuter TaRL-Prüfung",
+      "organization": "Helen Keller International",
+      "organization_id": "helen-keller-international",
+      "donation_url": "https://helenkellerintl.org/donate/",
+      "confidence": 0.64,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 1,
+        "models": [
+          "Claude Opus",
+          "GPT",
+          "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": true,
+            "reservation": "Vitamin-A-Supplementierung (VAS) — konditional, mit Vertagungsantrag zugunsten erneuter TaRL-Prüfung"
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen, davon 1 konditional, empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "B",
-      "has_consensus": false,
-      "title": "Kein Konsens — Einzelvoten",
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "individual_votes": [
-        {
-          "title": "Vitamin-A-Supplementierung (VAS) zur Reduktion von Kindersterblichkeit",
-          "organization": "Helen Keller International (HKI)",
-          "donation_url": "https://www.hki.org/donate/",
-          "confidence": 0.66,
-          "model": "GPT"
-        },
-        {
-          "title": "Malaria Prevention via Insecticide-Treated Nets",
-          "organization": "Against Malaria Foundation (AMF)",
-          "donation_url": "https://www.givewell.org/charities/amf",
-          "confidence": 0.95,
-          "model": "Gemini Pro"
-        }
-      ],
-      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
+      "has_consensus": true,
+      "title": "Insektizidbehandelte Moskitonetze (LLINs)",
+      "organization": "Against Malaria Foundation",
+      "organization_id": "against-malaria-foundation",
+      "donation_url": "https://www.againstmalaria.com/Donation.aspx",
+      "confidence": 0.86,
+      "convergence": {
+        "count": 2,
+        "total": 3,
+        "conditional_count": 0,
+        "models": [
+          "Claude Opus",
+          "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (Claude Opus, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "C",
-      "has_consensus": false,
-      "title": "Kein Konsens — Einzelvoten",
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "individual_votes": [
-        {
-          "title": "Pandemieprävention & Biosecurity (Global Health Security)",
-          "organization": "Nuclear Threat Initiative (NTI) – Biosecurity",
-          "donation_url": "https://www.nti.org/donate/",
-          "confidence": 0.55,
-          "model": "GPT"
-        },
-        {
-          "title": "Global Biosecurity Policy and Pandemic Preparedness",
-          "organization": "Nuclear Threat Initiative (NTI), Biosecurity Program",
-          "donation_url": "https://www.nti.org/about/donate/",
-          "confidence": 0.7,
-          "model": "Gemini Pro"
-        }
-      ],
-      "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
+      "has_consensus": true,
+      "title": "Pandemie-Vorsorge / Biosecurity (Familiendeklaration OpenAI/GPT; Enthaltung bei AI-nahen Orgs)",
+      "organization": "Nuclear Threat Initiative (NTI)",
+      "organization_id": "nuclear-threat-initiative",
+      "donation_url": "https://www.nti.org/donate/",
+      "confidence": 0.62,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 0,
+        "models": [
+          "Claude Opus",
+          "GPT",
+          "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "D",
       "has_consensus": true,
-      "title": "Eliminierung von Bleiexposition (v. a. bleihaltige Farbe) durch Policy- und Implementierungsunterstützung",
+      "title": "Eliminierung von Bleivergiftung via Farbregulierung",
       "organization": "Lead Exposure Elimination Project (LEEP)",
+      "organization_id": "lead-exposure-elimination-project",
       "donation_url": "https://leadelimination.org/donate/",
-      "confidence": 0.73,
+      "confidence": 0.71,
       "convergence": {
-        "count": 2,
+        "count": 3,
         "total": 3,
+        "conditional_count": 0,
         "models": [
+          "Claude Opus",
           "GPT",
           "Gemini Pro"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "GPT",
+            "conditional": false,
+            "reservation": null
+          },
+          {
+            "model": "Gemini Pro",
+            "conditional": false,
+            "reservation": null
+          }
         ]
       },
-      "rationale_md": "Konvergenz im Schlussvotum: 2 von 3 Modellen empfehlen diese Organisation (GPT, Gemini Pro). Begründungen in den Schlussvoten."
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen empfehlen diese Organisation (Claude Opus, GPT, Gemini Pro). Begründungen in den Schlussvoten."
     }
   ],
   "costs": {
@@ -285,5 +335,10 @@
       "usd": 2.133,
       "eur": 1.813
     }
+  },
+  "unresolved_votes": [],
+  "correction_notice": {
+    "date": "2026-07-14",
+    "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: ⟪COMMIT⟫."
   }
 }

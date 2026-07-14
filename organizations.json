@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "note": "Kuratierte Organisations-Registry. Der deterministische Aggregator löst Modell-Voten ausschließlich hier auf (Alias-Match, kein Fuzzy, kein Modell). donation_url ist die einzige Publikationsquelle für Spendenlinks — niemals die halluzinationsanfällige Modell-URL. Neue, unbekannte Org-Strings in einem Votum werden NICHT stillschweigend verworfen, sondern als 'nicht zuordenbar' gewarnt und hier nachgepflegt. aliases muss jede in einem Schlussvotum vorkommende Schreibweise abdecken.",
+  "note": "Kuratierte Organisations-Registry. Der deterministische Aggregator löst Modell-Voten ausschließlich hier auf (Alias-Match, kein Fuzzy, kein Modell). donation_url ist die einzige Publikationsquelle für Spendenlinks — niemals die halluzinationsanfällige Modell-URL. donation_url=null => kein Spendenlink auf der Karte (bewusst, bis kuratiert). donation_url_verified_at/-_source dokumentieren die Prüfung. Neue, unbekannte Org-Strings in einem Votum werden NICHT stillschweigend verworfen, sondern als 'nicht zuordenbar' gewarnt und hier nachgepflegt.",
   "organizations": [
     {
       "id": "helen-keller-international",
@@ -11,13 +11,17 @@
         "Helen Keller Intl"
       ],
       "donation_url": "https://helenkellerintl.org/donate/",
-      "evaluator_source": "GiveWell Top Charity (Vitamin-A-Supplementierung); hki.org leitet auf helenkellerintl.org um"
+      "donation_url_verified_at": null,
+      "donation_url_source": "hki.org leitet per 301 auf helenkellerintl.org um (Eigen-Domain, technische Korrektur); Endseite bot-403, Sicht-Check ausstehend",
+      "evaluator_source": "GiveWell Top Charity (Vitamin-A-Supplementierung)"
     },
     {
       "id": "malaria-consortium",
       "canonical_name": "Malaria Consortium",
       "aliases": ["Malaria Consortium"],
       "donation_url": "https://www.malariaconsortium.org/donate",
+      "donation_url_verified_at": null,
+      "donation_url_source": "kanonische Eigen-Domain; bot-403, Sicht-Check ausstehend",
       "evaluator_source": "GiveWell Top Charity (Seasonal Malaria Chemoprevention)"
     },
     {
@@ -28,6 +32,8 @@
         "Against Malaria Foundation (AMF)"
       ],
       "donation_url": "https://www.againstmalaria.com/Donation.aspx",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "curl HTTP 200 (Eigen-Domain)",
       "evaluator_source": "GiveWell Top Charity (insektizidbehandelte Moskitonetze)"
     },
     {
@@ -35,6 +41,8 @@
       "canonical_name": "Lead Exposure Elimination Project (LEEP)",
       "aliases": ["Lead Exposure Elimination Project (LEEP)"],
       "donation_url": "https://leadelimination.org/donate/",
+      "donation_url_verified_at": "2026-07-14",
+      "donation_url_source": "curl HTTP 200 (Eigen-Domain)",
       "evaluator_source": "GiveWell / Founders Pledge (Bleiexposition)"
     },
     {
@@ -48,34 +56,44 @@
         "Nuclear Threat Initiative (NTI), Biosecurity Program"
       ],
       "donation_url": "https://www.nti.org/donate/",
+      "donation_url_verified_at": null,
+      "donation_url_source": "kanonische Eigen-Domain; bot-403, Sicht-Check ausstehend",
       "evaluator_source": "Founders Pledge / Longview (Biosicherheit)"
     },
     {
       "id": "centre-for-governance-of-ai",
       "canonical_name": "Centre for the Governance of AI (GovAI)",
       "aliases": ["Centre for the Governance of AI (GovAI)"],
-      "donation_url": "https://www.every.org/govai#/donate",
-      "evaluator_source": "Longtermist AI-Governance; offizieller Spendenlink von governance.ai (every.org/govai) — Modell-URL /donate war 404"
+      "donation_url": null,
+      "donation_url_verified_at": null,
+      "donation_url_source": "EMPFEHLUNG, nicht selbst entschieden: governance.ai/donate war 404; die Homepage verlinkt every.org/govai — das leitet Geld auf eine Drittplattform um und ist eine redaktionelle Entscheidung. Bis zur Freigabe kein Spendenlink.",
+      "evaluator_source": "Longtermist AI-Governance"
     },
     {
       "id": "machine-intelligence-research-institute",
       "canonical_name": "Machine Intelligence Research Institute (MIRI)",
       "aliases": ["Machine Intelligence Research Institute"],
       "donation_url": "https://intelligence.org/donate/",
-      "evaluator_source": "AI-Alignment (modellgenannt, Domain geprüft)"
+      "donation_url_verified_at": null,
+      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
+      "evaluator_source": "AI-Alignment"
     },
     {
       "id": "pure-earth",
       "canonical_name": "Pure Earth",
       "aliases": ["Pure Earth"],
       "donation_url": "https://www.pureearth.org/donate/",
-      "evaluator_source": "Bleivergiftung / Schwermetalle (modellgenannt, Domain geprüft)"
+      "donation_url_verified_at": null,
+      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
+      "evaluator_source": "Bleivergiftung / Schwermetalle"
     },
     {
       "id": "evidence-action",
       "canonical_name": "Evidence Action",
       "aliases": ["Evidence Action – Teaching at the Right Level"],
       "donation_url": "https://www.evidenceaction.org/donate",
+      "donation_url_verified_at": null,
+      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
       "evaluator_source": "GiveWell / TaRL (Teaching at the Right Level)"
     },
     {
@@ -83,14 +101,18 @@
       "canonical_name": "Pratham",
       "aliases": ["Pratham"],
       "donation_url": "https://www.pratham.org/donate/",
-      "evaluator_source": "Bildung / TaRL (modellgenannt, Domain geprüft)"
+      "donation_url_verified_at": null,
+      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
+      "evaluator_source": "Bildung / TaRL"
     },
     {
       "id": "iodine-global-network",
       "canonical_name": "Iodine Global Network (IGN)",
       "aliases": ["Iodine Global Network (IGN)"],
       "donation_url": "https://www.ign.org/donate",
-      "evaluator_source": "Jod-Supplementierung (modellgenannt, Domain geprüft)"
+      "donation_url_verified_at": null,
+      "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
+      "evaluator_source": "Jod-Supplementierung"
     }
   ]
 }
