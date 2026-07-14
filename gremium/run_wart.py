@@ -165,7 +165,10 @@ def call_wart(wart_cfg, system, user, raw_dir):
     print(f"  Web-Suche: max. {max_uses} Anfragen")
     print("  Starte API-Call …")
 
-    resp = client.messages.create(
+    # Streaming ist Pflicht: bei hohem max_output_tokens (langes Dossier +
+    # Web-Suche) veranschlagt das SDK >10 min und verweigert den nicht-
+    # gestreamten Call. get_final_message() akkumuliert die volle Antwort.
+    with client.messages.stream(
         model=wart_cfg["model"],
         max_tokens=wart_cfg.get("max_output_tokens", 8192),
         system=system,
@@ -178,7 +181,8 @@ def call_wart(wart_cfg, system, user, raw_dir):
                 "allowed_callers": ["direct"],
             }
         ],
-    )
+    ) as stream:
+        resp = stream.get_final_message()
     raw = resp.model_dump()
     (raw_dir / "wart-response.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
@@ -279,13 +283,20 @@ def main():
     )
     (raw_dir / "wart-content.md").write_text(text)
 
+    # Nur end_turn ist eine vollständige Antwort. Jeder andere stop_reason
+    # (refusal, max_tokens, pause_turn, …) heißt: unvollständig/abnormal → laut
+    # abbrechen mit dem echten Grund, NICHT in den ratenden Parser laufen (der
+    # sonst leere/geratene Inhalte publiziert). Rohantwort ist bereits gesichert.
     stop_reason = raw.get("stop_reason")
     print(f"  stop_reason: {stop_reason}")
-    if stop_reason == "max_tokens":
-        sys.exit(
-            "Abbruch: Antwort bei max_tokens abgeschnitten — "
-            "max_output_tokens (config.json wart) erhöhen. Kein Parse-Versuch."
-        )
+    if stop_reason != "end_turn":
+        hint = {
+            "refusal": "Modell hat die Ausgabe verweigert (Content/Safety) — "
+            "Thema/Prompt redaktionell prüfen.",
+            "max_tokens": "Antwort abgeschnitten — max_output_tokens (config.json wart) erhöhen.",
+            "pause_turn": "Turn pausiert (Server-Tool) — unerwartet nach Streaming.",
+        }.get(stop_reason, "unerwarteter Abbruch.")
+        sys.exit(f"Abbruch: stop_reason={stop_reason} — {hint} Kein Parse-Versuch.")
 
     print("\nSchritt 2 — JSON extrahieren")
     parsed = extract_json_block(text)
