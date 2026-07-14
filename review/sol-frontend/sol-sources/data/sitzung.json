@@ -1,0 +1,221 @@
+{
+  "schema_version": 2,
+  "id": "2026-07c",
+  "number": 3,
+  "date": "2026-07-07",
+  "title": "Gründungssitzung: Auflösung des Säule-A-Dissens",
+  "question": "Auflösung des Säule-A-Dissens aus Sitzung 2: HKI oder Pratham/TaRL Africa — was sagt die aktuelle Evidenz?",
+  "summary": "Nach der Gegenlese nennen alle drei Modelle Helen Keller International für die Zukunftssäule. Zwei Modelle änderten dafür ihre erste Antwort. Bei der Linderung von Leid nennen zwei von drei die Against Malaria Foundation. Bei großen Gefahren und beim übersehenen Problem Bleivergiftung sind sich alle drei einig.",
+  "dissent_highlights": [
+    "Bei Linderung von Leid nennt GPT weiterhin Helen Keller International; Claude Opus und Gemini Pro nennen die Against Malaria Foundation.",
+    "Die Empfehlung für Helen Keller International steht bei einem Modell unter Vorbehalt: TaRL Africa soll mit neuen Daten erneut geprüft werden."
+  ],
+  "participants": [
+    {"family": "anthropic", "model": "claude-opus-4-8", "label": "Claude Opus"},
+    {"family": "openai", "model": "gpt-5.2", "label": "GPT"},
+    {"family": "google", "model": "gemini-2.5-pro", "label": "Gemini Pro"}
+  ],
+  "prompts": {
+    "system": "Öffentliche Beratung nach Evidenz, Unparteilichkeit, Demut und Transparenz.",
+    "round1": "Unabhängige erste Antwort je Säule.",
+    "round2": "Gegenlesen, mögliche Änderung begründen, Schlussantwort je Säule."
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "kind": "initial_vote",
+      "votes": [
+        {
+          "model": "claude-opus-4-8",
+          "confidence": 0.63,
+          "content_md": "Claude Opus nennt für Säule A Helen Keller International, unter Vorbehalt einer neuen TaRL-Prüfung.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.55},
+            {"pillar": "B", "organization": "Against Malaria Foundation", "title": "Moskitonetze", "confidence": 0.78},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.60},
+            {"pillar": "D", "organization": "Lead Exposure Elimination Project (LEEP)", "title": "Bleihaltige Farbe beseitigen", "confidence": 0.66}
+          ]
+        },
+        {
+          "model": "gpt-5.2",
+          "confidence": 0.62,
+          "content_md": "GPT nennt in der ersten Antwort für Säule A Pratham/TaRL Africa.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Pratham / TaRL Africa", "title": "Unterricht auf dem passenden Lernniveau", "confidence": 0.66},
+            {"pillar": "B", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.66},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.55},
+            {"pillar": "D", "organization": "Global Road Safety Partnership", "title": "Straßenverkehr sicherer machen", "confidence": 0.58}
+          ]
+        },
+        {
+          "model": "gemini-2.5-pro",
+          "confidence": 0.80,
+          "content_md": "Gemini Pro nennt in der ersten Antwort für Säule A Pratham/TaRL Africa.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Pratham / TaRL Africa", "title": "Unterricht auf dem passenden Lernniveau", "confidence": 0.80},
+            {"pillar": "B", "organization": "Against Malaria Foundation", "title": "Moskitonetze", "confidence": 0.95},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.70},
+            {"pillar": "D", "organization": "Lead Exposure Elimination Project (LEEP)", "title": "Bleihaltige Farbe beseitigen", "confidence": 0.90}
+          ]
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "kind": "final_vote",
+      "votes": [
+        {
+          "model": "claude-opus-4-8",
+          "confidence": 0.63,
+          "content_md": "Claude Opus bleibt bei Helen Keller International, kennzeichnet die Empfehlung aber als vorläufig und verlangt eine erneute TaRL-Prüfung mit aktuellen Daten.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.55, "conditional": true, "reservation": "Vertagung mit Evaluationsauftrag für TaRL Africa beantragt."},
+            {"pillar": "B", "organization": "Against Malaria Foundation", "title": "Moskitonetze", "confidence": 0.78},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.60},
+            {"pillar": "D", "organization": "Lead Exposure Elimination Project (LEEP)", "title": "Bleihaltige Farbe beseitigen", "confidence": 0.66}
+          ]
+        },
+        {
+          "model": "gpt-5.2",
+          "confidence": 0.62,
+          "content_md": "GPT ändert Säule A von Pratham/TaRL Africa zu Helen Keller International. Ausschlaggebend sind die aktuell besser belegte Finanzierungslücke und die unsicheren aktuellen Zahlen zu TaRL Africa.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.58},
+            {"pillar": "B", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.66},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.55},
+            {"pillar": "D", "organization": "Lead Exposure Elimination Project (LEEP)", "title": "Bleihaltige Farbe beseitigen", "confidence": 0.60}
+          ]
+        },
+        {
+          "model": "gemini-2.5-pro",
+          "confidence": 0.85,
+          "content_md": "Gemini Pro ändert Säule A von Pratham/TaRL Africa zu Helen Keller International. Das Modell gewichtet nach der Gegenlese die aktuelle Nachprüfbarkeit der Spendenwirkung höher.",
+          "recommendations": [
+            {"pillar": "A", "organization": "Helen Keller International", "title": "Vitamin-A-Supplementierung", "confidence": 0.80},
+            {"pillar": "B", "organization": "Against Malaria Foundation", "title": "Moskitonetze", "confidence": 0.95},
+            {"pillar": "C", "organization": "Nuclear Threat Initiative (NTI)", "title": "Pandemie-Vorsorge und Biosecurity", "confidence": 0.70},
+            {"pillar": "D", "organization": "Lead Exposure Elimination Project (LEEP)", "title": "Bleihaltige Farbe beseitigen", "confidence": 0.90}
+          ]
+        }
+      ]
+    }
+  ],
+  "dissent_md": "Bei Säule B bleibt eine abweichende Stimme sichtbar: GPT nennt Helen Keller International, Claude Opus und Gemini Pro nennen die Against Malaria Foundation. Die Zählmaschine macht daraus 2 zu 1, nicht Einstimmigkeit.",
+  "recommendations": [
+    {
+      "pillar": "A",
+      "has_consensus": true,
+      "title": "Vitamin-A-Supplementierung, unter Vorbehalt einer neuen TaRL-Prüfung",
+      "organization": "Helen Keller International",
+      "organization_id": "helen-keller-international",
+      "donation_url": "https://giving.helenkellerintl.org/page/FUNUYQRJGHG",
+      "confidence": 0.64,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 1,
+        "models": ["Claude Opus", "GPT", "Gemini Pro"],
+        "votes": [
+          {"model": "Claude Opus", "conditional": true, "reservation": "Vertagung mit Evaluationsauftrag für TaRL Africa beantragt."},
+          {"model": "GPT", "conditional": false, "reservation": null},
+          {"model": "Gemini Pro", "conditional": false, "reservation": null}
+        ]
+      },
+      "rationale_md": "Vitamin A schützt Kinder vor vermeidbarer Krankheit und Tod. Die Finanzierungslücke ist aktuell besser belegt als bei der Bildungsalternative."
+    },
+    {
+      "pillar": "B",
+      "has_consensus": true,
+      "title": "Insektizidbehandelte Moskitonetze",
+      "organization": "Against Malaria Foundation",
+      "organization_id": "against-malaria-foundation",
+      "donation_url": "https://www.againstmalaria.com/donate.aspx",
+      "confidence": 0.86,
+      "convergence": {
+        "count": 2,
+        "total": 3,
+        "conditional_count": 0,
+        "models": ["Claude Opus", "Gemini Pro"],
+        "votes": [
+          {"model": "Claude Opus", "conditional": false, "reservation": null},
+          {"model": "Gemini Pro", "conditional": false, "reservation": null}
+        ]
+      },
+      "rationale_md": "Moskitonetze verhindern Malaria unmittelbar und ihre Wirkung ist seit vielen Jahren gut untersucht."
+    },
+    {
+      "pillar": "C",
+      "has_consensus": true,
+      "title": "Pandemie-Vorsorge und biologische Sicherheit",
+      "organization": "Nuclear Threat Initiative (NTI)",
+      "organization_id": "nuclear-threat-initiative",
+      "donation_url": "https://www.nti.org/donate/",
+      "confidence": 0.62,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 0,
+        "models": ["Claude Opus", "GPT", "Gemini Pro"],
+        "votes": [
+          {"model": "Claude Opus", "conditional": false, "reservation": null},
+          {"model": "GPT", "conditional": false, "reservation": null},
+          {"model": "Gemini Pro", "conditional": false, "reservation": null}
+        ]
+      },
+      "rationale_md": "NTI arbeitet daran, Pandemien und andere sehr große Gefahren früh zu verhindern, bevor sie Millionen Menschen treffen."
+    },
+    {
+      "pillar": "D",
+      "has_consensus": true,
+      "title": "Bleivergiftung durch bleihaltige Farbe verhindern",
+      "organization": "Lead Exposure Elimination Project (LEEP)",
+      "organization_id": "lead-exposure-elimination-project",
+      "donation_url": "https://leadelimination.org/donate/",
+      "confidence": 0.71,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 0,
+        "models": ["Claude Opus", "GPT", "Gemini Pro"],
+        "votes": [
+          {"model": "Claude Opus", "conditional": false, "reservation": null},
+          {"model": "GPT", "conditional": false, "reservation": null},
+          {"model": "Gemini Pro", "conditional": false, "reservation": null}
+        ]
+      },
+      "rationale_md": "LEEP hilft Ländern, bleihaltige Farbe zu verbieten. Das schützt Kinder dauerhaft vor Schäden an Gehirn und Gesundheit."
+    }
+  ],
+  "unresolved_votes": [],
+  "costs": {
+    "currency": "EUR",
+    "total": 2.6,
+    "fx_rate_usd_eur": 0.85,
+    "by_model": [
+      {"model": "claude-opus-4-8", "label": "Claude Opus", "input_tokens": 20886, "output_tokens": 9932, "usd": 0.3527, "eur": 0.2998},
+      {"model": "gpt-5.2", "label": "GPT", "input_tokens": 10995, "output_tokens": 4653, "usd": 0.0844, "eur": 0.0717},
+      {"model": "gemini-2.5-pro", "label": "Gemini Pro", "input_tokens": 11620, "output_tokens": 9650, "usd": 0.111, "eur": 0.0944},
+      {"model": "claude-fable-5", "label": "Der Wart (Fable)", "input_tokens": 195711, "output_tokens": 9733, "web_search_requests": 7, "usd": 2.5138, "eur": 2.1367}
+    ]
+  },
+  "correction_notice": {
+    "date": "2026-07-14",
+    "text": "Die Aggregation der ursprünglichen Veröffentlichung wurde korrigiert. Organisationsnamen werden nun über eindeutige Kennungen gezählt; zuvor nicht erfasste Voten sind einbezogen.",
+    "commit": "33e6f34b9697c1be3001c166b7820e17c9dfbe14"
+  },
+  "presentation": {
+    "pillar_labels": {
+      "A": "Investition in die Zukunft",
+      "B": "Linderung von Leid",
+      "C": "Schutz vor großen Gefahren",
+      "D": "Übersehenes"
+    },
+    "pillar_symbols": {"A": "Keimling", "B": "Moskitonetz", "C": "Tresortür", "D": "Farbeimer"},
+    "focus_rule": "Höchster Stimmenanteil, danach höhere Konfidenz, danach Säule A bis D.",
+    "archive": [
+      {"id": "2026-07c", "number": 3, "date": "2026-07-07", "title": "Auflösung des Säule-A-Dissens", "result": "Drei Empfehlungen mit 3 zu 3; eine mit 2 zu 1", "href": "/sessions/2026-07c/"},
+      {"id": "2026-07b", "number": 2, "date": "2026-07-07", "title": "Evidenzprüfung der ersten Empfehlungen", "result": "Säule A: 2 zu 1, noch nicht abschließend", "href": "/sessions/2026-07b/"},
+      {"id": "2026-07", "number": 1, "date": "2026-07-07", "title": "Wirkung je 1.000 Euro", "result": "Säule A: 1 zu 1 zu 1, keine Einigung", "href": "/sessions/2026-07/"}
+    ]
+  }
+}
