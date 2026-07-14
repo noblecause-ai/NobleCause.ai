@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://noblecause.ai/schema/organizations.schema.json",
+  "title": "Organisations-Registry (organizations.json, Repo-Root)",
+  "description": "Kuratierte Quelle für Spendenlinks. Der Aggregator löst Voten NUR hierüber auf. donation_url ist die EINZIGE Publikationsquelle für Spendenwege.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "note", "organizations"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "note": { "type": "string" },
+    "organizations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "canonical_name", "aliases", "donation_url"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "eindeutige kebab-id" },
+          "canonical_name": { "type": "string" },
+          "aliases": { "type": "array", "items": { "type": "string" }, "description": "muss jede in Voten vorkommende Schreibweise abdecken" },
+          "donation_url": { "type": ["string", "null"], "description": "null => kein Spendenlink auf der Karte (bewusst, bis kuratiert)" },
+          "donation_url_verified_at": { "type": ["string", "null"], "description": "ISO-Datum oder null" },
+          "donation_url_source": { "type": "string" },
+          "evaluator_source": { "type": "string" }
+        }
+      }
+    }
+  }
+}
