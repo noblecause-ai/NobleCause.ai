@@ -31,3 +31,24 @@ finalen Freigabe auf einem echten Gerät gegenprüfen.
 `build.py` grün; `pytest` 13 grün (3 build + 10 golden); `git diff` nur `sol-build/`,
 keine `sessions/`-Textänderung. Screenshots (Hero-Falz, Karten gleich hoch, Nicht-Konsens)
 im PR. **Kein Merge** — geht zur unabhängigen ästhetischen Abnahme an Claude Design.
+
+---
+
+# Erstblick-Nachbesserung (drei konvergente Reviews)
+
+**Nur Darstellung.** Zwei Muss-Fixes; publizierter Sitzungstext unverändert. Bewusst
+verworfen: warme/emotionale Spenden-Rhetorik, Dringlichkeit (Kanon Unparteilichkeit).
+
+| Fund | Vorher | Nachher |
+|---|---|---|
+| **1 — Visueller Mittelpunkt** | Zwei große Serif-Blöcke (Titel + Org-Name) konkurrierten; die `trust-line` in Messing zog Blick in die Empfehlungszone; `.lit-floor`-Rahmen kaum sichtbar → Empfehlung war nicht das dominanteste Element | Intro leiser: `site-title` kleiner & `--muted`, `trust-line` → `--faint` (kein Messing mehr), `context-line` kleiner. Spotlight stärker: `.lit-floor`-Border `.38`→`.6`, Glow `.11`→`.2`, Kern heller. Org-`h2` fix `--ink`. Hero-Knopf größer (54 px, 1,05 rem) + Messing-Glow. **Blickreihenfolge jetzt: Org-Name → Spendenknopf → dann erst Intro** |
+| **2 — Geld-Pfad am Knopf** | „kein Geld"-Satz nur in `.money-note` **unter** dem 4-Karten-Gitter, weit unter der Falz | Neue `.money-path`-Zeile direkt unter dem Knopf: „Durch diese Seite fließt kein Geld — der Spendenlink führt direkt zur Organisation." (ruhig, `--muted`, .78 rem). `.money-note` unten auf die Kosten-Aussage gekürzt (keine Dopplung) |
+
+**Beleg:** Vorher/Nachher-Screenshot des ersten Sichtfelds im PR; Zoom bestätigt die
+Geld-Zeile am Knopf, nüchtern, kein Werbeton.
+
+**Testhinweis (nicht durch diese Änderung verursacht):** Die drei
+`test_reproduction_matches_published`-Fälle fallen im **Voll-Suite-Lauf** rot (Test-
+Isolationsartefakt: geteilter Registry-Global, reihenfolgeabhängig) — **isoliert grün**
+(`pytest tests/golden/test_golden_aggregation.py` = 7 grün) und **schon auf PR #14 so**,
+also Bestandsproblem, nicht Teil dieses Darstellungs-Fixes.
