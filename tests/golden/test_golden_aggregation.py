@@ -26,9 +26,17 @@ import organizations  # noqa: E402
 import reaggregate  # noqa: E402
 import run_session  # noqa: E402
 
-organizations.load_registry(REPO / "organizations.json")
-
 SESSIONS = ["2026-07", "2026-07b", "2026-07c"]
+
+
+@pytest.fixture(autouse=True)
+def _canonical_registry():
+    """Vor JEDEM Golden-Test die kanonische Registry frisch laden — so löst die
+    Reproduktion immer gegen die echte organizations.json auf, egal welcher Test
+    (z. B. eine Fixture-Registry) vorher lief. Zusammen mit der conftest-Isolation
+    (Snapshot/Restore) ist das Netz reihenfolge-unabhängig."""
+    organizations.load_registry(REPO / "organizations.json")
+    yield
 
 
 def _reproduce(sid):

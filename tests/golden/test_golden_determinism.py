@@ -12,6 +12,7 @@ nicht umgangen. run_session.prior_session() dagegen sortiert nach Nummer und IST
 deterministisch — das wird unten festgenagelt.
 """
 
+import copy
 import json
 import shutil
 import sys
@@ -21,7 +22,11 @@ REPO = Path(__file__).resolve().parents[2]
 GREMIUM = REPO / "gremium"
 sys.path.insert(0, str(GREMIUM))
 
+import organizations  # noqa: E402
+import reaggregate  # noqa: E402
 import run_session  # noqa: E402
+
+SESSIONS = ["2026-07", "2026-07b", "2026-07c"]
 
 
 def test_resolve_session_id_picks_next_free_suffix():
@@ -51,3 +56,36 @@ def test_advance_schedule_plus_30_days_preserves_other_fields(tmp_path, monkeypa
     assert after["last_journal"] == before["last_journal"]
     # Beweis: echte Datei unverändert.
     assert json.loads((REPO / "schedule.json").read_text()) == before
+
+
+# ---- Registry-Global: Beleg der Produktions-Ein-Schuss-Sauberkeit ----------
+# In Prod lädt kein Lauf die Registry mit abweichendem Pfad; sie wird einmal lazy
+# aus der kanonischen organizations.json geladen und danach nur gelesen. Diese
+# Tests nageln das fest, damit der geteilte mutable Modul-Global (organizations
+# ._REGISTRY) nicht unbemerkt Zustand über Sitzungen trägt.
+
+
+def test_default_lazy_load_uses_canonical_registry():
+    # Frischer Prozess: nichts geladen. Der erste Zugriff MUSS die kanonische
+    # organizations.json des Repos laden (kein Fixture-/Fremdzustand).
+    organizations._REGISTRY = None
+    canonical_ids = {o["id"] for o in
+                     json.loads((REPO / "organizations.json").read_text())["organizations"]}
+    reg = organizations._registry()
+    assert set(reg["by_id"]) == canonical_ids
+
+
+def test_registry_not_mutated_across_sessions():
+    # Simuliert einen langen Lauf: mehrere Sitzungen nacheinander aggregieren und
+    # beweisen, dass die Registry read-only bleibt (kein Zustand wird getragen).
+    organizations.load_registry(REPO / "organizations.json")
+    snapshot = copy.deepcopy(organizations._REGISTRY)
+    for sid in SESSIONS:
+        sdir = REPO / "sessions" / sid
+        session = json.loads((sdir / "session.json").read_text())
+        votes = reaggregate.final_votes_from_raw(sdir, session)
+        run_session.aggregate_recommendations(votes)  # nur lesend
+    assert organizations._REGISTRY == snapshot, (
+        "Aggregation hat den Registry-Global verändert — Zustand würde über "
+        "Sitzungen getragen (Produktions-Determinismus-Bug)."
+    )
