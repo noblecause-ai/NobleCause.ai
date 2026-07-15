@@ -414,12 +414,13 @@ def render(session_id: str | None = None) -> str:
             {link_or_note(focus.get('donation_url'), 'Hier direkt spenden ↗')}
             <a class="quiet-link" href="#entstehung">So entsteht die Empfehlung ↓</a>
           </div>
+          <p class="money-path">Durch diese Seite fließt kein Geld — der Spendenlink führt direkt zur Organisation.</p>
         </div>
 
         <div class="recommendation-grid" aria-label="Alle vier Empfehlungen">
           {cards}
         </div>
-        <p class="money-note">Durch diese Seite fließt kein Geld. Jeder Spendenlink führt direkt zur Organisation. Kosten dieser Sitzung: {esc(money(session['costs']['total'], session['costs']['currency']))}.</p>
+        <p class="money-note">Jeder Spendenlink führt direkt zur Organisation. Kosten dieser Sitzung: {esc(money(session['costs']['total'], session['costs']['currency']))}.</p>
       </div>
     </section>
 
