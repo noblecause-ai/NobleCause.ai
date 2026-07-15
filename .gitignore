@@ -6,3 +6,8 @@ __pycache__/
 .venv/
 venv/
 gremium/.fable-check/
+
+# lokaler Review-Server + verwaiste Plate-Kopien (nicht committen)
+serve/
+/ratssaal
+/vorraum
