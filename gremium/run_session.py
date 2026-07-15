@@ -286,6 +286,32 @@ def _vote_recommendations(parsed):
     return parsed.get("recommendations") or parsed.get("empfehlungen") or []
 
 
+def structured_vote_recs(parsed):
+    """Registry-aufgelöste Voten je Säule für die Persistenz in session.json.
+
+    Erlaubt dem Frontend, Protokollspalten + Revision (wer nannte r1 vs r2 welche
+    Org) zu rendern, OHNE Prosa zu parsen. Unbekannte Org → weggelassen (der
+    Aggregator meldet sie separat als unresolved); nie stiller Textfall.
+    """
+    out = []
+    for r in _vote_recommendations(parsed):
+        pillar = r.get("pillar")
+        org_id = organizations.resolve(r.get("organization"))
+        if pillar not in ("A", "B", "C", "D") or org_id is None:
+            continue
+        cond, reservation = _conditional(r)
+        out.append({
+            "pillar": pillar,
+            "organization_id": org_id,
+            "organization": organizations.get(org_id)["canonical_name"],
+            "title": r.get("title"),
+            "confidence": r.get("confidence"),
+            "conditional": cond,
+            "reservation": reservation,
+        })
+    return out
+
+
 # Publizierte, feste Markerliste: ein Votum ist konditional, wenn das Modell im
 # title selbst einen expliziten Vorbehalt deklariert. Kein Fuzzy, keine Semantik-
 # Inferenz — der Beleg ist der Titel wörtlich (reservation). Kanon Demut:
@@ -861,6 +887,7 @@ def main():
                 "model": v["model"],
                 "content_md": strip_json_block(v["text"]),
                 "confidence": (v["parsed"] or {}).get("confidence"),
+                "recommendations": structured_vote_recs(v["parsed"]),
             }
             for v in round_votes
         ]

@@ -1,0 +1,16 @@
+{
+  "_note": "Präsentations-Konstanten des Frontends — KEINE Beratungsdaten. Säulen-Labels/Symbole und der Text der (deterministischen) Führungsregel. Institutionelle Vorraum-Copy steht als statischer Text im Template.",
+  "pillar_labels": {
+    "A": "Investition in die Zukunft",
+    "B": "Linderung von Leid",
+    "C": "Schutz vor großen Gefahren",
+    "D": "Übersehenes"
+  },
+  "pillar_symbols": {
+    "A": "Keimling",
+    "B": "Moskitonetz",
+    "C": "Tresortür",
+    "D": "Farbeimer"
+  },
+  "focus_rule": "Höchster Stimmenanteil, danach höhere Sicherheit, danach Säule A bis D."
+}
