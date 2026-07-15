@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import html
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -32,6 +33,51 @@ CONFIG: dict[str, Any] = {}
 
 def esc(value: Any) -> str:
     return html.escape(str(value), quote=True)
+
+
+def md_min(text: str) -> str:
+    """Faithful minimal Markdown → HTML. NUR Darstellung: Text wird zuerst
+    HTML-escaped (Treue + Sicherheit), dann werden Auszeichnungen umschlossen —
+    kein Wortlaut wird verändert. Fenced ```blocks``` landen in einem
+    EINGEKLAPPTEN <details><pre> (die mehrbildschirmigen JSON-Dumps)."""
+    if not text:
+        return ""
+    fences: list[tuple[str, str]] = []
+
+    def _stash(m: "re.Match[str]") -> str:
+        fences.append(((m.group(1) or "").strip(), m.group(2)))
+        return f"\x00FENCE{len(fences) - 1}\x00"
+
+    tmp = re.sub(r"```([^\n]*)\n(.*?)```", _stash, text, flags=re.DOTALL)
+    tmp = html.escape(tmp, quote=False)
+    tmp = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", tmp, flags=re.DOTALL)
+    tmp = re.sub(r"(?<!\*)\*(?!\s)([^*\n]+?)(?<!\s)\*(?!\*)", r"<em>\1</em>", tmp)
+    tmp = re.sub(r"`([^`]+?)`", r"<code>\1</code>", tmp)
+
+    out: list[str] = []
+    for block in re.split(r"\n\s*\n", tmp):
+        block = block.strip("\n")
+        if not block.strip():
+            continue
+        if re.fullmatch(r"\x00FENCE\d+\x00", block.strip()):
+            out.append(block.strip())
+            continue
+        lines = [ln for ln in block.split("\n") if ln.strip()]
+        if lines and all(re.match(r"\s*([-*]|\d+\.)\s+", ln) for ln in lines):
+            ordered = bool(re.match(r"\s*\d+\.", lines[0]))
+            items = "".join(f"<li>{re.sub(r'^\\s*([-*]|\\d+\\.)\\s+', '', ln)}</li>" for ln in lines)
+            out.append(f"<{'ol' if ordered else 'ul'}>{items}</{'ol' if ordered else 'ul'}>")
+        else:
+            out.append("<p>" + block.replace("\n", "<br>") + "</p>")
+    rendered = "\n".join(out)
+
+    def _restore(m: "re.Match[str]") -> str:
+        lang, code = fences[int(m.group(1))]
+        label = "Code-Block" + (f" ({html.escape(lang)})" if lang else "")
+        return (f'<details class="raw-code"><summary>{label}</summary>'
+                f'<pre>{html.escape(code)}</pre></details>')
+
+    return re.sub(r"\x00FENCE(\d+)\x00", _restore, rendered)
 
 
 def percent(value: float | None) -> str:
@@ -123,17 +169,29 @@ def org_in_round(session: dict[str, Any], kind: str, model: str, pillar: str) ->
     return next((rc["organization"] for rc in v.get("recommendations", []) if rc["pillar"] == pillar), None)
 
 
-def pillar_revisions(session: dict[str, Any], pillar: str) -> list[dict[str, str]]:
+def _join_labels(labels: list[str]) -> str:
+    if len(labels) <= 1:
+        return labels[0] if labels else ""
+    return ", ".join(labels[:-1]) + " & " + labels[-1]
+
+
+def pillar_revisions(session: dict[str, Any], pillar: str) -> list[dict[str, Any]]:
     """Wer hat zwischen Runde 1 und 2 die Organisation gewechselt — aus den
-    strukturierten Voten, ohne Prosa-Parsing."""
-    out = []
+    strukturierten Voten, ohne Prosa-Parsing. Gleiche before→after-Wechsel werden
+    EINMAL gebündelt (Modelle zusammengefasst), nicht je Modell wiederholt."""
+    groups: dict[tuple[str, str], list[str]] = {}
+    order: list[tuple[str, str]] = []
     final = next((r for r in session["rounds"] if r.get("kind") == "final_vote"), None)
     for v in (final.get("votes", []) if final else []):
         before = org_in_round(session, "initial_vote", v["model"], pillar)
         after = org_in_round(session, "final_vote", v["model"], pillar)
         if before and after and before != after:
-            out.append({"label": model_label(session, v["model"]), "before": before, "after": after})
-    return out
+            key = (before, after)
+            if key not in groups:
+                groups[key] = []
+                order.append(key)
+            groups[key].append(model_label(session, v["model"]))
+    return [{"before": b, "after": a, "labels": groups[(b, a)]} for (b, a) in order]
 
 
 def recommendation_card(session: dict[str, Any], rec: dict[str, Any], focused: bool = False) -> str:
@@ -161,9 +219,11 @@ def recommendation_card(session: dict[str, Any], rec: dict[str, Any], focused: b
         revision_html = ""
         if revisions:
             rows = "".join(
+                f'<div class="revision-row">'
                 f'<span class="chalk-strike">{esc(r["before"])}</span>'
-                f'<span aria-hidden="true"> → </span><strong>{esc(r["after"])}</strong> '
-                f'<small>({esc(r["label"])})</small>'
+                f'<span class="revision-arrow" aria-hidden="true"> → </span>'
+                f'<strong>{esc(r["after"])}</strong> '
+                f'<small>({esc(_join_labels(r["labels"]))})</small></div>'
                 for r in revisions
             )
             revision_html = (
@@ -231,11 +291,11 @@ def protocol_column(session: dict[str, Any], vote: dict[str, Any], phase: str, i
         changed = before and before["organization"] != rec["organization"]
         change_markup = ""
         if phase == "final" and changed:
+            # Org nur EINMAL (unten als <h4>); hier nur die durchgestrichene Vor-Antwort.
             change_markup = (
                 '<div class="change-record">'
-                f'<del>{esc(before["organization"])}</del>'
-                f'<ins>{esc(rec["organization"])}</ins>'
-                '<span>nach dem Gegenlesen geändert</span>'
+                f'<del class="chalk-strike">{esc(before["organization"])}</del>'
+                '<span class="change-note">nach dem Gegenlesen geändert</span>'
                 '</div>'
             )
         elif phase == "final":
@@ -261,11 +321,14 @@ def protocol_column(session: dict[str, Any], vote: dict[str, Any], phase: str, i
     '''
 
 
-def render() -> str:
+def render(session_id: str | None = None) -> str:
     global REGISTRY, CONFIG
     REGISTRY = {o["id"]: o for o in json.loads(ORG_PATH.read_text(encoding="utf-8"))["organizations"]}
     CONFIG = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
-    session = latest_session()
+    if session_id:
+        session = json.loads((SESSIONS_DIR / session_id / "session.json").read_text(encoding="utf-8"))
+    else:
+        session = latest_session()
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(session), key=lambda e: list(e.path))
     if errors:
@@ -303,7 +366,7 @@ def render() -> str:
         correction_html = f'''
           <aside class="correction-note" aria-label="Korrekturhinweis">
             <strong>Korrektur vom {esc(correction['date'])}</strong>
-            <p>{esc(correction['text'])}</p>
+            {md_min(correction['text'])}
           </aside>
         '''
 
@@ -427,7 +490,12 @@ def render() -> str:
       <section class="tab-panel" id="zweite-antworten" role="tabpanel" aria-labelledby="tab-zweite">
         <div class="round-heading"><span>Runde 2</span><h3>Nach dem Gegenlesen</h3></div>
         <div class="model-grid">{second_columns}</div>
-        <aside class="dissent-note"><strong>Verbleibende Uneinigkeit:</strong> {esc(session['dissent_md'])}</aside>
+        <aside class="dissent-note">
+          <details class="dissent-full">
+            <summary><strong>Verbleibende Uneinigkeit</strong> — vollständigen Wortlaut anzeigen</summary>
+            <div class="dissent-body">{md_min(session['dissent_md'])}</div>
+          </details>
+        </aside>
       </section>
 
       <section class="tab-panel" id="ergebnis" role="tabpanel" aria-labelledby="tab-ergebnis">
@@ -469,5 +537,12 @@ def render() -> str:
 
 
 if __name__ == "__main__":
-    OUTPUT_PATH.write_text(render(), encoding="utf-8")
-    print(f"Wrote {OUTPUT_PATH}")
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--session", default=None, help="Session-ID rendern (Default: jüngste)")
+    ap.add_argument("--out", default=None, help="Ausgabedatei (Default: index.html)")
+    args = ap.parse_args()
+    out = Path(args.out) if args.out else OUTPUT_PATH
+    out.write_text(render(args.session), encoding="utf-8")
+    print(f"Wrote {out}")
