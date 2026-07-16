@@ -1,5 +1,17 @@
 # Bildassets der Startseite
 
+> **Deploy-Hygiene (16.07.2026):** Die PNG-**Originale** (Provenienz + Re-Ableitung) liegen
+> jetzt hier unter `docs/asset-originals/media/…` — **außerhalb `site/`**, damit sie nicht in
+> den Build (`site/build/`) kopiert und nicht via `rsync` ausgeliefert werden. Ausgeliefert
+> wird nur, was die Seite referenziert: die `*-display.jpg`-Derivate unter
+> `site/static/media/…`. Die „Produktiver Pfad"-Spalten unten sind relativ zu
+> `docs/asset-originals/media/` zu lesen. `site/static/media/` schrumpft dadurch von ~34 MB
+> auf ~1,5 MB. Zusätzlich wurde `scenes/hall-display.jpg` (initial vorgeladen) von Qualität
+> 78 auf 55 neu codiert: **367 kB → 199 kB** (Derivat, kein C2PA-Original — Neucodierung
+> unkritisch). Ein echtes WebP/AVIF-Derivat war lokal nicht erzeugbar (`sips` dieser
+> macOS-Version kann kein WebP schreiben, kein `cwebp`/`avifenc` vorhanden) → empfohlener
+> Folgeschritt: WebP/AVIF-Ableitung im CI (`cwebp`), Original erhalten.
+
 Die beiden produktiven Plates wurden am 15.07.2026 byte-identisch aus dem historischen,
 nicht deployten SOL-Build kopiert. Sie wurden weder neu codiert noch komprimiert. Damit
 bleiben die eingebetteten C2PA Content Credentials der Originale erhalten.
@@ -54,12 +66,13 @@ Exportnummer.
 Für die nur 34–43 CSS-Pixel großen UI-Motive wurden mit macOS `sips` 320 × 320 große
 JPEG-Anzeigederivate (`*-display.jpg`, Qualität 72) erzeugt. Sie sind je 17,6–20,2 kB groß;
 die Seite lädt ausschließlich diese Derivate und nicht zusätzlich die rund 20,6 MB großen
-Originale. Die Originale bleiben als unveränderte Provenienz- und Reviewartefakte im
-produktiven Assetpfad erhalten.
+Originale. Die Originale bleiben als unveränderte Provenienz- und Reviewartefakte im Repo
+erhalten (hier unter `docs/asset-originals/media/`), werden aber **nicht ausgeliefert**.
 
 Die vier großen Szenenoriginale werden ebenfalls nicht direkt ausgeliefert. Unter
 `media/scenes/` liegen 1600 × 900 große JPEG-Derivate (Qualität 78, 271–367 kB); unter
 `media/scene-thumbnails/` zwei 640 × 360 große Vorschaubilder (41 bzw. 62 kB). Nur der
 Ratssaal wird initial als große Szene geladen. Tür, Vorzimmer und Archiv werden erst beim
-zugehörigen Zustand in den DOM eingesetzt. Die unveränderten PNG-Originale bleiben daneben
-für Provenienz und spätere Neuableitungen erhalten.
+zugehörigen Zustand in den DOM eingesetzt. Die unveränderten PNG-Originale bleiben im Repo
+(`docs/asset-originals/media/`) für Provenienz und spätere Neuableitungen erhalten, außerhalb
+des Deploy-Pfads.

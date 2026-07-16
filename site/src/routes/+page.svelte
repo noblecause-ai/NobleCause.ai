@@ -3,6 +3,9 @@
 
 	let { data } = $props();
 	let home = $derived(data.home);
+	// Revisionen vollständig datengetrieben: Anzahl abgeleitet, alle Säulen, kein Hardcode.
+	let revisions = $derived(home?.revisions ?? []);
+	let revisedModelCount = $derived(new Set(revisions.map((revision) => revision.model)).size);
 	let scene = $state('arrival');
 	const scenes = ['arrival', 'recommendations', 'door-opening', 'antechamber', 'initial', 'revision', 'count', 'archive'];
 	const steps = [
@@ -73,7 +76,11 @@
 				<article><h2>{rec.pillar} · {rec.pillarName}</h2>
 					{#if rec.hasConsensus}
 						<strong>{rec.organization.name}</strong><span>{rec.count} von {rec.total}</span>
-						{#if rec.organization.donationUrl}<a href={rec.organization.donationUrl}>Direkt spenden (extern) ↗</a>{/if}
+						<span class="fb-desc">{rec.organization.description}</span>
+						{#if rec.conditionalCount}
+							{#each rec.reservations as reservation (reservation.model)}<em class="fb-reservation">Unter Vorbehalt ({reservation.model}): {reservation.reservation}</em>{/each}
+						{/if}
+						{#if rec.organization.donationUrl}<a href={rec.organization.donationUrl}>Direkt spenden (extern) ↗</a>{:else}<small>Kein kuratierter Spendenweg.</small>{/if}
 					{:else}
 						<p>Keine zwei gleichen Nennungen.</p>
 						{#each rec.votes as vote (vote.model)}<span>{vote.model}: {vote.organization.name}</span>{#if vote.organization.donationUrl}<a href={vote.organization.donationUrl}>Direkt spenden (extern) ↗</a>{/if}{/each}
@@ -82,6 +89,59 @@
 			{/each}
 		</div>
 		<p>NobleCause nimmt kein Geld an. Spendenlinks führen direkt zu den Organisationen.</p>
+
+		{#if revisions.length}
+			<section class="fb-block" aria-labelledby="fb-revisions">
+				<h2 id="fb-revisions">Änderungen nach dem Gegenlesen</h2>
+				<ul>
+					{#each revisions as revision (revision.model + revision.pillar)}
+						<li>{revision.model} · {revision.pillarName}: <del>{revision.initial.organization.name}</del> → <strong>{revision.final.organization.name}</strong></li>
+					{/each}
+				</ul>
+			</section>
+		{/if}
+
+		<section class="fb-block" aria-labelledby="fb-protocol">
+			<h2 id="fb-protocol">Voten je Modell — erst und nach dem Gegenlesen</h2>
+			{#each home.modelTracks as track (track.model)}
+				<div class="fb-track"><strong>{track.label}</strong>
+					<ul>
+						{#each track.rows as row (row.pillar)}
+							<li>{row.pillar} · {row.pillarName}: Erst {row.initial?.organization.name ?? 'kein Votum'} · Schluss {row.final?.organization.name ?? 'kein Votum'}</li>
+						{/each}
+					</ul>
+				</div>
+			{/each}
+		</section>
+
+		<details class="fb-block fb-dissent-wrap">
+			<summary>Dissens (vollständiger Wortlaut)</summary>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+			<div class="fb-dissent">{@html home.dissentHtml}</div>
+		</details>
+
+		{#if home.correctionHtml}
+			<aside class="fb-block fb-correction" aria-label="Korrekturhinweis">
+				<strong>Korrekturhinweis</strong>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+				<div>{@html home.correctionHtml}</div>
+			</aside>
+		{/if}
+
+		<section class="fb-block" aria-labelledby="fb-costs">
+			<h2 id="fb-costs">Kosten</h2>
+			<p>Kosten dieser Sitzung: {money(home.costs.total, home.costs.currency)}.</p>
+		</section>
+
+		<section class="fb-block" aria-labelledby="fb-archive">
+			<h2 id="fb-archive">Sitzungsarchiv</h2>
+			<ul>
+				{#each home.archive as item (item.id)}
+					<li><a href="/sessions/{item.id}/">Sitzung {item.number}: {item.nonConsensusPillars.length ? `Keine Einigung in ${item.nonConsensusPillars.join(', ')}` : 'Empfehlungen in allen Bereichen'}</a></li>
+				{/each}
+			</ul>
+		</section>
+
 		<a href="/sessions/{home.currentSession.id}/">Vollständiges Protokoll öffnen →</a>
 	</section>
 
@@ -137,7 +197,7 @@
 		</aside>
 
 		<section class="scene-plaque arrival-plaque">
-			<p>Wo hilft meine Spende am meisten?</p>
+			<h1>Wo hilft meine Spende am meisten?</h1>
 			<strong>Drei Modelle prüfen dieselben Belege. Öffentlich und überprüfbar.</strong>
 			<small>Für Menschen heute, unsere Zukunft, große Gefahren und Übersehenes.</small>
 		</section>
@@ -170,14 +230,16 @@
 			{/each}
 		</section>
 
+		{#if revisions.length}
 		<section class="revision-layer">
-			<header><strong>Nach dem Gegenlesen änderten zwei Modelle ihre Empfehlung.</strong><span>Erstvoten bleiben sichtbar.</span></header>
+			<header><strong>{revisedModelCount === 1 ? 'Nach dem Gegenlesen änderte ein Modell seine Empfehlung.' : `Nach dem Gegenlesen änderten ${revisedModelCount} Modelle ihre Empfehlung.`}</strong><span>Erstvoten bleiben sichtbar.</span></header>
 			<div class="revision-notes">
-				{#each home.revisions.filter((revision) => revision.pillar === 'A') as revision (revision.model)}
-					<article><span>{revision.model} · Bereich {revision.pillar}</span><small>Erstvotum</small><del>{revision.initial.organization.name}</del><small>geändert zu</small><strong>{revision.final.organization.name}</strong></article>
+				{#each revisions as revision (revision.model + revision.pillar)}
+					<article><span>{revision.model} · {revision.pillarName}</span><small>Erstvotum</small><del>{revision.initial.organization.name}</del><small>geändert zu</small><strong>{revision.final.organization.name}</strong></article>
 				{/each}
 			</div>
 		</section>
+		{/if}
 
 		<section class="counting-machine" aria-labelledby="machine-title">
 			<h2 id="machine-title">Zählwerk</h2>
@@ -218,6 +280,17 @@
 	.fallback-results { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; }
 	.fallback-results article { display:grid; gap:.4rem; padding:1rem; border:1px solid #8e6a34; }
 	.fallback-results h2 { margin:0; font-size:1rem; }
+	.fallback-results .fb-desc { color:#c7bca7; font-size:.85rem; }
+	.fb-reservation { color:#e0c07f; font-style:normal; font-size:.82rem; }
+	.home-fallback .fb-block { margin:1.5rem 0; }
+	.home-fallback .fb-block h2 { font-size:1.15rem; margin:0 0 .5rem; }
+	.home-fallback .fb-block ul { margin:.3rem 0; padding-left:1.2rem; }
+	.home-fallback .fb-track { margin:.5rem 0; }
+	.home-fallback .fb-correction { padding:1rem; border-left:3px solid #c89644; background:#161d20; }
+	.home-fallback .fb-dissent { max-height:24rem; overflow:auto; font-size:.85rem; }
+	.home-fallback .fb-dissent :global(pre) { overflow-x:auto; }
+	.home-fallback summary { cursor:pointer; color:#e0b75d; }
+	.home-fallback a { color:#e6b45c; }
 	:global(.js) .home-fallback { display:block; }
 	.council-stage { display:none; }
 	:global(.stage-ready) .home-fallback { display:none; }
@@ -256,7 +329,7 @@
 	.antechamber-window a { color:#d9b261; }
 	.scene-plaque,.mechanism-plaque,.question-plaque { position:absolute; z-index:6; left:50%; transform:translateX(-50%); width:min(42rem,46vw); padding:.65rem 1.2rem; text-align:center; background:linear-gradient(90deg,rgba(7,10,11,.5),rgba(13,17,17,.92),rgba(7,10,11,.5)); border-block:1px solid rgba(197,145,60,.48); opacity:0; transition:opacity .45s,transform .55s; pointer-events:none; }
 	.arrival-plaque { top:5.2rem; }
-	.arrival-plaque p { margin:0; color:#f0d899; font-size:clamp(1.35rem,2.2vw,2.2rem); }
+	.arrival-plaque h1 { margin:0; color:#f0d899; font-size:clamp(1.35rem,2.2vw,2.2rem); font-weight:400; line-height:1.12; }
 	.arrival-plaque strong,.arrival-plaque small { display:block; margin:.25rem 0; }
 	.arrival-plaque small { color:#b9ad97; }
 	.mechanism-plaque { top:.7rem; opacity:1; width:min(46rem,48vw); }
@@ -281,7 +354,7 @@
 	.revision-layer { position:absolute; z-index:7; inset:4.5rem 19% 12rem 24%; opacity:0; pointer-events:none; transition:opacity .45s; }
 	.revision-layer header { width:max-content; max-width:75%; margin:auto; padding:.45rem .8rem; text-align:center; background:rgba(7,10,11,.9); border:1px solid rgba(199,146,62,.45); }
 	.revision-layer header span { display:block;color:#bcae94;font-size:.7rem; }
-	.revision-notes { display:flex; justify-content:center; gap:1rem; margin-top:13rem; }
+	.revision-notes { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; margin-top:13rem; }
 	.revision-notes article { width:13rem; padding:.65rem; color:#20180e; background:#ded0b4; box-shadow:0 1rem 2rem #000; transform:rotate(-1deg); }
 	.revision-notes span,.revision-notes small { display:block;font:.58rem ui-sans-serif,system-ui;text-transform:uppercase; }
 	.revision-notes del,.revision-notes strong { display:block;margin:.15rem 0; }

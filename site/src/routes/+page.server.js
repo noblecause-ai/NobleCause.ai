@@ -13,13 +13,10 @@ export function load() {
 	return {
 		home: {
 			...home,
+			// dissent/correction werden im No-JS-Fallback gerendert; je-Modell-content_md
+			// (initialContentHtml/finalContentHtml) wurde nirgends gerendert -> entfernt.
 			correctionHtml: home.correction ? md(home.correction.text) : null,
-			dissentHtml: md(home.dissent),
-			modelTracks: home.modelTracks.map((track) => ({
-				...track,
-				initialContentHtml: md(track.initialContent),
-				finalContentHtml: md(track.finalContent)
-			}))
+			dissentHtml: md(home.dissent)
 		}
 	};
 }

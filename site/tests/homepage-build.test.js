@@ -7,25 +7,44 @@ import { fileURLToPath } from 'node:url';
 const SITE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const built = path.join(SITE, 'build', 'index.html');
 
-test('prerendered Homepage enthält die fachliche Wahrheit ohne JavaScript', (context) => {
+test('No-JS-Fallback trägt die volle Wahrheit (nicht die per JS versteckte Bühne)', (context) => {
 	if (!fs.existsSync(built)) return context.skip('zuerst npm run build ausführen');
 	const html = fs.readFileSync(built, 'utf8');
-	for (const value of [
-		'Wo hilft meine Spende am meisten?',
-		'Helen Keller International',
-		'Against Malaria Foundation',
-		'Nuclear Threat Initiative',
-		'Lead Exposure Elimination Project',
-		'3/3',
-		'2/3',
-		'Drei Modelle antworten getrennt',
-		'Zählwerk',
-		'Kosten:',
-		'/sessions/2026-07c/'
-	]) assert.ok(html.includes(value), `fehlender prerendered Inhalt: ${value}`);
-	assert.ok(html.includes('giving.helenkellerintl.org'));
-	assert.match(html, /<del[^>]*>TaRL Africa<\/del>/);
-	for (const scene of ['arrival', 'recommendations', 'door-opening', 'antechamber', 'initial', 'revision', 'count', 'archive']) {
-		assert.ok(html.includes(`id="${scene}"`), `fehlender Szenenanker: ${scene}`);
+
+	// Ohne JS ist NUR .home-fallback sichtbar; die reiche .council-stage ist display:none,
+	// bis JS .stage-ready setzt. Deshalb wird GEGEN DEN FALLBACK-BLOCK geprüft, nicht gegen
+	// das gesamte HTML — sonst falsche Sicherheit (die Strings stünden in der versteckten Bühne).
+	const start = html.indexOf('class="home-fallback');
+	const end = html.indexOf('class="council-stage');
+	assert.ok(start !== -1 && end !== -1 && end > start, 'Fallback-Block nicht gefunden');
+	const fallback = html.slice(start, end);
+
+	// Alles, was der Plan (§7/§21) ohne JS verlangt, muss IM FALLBACK stehen:
+	const required = [
+		'Wo hilft meine Spende am meisten?', // h1 / Titel
+		'Drei Modelle antworten getrennt', // Mechanismus in zwei Sätzen
+		'Helen Keller International', // Empfehlung A
+		'Against Malaria Foundation', // Empfehlung B
+		'Nuclear Threat Initiative', // Empfehlung C
+		'Lead Exposure Elimination Project', // Empfehlung D
+		'3 von 3', // Zählung Konsens
+		'2 von 3', // Zählung 2-von-3
+		'giving.helenkellerintl.org', // direkter Spendenlink aus der Registry
+		'Unter Vorbehalt', // Vorbehalt (konditionale Stimme)
+		'Erst ', // Erstvotum
+		'Schluss ', // Schlussvotum
+		'Änderungen nach dem Gegenlesen', // sichtbare Revisionen
+		'Dissens', // Dissens-Zugang
+		'Korrekturhinweis', // Korrekturhinweis
+		'Kosten dieser Sitzung', // Kosten
+		'Sitzungsarchiv', // Archiv
+		'Sitzung 1', // Archiv-Eintrag
+		'/sessions/2026-07c/' // Link zum vollständigen Protokoll
+	];
+	for (const value of required) {
+		assert.ok(fallback.includes(value), `Fallback (ohne JS) fehlt: ${value}`);
 	}
+
+	// Gegenprobe zu Blocker 1: der Revisions-Text ist datengetrieben, nicht hartkodiert.
+	assert.ok(!fallback.includes('änderten zwei Modelle'), 'hartkodierter Revisions-Text im Fallback');
 });
