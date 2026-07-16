@@ -2,7 +2,7 @@
 	import ResultCard from '$lib/components/ResultCard.svelte';
 
 	let { data } = $props();
-	const s = data.session;
+	const s = $derived(data.session);
 	const pillarNames = {
 		A: 'Zukunftsinvestition',
 		B: 'Linderung gegenwärtigen Leids',
@@ -34,7 +34,7 @@
 {#if s.correction_notice}
 	<aside class="correction">
 		<p class="correction-label">Korrektur</p>
-		<p>{s.correction_notice.text}</p>
+		<div class="correction-copy"><!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->{@html s.correction_html}</div>
 	</aside>
 {/if}
 
@@ -69,7 +69,7 @@
 {/if}
 
 {#if s.wart_dossier}
-	<h2>Wart-Dossier (Runde 0)</h2>
+	<h2 id="wart-dossier">Wart-Dossier (Runde 0)</h2>
 	<p class="muted">
 		Der Wart (<code>{s.wart_dossier.model}</code>, Web-Recherche) lieferte vor den Einzelvoten
 		folgendes Evidenz-Dossier — ohne eigene Empfehlung.
@@ -97,7 +97,7 @@
 	</div>
 {/if}
 
-<h2>Vollprotokoll</h2>
+<h2 id="vollprotokoll">Vollprotokoll</h2>
 <p class="muted">Standardmäßig eingeklappt — vollständige Transparenz auf Wunsch.</p>
 
 <details>

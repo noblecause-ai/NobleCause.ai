@@ -1,7 +1,7 @@
 <script>
 	let { confidence = 0 } = $props();
-	const pct = Math.round(confidence * 100);
-	const barWidth = Math.round(confidence * 120);
+	const pct = $derived(Math.round(confidence * 100));
+	const barWidth = $derived(Math.round(confidence * 120));
 </script>
 
 <svg width="140" height="10" viewBox="0 0 140 10" role="img" aria-label="Konfidenz {pct} Prozent">

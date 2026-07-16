@@ -1,46 +1,25 @@
-import { getLatestSession, getSchedule, listSessions } from '$lib/server/content.js';
-
-function formatStaticCountdown(iso) {
-	if (!iso) return null;
-	const target = new Date(iso);
-	const now = new Date();
-	const diff = target - now;
-	if (diff <= 0) return 'bald';
-	const days = Math.floor(diff / 86400000);
-	const hours = Math.floor((diff % 86400000) / 3600000);
-	const minutes = Math.floor((diff % 3600000) / 60000);
-	if (days > 0) return `in ${days} T ${hours} h`;
-	if (hours > 0) return `in ${hours} h ${minutes} min`;
-	return `in ${minutes} min`;
-}
+import { getAllSessions, getLatestSession, getOrganizations } from '$lib/server/content.js';
+import { buildHomepageViewModel } from '$lib/server/homepage.js';
+import { md } from '$lib/server/content.js';
 
 export function load() {
-	const latest = getLatestSession();
-	const schedule = getSchedule();
+	const session = getLatestSession();
+	if (!session) return { home: null };
+	const home = buildHomepageViewModel({
+		session,
+		sessions: getAllSessions(),
+		registry: getOrganizations()
+	});
 	return {
-		sessions: listSessions(),
-		schedule,
-		scheduleStatic: schedule
-			? {
-					research: formatStaticCountdown(schedule.next_research),
-					session: formatStaticCountdown(schedule.next_session),
-					researchDate: schedule.next_research
-						? new Date(schedule.next_research).toLocaleDateString('de-CH')
-						: null,
-					sessionDate: schedule.next_session
-						? new Date(schedule.next_session).toLocaleDateString('de-CH')
-						: null
-				}
-			: null,
-		latest: latest
-			? {
-					id: latest.id,
-					number: latest.number,
-					date: latest.date,
-					title: latest.title,
-					summary: latest.summary ?? null,
-					recommendations: latest.recommendations ?? []
-				}
-			: null
+		home: {
+			...home,
+			correctionHtml: home.correction ? md(home.correction.text) : null,
+			dissentHtml: md(home.dissent),
+			modelTracks: home.modelTracks.map((track) => ({
+				...track,
+				initialContentHtml: md(track.initialContent),
+				finalContentHtml: md(track.finalContent)
+			}))
+		}
 	};
 }

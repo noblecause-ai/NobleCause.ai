@@ -45,6 +45,15 @@ export function getSession(id) {
 	return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+export function getOrganizations() {
+	const file = path.join(ROOT, 'organizations.json');
+	return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+export function getAllSessions() {
+	return listSessions().map((item) => getSession(item.id));
+}
+
 export function getLatestSession() {
 	const sessions = listSessions();
 	if (sessions.length === 0) return null;

@@ -33,28 +33,15 @@
 
 <style>
 	:global(:root) {
-		--bg: #f4f1ea;
-		--ink: #1a1916;
-		--muted: #6f695c;
-		--structure: #0f6e56;
-		--life: #ba7517;
-		--line: #d8d2c4;
-		--line-strong: #1a1916;
-		--card-bg: #faf8f3;
-		--code-bg: #ebe6da;
-	}
-	@media (prefers-color-scheme: dark) {
-		:global(:root) {
-			--bg: #211e1a;
-			--ink: #ede8dc;
-			--muted: #a89f8f;
-			--structure: #5dcaa5;
-			--life: #fac775;
-			--line: #3a3630;
-			--line-strong: #ede8dc;
-			--card-bg: #2a2722;
-			--code-bg: #322e28;
-		}
+		--bg: #080c0e;
+		--ink: #e9e1d1;
+		--muted: #a89d8b;
+		--structure: #8bb7ca;
+		--life: #d7aa55;
+		--line: #473820;
+		--line-strong: #a67b3d;
+		--card-bg: #111719;
+		--code-bg: #070b0d;
 	}
 	:global(html) {
 		background: var(--bg);
@@ -63,8 +50,17 @@
 		line-height: 1.65;
 		font-size: 17px;
 	}
+	:global(*),
+	:global(*::before),
+	:global(*::after) {
+		box-sizing: border-box;
+	}
 	:global(body) {
 		margin: 0;
+		background:
+			radial-gradient(circle at 50% -20%, rgba(63, 97, 113, 0.2), transparent 38rem),
+			repeating-linear-gradient(90deg, transparent 0 79px, rgba(215, 170, 85, 0.018) 80px),
+			var(--bg);
 	}
 	:global(h1, h2, h3) {
 		font-weight: 600;
@@ -142,7 +138,7 @@
 	}
 
 	.page {
-		max-width: 44rem;
+		max-width: 52rem;
 		margin: 0 auto;
 		padding: 0 1.2rem;
 	}
@@ -179,6 +175,16 @@
 	}
 	main {
 		min-height: 55vh;
+		padding: clamp(1.2rem, 3vw, 2.5rem);
+		background: linear-gradient(145deg, rgba(18, 24, 25, 0.96), rgba(9, 14, 16, 0.98));
+		border: 1px solid var(--line);
+		box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.35), inset 0 1px rgba(255, 255, 255, 0.025);
+	}
+	:global(.page:has(.council-stage) main) {
+		padding: 0;
+		background: transparent;
+		border: 0;
+		box-shadow: none;
 	}
 	footer {
 		margin-top: 3.5rem;
@@ -190,5 +196,20 @@
 	.fine {
 		font-family: ui-sans-serif, system-ui, sans-serif;
 		font-size: 0.75rem;
+	}
+	@media (max-width: 44rem) {
+		header {
+			display: block;
+		}
+		.brand {
+			display: inline-block;
+			margin-bottom: 0.8rem;
+		}
+		nav {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 0.65rem 1rem;
+			width: 100%;
+		}
 	}
 </style>

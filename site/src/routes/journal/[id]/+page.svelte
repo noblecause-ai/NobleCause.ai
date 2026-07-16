@@ -1,6 +1,6 @@
 <script>
 	let { data } = $props();
-	const e = data.entry;
+	const e = $derived(data.entry);
 	const pillarNames = {
 		A: 'Zukunftsinvestition',
 		B: 'Linderung gegenwärtigen Leids',
