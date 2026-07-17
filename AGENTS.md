@@ -10,12 +10,23 @@ Datenvertrag, Plates, Schema, `organizations.json` mit `beschreibung` und beide 
 
 Diese Arbeit ist **Präsentation** — nur wie die vorhandenen Daten dargestellt werden.
 
+## Experiment: `feat/council-rooms` (Kimi, Wegwerf)
+Isolierter Versuch, die UI-Architektur der Startseite von „ein langer Scroll über acht
+Szenen" auf **drei diskrete Räume** (Vorzimmer → Ratssaal → Archiv) umzubauen. **Nur die
+Präsentation** wird ersetzt; die **verifizierte Datenschicht** (`site/src/lib/server/
+content.js` + `homepage.js` — liest `recommendations`/`convergence`, **aggregiert nie neu**)
+und die **Embleme** werden geerbt, nicht angefasst. Der genaue Auftrag steht in
+**`docs/council-rooms-brief.md`** (bitte zuerst lesen). Es gelten dieselbe harte Grenze und
+dieselben Sauberkeits-Regeln wie unten. Wegwerf: scheitert der Versuch, wird der Branch
+gelöscht; `master` und `feat/immersive-homepage` bleiben unberührt.
+
 ## HARTE GRENZE — diese Pfade werden NICHT angefasst
 Ändere, lösche oder verschiebe **nichts** unter:
 - `sessions/**` (publizierte Sitzungstexte)
 - `journal/**`
 - `schedule.json`
 - `gremium/**` (Aggregation, Backend, Läufe)
+- `schema/**` (Datenvertrag — nur lesen)
 - `prompts.py` / `**/prompts.py`
 
 Wenn eine Aufgabe eine Änderung dort zu verlangen scheint: **sofort stoppen und melden**,
