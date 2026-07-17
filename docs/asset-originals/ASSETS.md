@@ -45,29 +45,43 @@ HTML-Ebenen und werden nicht aus den Bildern abgeleitet.
 
 ## Prozess- und Säulenmotive
 
-Die folgenden zehn Originale wurden am 16.07.2026 byte-identisch aus `docs/` übernommen.
-Die Arbeitskopien bleiben bis nach dem Review erhalten. Alle Originale messen 1254 × 1254
-Pixel. Die Zuordnung folgt dem sichtbaren Motiv, nicht der ursprünglichen generischen
-Exportnummer.
+Die vier Säulenoriginale wurden am 16.07.2026 nach sichtbarem Inhalt aus den vom
+Auftraggeber unter `docs/` bereitgestellten Dateien zugeordnet und byteidentisch archiviert.
+Die sechs Prozessoriginale wurden am selben Tag mit Codex Image Generation einzeln nach dem
+freigegebenen Motivvertrag erzeugt. Alle Originale sind quadratisch; die Säulen messen
+1254 × 1254, die Prozessmotive 1256 × 1256 Pixel.
 
-| Produktiver Pfad | Quelldatei unter `docs/` | Zuordnung | Bytes | SHA-256 |
-|---|---|---|---:|---|
-| `process/question.png` | `ChatGPT Image 16. Juli 2026, 08_57_14 (1).png` | Frage | 2.191.992 | `501d240c863f86cc5a3fd7bc41ef10b799aba682cabd5b32bda985f71d445bb4` |
-| `process/evidence.png` | `ChatGPT Image 16. Juli 2026, 08_57_15 (2).png` | Belege sammeln | 1.946.744 | `1aa3a30548291539ff3b209d1521d2781b2e72ec46841d1c8eab1ddcf13f9416` |
-| `process/three-answers.png` | `ChatGPT Image 16. Juli 2026, 08_57_15 (3).png` | Drei Antworten | 2.312.377 | `d7cf4ca61fa378f009350c4af31877c6b85a8241de83d1b974d0051b09b2146f` |
-| `process/review-and-revise.png` | `ChatGPT Image 16. Juli 2026, 08_57_16 (4).png` | Gegenlesen und Umdenken | 1.964.180 | `199f6d9e5df3b8f83037faf7ffc1a04f77f1d402702e94cdf6d7735d965a763c` |
-| `process/count.png` | `ChatGPT Image 16. Juli 2026, 08_57_16 (5).png` | Zählen | 1.889.574 | `581991c48f5975ea306e6fa84d27f430d670f883262e19c19df176dfceef2556` |
-| `process/publish.png` | `ChatGPT Image 16. Juli 2026, 08_57_16 (6).png` | Veröffentlichen | 1.951.028 | `1c658573cdcb2068d8ca74bc63440845d903c5251d32b2e19f4af589e29eb373` |
-| `pillars/future.png` | `ChatGPT Image 16. Juli 2026, 08_57_17 (7).png` | Investition in die Zukunft | 1.837.691 | `2c7190b8e17ba057fe68837f918c3768b2fc04745975a1a3cb73f09f20011830` |
-| `pillars/suffering.png` | `ChatGPT Image 16. Juli 2026, 08_57_17 (8).png` | Linderung von Leid | 2.295.159 | `9fec5a51c2882f1dc3978861a8032bf2cc2e9c93be27192886e5d0fc3f3b1401` |
-| `pillars/global-risks.png` | `ChatGPT Image 16. Juli 2026, 08_57_17 (9).png` | Schutz vor großen Gefahren | 2.175.640 | `9de7cca7e63e0a8abd8dc38dbea6c9c7b9ee38a8e402129902fa48a07e5f7d46` |
-| `pillars/overlooked.png` | `ChatGPT Image 16. Juli 2026, 08_57_17 (10).png` | Übersehenes | 1.997.834 | `51449a110b65f4b51fab3b75eb741057e0e2d6682dda43d8251bf5372e59d705` |
+| Original unter `docs/asset-originals/media/` | Zuordnung | Bytes | SHA-256 |
+|---|---|---:|---|
+| `pillars/pillar-future.png` | Zukunft — Rakete | 2.619.231 | `f1cf408ad75773f87564b3ebed2a83a0087557747e98bb6fcfa98503c14b57b4` |
+| `pillars/pillar-relieve-suffering.png` | Leid lindern — gebende und empfangende Hand | 2.358.139 | `7839270a12c066d370be927d43104d16cd294be6e31f67cc38d39ad0e8ee53da` |
+| `pillars/pillar-major-risks.png` | Große Gefahren — Atompilz | 2.562.631 | `6c17d338fec4fab8bb8fd911bf4ff8e2da7cbb053fab43c1eadd836b28d2fd6f` |
+| `pillars/pillar-overlooked.png` | Was sonst übersehen wird — gefährdete Brücke | 2.676.957 | `e77f3f8f22dd38812af9f6e703e7995fe5c3a57152fd61e7c5bd2ff1b6a0890f` |
+| `process/process-question.png` | Frage — Feder, Blatt und Fragezeichen | 2.584.674 | `094b326ff4a622b794d266ba6bcea852c254390a458621181bb7640374b7c9b0` |
+| `process/process-evidence.png` | Belege — Lupe und drei geordnete Dokumente | 2.754.423 | `21a88ba92ea27483f672cd5f81cb84c7bda4e9eedf0e9baad53c7c2d9fb6a575` |
+| `process/process-three-answers.png` | Drei Antworten — drei gleichwertige Pulte | 2.624.008 | `e941c332ca95a79798ce4d6ec4bd6035501768cb9b27beaa791d0cd03c96d9e3` |
+| `process/process-reconsider.png` | Umdenken — Kopfprofil und Wendepfeil | 2.542.076 | `1be9a80d18335faaa08920d3b439c5d1db4506e248c50bfa2d9c58ca70d5d6d1` |
+| `process/process-count.png` | Zählen — mechanisches Zählwerk mit drei Zuflüssen | 2.475.247 | `50491e4b0735fb3414b6de834dc6281edb70e67c645d20b03c22ea8a4cd06b7a` |
+| `process/process-publish.png` | Veröffentlichen — offenes Protokoll und Siegel | 2.812.225 | `c4ddd295cbf4eb3df54913512dfc538fc1ec924a9b34fec427bda09e0023cd80` |
 
-Für die nur 34–43 CSS-Pixel großen UI-Motive wurden mit macOS `sips` 320 × 320 große
-JPEG-Anzeigederivate (`*-display.jpg`, Qualität 72) erzeugt. Sie sind je 17,6–20,2 kB groß;
-die Seite lädt ausschließlich diese Derivate und nicht zusätzlich die rund 20,6 MB großen
-Originale. Die Originale bleiben als unveränderte Provenienz- und Reviewartefakte im Repo
-erhalten (hier unter `docs/asset-originals/media/`), werden aber **nicht ausgeliefert**.
+Für die UI wurden mit macOS `sips` 320 × 320 große JPEG-Anzeigederivate (Qualität 72)
+erzeugt. Sie liegen semantisch gleich benannt als `*-display.jpg` unter
+`site/static/media/pillars/` beziehungsweise `site/static/media/process/`, sind jeweils
+25–31 kB groß und werden allein ausgeliefert. Die hochauflösenden Originale bleiben
+außerhalb des Deploypfads.
+
+| Deploytes Derivat | Bytes | SHA-256 |
+|---|---:|---|
+| `pillars/pillar-future-display.jpg` | 28.047 | `5e559bd783f05c327b6b8b5d402bfa7b9336092fbd0197a3b1288a15e16eb014` |
+| `pillars/pillar-relieve-suffering-display.jpg` | 25.272 | `5fbd3ce0e690e5900b5817e651571d2956cf93bad738610e9de5c8136ed7baca` |
+| `pillars/pillar-major-risks-display.jpg` | 25.165 | `40b3d5cd7eb2ed1e49c6ee50b28059fc61c4debfdada3eeb6e980d31323a1873` |
+| `pillars/pillar-overlooked-display.jpg` | 29.502 | `7e427dabdba0dbd042bb42d004050ab75c36ce0d1921a72a95f42a8506481eec` |
+| `process/process-question-display.jpg` | 27.124 | `b3ffd52e00a32e69106f2d7d0859129f148d0418ba833c3eb298dbf9ab8bafe4` |
+| `process/process-evidence-display.jpg` | 27.418 | `23211fc8295e1b06ffab6059138aa4cf6ba6ed5dcd31266e14005bbf69688710` |
+| `process/process-three-answers-display.jpg` | 26.261 | `78b3c3d13aa56473cb993af1eb0fe9d70b8088cd0ef19256307f1e9bccb18b0e` |
+| `process/process-reconsider-display.jpg` | 28.419 | `42f16ba4e1302506fe7fc61fabc28e2b8250858a1078bc4b1781215b4492e0aa` |
+| `process/process-count-display.jpg` | 28.440 | `7d69f2ac2b8e5973638013462998ca94bc0f9eb6caa845082a14f02d2c0d1146` |
+| `process/process-publish-display.jpg` | 31.044 | `57e0c280470c61703328553e8785e365fa8ba8305f7cae0d86459b13fc020916` |
 
 Die vier großen Szenenoriginale werden ebenfalls nicht direkt ausgeliefert. Unter
 `media/scenes/` liegen 1600 × 900 große JPEG-Derivate (Qualität 78, 271–367 kB); unter

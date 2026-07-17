@@ -34,7 +34,7 @@ test('No-JS-Fallback trägt die volle Wahrheit (nicht die per JS versteckte Büh
 		'Erst ', // Erstvotum
 		'Schluss ', // Schlussvotum
 		'Änderungen nach dem Gegenlesen', // sichtbare Revisionen
-		'Dissens', // Dissens-Zugang
+		'Noch keine Einigkeit', // alltagssprachlicher Zugang zum vollständigen Dissens
 		'Korrekturhinweis', // Korrekturhinweis
 		'Kosten dieser Sitzung', // Kosten
 		'Sitzungsarchiv', // Archiv
@@ -47,4 +47,27 @@ test('No-JS-Fallback trägt die volle Wahrheit (nicht die per JS versteckte Büh
 
 	// Gegenprobe zu Blocker 1: der Revisions-Text ist datengetrieben, nicht hartkodiert.
 	assert.ok(!fallback.includes('änderten zwei Modelle'), 'hartkodierter Revisions-Text im Fallback');
+});
+
+test('Bereichs- und Prozesszeichen sind im No-JS-Grundzustand und Deploy enthalten', (context) => {
+	if (!fs.existsSync(built)) return context.skip('zuerst npm run build ausführen');
+	const html = fs.readFileSync(built, 'utf8');
+	const assets = [
+		'pillars/pillar-future-display.jpg',
+		'pillars/pillar-relieve-suffering-display.jpg',
+		'pillars/pillar-major-risks-display.jpg',
+		'pillars/pillar-overlooked-display.jpg',
+		'process/process-question-display.jpg',
+		'process/process-evidence-display.jpg',
+		'process/process-three-answers-display.jpg',
+		'process/process-reconsider-display.jpg',
+		'process/process-count-display.jpg',
+		'process/process-publish-display.jpg'
+	];
+
+	for (const asset of assets) {
+		assert.ok(html.includes(`/media/${asset}`), `HTML referenziert ${asset} nicht`);
+		assert.ok(fs.existsSync(path.join(SITE, 'build', 'media', asset)), `Deploy fehlt ${asset}`);
+	}
+	assert.ok(!html.includes('>Dissens (vollständiger Wortlaut)<'), 'unerklärter Fachbegriff im Einstieg');
 });

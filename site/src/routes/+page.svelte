@@ -8,13 +8,19 @@
 	let revisedModelCount = $derived(new Set(revisions.map((revision) => revision.model)).size);
 	let scene = $state('arrival');
 	const scenes = ['arrival', 'recommendations', 'door-opening', 'antechamber', 'initial', 'revision', 'count', 'archive'];
+	const pillarEmblems = {
+		A: { label: 'Zukunft', src: '/media/pillars/pillar-future-display.jpg' },
+		B: { label: 'Leid lindern', src: '/media/pillars/pillar-relieve-suffering-display.jpg' },
+		C: { label: 'Große Gefahren', src: '/media/pillars/pillar-major-risks-display.jpg' },
+		D: { label: 'Was sonst übersehen wird', src: '/media/pillars/pillar-overlooked-display.jpg' }
+	};
 	const steps = [
-		['Frage', 'arrival'],
-		['Belege', 'door-opening'],
-		['Drei Antworten', 'initial'],
-		['Umdenken', 'revision'],
-		['Zählen', 'count'],
-		['Veröffentlichen', 'archive']
+		{ label: 'Frage', scene: 'arrival', src: '/media/process/process-question-display.jpg' },
+		{ label: 'Belege', scene: 'door-opening', src: '/media/process/process-evidence-display.jpg' },
+		{ label: 'Drei Antworten', scene: 'initial', src: '/media/process/process-three-answers-display.jpg' },
+		{ label: 'Umdenken', scene: 'revision', src: '/media/process/process-reconsider-display.jpg' },
+		{ label: 'Zählen', scene: 'count', src: '/media/process/process-count-display.jpg' },
+		{ label: 'Veröffentlichen', scene: 'archive', src: '/media/process/process-publish-display.jpg' }
 	];
 	const lecternAnchors = [
 		{ x: 23, y: 38 }, { x: 77, y: 38 }, { x: 50, y: 82 }
@@ -37,13 +43,15 @@
 		const initial = location.hash.slice(1);
 		if (scenes.includes(initial)) {
 			scene = initial;
-			document.querySelector(`[data-scene="${initial}"]`)?.scrollIntoView();
+			// Keep the scroll controller and the deep-linked camera state in sync.
+			requestAnimationFrame(() => scrollTo({ top: scenes.indexOf(initial) * innerHeight, behavior: 'instant' }));
+		} else if (['recommendations-register', 'process-overview'].includes(initial)) {
+			requestAnimationFrame(() => document.getElementById(initial)?.scrollIntoView());
 		}
 		const onHash = () => {
 			const next = location.hash.slice(1);
 			if (scenes.includes(next)) {
 				scene = next;
-				document.querySelector(`[data-scene="${next}"]`)?.scrollIntoView();
 			}
 		};
 		addEventListener('hashchange', onHash);
@@ -56,6 +64,7 @@
 
 	const currentStep = () => ({ arrival: 0, recommendations: 0, 'door-opening': 1, antechamber: 1, initial: 2, revision: 3, count: 4, archive: 5 })[scene] ?? 0;
 	const money = (value, currency = 'EUR') => new Intl.NumberFormat('de-CH', { style: 'currency', currency }).format(value);
+	const areaNames = (pillars) => pillars.map((pillar) => pillarEmblems[pillar]?.label ?? pillar).join(', ');
 </script>
 
 <svelte:head>
@@ -69,10 +78,20 @@
 		<p class="eyebrow">Öffentliches Beratungsprotokoll</p>
 		<h1 id="fallback-title">Wo hilft meine Spende am meisten?</h1>
 		<p>Je ein KI-Modell von Anthropic, OpenAI und Google prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt.</p>
+		<div class="emblem-glossary pillar-glossary" aria-label="Die vier Bereiche">
+			{#each Object.entries(pillarEmblems) as [, emblem] (emblem.label)}
+				<span><img src={emblem.src} alt="" width="48" height="48" /><strong>{emblem.label}</strong></span>
+			{/each}
+		</div>
 		<p><strong>Drei Modelle antworten getrennt. Sie lesen einander. Sie dürfen umdenken. Ein einfaches Programm zählt nur die Nennungen.</strong></p>
+		<div class="emblem-glossary process-glossary" aria-label="Die sechs Schritte">
+			{#each steps as step (step.label)}
+				<span><img src={step.src} alt="" width="48" height="48" /><strong>{step.label}</strong></span>
+			{/each}
+		</div>
 		<div class="fallback-results">
 			{#each home.recommendations as rec (rec.pillar)}
-				<article><h2>{rec.pillar} · {rec.pillarName}</h2>
+				<article><h2>{pillarEmblems[rec.pillar]?.label ?? rec.pillarName}</h2>
 					{#if rec.hasConsensus}
 						<strong>{rec.organization.name}</strong><span>{rec.count} von {rec.total}</span>
 						<span class="fb-desc">{rec.organization.description}</span>
@@ -114,7 +133,7 @@
 		</section>
 
 		<details class="fb-block fb-dissent-wrap">
-			<summary>Dissens (vollständiger Wortlaut)</summary>
+			<summary>Noch keine Einigkeit (vollständiger Wortlaut)</summary>
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
 			<div class="fb-dissent">{@html home.dissentHtml}</div>
 		</details>
@@ -136,7 +155,7 @@
 			<h2 id="fb-archive">Sitzungsarchiv</h2>
 			<ul>
 				{#each home.archive as item (item.id)}
-					<li><a href="/sessions/{item.id}/">Sitzung {item.number}: {item.nonConsensusPillars.length ? `Keine Einigung in ${item.nonConsensusPillars.join(', ')}` : 'Empfehlungen in allen Bereichen'}</a></li>
+					<li><a href="/sessions/{item.id}/">Sitzung {item.number}: {item.nonConsensusPillars.length ? `Noch keine Einigkeit: ${areaNames(item.nonConsensusPillars)}` : 'Empfehlungen in allen Bereichen'}</a></li>
 				{/each}
 			</ul>
 		</section>
@@ -149,10 +168,11 @@
 			<img src="/media/scenes/hall-display.jpg" alt="" width="1600" height="900" />
 			<div class="world-shade"></div>
 		</div>
-		{#if scene === 'door-opening'}<div class="world doorway-world" aria-hidden="true">
+		<div class="world doorway-world" aria-hidden="true">
 			<img src="/media/scenes/doorway-display.jpg" alt="" width="1600" height="900" decoding="async" />
 			<div class="world-shade"></div>
-		</div>{/if}
+			<div class="door-leaves"><span></span><span></span></div>
+		</div>
 		{#if scene === 'antechamber'}<div class="world antechamber-world" aria-hidden="true">
 			<img src="/media/scenes/antechamber-display.jpg" alt="" width="1600" height="900" decoding="async" />
 			<div class="world-shade"></div>
@@ -166,13 +186,13 @@
 			<a href="/">NobleCause</a><span>Öffentliches Protokoll der Beratung</span>
 		</header>
 
-		<aside class="recommendation-console" aria-labelledby="rec-console-title">
+		<aside class="recommendation-console" id="recommendations-register" aria-labelledby="rec-console-title">
 			<header><span>Sitzung {home.currentSession.number} · heute</span><h2 id="rec-console-title">Empfehlungen</h2></header>
 			<div class="rec-register">
 				{#each home.recommendations as rec (rec.pillar)}
 					<details class="rec-row" open={scene === 'recommendations'}>
 						<summary>
-							<i aria-hidden="true">{rec.pillar}</i><span><small>{rec.pillar} · {rec.pillarName}</small><strong>{rec.hasConsensus ? rec.organization.name : 'Keine Einigung'}</strong></span>
+							<img class="rec-emblem" src={pillarEmblems[rec.pillar]?.src} alt="" width="48" height="48" /><span><small>{pillarEmblems[rec.pillar]?.label ?? rec.pillarName}</small><strong>{rec.hasConsensus ? rec.organization.name : 'Noch keine Einigkeit'}</strong></span>
 							<b>{rec.hasConsensus ? `${rec.count}/${rec.total}` : '≠'}</b>
 						</summary>
 						<div class="rec-detail">
@@ -198,12 +218,22 @@
 		<section class="scene-plaque arrival-plaque">
 			<h1>Wo hilft meine Spende am meisten?</h1>
 			<strong>Drei Modelle prüfen dieselben Belege. Öffentlich und überprüfbar.</strong>
-			<small>Für Menschen heute, unsere Zukunft, große Gefahren und Übersehenes.</small>
+			<div class="pillar-sentence" aria-label="Die vier Bereiche">
+				<span>Für Menschen, die heute Hilfe brauchen <img src={pillarEmblems.B.src} alt="Leid lindern" width="40" height="40" /></span>
+				<span>Für unsere gemeinsame Zukunft <img src={pillarEmblems.A.src} alt="Zukunft" width="40" height="40" /></span>
+				<span>Für große Gefahren <img src={pillarEmblems.C.src} alt="Große Gefahren" width="40" height="40" /></span>
+				<span>Für Probleme, die leicht übersehen werden <img src={pillarEmblems.D.src} alt="Was sonst übersehen wird" width="40" height="40" /></span>
+			</div>
 		</section>
 
-		<section class="mechanism-plaque">
+		<section class="mechanism-plaque" id="process-overview">
 			<strong>Drei Modelle antworten getrennt. Sie lesen einander. Sie dürfen umdenken.</strong>
 			<span>Ein einfaches Programm zählt nur die Nennungen.</span>
+			<div class="emblem-glossary process-glossary" aria-label="Die sechs Schritte">
+				{#each steps as step (step.label)}
+					<span><img src={step.src} alt="" width="40" height="40" /><b>{step.label}</b></span>
+				{/each}
+			</div>
 		</section>
 
 		<section class="question-plaque">
@@ -211,11 +241,11 @@
 			<a href="/sessions/{home.currentSession.id}/">Vollständig lesen →</a>
 		</section>
 
-		<section class="antechamber-labels">
-			<div><span>Späher</span><strong>Der Späher sammelt Belege.</strong></div>
-			<div><span>Wart</span><strong>Der Wart ordnet das öffentliche Protokoll.</strong></div>
+		<section class="antechamber-labels evidence-board">
+			<div><span>Späher</span><strong>Der Späher sammelt Belege.</strong><span>Wart</span><strong>Der Wart ordnet das öffentliche Protokoll.</strong></div>
 			<a href="/sessions/{home.currentSession.id}/#wart-dossier">Dossier öffnen →</a>
 		</section>
+		<a class="hall-return" href="#initial"><span>Tür zum Ratssaal</span>Zurück zu den drei Pulten →</a>
 
 		<section class="lectern-layer" aria-label="Drei gleichwertige Modellpulte">
 			{#each home.modelTracks as track, index (track.model)}
@@ -244,7 +274,7 @@
 			<h2 id="machine-title">Zählwerk</h2>
 			<p>Das Programm zählt nur gleiche Nennungen.</p>
 			<div class="machine-slots">
-				{#each home.recommendations as rec (rec.pillar)}<span><i>{rec.pillar}</i>{rec.hasConsensus ? `${rec.count} gleich` : 'getrennt'}</span>{/each}
+				{#each home.recommendations as rec (rec.pillar)}<span><i>{pillarEmblems[rec.pillar]?.label ?? rec.pillarName}</i>{rec.hasConsensus ? `${rec.count} gleich` : 'getrennt'}</span>{/each}
 			</div>
 		</section>
 
@@ -253,14 +283,14 @@
 			<header><span>Sitzungsarchiv</span><h2 id="archive-title">Veröffentlicht</h2></header>
 			<ol>
 				{#each home.archive as item (item.id)}
-					<li><a href="/sessions/{item.id}/"><span>Sitzung {item.number}</span><strong>{item.nonConsensusPillars.length ? `Keine Einigung in ${item.nonConsensusPillars.join(', ')}` : 'Empfehlungen in allen Bereichen'}</strong></a></li>
+					<li><a href="/sessions/{item.id}/"><span>Sitzung {item.number}</span><strong>{item.nonConsensusPillars.length ? `Noch keine Einigkeit: ${areaNames(item.nonConsensusPillars)}` : 'Empfehlungen in allen Bereichen'}</strong></a></li>
 				{/each}
 			</ol>
 			<div class="archive-meta"><span>Kosten: {money(home.costs.total, home.costs.currency)}</span>{#if home.correction}<a href="/sessions/{home.currentSession.id}/">Korrekturhinweis</a>{/if}</div>
 		</aside>
 
 		<nav class="process-rail" aria-label="Ablauf der Beratung">
-			{#each steps as step, index (step[0])}<a href="#{step[1]}" class:active={currentStep() === index}><i aria-hidden="true">{index + 1}</i><span>{step[0]}</span></a>{/each}
+			{#each steps as step, index (step.label)}<a href="#{step.scene}" class:active={currentStep() === index}><img src={step.src} alt="" width="48" height="48" /><span>{step.label}</span></a>{/each}
 		</nav>
 	</section>
 
@@ -290,6 +320,12 @@
 	.home-fallback .fb-dissent :global(pre) { overflow-x:auto; }
 	.home-fallback summary { cursor:pointer; color:#e0b75d; }
 	.home-fallback a { color:#e6b45c; }
+	.emblem-glossary { display:grid; gap:.45rem; margin:.65rem 0; }
+	.emblem-glossary span { min-width:0; display:flex; align-items:center; gap:.35rem; color:#d8c7a5; font:600 .66rem ui-sans-serif,system-ui; }
+	.emblem-glossary img,.rec-emblem,.process-rail img { display:block; flex:none; border:1px solid rgba(190,139,58,.65); border-radius:50%; background:#080b0c; object-fit:cover; box-shadow:inset 0 0 .5rem #000,0 0 .45rem rgba(205,153,69,.12); }
+	.pillar-glossary { grid-template-columns:repeat(4,minmax(0,1fr)); }
+	.process-glossary { grid-template-columns:repeat(6,minmax(0,1fr)); }
+	.home-fallback .emblem-glossary img { width:3rem; height:3rem; }
 	:global(.js) .home-fallback { display:block; }
 	.council-stage { display:none; }
 	:global(.stage-ready) .home-fallback { display:none; }
@@ -301,6 +337,10 @@
 	.world-shade { position:absolute; inset:0; background:radial-gradient(circle at 52% 52%,transparent 12%,rgba(1,4,5,.18) 58%,rgba(1,3,4,.76)); }
 	.council-world { opacity:1; }
 	.antechamber-world img,.doorway-world img,.archive-world img { object-position:center; }
+	.door-leaves { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+	.door-leaves span { position:absolute; top:0; bottom:0; width:18%; background:linear-gradient(90deg,#090b0b,#17120e 45%,#080a0a); box-shadow:inset 0 0 0 1px #392a1b,0 0 2rem #000; transition:transform 1.1s cubic-bezier(.2,.72,.2,1); }
+	.door-leaves span:first-child { left:44%; transform-origin:left; }
+	.door-leaves span:last-child { left:62%; transform-origin:right; }
 	.stage-brand { grid-column:1; grid-row:1; align-self:center; z-index:8; padding:0 1rem; display:grid; border-bottom:1px solid rgba(199,146,62,.45); }
 	.stage-brand a { color:#e7c881; font-size:1.35rem; text-decoration:none; letter-spacing:.04em; }
 	.stage-brand span,.recommendation-console header span,.archive-console header span { color:#a99062; font:600 .62rem ui-sans-serif,system-ui; letter-spacing:.11em; text-transform:uppercase; }
@@ -309,7 +349,7 @@
 	.rec-row { border-top:1px solid rgba(189,139,62,.3); }
 	.rec-row summary { display:grid; grid-template-columns:2.35rem 1fr auto; gap:.55rem; align-items:center; min-height:3.45rem; cursor:pointer; list-style:none; }
 	.rec-row summary::-webkit-details-marker { display:none; }
-	.rec-row summary i { display:grid; place-items:center; width:2.15rem; height:2.15rem; border:1px solid #a67d38; border-radius:50%; background:#161311; color:#f0cd7f; font:700 1.05rem ui-sans-serif,system-ui; font-style:normal; }
+	.rec-emblem { width:2.15rem; height:2.15rem; }
 	.rec-row summary span { display:grid; min-width:0; }
 	.rec-row summary small { color:#a9997d; font:600 .58rem ui-sans-serif,system-ui; text-transform:uppercase; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 	.rec-row summary strong { overflow:hidden; color:#e6dbc4; font-size:.78rem; white-space:nowrap; text-overflow:ellipsis; }
@@ -326,21 +366,31 @@
 	.antechamber-window div { position:absolute; z-index:2; inset:auto .7rem .55rem; display:flex; justify-content:space-between; gap:.5rem; font-size:.67rem; }
 	.antechamber-window a { color:#d9b261; }
 	.scene-plaque,.mechanism-plaque,.question-plaque { position:absolute; z-index:6; left:50%; transform:translateX(-50%); width:min(42rem,46vw); padding:.65rem 1.2rem; text-align:center; background:linear-gradient(90deg,rgba(7,10,11,.78),rgba(13,17,17,.95),rgba(7,10,11,.78)); border-block:1px solid rgba(197,145,60,.48); opacity:0; transition:opacity .45s,transform .55s; pointer-events:none; }
-	.arrival-plaque { top:5.2rem; }
+	.arrival-plaque { top:10.4rem; }
 	.arrival-plaque h1 { margin:0; color:#f0d899; font-size:clamp(1.35rem,2.2vw,2.2rem); font-weight:400; line-height:1.12; }
-	.arrival-plaque strong,.arrival-plaque small { display:block; margin:.25rem 0; }
-	.arrival-plaque small { color:#b9ad97; }
+	.arrival-plaque strong { display:block; margin:.25rem 0; }
+	.pillar-sentence { display:flex; flex-wrap:wrap; justify-content:center; gap:.3rem .75rem; margin:.55rem 0 0; color:#c8bda8; font-size:.68rem; }
+	.pillar-sentence span { display:inline-flex; align-items:center; gap:.3rem; }
+	.pillar-sentence img { width:1.8rem; height:1.8rem; flex:none; border:1px solid rgba(190,139,58,.65); border-radius:50%; object-fit:cover; box-shadow:0 0 .45rem rgba(205,153,69,.2); }
+	.mechanism-plaque .emblem-glossary { margin:.45rem 0 0; }
+	.mechanism-plaque .emblem-glossary span { justify-content:center; font-size:.55rem; line-height:1.1; }
+	.mechanism-plaque .emblem-glossary img { width:2rem; height:2rem; }
+	.mechanism-plaque .emblem-glossary b { font-weight:600; }
 	.mechanism-plaque { top:.7rem; opacity:1; width:min(46rem,48vw); }
 	.mechanism-plaque strong,.mechanism-plaque span { display:block; }
 	.mechanism-plaque span { color:#cdb57f; font-size:.78rem; }
+	.mechanism-plaque .process-glossary { display:none; }
 	.question-plaque { top:20%; }
 	.question-plaque span { color:#d6b264; font:.65rem ui-sans-serif,system-ui; text-transform:uppercase; letter-spacing:.1em; }
 	.question-plaque p { margin:.4rem 0; font-size:.95rem; }
 	.question-plaque a { color:#e1bb68; pointer-events:auto; }
-	.antechamber-labels { position:absolute; z-index:6; inset:auto 22% 14rem 27%; display:flex; justify-content:center; gap:1rem; opacity:0; transition:opacity .4s; }
-	.antechamber-labels div { padding:.65rem .8rem; background:rgba(9,12,12,.9); border:1px solid rgba(190,139,58,.4); }
+	.antechamber-labels { position:absolute; z-index:6; left:7%; top:20%; width:34%; display:grid; gap:.65rem; opacity:0; transition:opacity .4s; }
+	.antechamber-labels div { display:grid; gap:.22rem; padding:1rem 1.1rem; background:rgba(7,10,10,.78); border:1px solid rgba(190,139,58,.45); box-shadow:0 1rem 2rem rgba(0,0,0,.5); }
 	.antechamber-labels span { display:block; color:#c89b4e; font:.6rem ui-sans-serif,system-ui;text-transform:uppercase; }
-	.antechamber-labels a { align-self:center; color:#e0b65e; }
+	.antechamber-labels strong + span { margin-top:.65rem; }
+	.antechamber-labels a { justify-self:start; color:#e0b65e; }
+	.hall-return { position:absolute; z-index:7; left:69%; top:66%; display:grid; gap:.2rem; padding:.65rem .8rem; color:#e2bd6d; background:rgba(8,11,11,.9); border:1px solid rgba(190,139,58,.45); text-decoration:none; opacity:0; pointer-events:none; transition:opacity .4s; }
+	.hall-return span { color:#a88e63; font:.58rem ui-sans-serif,system-ui; text-transform:uppercase; letter-spacing:.1em; }
 	.lectern-layer { position:absolute; z-index:6; inset:0; opacity:0; pointer-events:none; transition:opacity .45s; }
 	.lectern-sign { position:absolute; left:var(--anchor-x);top:var(--anchor-y);transform:translate(-50%,-105%);width:11rem;color:#e6dbc5;background:rgba(10,13,14,.94);border:1px solid rgba(205,153,69,.55);pointer-events:auto; }
 	.lectern-sign summary { padding:.45rem .6rem; cursor:pointer; list-style:none; text-align:center; }
@@ -374,14 +424,14 @@
 	.archive-meta a { color:#dcb463; }
 	.process-rail { grid-column:2;grid-row:3;z-index:9;align-self:end;display:grid;grid-template-columns:repeat(6,1fr);margin:.6rem;border:1px solid rgba(190,139,58,.48);background:rgba(7,10,11,.9); }
 	.process-rail a { min-width:0;min-height:5.5rem;display:grid;place-items:center;align-content:center;gap:.25rem;color:#9e927e;text-decoration:none;border-right:1px solid rgba(190,139,58,.28);font:.65rem ui-sans-serif,system-ui;text-align:center; }
-	.process-rail a:last-child{border:0}.process-rail i{display:grid;place-items:center;width:2.7rem;height:2.7rem;border:1px solid #8a6531;border-radius:50%;background:#0c0f10;color:#cda65c;font:700 1rem ui-sans-serif,system-ui;font-style:normal}.process-rail a.active{color:#efd18d;background:linear-gradient(transparent,rgba(198,143,55,.15));box-shadow:inset 0 -2px #c89644}.process-rail a.active i{color:#f4d488;box-shadow:0 0 1rem rgba(220,164,72,.65)}
+	.process-rail a:last-child{border:0}.process-rail img{width:2.7rem;height:2.7rem;filter:saturate(.78) brightness(.72);transition:filter .25s,box-shadow .25s}.process-rail a.active{color:#efd18d;background:linear-gradient(transparent,rgba(198,143,55,.15));box-shadow:inset 0 -2px #c89644}.process-rail a.active img{filter:saturate(1) brightness(1.08);box-shadow:0 0 1rem rgba(220,164,72,.65)}
 	.scene-track { position:relative;height:800vh; }
 	.scene-cue { height:100vh; }
 
 	.council-stage[data-scene='arrival'] { --zoom:1;--cx:0%;--cy:0%; }.council-stage[data-scene='arrival'] .arrival-plaque{opacity:1;transform:translateX(-50%) translateY(.3rem)}
 	.council-stage[data-scene='recommendations'] { --zoom:1.06;--cx:2%;--cy:1%; }.council-stage[data-scene='recommendations'] .recommendation-console{box-shadow:0 0 2rem rgba(215,160,67,.25)}
-	.council-stage[data-scene='door-opening'] { --zoom:1.08;--cx:-4%;--cy:0%; }.council-stage[data-scene='door-opening'] .council-world{opacity:0}.council-stage[data-scene='door-opening'] .doorway-world{opacity:1}.council-stage[data-scene='door-opening'] .question-plaque{opacity:1;transform:translateX(-50%) translateY(.4rem)}
-	.council-stage[data-scene='antechamber'] .council-world{opacity:0}.council-stage[data-scene='antechamber'] .antechamber-world{opacity:1}.council-stage[data-scene='antechamber'] .counting-machine{opacity:0}.council-stage[data-scene='antechamber'] .antechamber-labels{opacity:1;pointer-events:auto}.council-stage[data-scene='antechamber'] .recommendation-console,.council-stage[data-scene='antechamber'] .archive-console,.council-stage[data-scene='antechamber'] .antechamber-window{opacity:.12}
+	.council-stage[data-scene='door-opening'] { --zoom:1.22;--cx:-18%;--cy:0%; }.council-stage[data-scene='door-opening'] .council-world{opacity:0}.council-stage[data-scene='door-opening'] .doorway-world{opacity:1}.council-stage[data-scene='door-opening'] .door-leaves span:first-child{transform:translateX(-92%)}.council-stage[data-scene='door-opening'] .door-leaves span:last-child{transform:translateX(92%)}.council-stage[data-scene='door-opening'] .question-plaque{left:34%;top:63%;width:min(32rem,38vw);opacity:1;transform:translateX(-50%) translateY(.4rem)}.council-stage[data-scene='door-opening'] .recommendation-console,.council-stage[data-scene='door-opening'] .archive-console,.council-stage[data-scene='door-opening'] .antechamber-window{opacity:.08;pointer-events:none}
+	.council-stage[data-scene='antechamber'] .council-world{opacity:0}.council-stage[data-scene='antechamber'] .antechamber-world{opacity:1}.council-stage[data-scene='antechamber'] .counting-machine{opacity:0}.council-stage[data-scene='antechamber'] .antechamber-labels,.council-stage[data-scene='antechamber'] .hall-return{opacity:1;pointer-events:auto}.council-stage[data-scene='antechamber'] .recommendation-console,.council-stage[data-scene='antechamber'] .archive-console,.council-stage[data-scene='antechamber'] .antechamber-window{opacity:0;visibility:hidden;pointer-events:none}
 	.council-stage[data-scene='initial'] { --zoom:1;--cx:0%;--cy:0%; }.council-stage[data-scene='initial'] .council-world img{object-fit:contain}.council-stage[data-scene='initial'] .lectern-layer{opacity:1}.council-stage[data-scene='initial'] .recommendation-console,.council-stage[data-scene='initial'] .archive-console{opacity:.3}
 	.council-stage[data-scene='revision'] { --zoom:1.08;--cx:0%;--cy:2%; }.council-stage[data-scene='revision'] .revision-layer{opacity:1}.council-stage[data-scene='revision'] .lectern-layer{opacity:.2}
 	.council-stage[data-scene='count'] { --zoom:1.28;--cx:0%;--cy:1%; }.council-stage[data-scene='count'] .counting-machine{opacity:1;transform:translate(-50%,-45%);pointer-events:auto}.council-stage[data-scene='count'] .recommendation-console,.council-stage[data-scene='count'] .archive-console{opacity:.28}
@@ -389,9 +439,11 @@
 
 	@media (max-width:800px) {
 		.fallback-results{grid-template-columns:1fr}
+		.pillar-glossary{grid-template-columns:repeat(2,minmax(0,1fr))}.process-glossary{grid-template-columns:repeat(3,minmax(0,1fr))}
 		:global(.stage-ready) .council-stage{position:relative;inset:auto;display:flex;flex-direction:column;min-height:100vh;overflow:hidden;padding-bottom:1rem;background:#05090b}:global(.stage-ready) .scene-track{display:none}
+		.council-stage>*{min-width:0;box-sizing:border-box}.arrival-plaque h1{overflow-wrap:anywhere}.pillar-sentence{display:grid;grid-template-columns:1fr 1fr;justify-content:stretch}.pillar-sentence span{justify-content:space-between}.mechanism-plaque .emblem-glossary span{min-width:0}.mechanism-plaque .process-glossary{display:grid}.mechanism-plaque .process-glossary span{flex-direction:column;text-align:center}
 		.world{position:relative;inset:auto;order:1;height:58vw;min-height:14rem;opacity:1!important}.world img{transform:none!important}.doorway-world,.antechamber-world,.archive-world{display:none}.stage-brand{order:0;padding:1rem;display:grid;border-bottom:1px solid rgba(190,139,58,.4)}
-		.mechanism-plaque{position:relative;order:2;top:auto;left:auto;transform:none;width:auto;margin:.7rem;opacity:1}.arrival-plaque{position:relative;order:3;top:auto;left:auto;transform:none!important;width:auto;margin:.7rem;opacity:1;text-align:left}.recommendation-console{order:4;max-height:none;margin:.7rem;opacity:1!important}.antechamber-window{order:5;min-height:14rem;margin:.7rem}.process-rail{display:none}.question-plaque{position:relative;order:7;top:auto;left:auto;transform:none;width:auto;margin:.7rem;opacity:1;text-align:left}.antechamber-labels{position:relative;order:8;inset:auto;display:grid;margin:.7rem;opacity:1}.lectern-layer{position:relative;order:9;inset:auto;display:grid;grid-template-columns:1fr;gap:.6rem;margin:.7rem;opacity:1}.lectern-sign{position:relative;inset:auto!important;transform:none;width:auto}.revision-layer{position:relative;order:10;inset:auto;margin:.7rem;opacity:1}.revision-layer header{max-width:none;width:auto}.revision-notes{display:grid;margin-top:.7rem}.revision-notes article{width:auto}.counting-machine{position:relative;order:11;left:auto;top:auto;width:min(16rem,80vw);margin:2rem auto 5rem;transform:none!important;opacity:1}.archive-console{order:12;margin:.7rem;max-height:none;opacity:1!important}.archive-door-visual{height:12rem}.scene-plaque,.mechanism-plaque,.question-plaque{pointer-events:auto}
+		.mechanism-plaque{position:relative;order:3;top:auto;left:auto;transform:none;width:calc(100% - 1.4rem);margin:.7rem;opacity:1;text-align:left}.arrival-plaque{position:relative;order:2;top:auto;left:auto;transform:none!important;width:calc(100% - 1.4rem);margin:.7rem;opacity:1;text-align:left}.mechanism-plaque .emblem-glossary span{justify-content:flex-start}.recommendation-console{order:4;max-height:none;margin:.7rem;opacity:1!important}.antechamber-window{order:5;min-height:14rem;margin:.7rem}.process-rail{display:none}.question-plaque{position:relative;order:7;top:auto;left:auto;transform:none!important;width:calc(100% - 1.4rem);margin:.7rem;opacity:1;text-align:left}.antechamber-labels{position:relative;order:8;inset:auto;width:auto;display:grid;margin:.7rem;opacity:1}.hall-return{position:relative;order:8;inset:auto;margin:.7rem;opacity:1;pointer-events:auto}.lectern-layer{position:relative;order:9;inset:auto;display:grid;grid-template-columns:1fr;gap:.6rem;margin:.7rem;opacity:1}.lectern-sign{position:relative;inset:auto!important;transform:none;width:auto}.revision-layer{position:relative;order:10;inset:auto;margin:.7rem;opacity:1}.revision-layer header{max-width:none;width:auto}.revision-notes{display:grid;margin-top:.7rem}.revision-notes article{width:auto}.counting-machine{position:relative;order:11;left:auto;top:auto;width:min(16rem,80vw);margin:2rem auto 5rem;transform:none!important;opacity:1}.archive-console{order:12;margin:.7rem;max-height:none;opacity:1!important}.archive-door-visual{height:12rem}.scene-plaque,.mechanism-plaque,.question-plaque{pointer-events:auto}
 	}
 	@media (prefers-reduced-motion:reduce){.world img,.counting-machine,*{transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
