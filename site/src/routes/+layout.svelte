@@ -180,12 +180,6 @@
 		border: 1px solid var(--line);
 		box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.35), inset 0 1px rgba(255, 255, 255, 0.025);
 	}
-	:global(.page:has(.council-stage) main) {
-		padding: 0;
-		background: transparent;
-		border: 0;
-		box-shadow: none;
-	}
 	footer {
 		margin-top: 3.5rem;
 		padding: 1.2rem 0 2.5rem;
