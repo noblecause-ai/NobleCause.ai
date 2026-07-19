@@ -19,6 +19,10 @@ und die **Embleme** werden geerbt, nicht angefasst. Der genaue Auftrag steht in
 **`docs/council-rooms-brief.md`** (bitte zuerst lesen). Es gelten dieselbe harte Grenze und
 dieselben Sauberkeits-Regeln wie unten. Wegwerf: scheitert der Versuch, wird der Branch
 gelöscht; `master` und `feat/immersive-homepage` bleiben unberührt.
+Die Räume sind zweisprachig: Deutsch (Default) unter `/`, `/ratssaal/`, `/archiv/`,
+Englisch unter `/en/`, `/en/council/`, `/en/archive/` — der publizierte Rekord
+(Sitzungsprosa, Dissens, Korrekturen, Voten) bleibt in beiden Sprachen deutsch und
+wird nie maschinenübersetzt (EN: Vermerk + `lang="de"`).
 
 ## HARTE GRENZE — diese Pfade werden NICHT angefasst
 Ändere, lösche oder verschiebe **nichts** unter:
