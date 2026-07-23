@@ -121,9 +121,42 @@ def diff_session(sid, write):
     return changed
 
 
+def backfill_votes(sid, write):
+    """Ergänzt rounds[].votes[].recommendations[] deterministisch aus den
+    committeten Rohvoten (raw/r1-*, raw/r2-*). Fügt nur ein maschinell abgeleitetes
+    Struktur-Feld hinzu — ändert KEINEN Text (content_md/summary/dissent bleiben)."""
+    from run_session import structured_vote_recs
+    session_dir = ROOT / "sessions" / sid
+    session = json.loads((session_dir / "session.json").read_text())
+    family_by_model = {p["model"]: p["family"] for p in session.get("participants", [])}
+    phase = {"initial_vote": "r1", "final_vote": "r2"}
+    changed = False
+    for rd in session.get("rounds", []):
+        prefix = phase.get(rd.get("kind"))
+        if not prefix:
+            continue
+        for v in rd.get("votes", []):
+            fam = family_by_model.get(v["model"])
+            rawf = session_dir / "raw" / f"{prefix}-{fam}.json"
+            if not fam or not rawf.exists():
+                print(f"  WARN {sid} {rd['kind']} {v['model']}: kein Rohvotum ({rawf.name})")
+                continue
+            recs = structured_vote_recs(extract_json_block(text_of(json.load(open(rawf)), fam)))
+            if v.get("recommendations") != recs:
+                v["recommendations"] = recs
+                changed = True
+    print(f"  {sid}: {'Voten strukturiert ergänzt' if changed else 'unverändert'}")
+    if write and changed:
+        (session_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
+        print(f"  → geschrieben ({sid})")
+    return changed
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--write", action="store_true", help="session.json tatsächlich schreiben (sonst Dry-Run)")
+    ap.add_argument("--backfill-votes", action="store_true",
+                    help="rounds[].votes[].recommendations[] aus Rohvoten ergänzen (Struktur, kein Text)")
     ap.add_argument("sessions", nargs="*", help="Session-IDs (Default: alle)")
     args = ap.parse_args()
     organizations_check()
@@ -133,7 +166,10 @@ def main():
     )
     any_changed = False
     for sid in ids:
-        any_changed |= diff_session(sid, args.write)
+        if args.backfill_votes:
+            any_changed |= backfill_votes(sid, args.write)
+        else:
+            any_changed |= diff_session(sid, args.write)
     print("\n" + ("Änderungen vorhanden." if any_changed else "Keine Änderungen."))
     if not args.write:
         print("Dry-Run — nichts geschrieben. Mit --write anwenden (erst nach Freigabe).")

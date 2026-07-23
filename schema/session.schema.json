@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://noblecause.ai/schema/session.schema.json",
+  "title": "Gremium-Sitzungsprotokoll (sessions/<id>/session.json)",
+  "description": "Aus den realen Dateien abgeleitet (2026-07, -07b, -07c). Charakterisierung, NICHT im Code erzwungen. additionalProperties:true, weil das Format evolviert (schema_version bleibt trotz Formänderungen auf 2 — siehe data-contract.md).",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version", "id", "number", "date", "title", "question",
+    "summary", "dissent_highlights", "participants", "prompts", "rounds",
+    "dissent_md", "recommendations", "unresolved_votes", "costs"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "id": { "type": "string", "description": "z.B. 2026-07, 2026-07b" },
+    "number": { "type": "integer", "description": "eindeutige Sitzungsnummer (Sortier-Schlüssel)" },
+    "date": { "type": "string", "description": "ISO-Datum YYYY-MM-DD" },
+    "title": { "type": "string" },
+    "question": { "type": "string" },
+    "summary": { "type": "string", "description": "modellgeschriebene Leserfassung" },
+    "dissent_highlights": { "description": "Liste ODER String — inkonsistent", "type": ["array", "string"] },
+    "participants": {
+      "type": "array",
+      "items": { "type": "object", "required": ["family", "model", "label"],
+        "properties": { "family": {"type": "string"}, "model": {"type": "string"}, "label": {"type": "string"} } }
+    },
+    "prompts": { "type": "object", "description": "wörtliche Prompt-Vorlagen des Laufs" },
+    "rounds": {
+      "type": "array",
+      "description": "diskriminierte Union über 'kind'",
+      "items": {
+        "type": "object",
+        "required": ["round", "kind"],
+        "properties": {
+          "round": { "type": "number" },
+          "kind": { "enum": ["wart_opening", "wart_dossier", "wart_moderation", "initial_vote", "final_vote"] },
+          "content_md": { "type": "string" },
+          "wart": { "type": "object" },
+          "votes": {
+            "type": "array",
+            "items": { "type": "object", "required": ["model", "content_md"],
+              "properties": { "model": {"type": "string"}, "content_md": {"type": "string"},
+                "confidence": {"type": ["number", "null"]},
+                "recommendations": {
+                  "type": "array",
+                  "description": "Strukturierte Voten je Säule — registry-aufgelöst, damit das Frontend Protokollspalten + Revision OHNE Prosa-Parsing rendert. Aus dem geparsten Roh-Votum (extract_json_block), Org via organizations.resolve.",
+                  "items": { "type": "object", "required": ["pillar", "organization_id", "organization"],
+                    "properties": {
+                      "pillar": { "enum": ["A", "B", "C", "D"] },
+                      "organization_id": { "type": "string" },
+                      "organization": { "type": "string", "description": "canonical_name aus Registry" },
+                      "title": { "type": ["string", "null"] },
+                      "confidence": { "type": ["number", "null"] },
+                      "conditional": { "type": "boolean" },
+                      "reservation": { "type": ["string", "null"] }
+                    } }
+                } } }
+          }
+        }
+      }
+    },
+    "dissent_md": { "type": "string" },
+    "unresolved_votes": {
+      "type": "array",
+      "description": "Voten mit nicht zuordenbarer Organisation (nie stiller Dissens)",
+      "items": { "type": "object", "required": ["pillar", "organization", "model"] }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pillar", "has_consensus", "title", "organization", "donation_url", "confidence", "rationale_md"],
+        "properties": {
+          "pillar": { "enum": ["A", "B", "C", "D"] },
+          "has_consensus": { "type": "boolean" },
+          "title": { "type": "string" },
+          "organization": { "type": ["string", "null"], "description": "canonical_name aus Registry; null bei Dissens" },
+          "organization_id": { "type": "string" },
+          "donation_url": { "type": ["string", "null"], "description": "AUSSCHLIESSLICH aus Registry; null erlaubt" },
+          "confidence": { "type": ["number", "null"] },
+          "rationale_md": { "type": "string" }
+        },
+        "allOf": [
+          {
+            "if": { "properties": { "has_consensus": { "const": true } } },
+            "then": {
+              "required": ["organization_id", "convergence"],
+              "properties": {
+                "convergence": {
+                  "type": "object",
+                  "required": ["count", "total", "conditional_count", "models", "votes"],
+                  "properties": {
+                    "count": { "type": "integer" },
+                    "total": { "type": "integer" },
+                    "conditional_count": { "type": "integer" },
+                    "models": { "type": "array", "items": { "type": "string" } },
+                    "votes": {
+                      "type": "array",
+                      "items": { "type": "object", "required": ["model", "conditional", "reservation"],
+                        "properties": { "model": {"type": "string"}, "conditional": {"type": "boolean"},
+                          "reservation": {"type": ["string", "null"]} } }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": { "properties": { "has_consensus": { "const": false } } },
+            "then": {
+              "required": ["individual_votes"],
+              "properties": {
+                "individual_votes": {
+                  "type": "array",
+                  "items": { "type": "object",
+                    "required": ["title", "organization", "organization_id", "donation_url", "confidence", "model", "conditional", "reservation"] }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "costs": { "$ref": "#/$defs/session_costs" },
+    "correction_notice": {
+      "type": "object", "description": "nur bei re-aggregierten Sitzungen (deterministisch, kein Redigieren)",
+      "required": ["date", "text"],
+      "properties": { "date": {"type": "string"}, "text": {"type": "string"}, "commit": {"type": "string"} }
+    },
+    "wart_dossier": { "type": "object" },
+    "designation": { "type": "string" },
+    "led_by": { "type": "object" },
+    "wart_opening_md": { "type": "string" },
+    "wart_moderation_md": { "type": "string" }
+  },
+  "$defs": {
+    "session_costs": {
+      "type": "object",
+      "required": ["currency", "total", "fx_rate_usd_eur", "by_model"],
+      "properties": {
+        "currency": { "const": "EUR" },
+        "total": { "type": "number" },
+        "fx_rate_usd_eur": { "type": "number" },
+        "by_model": {
+          "type": "array",
+          "items": { "type": "object", "required": ["model", "label", "input_tokens", "output_tokens", "usd", "eur"] }
+        }
+      }
+    }
+  }
+}
