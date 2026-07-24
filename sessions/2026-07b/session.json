@@ -1,4 +1,14 @@
 {
+  "plain": {
+    "question": "Halten die vier Empfehlungen aus der ersten Sitzung der aktuellen Beleglage stand?",
+    "recommendations": {
+      "A": "Zukunft → Helen Keller International, weil Vitamin-A-Gaben für Kinder pro Euro eine besonders gut belegte Wirkung haben.",
+      "B": "Leid lindern → Malaria Consortium, weil Medikamente Kinder in der Malaria-Hochsaison nachweislich günstig vor Erkrankung schützen.",
+      "C": "Große Gefahren → Nuclear Threat Initiative, weil Vorsorge gegen Pandemien und Biogefahren großen künftigen Schaden abwenden kann.",
+      "D": "Was sonst übersehen wird → Lead Exposure Elimination Project, weil strengere Regeln gegen Blei in Farben Kinder vor Vergiftung schützen."
+    },
+    "dissent": {}
+  },
   "schema_version": 2,
   "id": "2026-07b",
   "number": 2,

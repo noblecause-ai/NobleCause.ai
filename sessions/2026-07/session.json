@@ -1,4 +1,16 @@
 {
+  "plain": {
+    "question": "Wo bringt je 1.000 Euro Spende 2026 in jedem der vier Bereiche die größte Wirkung?",
+    "recommendations": {
+      "A": null,
+      "B": "Leid lindern → Malaria Consortium, weil Medikamente Kinder in der Malaria-Hochsaison nachweislich günstig vor Erkrankung schützen.",
+      "C": "Große Gefahren → Centre for the Governance of AI, weil klare Regeln für fortgeschrittene KI großen künftigen Schaden verhindern sollen.",
+      "D": "Was sonst übersehen wird → Lead Exposure Elimination Project, weil strengere Regeln gegen Blei in Farben Kinder vor Vergiftung schützen."
+    },
+    "dissent": {
+      "A": "keine Einigung — ob Kindergesundheit, Salz mit Jod oder bessere Schulbildung die stärkste Zukunftsinvestition ist."
+    }
+  },
   "schema_version": 2,
   "id": "2026-07",
   "number": 1,

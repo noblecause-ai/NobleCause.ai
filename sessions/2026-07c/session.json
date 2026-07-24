@@ -1,4 +1,14 @@
 {
+  "plain": {
+    "question": "Bereich Zukunft: Ist Kindergesundheit (Helen Keller) oder Bildung (Pratham/TaRL) besser belegt?",
+    "recommendations": {
+      "A": "Zukunft → Helen Keller International, weil ihre Wirkung besser belegt ist als die der geprüften Bildungs-Alternative; der Rat will Letztere später erneut prüfen.",
+      "B": "Leid lindern → Against Malaria Foundation, weil imprägnierte Moskitonetze Malaria besonders günstig verhindern.",
+      "C": "Große Gefahren → Nuclear Threat Initiative, weil Vorsorge gegen Pandemien und Biogefahren großen künftigen Schaden abwenden kann.",
+      "D": "Was sonst übersehen wird → Lead Exposure Elimination Project, weil Regeln gegen Blei in Farben Kinder vor bleibenden Schäden schützen."
+    },
+    "dissent": {}
+  },
   "schema_version": 2,
   "id": "2026-07c",
   "number": 3,
