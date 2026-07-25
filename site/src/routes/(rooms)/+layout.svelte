@@ -6,6 +6,7 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { installRoomTransitions } from '$lib/room-transitions.js';
+	import { installStage } from '$lib/stage.js';
 	import { langOfPath, locales, roomPaths, siblingPath } from '$lib/i18n/index.js';
 
 	let { children, data } = $props();
@@ -16,7 +17,10 @@
 	let otherLang = $derived(lang === 'de' ? 'en' : 'de');
 	let homePath = $derived(roomPaths.study[lang]);
 
-	if (browser) installRoomTransitions();
+	if (browser) {
+		installRoomTransitions();
+		installStage();
+	}
 </script>
 
 <div class="rooms-shell">
@@ -56,7 +60,7 @@
 	}
 	/* Nur das ÄUSSERE Template-main (direktes Kind von .page) wird entschärft —
 	   die main-Elemente der Räume brauchen eigenen Hintergrund, damit der
-	   scrollende Inhalt die feste Bildebene (z-index:-1 im RoomHero) deckt. */
+	   scrollende Inhalt die feste Bildebene (z-index:0 im StageHero) deckt. */
 	:global(.page:has(.rooms-shell) > main) {
 		min-height: 0;
 		padding: 0;
@@ -188,11 +192,13 @@
 	@media (prefers-reduced-motion: no-preference) {
 		::view-transition-old(root),
 		::view-transition-new(root) {
-			/* Zoom-Ursprung = Klickpunkt (Tür), Fallback Mitte. */
+			/* Zoom-Ursprung = Tür-Kartenmitte (Klick/Tastatur), Fallback Mitte. */
 			transform-origin: var(--vt-origin, center);
 		}
 		::view-transition-old(root) {
-			animation: room-out 2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+			/* Türfahrt: die Szene fliegt IN die Tür hinein (starker Zoom, dunkelt
+			   ab) — die neue Szene öffnet sich darunter. */
+			animation: room-out 2s cubic-bezier(0.45, 0, 0.8, 0.6) both;
 		}
 		::view-transition-new(root) {
 			animation: room-in 2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
@@ -201,17 +207,87 @@
 		:root[data-nav-dir='back']::view-transition-new(root) {
 			animation-duration: 1.2s;
 		}
+		/* Die Ergebnis-Tafel reist als Shared Element im selben Tempo mit. */
+		::view-transition-group(board) {
+			animation-duration: 2s;
+		}
+		:root[data-nav-dir='back']::view-transition-group(board) {
+			animation-duration: 1.2s;
+		}
+		/* Der stabile Kopf (Masthead) ebenso: gleiche Gruppen-Regel wie die
+		   Tafel — er bleibt über den Raumwechsel pixelstabil stehen. */
+		::view-transition-group(masthead) {
+			animation-duration: 2s;
+		}
+		:root[data-nav-dir='back']::view-transition-group(masthead) {
+			animation-duration: 1.2s;
+		}
 		@keyframes room-out {
 			to {
-				transform: scale(1.3);
+				transform: scale(2.4);
 				opacity: 0;
-				filter: brightness(0.5);
+				filter: brightness(0.35);
 			}
 		}
 		@keyframes room-in {
 			from {
-				transform: scale(0.94);
+				transform: scale(1.06);
 				opacity: 0;
+			}
+		}
+
+		/* ---- Tür-Gegenprobe (Spike, §B): der Zielraum wird aus der Türkontur
+		   aufgezogen, statt den ganzen Frame zu ersetzen. Nur bei echter Türfahrt
+		   (data-portal, gesetzt im Klick-Handler nach allen Guards) — Back/Forward
+		   und Quereinstiege behalten das bisherige room-out/room-in. Die
+		   [data-portal]-Regeln sind spezifischer und überschreiben die obigen.
+		   Fallback-Werte in var() greifen, falls die Geometrie fehlt (Blende aus
+		   der Mitte). board/masthead haben eigene VT-Namen, liegen also außerhalb
+		   der Blende und bleiben als fester Rahmen stehen, während der Raum wächst.
+		   QUELLREIHENFOLGE-ABHÄNGIG: Die animation-duration der board/masthead-
+		   Gruppen (1,1 s) hat DIESELBE Spezifität wie die :root[data-nav-dir='back']-
+		   Gruppenregeln oben (1,2 s). Bei einem Türklick rückwärts (nav-dir=back +
+		   data-portal) gewinnt die spätere Regel = diese hier (1,1 s). Dieser Block
+		   MUSS nach den room-out/room-in- und den nav-dir-Regeln stehen bleiben —
+		   beim Umsortieren kippt sonst die Dauer. */
+		:root[data-portal]::view-transition-old(root) {
+			animation: portal-out 1.1s cubic-bezier(0.45, 0, 0.8, 0.6) both;
+		}
+		:root[data-portal]::view-transition-new(root) {
+			animation: portal-in 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+			/* N2: das UA-Stylesheet setzt mix-blend-mode: plus-lighter auf
+			   ::view-transition-old/new — für einen Opacity-Crossfade korrekt
+			   (Summe = 1). portal-in animiert aber KEINE Opacity: der Zielraum
+			   steht ab Frame 0 voll deckend, portal-out noch bei 1 → in der
+			   Türkontur würden alt+neu ADDIERT (leuchtender Saum, erste ~200 ms).
+			   Wir wollen Deckung, nicht Addition — bewusste Entscheidung, nicht
+			   UA-Default. */
+			mix-blend-mode: normal;
+		}
+		:root[data-portal]::view-transition-group(board),
+		:root[data-portal]::view-transition-group(masthead) {
+			animation-duration: 1.1s;
+		}
+		@keyframes portal-out {
+			to {
+				/* schwächer als die alten 2.4 — der Frame fährt auf die Tür zu,
+				   statt an ihr vorbeizuschießen; die Blende trägt jetzt den Effekt. */
+				transform: scale(1.55);
+				opacity: 0;
+				filter: brightness(0.34);
+			}
+		}
+		@keyframes portal-in {
+			from {
+				clip-path: inset(
+					var(--door-top, 30%) var(--door-right, 40%) var(--door-bottom, 12%)
+						var(--door-left, 40%) round 6px
+				);
+				transform: scale(1.14);
+			}
+			to {
+				clip-path: inset(0 0 0 0 round 0);
+				transform: none;
 			}
 		}
 	}
