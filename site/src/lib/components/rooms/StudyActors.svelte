@@ -349,34 +349,66 @@
 	}
 	/* Namens-Plakette: Hover-Zugabe (Maus), dieselbe Information steht im
 	   alt-Text und im DOM — kein Tab-Stopp auf einem nicht-interaktiven
-	   Element (StageTube-Regel). */
+	   Element (StageTube-Regel).
+	   ÜBER DER KOPFLINIE (Auftrag A3/A4): früher hing sie unter dem Kasten und
+	   ragte ins schmale Röhren-Band — brach bei 1440×700. Jetzt sitzt sie
+	   VOLLSTÄNDIG über der Kopflinie (--head, per Canvas-Alpha-Scan am AVIF
+	   gemessen), z-index 2 hebt sie über das Bild (img z-index 1) — kein Bildteil
+	   davor, kein Haar durch den Text. Bleibt im Figurband, kann per Konstruktion
+	   nicht mit Masthead/Tafel kollidieren (kein clamp()). Schwebende Vignette
+	   statt opaker Kasten (wie .room-plaque, StageHero) — ein Rahmen läse über
+	   der Vertäfelung als aufgeklebtes UI. Horizontal: zwei eingemessene Werte je
+	   Akteur (keine --side-Formel, die ruhigen Flächen liegen unsymmetrisch). */
 	.actor figcaption {
 		position: absolute;
 		left: 50%;
-		bottom: -0.4rem;
-		transform: translate(-50%, 100%);
+		bottom: auto;
+		top: calc(var(--head, 0.18) * 100%);
+		transform: translate(-50%, calc(-100% - 0.4rem));
+		z-index: 2;
 		width: max-content;
-		max-width: 15rem;
-		padding: 0.45rem 0.7rem;
+		max-width: 20rem;
+		padding: 0.4rem 1.2rem 0.5rem;
 		text-align: center;
-		background: rgba(5, 8, 9, 0.82);
-		border: 1px solid rgba(166, 123, 61, 0.55);
-		border-radius: 3px;
+		background: radial-gradient(ellipse 78% 92% at 50% 50%, rgba(3, 6, 7, 0.82), rgba(3, 6, 7, 0) 74%);
+		text-shadow: 0 1px 7px rgba(3, 6, 7, 0.95);
 		opacity: 0;
 		transition: opacity 0.35s ease;
+	}
+	/* Scout (links verankert): Kopf bei ~41 % der Box, innen Lampe/Bildschirm
+	   (unruhig), über dem Kopf ruhige Vertäfelung → über den Kopf, leicht nach
+	   aussen (links). */
+	/* Scout ist per Kantenprinzip an der Tafelkante verankert — links ihrer Box
+	   liegt die Ergebnis-Tafel. Die Plakette muss daher nach RECHTS, über die
+	   dunkle Tür-Vertäfelung (wohin die Scout ohnehin blickt), sonst verschwindet
+	   sie bei schmaleren Breiten hinter der Tafel (N5). */
+	.actor.scout figcaption {
+		--head: 0.177;
+		left: 72%;
+	}
+	/* Warden (rechts verankert): Kopf bei ~68 % der Box, innen ruhige Wand, über
+	   dem Kopf das helle Fenster (unruhig) → schräg über den Kopf nach innen
+	   (links, weg vom Fenster). */
+	.actor.warden figcaption {
+		--head: 0.161;
+		left: 25%;
 	}
 	.actor:hover figcaption {
 		opacity: 1;
 	}
+	/* Zwei Zeilen (Auftrag N4): Name + Gloss in EINER Zeile, Rolle darunter —
+	   ~79 px → ~50 px, damit die Plakette auch bei 605 px Höhe über die Kopflinie
+	   passt. */
 	.actor figcaption strong {
-		display: block;
+		display: inline;
 		color: #f0d899;
 		font-size: 0.8rem;
 		font-weight: 600;
 		letter-spacing: 0.04em;
 	}
 	.actor figcaption .gloss {
-		display: block;
+		display: inline;
+		margin-left: 0.4em;
 		color: #c9ab6e;
 		font-size: 0.68rem;
 		font-style: italic;
