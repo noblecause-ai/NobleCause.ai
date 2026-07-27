@@ -11,3 +11,8 @@ gremium/.fable-check/
 serve/
 /ratssaal
 /vorraum
+
+# prebuild-Artefakt: static/schedule.json = Kopie der Repo-Root-schedule.json
+# (site/package.json prebuild: cp ../schedule.json static/schedule.json) —
+# generiert, gehört nicht in den Baum.
+site/static/schedule.json
