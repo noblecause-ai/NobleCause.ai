@@ -269,8 +269,7 @@ export const de = {
 	archive: {
 		roomWord: 'Archive',
 		lead: 'Jede Sitzung, vollständig und unverändert — Empfehlungen, Uneinigkeit, Kosten.',
-		// Alt-Text der Möbel (zweite Ebene): reine Kulisse, kein Datenbezug.
-		registerAlt: 'Karteikasten des Archivs',
+		// Alt-Text des Möbels (zweite Ebene): reine Kulisse, kein Datenbezug.
 		pultAlt: 'Archivpult mit Leseleuchte und aufgeschlagenem Folianten',
 		sessionsTitle: 'Sitzungsarchiv',
 		sessionLabel: (number) => `Sitzung ${number}`,

@@ -1,25 +1,20 @@
 <script>
-	// The Archive — zweite Ebene (Szene-Kantenprinzip, wie CouncilActors/StudyActors):
-	// ZWEI VERSCHIEDENE Möbel nehmen von UNTEN ihre Plätze an den unteren Ecken ein
-	// (nicht zwei gleiche Kästen):
-	//   rechts = das Pult mit der Leuchte (bringt eine warme, flackernde Lichtquelle
-	//            mit, die einfährt — der Gewinn gegenüber einem stummen Schrank),
-	//   links  = der Karteikasten (register.avif), nur einmal.
-	// (Steward: Pult von rechts; die Serie-5-Kulisse hat geräumte Ecken, also kein
-	//  Verdopplungskonflikt mehr mit gemaltem Möbel.)
-	// REINE KULISSE, keine Datenbindung; asymmetrisch, Mitte frei (trägt Röhre/Tafel/
-	// Text — Kantenprinzip). KANTENPRINZIP „von unten": die Basislinie (~100 % der
-	// bbox-getrimmten Box) steht knapp unter der Viewport-Unterkante (~5 % Anschnitt).
-	// Einfahrt per translateY (1,7 s Gleiten, Staffelung über --i), Rückzug vertikal
-	// über die globale --retreat-Scrub (stage.js). Ruheposition steht im pragerenderten
-	// HTML; Anfangszustände nur unter html.stage-armed + no-preference; reduced-motion/
-	// No-JS = statischer Endzustand (§0).
+	// The Archive — zweite Ebene: EIN Möbel, das leuchtende Pult mit der Leuchte,
+	// betritt die Bühne von der RECHTEN Kante — dieselbe Grammatik wie der Warden
+	// im Study (StudyActors): Schiene an der Seitenkante, horizontale Einfahrt,
+	// Rückzug horizontal über --retreat (Desktop); mobil steigt es von unten
+	// (Hochformat-Dramaturgie, wie der Warden mobil). Reine Kulisse, keine
+	// Datenbindung; die LINKE Flanke bleibt leer (Serie-5-Kulisse mit geräumten
+	// Ecken, die Ergebnis-Tafel steht frei — das Regal ist ersatzlos entfallen).
+	// Lampen-Glow fährt mit. Ruheposition steht im pragerenderten HTML; Anfangs-
+	// zustände nur unter html.stage-armed + no-preference; reduced-motion/No-JS =
+	// statischer Endzustand (§0).
 	let { t } = $props();
 </script>
 
 <div class="scene2">
-	<!-- rechts: das leuchtende Pult (näher, größer) — mit warmem Lampen-Glow. -->
-	<div class="rail pult-desk" data-side="right" style="--x: 80; --i: 0">
+	<!-- rechts: das leuchtende Pult — mit warmem Lampen-Glow, fährt von rechts ein. -->
+	<div class="rail pult-desk" data-side="right" style="--x: 80; --side: 1">
 		<figure class="reg-figure">
 			<img
 				src="/media/actors/pult-lamp.avif"
@@ -35,18 +30,6 @@
 			>
 		</figure>
 	</div>
-	<!-- links: der Karteikasten, nur einmal. -->
-	<div class="rail register" data-side="left" style="--x: 20; --i: 1">
-		<figure class="reg-figure">
-			<img
-				src="/media/actors/register.avif"
-				alt={t.archive.registerAlt}
-				width="1064"
-				height="1338"
-				decoding="async"
-			/>
-		</figure>
-	</div>
 </div>
 
 <!-- Mobil: warmer Türschimmer am Hochformat-Plate (eigene Koordinaten). -->
@@ -59,13 +42,14 @@
 		pointer-events: none;
 	}
 
-	/* ---- Schiene: dieselbe Grammatik wie die Council-Rails — die .rail trägt
-	   Position und Rückzug (--retreat, stage.js), die Figur darauf die Einfahrt.
-	   Rückzug VERTIKAL (die Möbel tauchen nach unten ab). ---------------------- */
+	/* ---- Schiene: die .rail trägt Position + Rückzug (--retreat), die Figur die
+	   Einfahrt (getrennte transforms, kein Konflikt). Rückzug mobil vertikal,
+	   Desktop horizontal (--side) — dieselbe Grammatik wie die Study-Schienen.
+	   --side: 1 = rechts (zieht nach rechts ab). Die Transition liegt nur auf
+	   stage-clearing (der Scrub selbst ist transitionslos). */
 	.rail {
 		position: fixed;
 		pointer-events: none;
-		transform: translateY(calc(var(--retreat, 0) * 18vh));
 	}
 	:global(html.stage-clearing) .rail {
 		transition: transform 0.38s ease-in;
@@ -101,7 +85,7 @@
 		background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0) 68%);
 	}
 
-	/* ---- Lampen-Glow (nur am Pult) ----------------------------------------
+	/* ---- Lampen-Glow (am Pult) --------------------------------------------
 	   Warme Ellipse über dem gemalten Messingschirm (am Cutout gemessen ≈ x 60 %,
 	   y 13 %), screen-Blend; zwei Ebenen mit teilerfremden Perioden. */
 	.pult-desk .lamp {
@@ -160,23 +144,56 @@
 		100% { opacity: 0.1; }
 	}
 
-	/* ---- Eintritts-Takt: Einfahrt von unten (wie die Pulte) ---------------- */
+	/* ---- Eintritts-Takt: Einfahrt von RECHTS (wie der Warden) — Default; mobil
+	   von unten (Override im <1200-Block). 1,7 s sichtbares Gleiten, Delay 0,55 s,
+	   dieselbe Kurve wie actor-in-right. */
 	@media (prefers-reduced-motion: no-preference) {
 		:global(html.stage-armed) .reg-figure {
 			opacity: 0;
-			transform: translate(-50%, 26vh);
+			transform: translateX(calc(-50% + 20vw));
 		}
 		:global(html.stage-armed.stage-play) .reg-figure {
 			opacity: 1;
-			animation: register-in-up 1.7s cubic-bezier(0.16, 0.6, 0.24, 1) both;
-			animation-delay: calc(0.55s + var(--i, 0) * 0.12s);
+			animation: pult-in-right 1.7s cubic-bezier(0.16, 0.6, 0.24, 1) 0.55s both;
 		}
 		:global(html.stage-skip) .reg-figure {
 			animation-duration: 0.01ms !important;
 			animation-delay: 0ms !important;
 		}
 	}
-	@keyframes register-in-up {
+	@keyframes pult-in-right {
+		from {
+			opacity: 0;
+			transform: translateX(calc(-50% + 20vw));
+		}
+		22% {
+			opacity: 1;
+		}
+		to {
+			opacity: 1;
+			transform: translateX(-50%);
+		}
+	}
+
+	/* ---- Positionierung: drei Fälle wie die Study-Schienen ----------------
+	   x in Plate-Prozent (--x). Fußlinie ≈ 100 % → ~5 % Anschnitt. */
+	/* Mobil + Tablet (< 1200 px): Hochformat-Plate 2:3 (cover), Bildbreite 66,67 svh.
+	   Rückzug VERTIKAL, Einfahrt von unten (Override unten). */
+	.rail.pult-desk {
+		left: calc(50vw + (var(--x, 50) - 50) * 0.6667svh);
+		height: 30svh;
+		bottom: calc(-0.05 * 30svh);
+		transform: translateY(calc(var(--retreat, 0) * 18vh));
+	}
+	@media (max-width: 1199px) and (prefers-reduced-motion: no-preference) {
+		:global(html.stage-armed) .reg-figure {
+			transform: translate(-50%, 26vh);
+		}
+		:global(html.stage-armed.stage-play) .reg-figure {
+			animation-name: pult-in-up;
+		}
+	}
+	@keyframes pult-in-up {
 		from {
 			opacity: 0;
 			transform: translate(-50%, 26vh);
@@ -190,44 +207,14 @@
 		}
 	}
 
-	/* ---- Positionierung: drei Fälle wie die Council-Schienen ---------------
-	   x in Plate-Prozent (--x). Das Pult ist NÄHER/GRÖSSER (§3): eigene Höhe;
-	   halbe Box-Breite für die Links-Klemme = 0,447 · Höhe (Pult 1026×1148 ≈ 0,894).
-	   Register-Höhe kleiner (1064×1338 ≈ 0,795). Fußlinie ≈ 100 % → ~5 % Anschnitt. */
-	/* Mobil + Tablet (< 1200 px): Hochformat-Plate 2:3 (cover), Bildbreite 66,67 svh. */
-	.rail.pult-desk,
-	.rail.register {
-		left: calc(50vw + (var(--x, 50) - 50) * 0.6667svh);
-	}
-	.rail.pult-desk {
-		height: 30svh;
-		bottom: calc(-0.05 * 30svh);
-	}
-	.rail.register {
-		height: 28svh;
-		bottom: calc(-0.05 * 28svh);
-	}
 	@media (min-width: 1200px) {
-		/* Bild füllt die Höhe (Viewport schmaler als 16:9): Bildbreite 177,78 svh. */
-		.rail.pult-desk,
-		.rail.register {
-			left: calc(50vw + (var(--x, 50) - 50) * 1.7778svh);
-		}
+		/* Bild füllt die Höhe (Viewport schmaler als 16:9): Bildbreite 177,78 svh.
+		   Rückzug HORIZONTAL nach rechts (--side), Einfahrt von rechts (Default). */
 		.rail.pult-desk {
+			left: calc(50vw + (var(--x, 50) - 50) * 1.7778svh);
 			height: 38svh;
 			bottom: calc(-0.05 * 38svh);
-		}
-		.rail.register {
-			height: 34svh;
-			bottom: calc(-0.05 * 34svh);
-		}
-		/* Linke Flanke (jetzt der Karteikasten): nie hinter die fixe Ergebnis-Tafel
-		   (23,5 rem); halbe Box-Breite = 0,3975 · Höhe (Register 1064×1338). */
-		.rail.register[data-side='left'] {
-			left: max(
-				calc(50vw + (var(--x, 50) - 50) * 1.7778svh),
-				calc(23.5rem + 0.3975 * 34svh)
-			);
+			transform: translateX(calc(var(--retreat, 0) * var(--side, 1) * 13vw));
 		}
 	}
 	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
@@ -236,14 +223,6 @@
 			height: min(21vw, 38svh);
 			bottom: calc(-0.05 * min(21vw, 38svh));
 			left: calc(var(--x, 50) * 1vw);
-		}
-		.rail.register {
-			height: min(19vw, 34svh);
-			bottom: calc(-0.05 * min(19vw, 34svh));
-			left: calc(var(--x, 50) * 1vw);
-		}
-		.rail.register[data-side='left'] {
-			left: max(calc(var(--x, 50) * 1vw), calc(23.5rem + 0.3975 * min(19vw, 34svh)));
 		}
 	}
 

@@ -268,7 +268,6 @@ export const en = {
 		roomWord: 'Archive',
 		lead: 'Every session, complete and unchanged — recommendations, disagreement, costs.',
 		// Alt text for the furniture (second layer): pure scenery, no data.
-		registerAlt: 'Card index of the archive',
 		pultAlt: 'Archive desk with a reading lamp and an open folio',
 		sessionsTitle: 'Session archive',
 		sessionLabel: (number) => `Session ${number}`,

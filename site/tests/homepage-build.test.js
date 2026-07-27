@@ -415,7 +415,6 @@ test('Embleme, Szenen und Tür-Bilder sind referenziert und im Deploy enthalten'
 		'scenes/archive-portrait-display.avif',
 		'scenes/archive-portrait-800.avif',
 		'scenes/archive-door-open-display.avif',
-		'actors/register.avif',
 		'actors/pult-lamp.avif'
 	];
 	for (const asset of assets) {
@@ -633,11 +632,11 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 	}
 });
 
-test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Karteikasten + Tür-Hotspot (DE+EN)', (context) => {
-	// No-JS-Wahrheit: die Möbel sind Teil des statischen Dokuments — REINE KULISSE
-	// (keine Datenbindung, generisches alt), kein Tab-Stopp auf den Figuren. §3:
-	// ZWEI VERSCHIEDENE Objekte — links das Pult mit Leuchte, rechts EIN Karteikasten.
-	// Der Tür-Hotspot führt zurück in die Study.
+test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Tür-Hotspot (DE+EN)', (context) => {
+	// No-JS-Wahrheit: das Möbel ist Teil des statischen Dokuments — REINE KULISSE
+	// (keine Datenbindung, generisches alt), kein Tab-Stopp auf der Figur. Runde B §2:
+	// nur EIN Möbel (das Pult mit Leuchte, rechts) — das Regal ist ersatzlos entfallen,
+	// die linke Flanke bleibt leer. Der Tür-Hotspot führt zurück in die Study.
 	const archiveHtml = readBuilt(PAGES.archive);
 	const archiveEnHtml = readBuilt(PAGES.archiveEn);
 	if (archiveHtml === null || archiveEnHtml === null) {
@@ -648,16 +647,14 @@ test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Karteikasten + Tür-Hot
 		[archiveEnHtml, 'archiveEn']
 	]) {
 		assert.ok(html.includes('/media/actors/pult-lamp.avif'), `${room}: Pult-Cutout fehlt`);
-		assert.ok(html.includes('/media/actors/register.avif'), `${room}: Register-Cutout fehlt`);
 		assert.equal(
 			(html.match(/class="rail pult-desk/g) ?? []).length,
 			1,
 			`${room}: erwartet genau EIN Pult mit Leuchte`
 		);
-		assert.equal(
-			(html.match(/class="rail register/g) ?? []).length,
-			1,
-			`${room}: erwartet genau EINEN Karteikasten (nicht zwei gleiche Möbel, §3)`
+		assert.ok(
+			!html.includes('/media/actors/register.avif'),
+			`${room}: Regal (register) ist ersatzlos entfallen (Runde B §2)`
 		);
 		assert.ok(
 			!/class="reg-figure[^"]*"[^>]*tabindex/.test(html),
@@ -665,15 +662,10 @@ test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Karteikasten + Tür-Hot
 		);
 		assert.ok(html.includes('class="door-hotspot'), `${room}: Tür-Hotspot fehlt`);
 	}
-	// Alt-Texte generisch (kein Datenbezug) — DE/EN gespiegelt.
-	assert.ok(archiveHtml.includes('Karteikasten des Archivs'), 'archive: generisches Register-alt fehlt');
+	// Alt-Text generisch (kein Datenbezug) — DE/EN gespiegelt.
 	assert.ok(
 		archiveHtml.includes('Archivpult mit Leseleuchte'),
 		'archive: generisches Pult-alt fehlt'
-	);
-	assert.ok(
-		archiveEnHtml.includes('Card index of the archive'),
-		'archiveEn: generisches Register-alt fehlt (EN)'
 	);
 	assert.ok(
 		archiveEnHtml.includes('Archive desk with a reading lamp'),
