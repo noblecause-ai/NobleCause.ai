@@ -642,8 +642,9 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 	for (const asset of [
 		'actors/lectern.avif',
 		'scenes/hall-portrait-display.avif',
-		'scenes/hall-portrait-800.avif',
-		'scenes/hall-door-open-display.avif'
+		'scenes/hall-portrait-800.avif'
+		// hall-door-open-display entfällt: Council nutzt den Ruhe-Stapel
+		// (hall-wall-hole + Flügel), nicht mehr das Auf-Plate (Runde C §2).
 	]) {
 		assert.ok(fs.existsSync(path.join(SITE, 'build', 'media', asset)), `Deploy fehlt: ${asset}`);
 	}
