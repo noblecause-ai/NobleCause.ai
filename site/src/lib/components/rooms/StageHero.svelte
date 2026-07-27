@@ -15,6 +15,7 @@
 		sceneMobile = null,
 		sceneMobile800 = null,
 		sceneOpen = null,
+		passage = null,
 		bgPos = 'left top',
 		bgPosMobile = null,
 		title,
@@ -48,7 +49,22 @@
 			fetchpriority="high"
 		/>
 	</picture>
-	{#if sceneOpen}
+	{#if passage}
+		<!-- §1 Ruhe-Stapel: der Spalt zeigt den Zielraum schon im Ruhezustand.
+		     Void → farLo (Ferne, klein) → Flügel → Wand-mit-Loch, statisch bei
+		     Kamera 0 — DERSELBE Stapel, den door-passage.js zur Fahrt beschleunigt
+		     (Frame 1 = dieses Ruhebild, konstruktiv, §C). Beim Hover spreizen die
+		     Flügel und geben das Ziel frei. Nur Desktop; Spreizung nur mit JS +
+		     ohne Reduced-Motion (§0). -->
+		<div class="rest-stack" aria-hidden="true" style:--rest-origin={passage.origin}>
+			<div class="rest-dolly">
+				<img class="rs-plane rs-far" src={passage.farLo} alt="" decoding="async" />
+				<img class="rs-plane rs-leaf rs-leaf-l" src={passage.leafLeft} alt="" decoding="async" />
+				<img class="rs-plane rs-leaf rs-leaf-r" src={passage.leafRight} alt="" decoding="async" />
+				<img class="rs-plane rs-wall" src={passage.wallHole} alt="" decoding="async" />
+			</div>
+		</div>
+	{:else if sceneOpen}
 		<!-- Tür-offen-Ebene: Komposit, das ausserhalb der Tür pixelgleich mit
 		     dem Basis-Plate ist — der Crossfade (CSS :has, ohne JS) öffnet
 		     die Tür mit gemaltem Licht. Nur Desktop: der Hotspot existiert
@@ -160,6 +176,69 @@
 	@media (prefers-reduced-motion: reduce) {
 		.room-bg-open {
 			transition: none;
+		}
+	}
+	/* §1 Ruhe-Stapel: fixe z-index:0-Perspektivebene hinter der UI (wie .room-bg),
+	   STATISCH bei Kamera 0 — dieselbe Geometrie wie die Fahrt-Übergangsebene
+	   (.passage-layer in +layout.svelte). Frame 1 der Fahrt = dieses Ruhebild,
+	   damit konstruktiv statt gemessen (§C). Nur Desktop ≥1200 px. */
+	.rest-stack {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		overflow: hidden;
+		pointer-events: none;
+		perspective: 850px;
+		perspective-origin: var(--rest-origin, 48.8% 41%);
+		/* Void: die Ferne wächst beim Spreizen aus dem Schwarz, der Ausgangsraum
+		   scheint nicht in den Rändern durch. */
+		background: #05090b;
+		display: none;
+	}
+	@media (min-width: 1200px) {
+		.rest-stack {
+			display: block;
+		}
+	}
+	.rest-dolly {
+		position: absolute;
+		inset: 0;
+		transform-style: preserve-3d;
+	}
+	.rest-stack .rs-plane {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100svh;
+		object-fit: cover;
+		object-position: center top;
+		backface-visibility: hidden;
+	}
+	/* Ferne NICHT gegenskaliert (Handoff-Deckungsgleichheit, §6.3): bei Kamera 0
+	   erscheint sie klein (≈0,38 × Cover) hinter dem Loch. */
+	.rs-far {
+		transform: translateZ(-1400px);
+	}
+	.rs-wall {
+		transform: translateZ(0);
+	}
+	/* Flügel geschlossen im Ruhezustand (Tür zu = heutiges Plate). Die Spreizung
+	   gibt erst das Ziel frei — sie läuft NUR mit JS (html.js) UND ohne
+	   Reduced-Motion; ohne beides steht die geschlossene Tür (§0). */
+	.rs-leaf {
+		transform: translateZ(0);
+	}
+	@media (prefers-reduced-motion: no-preference) {
+		.rs-leaf {
+			transition: transform 0.5s cubic-bezier(0.4, 0, 0.5, 1);
+		}
+		:global(html.js .room-hero:has(.door-hotspot:hover) .rs-leaf-l),
+		:global(html.js .room-hero:has(.door-hotspot:focus-visible) .rs-leaf-l) {
+			transform: translateZ(0) translateX(-58px);
+		}
+		:global(html.js .room-hero:has(.door-hotspot:hover) .rs-leaf-r),
+		:global(html.js .room-hero:has(.door-hotspot:focus-visible) .rs-leaf-r) {
+			transform: translateZ(0) translateX(58px);
 		}
 	}
 	/* Weicher Übergang vom stehenden Bild in den scrollenden Inhalt — zielt auf

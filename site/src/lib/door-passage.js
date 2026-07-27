@@ -1,4 +1,4 @@
-// §6 Phase 1 — Echter Türdurchgang Archiv → Study (CSS-3D-Kamerafahrt).
+// §6/§C — Echter Türdurchgang (CSS-3D-Kamerafahrt), config-getrieben je Tür.
 //
 // Eine Übergangsebene, die beim Klick entsteht und nach der Fahrt verschwindet.
 // Parallaxe mit korrekter Perspektive: der Browser macht die Perspektivteilung,
@@ -20,8 +20,7 @@ import { goto, preloadData } from '$app/navigation';
 
 const Z_FAR = 1400; // Tiefe der fernen Ebene (Betrag) = Fahrtstrecke der Kamera
 const RIDE_MS = 1250; // Gesamtdauer (Zusatz: 1500–1600, falls nach 1–3 noch flach)
-const DOOR_MS = 450; // Türöffnen (Flügel-Spreizung)
-const LEAF_SPREAD = 58; // px, Spreizung je Flügel zur Laibung
+const LEAF_SPREAD = 58; // px, Offen-Position je Flügel zur Laibung (= Hover-Spreizung)
 const NAV_AT = 0.82; // Anteil von RIDE_MS, bei dem goto() feuert (gegen Fahrtende)
 const DECODE_CAP = 300; // Wartedeckel fürs Ziel-Plate
 const RIDE_EASE = 'cubic-bezier(.5,0,.75,.4)'; // langsam an, spät beschleunigend
@@ -63,11 +62,22 @@ async function prepareTarget(href, plateSrc) {
 	await Promise.race([Promise.all(jobs), delay(DECODE_CAP)]);
 }
 
-// Läuft die Kamerafahrt Archiv → Study.
-// href = Zielpfad, farSrc = Ziel-Plate (Study), onNavigate() setzt das Passage-
-// Flag im room-transitions-Zweig (dort läuft dann KEINE eigene VT-Fahrt),
-// onDone() ruft extern playStage() nach der Übergabe.
-export async function runArchiveToStudyPassage({ href, farSrc, onNavigate, onDone }) {
+// Läuft die Kamerafahrt Quellraum → Zielraum.
+// Config je Tür (door-passages.js): wallHole/leafLeft/leafRight = Ebenen aus dem
+// Quell-Plate, far = Ziel-Plate (volle Auflösung), origin = gemessene Aperturmitte
+// (perspective-origin). href = Zielpfad; onNavigate() setzt das Passage-Flag im
+// room-transitions-Zweig (dort läuft dann KEINE eigene VT-Fahrt), onDone() ruft
+// extern playStage() nach der Übergabe.
+export async function runDoorPassage({
+	href,
+	wallHole,
+	leafLeft: leafLeftSrc,
+	leafRight: leafRightSrc,
+	far: farSrc,
+	origin,
+	onNavigate,
+	onDone
+}) {
 	if (active) return;
 	active = true;
 
@@ -75,14 +85,23 @@ export async function runArchiveToStudyPassage({ href, farSrc, onNavigate, onDon
 
 	const layer = document.createElement('div');
 	layer.className = 'passage-layer';
+	// perspective-origin je Tür (die Kamera zielt auf DIESE Apertur, §6-Nachtrag
+	// Ursache 2) — inline statt CSS-fest, weil je Tür verschieden.
+	if (origin) layer.style.perspectiveOrigin = origin;
 	const dolly = document.createElement('div');
 	dolly.className = 'passage-dolly';
 	const far = mkImg(farSrc, 'p-plane p-far');
-	const leafLeft = mkImg('/media/actors/door-leaf-left.avif', 'p-plane p-leaf');
-	const leafRight = mkImg('/media/actors/door-leaf-right.avif', 'p-plane p-leaf');
-	const nearHole = mkImg('/media/scenes/archive-wall-hole.avif', 'p-plane p-near-hole');
+	const leafLeft = mkImg(leafLeftSrc, 'p-plane p-leaf');
+	const leafRight = mkImg(leafRightSrc, 'p-plane p-leaf');
+	const nearHole = mkImg(wallHole, 'p-plane p-near-hole');
+	// Die Flügel starten OFFEN (±LEAF_SPREAD) — genau wie sie der Ruhe-Stapel beim
+	// Hover zeigt. Auf Desktop ist ein Klick immer gehovert; so gibt es keinen
+	// Zuschnapp zwischen Ruhebild (offen) und Frame 1 der Fahrt. Der Hover HAT die
+	// Tür geöffnet, der Klick fährt hindurch.
+	leafLeft.style.transform = `translateZ(0) translateX(-${LEAF_SPREAD}px)`;
+	leafRight.style.transform = `translateZ(0) translateX(${LEAF_SPREAD}px)`;
 	// Maldistanz: far (hinten) → Flügel → Wand-mit-Loch (vorn; ihre opake Laibung
-	// deckt die zur Seite gleitenden Flügel ab). Frame 1 = Wand + Flügel = Archiv zu.
+	// deckt die zur Seite gleitenden Flügel ab). Frame 1 = Ruhe-Stapel (offen).
 	dolly.append(far, leafLeft, leafRight, nearHole);
 	layer.append(dolly);
 	shell.appendChild(layer);
@@ -101,16 +120,14 @@ export async function runArchiveToStudyPassage({ href, farSrc, onNavigate, onDon
 	await prepareTarget(href, farSrc);
 	if (aborted) return finish();
 
-	// Ebene sanft einblenden (kaschiert Hover→Frame-1, §6.4).
+	// Ebene sanft einblenden (kaschiert Hover→Frame-1, §6.4). Frame 1 gleicht dem
+	// Ruhe-Stapel (offene Flügel) — der Einblend ist damit unmerklich.
 	layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 90, fill: 'forwards' });
 	await nextFrame();
 
-	// Tür öffnen: die gespreizten Flügel fahren zur Laibung auseinander (0–DOOR_MS);
-	// der Teil, der über die Apertur hinausgleitet, verschwindet hinter der opaken
-	// Laibung der Wand-mit-Loch. Kein Dissolve mehr.
-	const spread = { duration: DOOR_MS, easing: 'cubic-bezier(.4,0,.5,1)', fill: 'forwards' };
-	leafLeft.animate([{ transform: 'translateX(0px)' }, { transform: `translateX(-${LEAF_SPREAD}px)` }], spread);
-	leafRight.animate([{ transform: 'translateX(0px)' }, { transform: `translateX(${LEAF_SPREAD}px)` }], spread);
+	// Die Flügel stehen offen und bleiben stehen (§6-Nachtrag: sie sitzen näher,
+	// müssen die Wand früher verlassen) — keine Spreiz-Animation mehr, nur der
+	// leafFade unten (früher als die Wand). Ihr translateX steht als inline-Style.
 
 	// Kamerafahrt: translateZ 0 → Z_FAR. Der einzige Kern-Antrieb.
 	const ride = dolly.animate(

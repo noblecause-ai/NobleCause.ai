@@ -11,6 +11,7 @@
 	import StageTube from './StageTube.svelte';
 	import { locales, roomPaths } from '$lib/i18n/index.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
+	import { DOOR_PASSAGES } from '$lib/door-passages.js';
 
 	let { home, lang = 'de' } = $props();
 
@@ -61,7 +62,7 @@
 		scene="/media/scenes/archive-display.avif"
 		sceneMobile="/media/scenes/archive-portrait-display.avif"
 		sceneMobile800="/media/scenes/archive-portrait-800.avif"
-		sceneOpen="/media/scenes/archive-door-open-display.avif"
+		passage={DOOR_PASSAGES.archive}
 		bgPos="center top"
 		bgPosMobile="right top"
 		title={t.common.heroTitle}

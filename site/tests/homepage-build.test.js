@@ -414,7 +414,12 @@ test('Embleme, Szenen und Tür-Bilder sind referenziert und im Deploy enthalten'
 		'scenes/archive-display.avif',
 		'scenes/archive-portrait-display.avif',
 		'scenes/archive-portrait-800.avif',
-		'scenes/archive-door-open-display.avif',
+		// §1 Archiv-Ruhe-Stapel (statt Auf-Plate): Wand-mit-Loch + Flügel + ferne
+		// Kleinauflösung (der Spalt zeigt den Zielraum bei Kamera 0).
+		'scenes/archive-wall-hole.avif',
+		'scenes/antechamber-display-lo.avif',
+		'actors/door-leaf-left.avif',
+		'actors/door-leaf-right.avif',
 		'actors/pult-lamp.avif'
 	];
 	for (const asset of assets) {

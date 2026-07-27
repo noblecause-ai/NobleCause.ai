@@ -21,7 +21,8 @@ import {
 	TUBE_FILLED
 } from './stage.js';
 import { langOfPath } from './i18n/index.js';
-import { runArchiveToStudyPassage, passageActive } from './door-passage.js';
+import { runDoorPassage, passageActive } from './door-passage.js';
+import { DOOR_PASSAGES } from './door-passages.js';
 
 // DE- und EN-Räume bilden je eine eigene Folge — Übergänge nur innerhalb einer
 // Sprache; der Sprachwechsel selbst ist ein schlichter, sofortiger Wechsel.
@@ -91,13 +92,16 @@ export function installRoomTransitions() {
 			const to = new URL(door.href, window.location.href).pathname;
 			if (from === to || !roomOfPath(from) || !roomOfPath(to)) return;
 			if (langOfPath(from) !== langOfPath(to)) return;
-			// §6 Türdurchgang: nur Archiv → Study, nur Desktop ≥1200 px → echte
-			// Kamerafahrt statt Portalblende. door-passage baut die Übergangsebene,
-			// navigiert selbst und ruft playStage() nach der Übergabe. Fällt eines
-			// der Kriterien, läuft unverändert die Blende darunter (return unten).
+			// §C Türdurchgang: jede in-Szene-Passage-Tür (Config je Quellraum in
+			// door-passages.js), nur Desktop ≥1200 px → echte Kamerafahrt statt
+			// Portalblende. door-passage baut die Übergangsebene aus derselben Config
+			// wie der Ruhe-Stapel, navigiert selbst und ruft playStage() nach der
+			// Übergabe. Fällt eines der Kriterien, läuft unverändert die Blende
+			// darunter (return unten).
+			const passage = DOOR_PASSAGES[roomOfPath(from)];
 			if (
-				roomOfPath(from) === 'archive' &&
-				roomOfPath(to) === 'study' &&
+				passage &&
+				roomOfPath(to) === passage.target &&
 				window.innerWidth >= 1200 &&
 				!passageActive()
 			) {
@@ -109,9 +113,13 @@ export function installRoomTransitions() {
 					el.style.removeProperty('--retreat');
 				};
 				const passGuard = setTimeout(clearPassage, 3200);
-				runArchiveToStudyPassage({
+				runDoorPassage({
 					href: to,
-					farSrc: '/media/scenes/antechamber-display.avif',
+					wallHole: passage.wallHole,
+					leafLeft: passage.leafLeft,
+					leafRight: passage.leafRight,
+					far: passage.farHi,
+					origin: passage.origin,
 					onDone: () => {
 						clearTimeout(passGuard);
 						clearPassage();
