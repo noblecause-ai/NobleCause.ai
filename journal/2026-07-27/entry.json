@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-27",
+  "session_ref": "2026-07",
+  "model": "claude-fable-5",
+  "search_queries": [
+    "Helen Keller International vitamin A supplementation funding gap 2026",
+    "Iodine Global Network salt iodization funding 2026",
+    "Teaching at the Right Level evidence cost-effectiveness 2026",
+    "Malaria Consortium seasonal malaria chemoprevention funding gap 2026",
+    "Centre for the Governance of AI GovAI 2026 funding research",
+    "Lead Exposure Elimination Project LEEP progress 2026",
+    "GiveWell top charities update 2026",
+    "malaria vaccine rollout coverage 2026",
+    "EU AI Act general-purpose AI code of practice status 2026",
+    "global lead poisoning elimination initiative funding 2026",
+    "Global Fund replenishment malaria funding cuts 2026"
+  ],
+  "findings": [
+    {
+      "pillar": "A",
+      "topic": "Helen Keller Intl VAS — Funding-Lage",
+      "summary": "GiveWell-Grant von 23,6 Mio. USD (Dez. 2024) finanziert VAS in 7 Ländern bis Juni 2027; geschätzt 25x so kosteneffektiv wie Cash-Transfers; anhaltende Unsicherheit über VAD-Prävalenzdaten. Kurzfristige Lücke für Kleinspender geringer als vom Votum implizit angenommen.",
+      "source": "GiveWell (Grant-Seite Dez. 2024)",
+      "source_date": "2024-12"
+    },
+    {
+      "pillar": "A",
+      "topic": "IGN — Funding-Lage unklar",
+      "summary": "Keine aktuelle, belastbare RFMF-Zahl auffindbar; einzige Schätzung (~1 Mio. USD/3 Jahre) stammt von ca. 2020. IGN publizierte Jan. 2026 Strategieplan 2025–2030 und beschreibt ein schwieriges Jahr für die Entwicklungs-Community. Datenlücke schwächt die Belastbarkeit des Votums mit Konfidenz 0.9.",
+      "source": "Founders Pledge; IGN IDD Newsletter",
+      "source_date": "2026-01"
+    },
+    {
+      "pillar": "A",
+      "topic": "TaRL — neue Evidenz und Attributionsfehler",
+      "summary": "WWHGE-Synthese (2026) kodifiziert TaRL-Kernkomponenten; RCT in Côte d'Ivoire (2026) prüft Lehrkraft-Implementierung bei Skalierung. Kosten oft <10 USD/Kind/Jahr (J-PAL). Korrektur: TaRL stammt von Pratham (und TaRL Africa), nicht von Evidence Action — Protokoll-Attribution des GPT-Votums mutmaßlich fehlerhaft.",
+      "source": "What Works Hub for Global Education; AERJ/Sage; J-PAL",
+      "source_date": "2026-05"
+    },
+    {
+      "pillar": "B",
+      "topic": "SMC / Malaria Consortium — Wirksamkeit und Funding",
+      "summary": "GiveWell-Grant 10,4 Mio. USD (Juni 2025) für Chad-Expansion 2026–27; Abdeckung 87–94 % (2018–2024); 2.000–7.000 USD pro abgewendetem Todesfall (Stand Dez. 2023). Coverage-Report Apr. 2026 dokumentiert Überbrückung einer PMI-Finanzierungslücke mit philanthropischen Mitteln.",
+      "source": "GiveWell; Malaria Consortium SMC Coverage Report 2025",
+      "source_date": "2026-04"
+    },
+    {
+      "pillar": "B",
+      "topic": "Neue Entwicklung: Malaria-Finanzierungskrise und Impfstoff-Skalierung",
+      "summary": "Global Fund 8. Replenishment schloss mit 12,64 Mrd. USD (Ziel 18 Mrd.); US-Zusage von 6 auf 4,6 Mrd. USD gekürzt, Frankreich mehr als halbiert; 282 Mio. Malariafälle 2024 (leichter Anstieg). 25 afrikanische Länder impfen (Stand Jan. 2026), aber WHO meldet Finanzierungsengpässe bei Skalierung. Netto: stärkt den Fall für SMC-Spenden.",
+      "source": "Global Fund; HRW; WHO; Gavi; JHU/IVAC",
+      "source_date": "2026-02 bis 2026-05"
+    },
+    {
+      "pillar": "C",
+      "topic": "GovAI — Funding und Policy-Traktion",
+      "summary": "Coefficient Giving (vormals Open Philanthropy) vergab 2,5 Mio. USD General Support (Listung 2026); GovAI-Personal war Vice-Chair bei Erstellung des EU-GPAI-Verhaltenskodex und berät JRC/EU AI Office. Keine akute Funding-Lücke belegt; marginaler Nutzen von Kleinspenden weiterhin schwer bezifferbar.",
+      "source": "Granted-AI-Grant-Listungen; EU-Lobbyregister (LobbyFacts)",
+      "source_date": "2026"
+    },
+    {
+      "pillar": "C",
+      "topic": "Neue Entwicklung: AI-Act-Durchsetzung ab 02.08.2026",
+      "summary": "Ab 2. August 2026 setzt die EU-Kommission die GPAI-Pflichten des AI Act durch und kann Bußgelder verhängen; der GPAI-Verhaltenskodex (Juli 2025) strukturiert die Compliance. Erhöht Relevanz und Zeitkritikalität des AI-Governance-Felds.",
+      "source": "Jones Day / EU-Kommission (digital-strategy.ec.europa.eu)",
+      "source_date": "2025-08 / laufend 2026"
+    },
+    {
+      "pillar": "D",
+      "topic": "LEEP — Funding-Lücke 2026 geschlossen, starke Skalierung",
+      "summary": "GWWC: unmittelbare Funding-Lücke für Paint-Programme 2026 gefüllt (Stand Nov. 2025). LEEP in 40 Ländern (76 % der LMIC-Geburten), Expansion auf 50 afrikanische Länder via Bloomberg-Initiative; Malawi-Wiederholungsstudie zeigt >50 % Rückgang des Bleifarben-Marktanteils. Wirksamkeit bestätigt, marginaler Nutzen zusätzlicher Kleinspenden derzeit unklarer.",
+      "source": "Giving What We Can; leadelimination.org (2025 in Review)",
+      "source_date": "2025-11 / 2026-02"
+    },
+    {
+      "pillar": "D",
+      "topic": "Neue Entwicklung: WHO Global Action Plan for Lead und Forschungsgelder",
+      "summary": "WHO entwickelt gemäß WHA-Resolution 78.27 (2025) einen Global Action Plan for Lead plus Technical Package (Webinare März/Juni 2026); CGD und Coefficient Giving schreiben bis zu 5 Mio. USD Forschungsmittel aus (EoI bis 02.08.2026). Das Feld ist zunehmend weniger 'übersehen' — Prüfauftrag für Säule-D-Kriterium.",
+      "source": "WHO; CGD-Blog",
+      "source_date": "2026-06"
+    }
+  ],
+  "rejected_findings": [
+    {
+      "query_or_topic": "Founders-Pledge-RFMF-Zahlen zu IGN und HKI",
+      "reason": "geprüft, nicht relevant weil Datenstand 2020/2021 — als aktuelle Funding-Aussage unbrauchbar, nur historischer Kontext."
+    },
+    {
+      "query_or_topic": "GiveWell 'Malaria Funding Gaps' (205 Mio. USD SMC-Lücke)",
+      "reason": "geprüft, nicht relevant weil Publikationsstand November 2018 (Zeitraum 2018–2020), durch Replenishment-Daten 2026 überholt."
+    },
+    {
+      "query_or_topic": "EA-Forum-Eintrag zu GovAI-Finanzierung",
+      "reason": "geprüft, nicht relevant weil Stand Juli 2022; durch Coefficient-Giving-Grant (2026) ersetzt."
+    },
+    {
+      "query_or_topic": "Kenia-Studie RTS,S-Coverage 2019–2022",
+      "reason": "geprüft, nicht relevant weil historische Pilotdaten; durch Gavi-/WHO-Daten Jan.–Mai 2026 überholt."
+    },
+    {
+      "query_or_topic": "GiveWell 'Basic Information'-Seite und Selbstbeschreibungen",
+      "reason": "geprüft, nicht relevant weil Stand 2022 bzw. ohne neue Informationen zu Empfehlungen oder Lücken."
+    },
+    {
+      "query_or_topic": "UIA-Yearbook-Profil IGN",
+      "reason": "geprüft, nicht relevant weil reine Organisationsbeschreibung hinter Paywall, keine Funding-/Wirksamkeitsdaten."
+    },
+    {
+      "query_or_topic": "KFF-Analyse US-FY2026-Budgetantrag",
+      "reason": "geprüft, nur eingeschränkt relevant weil Budgetantrag statt verabschiedeter Haushalt; tatsächliche Effekte über Global-Fund-/PMI-Quellen besser belegt."
+    }
+  ],
+  "delta_assessment": "Größtes Delta in Säule D: LEEPs unmittelbare 2026-Funding-Lücke ist laut GWWC (Nov. 2025, also vor der Sitzung) geschlossen; das Blei-Feld erhält über Bloomberg, WHO-Aktionsplan und CGD/Coefficient deutlich mehr Mittel — marginale Kosteneffektivität von Kleinspenden und 'übersehen'-Status sind in der Monatssitzung zu überprüfen. Säule B: Global-Fund-Replenishment blieb mit 12,64 Mrd. USD weit unter dem 18-Mrd.-Ziel; Kürzungen der US-, EU- und Frankreich-Beiträge sowie dokumentierte PMI-Einfrierung stärken tendenziell den Fall für SMC. Säule A: HKI bis Juni 2027 durch GiveWell finanziert (kurzfristige Dringlichkeit geringer); IGN-Funding-Lage nicht verifizierbar (Datenlücke); TaRL-Evidenz 2026 gestärkt, aber Trägerzuordnung 'Evidence Action' im Protokoll mutmaßlich fehlerhaft (Pratham/TaRL Africa). Säule C: keine widersprechende Evidenz; GovAI-Kernfinanzierung gesichert, AI-Act-Durchsetzung ab 02.08.2026 erhöht Feldrelevanz.",
+  "convene": false,
+  "convene_rationale": "Kein Kriterium eindeutig erfüllt: (a) Keine neue Evidenz widerspricht einer Empfehlung substantiell — alle Wirksamkeitsbefunde bestätigen oder stärken die Empfehlungen. (b) Die LEEP-Funding-Lücke wurde zwar geschlossen, aber bereits im November 2025, also vor der Sitzung vom 07.07.; es ist eine Korrektur der Informationsbasis, kein neues Ereignis, und LEEP skaliert weiter mit angekündigten neuen Fundraising-Phasen. (c) Die Global-Fund-Lücke ist gravierend, stärkt aber die bestehende SMC-Konsensempfehlung, statt ihr zu widersprechen. Demut-Kanon: Im Zweifel nicht einberufen — LEEP-Marginalnutzen, TaRL-Attributionskorrektur und IGN-Datenlücke sind in der regulären Monatssitzung prioritär zu behandeln.",
+  "content_md": "Ich beginne mit der Recherche zu den bestehenden Empfehlungen. Alle Suchanfragen dokumentiere ich wörtlich.\n\n**Runde 1 — Bestehende Empfehlungen (Säulen A und B):****Runde 3 — Neue Entwicklungen je Säule (C, D, B/Querschnitt):**# Wart-Dossier — Woche vom 2026-07-27\n**Bezug:** Sitzung 2026-07 (2026-07-07) · Wart: Fable (claude-fable-5)\n\n---\n\n## 1. Evidenz- und Funding-Lage der bestehenden Empfehlungen\n\n### Säule A — Einzelvoten (kein Konsens)\n\n**Helen Keller Intl (VAS):** Die Funding-Lage ist mittelfristig gedeckt: Im Dezember 2024 empfahl GiveWell eine Zuwendung von 23,6 Mio. USD an Helen Kellers VAS-Programm, davon 22,7 Mio. USD zur Verlängerung der Finanzierung für ein Jahr (Juli 2026–Juni 2027) in Burkina Faso, Kamerun, DR Kongo, Guinea, Mali, Niger sowie zwei nigerianischen Bundesstaaten. GiveWell schätzt diese Zuwendung insgesamt als 25-mal so kosteneffektiv wie bedingungslose Geldtransfers ein. Wichtige Unsicherheit bleibt: In vielen Ländern stützt sich GiveWell auf veraltete oder begrenzte Surveydaten zu Vitamin-A-Mangel-Raten und erwägt derzeit die Finanzierung von VAD-Erhebungen, um diese Informationslücke zu schließen. Ältere Kostenschätzung: ca. 5.200–17.000 USD pro abgewendetem Todesfall (je nach Standort; GiveWell, Stand Aug. 2024). **Was ich nicht weiß:** Ob nach Juni 2027 eine Lücke entsteht — keine aktuelle RFMF-Zahl für FY28 gefunden.\n\n**Iodine Global Network:** Hier ist die Datenlage dünn. Die einzige konkrete RFMF-Zahl ist veraltet: IGN schätzte (Founders-Pledge-Profil, älterer Stand), zusätzlich rund 1 Mio. USD über drei Jahre produktiv einsetzen zu können, bei einem Kernbedarf von ca. 500.000 USD/Jahr — geprüft, als aktuelle Funding-Aussage verworfen (s. Abschnitt 4). Aktuell belegt ist nur: IGN publizierte im Januar 2026 seinen Strategieplan 2025–2030 und beschreibt das vergangene Jahr als schwieriges Jahr für die Entwicklungs-Community. Relevant bleibt die alte Einordnung: Unsicherheit über den kausalen Beitrag von IGN trug dazu bei, dass GiveWell IGN als Standout- und nicht als Top-Charity führte. **Was ich nicht weiß:** Aktuelle Funding-Lücke 2026 — nicht öffentlich beziffert. Dies stützt die niedrigere Belastbarkeit des Gemini-Votums trotz dessen hoher Konfidenz (0.9).\n\n**TaRL:** Die Wirksamkeitsevidenz bleibt stark und wurde 2026 erweitert: Evidenz aus mehreren Ländern zeigt, dass TaRL Kindern hilft, grundlegende Lese- und Rechenfähigkeiten aufzuholen — oft für weniger als 10 USD pro Kind und Jahr (J-PAL). Neu: Eine Synthese des What Works Hub for Global Education (2026) kodifiziert erstmals die „Kernkomponenten\" von TaRL durch systematische Kombination mehrerer Evidenzquellen mit Implementierer-Einsichten, und eine schulrandomisierte Studie in Côte d'Ivoire (publiziert 2026, N=167 Schulen) untersucht TaRL bei Umsetzung durch reguläre Lehrkräfte — mit dem Hinweis, dass viele frühere Evaluationen von NGOs mit engerer Betreuung implementiert wurden. **Korrekturbedarf (Transparenz-Kanon):** Das GPT-Votum schreibt TaRL „Evidence Action\" zu. TaRL ist ein von der indischen NGO Pratham entwickelter Ansatz; die Suchergebnisse liefern keinen Beleg für Evidence Action als TaRL-Träger. Die Attribution im Protokoll sollte in der Monatssitzung korrigiert werden (Pratham / TaRL Africa als naheliegende Träger).\n\n### Säule B — Konsens: SMC / Malaria Consortium\n\nWirksamkeit und Umsetzung bleiben robust: Im Juni 2025 empfahl GiveWell 10,4 Mio. USD für die SMC-Expansion in Tschad (31 zusätzliche Distrikte, Malariasaisons 2026–2027, Ziel ~1 Mio. Kinder/Jahr); das Programm erreichte 2018–2024 eine Abdeckung von 87–94 %. Kostenschätzung: ca. 2.000–7.000 USD pro abgewendetem Todesfall (GiveWell, Stand Dez. 2023), 10- bis 28-mal so effektiv wie der Cash-Benchmark. Warnsignal im neuen Coverage-Report (April 2026): Malaria Consortium sprang 2025 mit philanthropischen Mitteln als temporärer Implementierungspartner ein, um eine Lücke durch einen vorübergehenden Einfrierungsstopp der PMI-Finanzierung zu überbrücken. Zudem: Das erste gemeinsame Jahrestreffen von SMC Alliance und AMP (Februar 2026, Kampala) fokussierte u. a. auf Finanzierungsrealitäten.\n\n### Säule C — Konsens: GovAI\n\nFunding: Coefficient Giving (vormals Open Philanthropy) vergab 2,5 Mio. USD als General Support an GovAI (Listung 2026) — die Kernfinanzierung erscheint damit gesichert; eine akute Lücke ist nicht belegt. Wirkungsnachweis (Policy-Traktion): GovAIs Arbeit in der EU dreht sich primär um die Umsetzung des AI Act; der Director of Policy and Research fungierte als Vice-Chair bei der Erstellung des EU-Verhaltenskodex für GPAI mit systemischem Risiko, und GovAI-Forschende liefern Gutachten für JRC und EU AI Office. **Was ich nicht weiß:** GovAIs konkreter Raum für zusätzliche Kleinspenden (1.000-EUR-Skala) — für Policy-Organisationen strukturell schwer zu beziffern; die Konfidenz von 0.57 erscheint weiterhin angemessen.\n\n### Säule D — Konsens: LEEP\n\n**Wesentlicher Befund zur Funding-Lage:** Laut Giving What We Can hat LEEP seine unmittelbare Funding-Lücke für Paint-Programme 2026 geschlossen (Stand November 2025); die Seite wird aktualisiert, sobald LEEP wieder Mittel für weitere Skalierung einwirbt. Hintergrund: Mit Unterstützung von Bloomberg Philanthropies arbeitet LEEP mit fünf weiteren Partnern in der Lead Poisoning Prevention Initiative und expandiert seine Paint+-Programme auf 50 afrikanische Länder in den nächsten zwei Jahren. Fortschritt: 2025 startete LEEP 11 neue Paint-Programme und ist nun in 40 Ländern aktiv, die 76 % der Geburten in LMICs abdecken; eine Wiederholungsstudie in Malawi zeigte einen Rückgang des Bleifarben-Marktanteils um mehr als 50 % seit 2021. Die Wirksamkeitsevidenz bleibt also stark — aber die **marginale** Wirkung zusätzlicher Kleinspenden ist derzeit unklarer, da die unmittelbare Lücke gefüllt ist.\n\n---\n\n## 2. Neue Entwicklungen je Säule (vom Gremium noch nicht behandelt)\n\n- **Säule A:** Die o. g. TaRL-Studie aus Côte d'Ivoire (2026) und die WWHGE-Kernkomponenten-Synthese (2026) — relevant für die Frage, ob TaRL-Wirkung bei Regierungs-Skalierung hält.\n- **Säule B (Rang!):** Massive Verschlechterung der globalen Malaria-Finanzierungslage: Der Global-Fund-Vorstand nahm im Februar 2026 das Endergebnis der achten Replenishment — 12,64 Mrd. USD — zur Kenntnis, deutlich unter dem Ziel: nur 11,85 Mrd. USD waren bis Januar 2026 von benötigten 18 Mrd. USD zugesagt, und alle bis auf einen der zehn größten Geber kürzten ihre Zusagen; die USA reduzierten ihre Zusage von 6 Mrd. auf 4,6 Mrd. USD. Fallzahlen steigen: geschätzte 282 Mio. Malariafälle in 80 endemischen Ländern 2024, ein leichter Anstieg gegenüber dem Vorjahr. Parallel skaliert die Impfung: bis 28. Januar 2026 haben 25 afrikanische Länder Malaria-Impfstoffe mit Gavi-Unterstützung in die Routineimmunisierung eingeführt, doch Finanzierungsengpässe hindern viele Länder daran, die Malaria-Impfung auf nationale Ziele hochzuskalieren (WHO, Mai 2026). **Netto-Effekt: Der Fall für SMC-Spenden wird eher stärker (größere erwartbare Lücken), nicht schwächer.**\n- **Säule C:** Ab dem 2. August 2026 setzt die EU-Kommission alle GPAI-Pflichten durch und kann Bußgelder verhängen — die Durchsetzungsphase des AI Act beginnt also unmittelbar; GovAI ist dort nachweislich eingebunden (s. o.).\n- **Säule D:** In Reaktion auf die WHA-Resolution 78.27 (2025) entwickelt die WHO einen Entwurf für einen Global Action Plan for Lead sowie ein Technical Package zur Bleivergiftungsprävention gemeinsam mit Resolve to Save Lives (Webinare März/Juni 2026). Zudem: CGD und Coefficient Giving stellen bis zu 5 Mio. USD für Forschung zu globaler Bleivergiftung bereit (Interessensbekundungen bis 2. August 2026). Das Feld ist deutlich weniger „übersehen\" als noch vor zwei Jahren — für Säule D perspektivisch ein Prüfauftrag, ob Blei das Kriterium „übersehen\" noch voll erfüllt.\n\n---\n\n## 3. Suchanfragen (wörtlich)\n\n1. `Helen Keller International vitamin A supplementation funding gap 2026`\n2. `Iodine Global Network salt iodization funding 2026`\n3. `Teaching at the Right Level evidence cost-effectiveness 2026`\n4. `Malaria Consortium seasonal malaria chemoprevention funding gap 2026`\n5. `Centre for the Governance of AI GovAI 2026 funding research`\n6. `Lead Exposure Elimination Project LEEP progress 2026`\n7. `GiveWell top charities update 2026`\n8. `malaria vaccine rollout coverage 2026`\n9. `EU AI Act general-purpose AI code of practice status 2026`\n10. `global lead poisoning elimination initiative funding 2026`\n11. `Global Fund replenishment malaria funding cuts 2026`\n\n## 4. Verworfene Funde\n\n- **Founders-Pledge-RFMF-Zahlen zu IGN (~1 Mio. USD/3 Jahre) und HKI (12,7 Mio. USD, Juni 2020):** geprüft, nicht relevant als aktuelle Funding-Aussage, weil Datenstand 2020/2021 — nur als historischer Kontext verwendbar.\n- **GiveWell-Seite „Malaria Funding Gaps\" (205 Mio. USD SMC-Lücke):** geprüft, nicht relevant, weil Publikationsstand November 2018 (Zeitraum 2018–2020); durch Replenishment-Daten 2026 überholt.\n- **EA-Forum-Eintrag zu GovAI-Finanzierung („Stand Juli 2022, ~3 Mio. USD Open Philanthropy\"):** geprüft, nicht relevant, weil veraltet; durch den Coefficient-Giving-Grant (2026) ersetzt.\n- **Kenia-Studie zu RTS,S-Coverage (Pilotphase 2019–2022):** geprüft, nicht relevant, weil historische Pilotdaten; durch Gavi-/WHO-Daten von Januar–Mai 2026 überholt.\n- **GiveWell „Basic Information\"-Seite (Stand August 2022) und generische GiveWell-Selbstbeschreibungen:** geprüft, nicht relevant, weil keine inhaltlich neuen Informationen zu Empfehlungen oder Lücken.\n- **UIA-Yearbook-Profil IGN:** geprüft, nicht relevant, weil reine Organisationsbeschreibung hinter Paywall, keine Funding- oder Wirksamkeitsdaten.\n- **KFF-Analyse des US-FY2026-Budgetantrags:** geprüft, nur eingeschränkt relevant, weil Budget-*Antrag* (nicht verabschiedet); die tatsächlichen Auswirkungen sind über Global-Fund-/PMI-Berichte besser belegt.\n\n## 5. Delta-Bewertung\n\n1. **Säule D (größtes Delta):** LEEPs unmittelbare Funding-Lücke für 2026 ist laut GWWC (Stand Nov. 2025) geschlossen; das Feld erhält über Bloomberg, WHO-Aktionsplan und CGD/Coefficient erheblich mehr Mittel und Aufmerksamkeit. Die Empfehlung ist nicht durch Evidenz widerlegt — aber die *marginale* Kosteneffektivität zusätzlicher Kleinspenden und der „übersehen\"-Status sind zu überprüfen. Wichtig: Diese Lage bestand bereits **vor** der Sitzung vom 07.07.; sie ist kein neues Ereignis, sondern eine von den Modellen möglicherweise übersehene Information.\n2. **Säule B:** Deutlich verschlechterte Makro-Finanzierungslage (Global Fund 12,64 Mrd. statt 18 Mrd. USD; US-, EU-, Frankreich-Kürzungen; PMI-Einfrierung 2025 dokumentiert). Das **stärkt** die SMC-Empfehlung tendenziell (größere Lücken, bewährter Implementierer).\n3. **Säule A:** HKI durch GiveWell bis Juni 2027 finanziert (Dringlichkeit für Kleinspender kurzfristig geringer); IGN-Funding-Lage nicht verifizierbar (Demut: Datenlücke benennen); TaRL-Evidenz 2026 weiter gestärkt, aber Trägerzuordnung „Evidence Action\" im Protokoll ist mutmaßlich fehlerhaft (Pratham/TaRL Africa).\n4. **Säule C:** Keine widersprechende Evidenz; GovAI-Kernfinanzierung durch Coefficient Giving gesichert, Policy-Traktion (EU-Kodex-Vice-Chair) belegt; Durchsetzungsbeginn des AI Act am 02.08.2026 erhöht die Relevanz des Felds.\n\n## 6. Einberufungs-Entscheid\n\n**Nicht einberufen.** Prüfung der Kriterien: (a) Keine neue Evidenz widerspricht einer Empfehlung substantiell — die LEEP- und HKI-Befunde betreffen Funding-Timing, nicht Wirksamkeit. (b) Die LEEP-Lücke wurde zwar geschlossen, aber bereits vor der Sitzung (Nov. 2025) — es handelt sich um eine Korrektur der Informationsbasis, nicht um eine Änderung seit der Sitzung; zudem skaliert LEEP weiter und GWWC kündigt neue Fundraising-Phasen an. (c) Die Global-Fund-Lücke ist gravierend, stärkt aber die bestehende Konsens-Empfehlung, statt ihr zu widersprechen. Demut-Kanon: Im Zweifel nicht einberufen — alle Punkte sind in der regulären Monatssitzung gut aufgehoben, dort aber prioritär zu behandeln (LEEP-Marginalnutzen, TaRL-Attribution, IGN-Datenlücke).",
+  "costs": {
+    "currency": "EUR",
+    "total": 2.214,
+    "fx_rate_usd_eur": 0.85,
+    "model": "claude-fable-5",
+    "input_tokens": 175210,
+    "output_tokens": 14851,
+    "web_search_requests": 11,
+    "usd_tokens": 2.4947,
+    "usd_web_search": 0.11,
+    "usd_total": 2.6046
+  },
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/30255462425"
+}
