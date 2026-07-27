@@ -188,6 +188,58 @@
 		color: #d7aa55;
 	}
 
+	/* ---- §6 Türdurchgang: die Übergangsebene (door-passage.js baut sie beim
+	   Klick, baut sie nach der Fahrt ab). Fixe Vollbild-Ebene über allem, klick-
+	   durchlässig; perspective auf dem Container, preserve-3d auf dem Kamerawagen.
+	   Die Ebenen tragen dieselbe Cover-Geometrie wie das StageHero-Plate, damit
+	   sie exakt über dem realen Plate liegen. Nur Desktop; unter 1200 px entsteht
+	   die Ebene gar nicht erst (Gate im Klick-Handler). */
+	/* Alle Passage-Regeln :global — door-passage.js erzeugt die Elemente per JS
+	   (außerhalb des Svelte-Komponentenbaums), sie tragen keinen Scope-Hash. */
+	:global(.passage-layer) {
+		position: fixed;
+		inset: 0;
+		z-index: 5;
+		overflow: hidden;
+		pointer-events: none;
+		/* perspective ≈ 0,6 × Fahrtstrecke (1400) → die nahe Wand passiert die Kamera
+		   bei ≈ 60 % der Fahrt und zieht danach vorbei (Fahrt statt Zoom, §6-Nachtrag
+		   Ursache 1). perspective-origin = gemessener Aperturmittelpunkt am Cover-Crop
+		   (Ursache 2) — die Kamera zielt genau auf die Tür. */
+		perspective: 850px;
+		perspective-origin: 48.8% 41%;
+		/* Dunkler Void: sobald die nahe Wand vorbeigezogen ist, füllt der Zielraum
+		   den Rahmen aus dem Schwarz heraus — nicht der reale Ausgangsraum scheint
+		   in den Rändern durch. */
+		background: #05090b;
+	}
+	:global(.passage-dolly) {
+		position: absolute;
+		inset: 0;
+		transform-style: preserve-3d;
+		will-change: transform;
+	}
+	:global(.passage-layer .p-plane) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100svh;
+		object-fit: cover;
+		object-position: center top;
+		backface-visibility: hidden;
+	}
+	/* Ferne Ebene NICHT gegenskaliert: die Kamera erreicht sie am Fahrtende bei
+	   Cover-Skalierung 1,0 (Handoff-Deckungsgleichheit, §6.3). */
+	:global(.passage-layer .p-far) {
+		transform: translateZ(-1400px);
+	}
+	/* Wand-mit-Loch und die Flügel liegen auf z=0 (mit der Wand); die WAAPI-
+	   Spreizung (translateX) der Flügel gleitet hinter die opake Laibung. */
+	:global(.passage-layer .p-near-hole),
+	:global(.passage-layer .p-leaf) {
+		transform: translateZ(0);
+	}
+
 	/* Übergänge zwischen den Räumen (nur installiert, wenn API + no-preference). */
 	@media (prefers-reduced-motion: no-preference) {
 		::view-transition-old(root),

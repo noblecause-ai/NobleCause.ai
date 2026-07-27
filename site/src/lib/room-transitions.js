@@ -21,6 +21,7 @@ import {
 	TUBE_FILLED
 } from './stage.js';
 import { langOfPath } from './i18n/index.js';
+import { runArchiveToStudyPassage, passageActive } from './door-passage.js';
 
 // DE- und EN-Räume bilden je eine eigene Folge — Übergänge nur innerhalb einer
 // Sprache; der Sprachwechsel selbst ist ein schlichter, sofortiger Wechsel.
@@ -90,6 +91,35 @@ export function installRoomTransitions() {
 			const to = new URL(door.href, window.location.href).pathname;
 			if (from === to || !roomOfPath(from) || !roomOfPath(to)) return;
 			if (langOfPath(from) !== langOfPath(to)) return;
+			// §6 Türdurchgang: nur Archiv → Study, nur Desktop ≥1200 px → echte
+			// Kamerafahrt statt Portalblende. door-passage baut die Übergangsebene,
+			// navigiert selbst und ruft playStage() nach der Übergabe. Fällt eines
+			// der Kriterien, läuft unverändert die Blende darunter (return unten).
+			if (
+				roomOfPath(from) === 'archive' &&
+				roomOfPath(to) === 'study' &&
+				window.innerWidth >= 1200 &&
+				!passageActive()
+			) {
+				event.preventDefault();
+				el.classList.add('stage-clearing');
+				el.style.setProperty('--retreat', '1');
+				const clearPassage = () => {
+					el.classList.remove('stage-clearing');
+					el.style.removeProperty('--retreat');
+				};
+				const passGuard = setTimeout(clearPassage, 3200);
+				runArchiveToStudyPassage({
+					href: to,
+					farSrc: '/media/scenes/antechamber-display.avif',
+					onDone: () => {
+						clearTimeout(passGuard);
+						clearPassage();
+						playStage();
+					}
+				});
+				return;
+			}
 			event.preventDefault();
 			el.classList.add('stage-clearing');
 			el.style.setProperty('--retreat', '1');
@@ -117,6 +147,13 @@ export function installRoomTransitions() {
 		const to = navigation.to?.url.pathname;
 		if (!from || !to || from === to) return;
 		const mode = classifyEntry(from, to);
+		// §6: läuft der Türdurchgang, IST die Übergangsebene der Übergang — keine
+		// eigene VT-Fahrt, kein Block. Zielraum nur ARMEN (nicht spielen); die
+		// Passage ruft playStage() nach der Übergabe (arrival-Deferral).
+		if (passageActive()) {
+			applyEntryMode(mode);
+			return;
+		}
 		const order = ORDERS.find((candidate) => candidate.includes(from) && candidate.includes(to));
 		const tubeFrom = mode === 'arrival' ? TUBE_FILLED[roomOfPath(from)] : null;
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
