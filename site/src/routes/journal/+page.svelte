@@ -28,7 +28,9 @@
 			<li>
 				<a href="/journal/{e.id}/">{e.date}</a>
 				<span class="muted">
-					· Sitzung {e.session_ref}
+					{#if e.session_ref}
+						· Sitzung {e.session_ref}
+					{/if}
 					· {e.findings_count} Fund{e.findings_count === 1 ? '' : 'e'}
 					{#if e.convene}
 						· <span class="life">Einberufung empfohlen</span>

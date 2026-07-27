@@ -5,7 +5,22 @@
 		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		%sveltekit.head%
-		<script>document.documentElement.classList.add('js');</script>
+		<script>
+			document.documentElement.classList.add('js');
+			// Bühnen-Boot (§3 Schritt 2): nur die sechs Raum-Routen (DE+EN) und nur
+			// beim harten Seitenaufruf — der ist immer ein frischer Direktaufruf.
+			// Die Klassen stehen so schon vor dem ersten Paint: die Eintritts-
+			// Choreografie läuft ohne Aufblitzen des Komplettzustands. No-JS: dieses
+			// Script läuft nie — das Dokument bleibt vollständig. Reduced-Motion
+			// versteckt per CSS-Media-Query ohnehin nichts. Kanonische Pfadliste:
+			// src/lib/i18n/index.js (roomPaths) — hier als stabile Kopie.
+			(function () {
+				var p = location.pathname.replace(/\/$/, '') || '/';
+				if (['/', '/ratssaal', '/archiv', '/en', '/en/council', '/en/archive'].includes(p)) {
+					document.documentElement.classList.add('stage-armed', 'stage-play', 'mode-fresh');
+				}
+			})();
+		</script>
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>

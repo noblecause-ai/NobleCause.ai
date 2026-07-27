@@ -18,7 +18,10 @@
 <h1>Wart-Dossier vom {e.date}</h1>
 
 <p class="meta muted">
-	Referenz: <a href="/sessions/{e.session_ref}/">Sitzung {e.session_ref}</a> · Modell
+	{#if e.session_ref}
+		Referenz: <a href="/sessions/{e.session_ref}/">Sitzung {e.session_ref}</a> ·
+	{/if}
+	Modell
 	<code>{e.model}</code>
 	{#if e.costs?.total != null}
 		· Laufkosten {e.costs.total.toFixed(2)} €

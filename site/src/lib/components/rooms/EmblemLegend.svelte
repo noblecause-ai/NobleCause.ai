@@ -7,7 +7,7 @@
 <ul class="emblem-legend" style="--cols:{cols}" aria-label={label}>
 	{#each items as item (item.label)}
 		<li>
-			<img src={item.src} alt="" width="48" height="48" />
+			<img src={item.src} alt="" width="48" height="48" loading="lazy" />
 			<strong>{item.label}</strong>
 		</li>
 	{/each}

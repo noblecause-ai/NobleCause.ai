@@ -14,7 +14,7 @@
 
 <article class="rec-card">
 	<header>
-		<img src={emblem?.src} alt="" width="48" height="48" />
+		<img src={emblem?.src} alt="" width="48" height="48" loading="lazy" />
 		<div>
 			<p class="rec-area">{emblem?.label ?? rec.pillarName}</p>
 			<h3>{rec.hasConsensus ? rec.organization.name : t.council.noConsensus}</h3>
