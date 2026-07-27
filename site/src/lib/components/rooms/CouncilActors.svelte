@@ -251,20 +251,26 @@
 
 	/* Namens-Plakette: Hover-Zugabe — dieselbe Information steht im alt-Text;
 	   kein Tab-Stopp auf einem nicht-interaktiven Element (StageTube-Regel).
-	   Verankert an der Basislinie (17,5 % über der Box-Unterkante = knapp über
-	   der Viewport-Unterkante — weiter unten läge sie im Anschnitt). */
+	   ÜBER DER PULT-OBERKANTE (Runde B §4.2, wie Scout/Warden c87cb97): verankert
+	   an der Oberkante des Pults (Messinglampe ≈ 13 % der Box, am AVIF gemessen),
+	   z-index 2 hebt sie über das Bild (.pult-figure > img trägt z-index: 1 — die
+	   Falle: sonst sticht das Bild durch den Text). Schwebende Vignette statt
+	   Kasten (wie .room-plaque / die Study-Plaketten) — ein Rahmen läse über der
+	   Bühne als aufgeklebtes UI. Reine Anzeige, kein Ziel für den Zeiger. */
 	.pult-figure figcaption {
 		position: absolute;
 		left: 50%;
-		bottom: 17.5%;
-		transform: translateX(-50%);
+		bottom: auto;
+		top: 13%;
+		transform: translate(-50%, calc(-100% - 0.4rem));
+		z-index: 2;
 		width: max-content;
 		max-width: 15rem;
-		padding: 0.45rem 0.7rem;
+		padding: 0.35rem 0.95rem 0.45rem;
 		text-align: center;
-		background: rgba(5, 8, 9, 0.82);
-		border: 1px solid rgba(166, 123, 61, 0.55);
-		border-radius: 3px;
+		background: radial-gradient(ellipse 82% 94% at 50% 50%, rgba(3, 6, 7, 0.84), rgba(3, 6, 7, 0) 76%);
+		text-shadow: 0 1px 7px rgba(3, 6, 7, 0.95);
+		pointer-events: none;
 		opacity: 0;
 		transition: opacity 0.35s ease;
 	}
