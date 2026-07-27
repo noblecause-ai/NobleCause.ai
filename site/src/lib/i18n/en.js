@@ -267,8 +267,9 @@ export const en = {
 	archive: {
 		roomWord: 'Archive',
 		lead: 'Every session, complete and unchanged — recommendations, disagreement, costs.',
-		// Alt text for the card-index cabinets (second layer): pure scenery, no data.
+		// Alt text for the furniture (second layer): pure scenery, no data.
 		registerAlt: 'Card index of the archive',
+		pultAlt: 'Archive desk with a reading lamp and an open folio',
 		sessionsTitle: 'Session archive',
 		sessionLabel: (number) => `Session ${number}`,
 		// Chip marker of an open area in the session row (§5.2).
