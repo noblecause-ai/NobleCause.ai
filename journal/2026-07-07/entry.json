@@ -3,6 +3,7 @@
   "date": "2026-07-07",
   "session_ref": "2026-07",
   "model": "claude-fable-5",
+  "model_label": "Claude Fable 5 (Anthropic)",
   "search_queries": [
     "Helen Keller vitamin A supplementation funding gap 2026",
     "Teaching at the Right Level evidence 2026",

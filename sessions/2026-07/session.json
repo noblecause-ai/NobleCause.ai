@@ -11,6 +11,18 @@
       "A": "keine Einigung — ob Kindergesundheit, Salz mit Jod oder bessere Schulbildung die stärkste Zukunftsinvestition ist."
     }
   },
+  "plain_en": {
+    "question": "Where does €1,000 donated in 2026 achieve the greatest impact in each of the four areas?",
+    "recommendations": {
+      "A": null,
+      "B": "Relieve suffering → Malaria Consortium, because medicines demonstrably protect children from illness at low cost during peak malaria season.",
+      "C": "Major risks → Centre for the Governance of AI, because clear rules for advanced AI are meant to prevent great future harm.",
+      "D": "Easily overlooked → Lead Exposure Elimination Project, because stricter rules against lead in paint protect children from poisoning."
+    },
+    "dissent": {
+      "A": "no agreement — on whether child health, iodized salt, or better schooling is the strongest investment in the future."
+    }
+  },
   "schema_version": 2,
   "id": "2026-07",
   "number": 1,

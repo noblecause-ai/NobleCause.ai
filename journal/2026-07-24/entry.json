@@ -3,6 +3,7 @@
   "date": "2026-07-24",
   "session_ref": null,
   "model": "claude-fable-5",
+  "model_label": "Claude Fable 5 (Anthropic)",
   "deputation_note": "Entwurf: Opus (separate Rolle, Input-Grenze nur Rats-Wortlaut). Freigabe: interaktive Fable-Instanz in deklarierter Vertretung des Wart-Amtes (Bootstrap).",
   "search_queries": [],
   "findings": [],

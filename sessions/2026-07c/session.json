@@ -3,9 +3,19 @@
     "question": "Bereich Zukunft: Ist Kindergesundheit (Helen Keller) oder Bildung (Pratham/TaRL) besser belegt?",
     "recommendations": {
       "A": "Zukunft → Helen Keller International, weil ihre Wirkung besser belegt ist als die der geprüften Bildungs-Alternative; der Rat will Letztere später erneut prüfen.",
-      "B": "Leid lindern → Against Malaria Foundation, weil imprägnierte Moskitonetze Malaria besonders günstig verhindern.",
+      "B": "Leid lindern → Against Malaria Foundation, weil imprägnierte Moskitonetze Malaria besonders günstig verhindern. Zwei der drei Modelle empfahlen die Against Malaria Foundation; das dritte nannte stattdessen Helen Keller International.",
       "C": "Große Gefahren → Nuclear Threat Initiative, weil Vorsorge gegen Pandemien und Biogefahren großen künftigen Schaden abwenden kann.",
       "D": "Was sonst übersehen wird → Lead Exposure Elimination Project, weil Regeln gegen Blei in Farben Kinder vor bleibenden Schäden schützen."
+    },
+    "dissent": {}
+  },
+  "plain_en": {
+    "question": "Area Future: Is child health (Helen Keller) or education (Pratham/TaRL) better supported by evidence?",
+    "recommendations": {
+      "A": "Future → Helen Keller International, because its impact is better documented than that of the education alternative under review; the council intends to re-examine the latter later.",
+      "B": "Relieve suffering → Against Malaria Foundation, because insecticide-treated mosquito nets prevent malaria at particularly low cost. Two of the three models recommended the Against Malaria Foundation; the third named Helen Keller International instead.",
+      "C": "Major risks → Nuclear Threat Initiative, because preparedness against pandemics and biological threats can avert great future harm.",
+      "D": "Easily overlooked → Lead Exposure Elimination Project, because rules against lead in paint protect children from lasting harm."
     },
     "dissent": {}
   },

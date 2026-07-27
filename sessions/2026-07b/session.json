@@ -9,6 +9,16 @@
     },
     "dissent": {}
   },
+  "plain_en": {
+    "question": "Do the four recommendations from the first session hold up against the current evidence?",
+    "recommendations": {
+      "A": "Future → Helen Keller International, because vitamin A supplements for children have a particularly well-documented impact per euro.",
+      "B": "Relieve suffering → Malaria Consortium, because medicines demonstrably protect children from illness at low cost during peak malaria season.",
+      "C": "Major risks → Nuclear Threat Initiative, because preparedness against pandemics and biological threats can avert great future harm.",
+      "D": "Easily overlooked → Lead Exposure Elimination Project, because stricter rules against lead in paint protect children from poisoning."
+    },
+    "dissent": {}
+  },
   "schema_version": 2,
   "id": "2026-07b",
   "number": 2,
