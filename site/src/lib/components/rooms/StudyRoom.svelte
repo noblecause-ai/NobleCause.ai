@@ -18,6 +18,7 @@
 	import { locales, roomPaths } from '$lib/i18n/index.js';
 	import { formatDate } from '$lib/format.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
+	import { DOOR_PASSAGES } from '$lib/door-passages.js';
 
 	let { home, lang = 'de' } = $props();
 
@@ -63,7 +64,7 @@
 		scene="/media/scenes/antechamber-display.avif"
 		sceneMobile="/media/scenes/antechamber-portrait-display.avif"
 		sceneMobile800="/media/scenes/antechamber-portrait-800.avif"
-		sceneOpen="/media/scenes/antechamber-door-open-display.avif"
+		passage={DOOR_PASSAGES.study}
 		bgPos="center top"
 		title={t.common.heroTitle}
 		pitch={t.common.heroPitch}

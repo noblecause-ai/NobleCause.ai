@@ -420,6 +420,12 @@ test('Embleme, Szenen und Tür-Bilder sind referenziert und im Deploy enthalten'
 		'scenes/antechamber-display-lo.avif',
 		'actors/door-leaf-left.avif',
 		'actors/door-leaf-right.avif',
+		// §2 Study-Ruhe-Stapel/Durchgang (Freischnitt aus antechamber-display,
+		// Ziel hall): Wand-mit-Loch + Flügel + ferne Kleinauflösung des Councils.
+		'scenes/antechamber-wall-hole.avif',
+		'scenes/hall-display-lo.avif',
+		'actors/antechamber-leaf-left.avif',
+		'actors/antechamber-leaf-right.avif',
 		'actors/pult-lamp.avif'
 	];
 	for (const asset of assets) {

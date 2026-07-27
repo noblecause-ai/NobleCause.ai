@@ -22,6 +22,15 @@ export const DOOR_PASSAGES = {
 		farHi: '/media/scenes/antechamber-display.avif',
 		farLo: '/media/scenes/antechamber-display-lo.avif',
 		origin: '48.8% 41%'
+	},
+	study: {
+		target: 'council',
+		wallHole: '/media/scenes/antechamber-wall-hole.avif',
+		leafLeft: '/media/actors/antechamber-leaf-left.avif',
+		leafRight: '/media/actors/antechamber-leaf-right.avif',
+		farHi: '/media/scenes/hall-display.avif',
+		farLo: '/media/scenes/hall-display-lo.avif',
+		origin: '49.5% 55%'
 	}
-	// study (→ hall) und council (→ archive) folgen in §2 nach dem Freischnitt.
+	// council (→ archive) folgt nach abgenommenem Study.
 };
