@@ -612,6 +612,16 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 		!councilEnHtml.includes('antwortet getrennt'),
 		'councilEn: deutsche Rolle darf EN nicht erscheinen'
 	);
+	// Tür-Hotspot: die gemalte Saal-Tür führt weiter ins Archiv (Rundgang).
+	assert.ok(councilHtml.includes('class="door-hotspot'), 'council: Tür-Hotspot fehlt');
+	assert.ok(
+		councilHtml.includes('aria-label="Die schlichte Tür: The Archive"'),
+		'council: Tür-Hotspot-Ziel/aria (Die schlichte Tür: The Archive) fehlt'
+	);
+	assert.ok(
+		councilEnHtml.includes('aria-label="The plain door: The Archive"'),
+		'councilEn: Tür-Hotspot-Ziel/aria (The plain door: The Archive) fehlt'
+	);
 	for (const asset of [
 		'actors/lectern.avif',
 		'scenes/hall-portrait-display.avif',

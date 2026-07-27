@@ -27,6 +27,19 @@
 	void orgEn; // Prop bleibt verdrahtet (Mechanismus), hat hier keine Anzeigefläche.
 
 	let t = $derived(locales[lang]);
+	// Die große Tür im Saal-Plate führt WEITER ins Archiv — Daten wie bei der
+	// Tür-Karte (sub/label). Der Rundgang läuft Study → Council → Archive.
+	let archiveDoor = $derived(t.council.doors.find((door) => door.label === 'The Archive'));
+
+	// Zoom-Ursprung der Raumfahrt auf die Türmitte legen (Tastatur/Kartenrand) —
+	// reine progressive Enhancement; ohne JS bleibt der Link ein Link.
+	function setDoorOrigin(event) {
+		const rect = event.currentTarget.getBoundingClientRect();
+		document.documentElement.style.setProperty(
+			'--vt-origin',
+			`${rect.left + rect.width / 2}px ${rect.top + rect.height / 2}px`
+		);
+	}
 	// Zeitschicht: das geplante Sitzungsdatum wird server-gerendert (No-JS = voll).
 	// Ob es verstrichen ist, entscheidet NUR der Client relativ zum Betrachtungs-
 	// zeitpunkt — kein buildTime, kein Überfällig-Zustand. $effect läuft client-only.
@@ -77,6 +90,21 @@
 		roomWord={t.council.roomWord}
 		roomLead={t.council.lead}
 	>
+		{#snippet overlay()}
+			{#if archiveDoor}
+				<!-- Die Tür IM Saal-Bild: Hotspot auf der gemalten Doppeltür, führt
+				     weiter ins Archiv. Echter Link (No-JS/Tastatur); die Tür-Karte
+				     unten bleibt der auffindbare Weg. Ratssaal-eigene Türgeometrie
+				     (s. CSS) — Unterkante über der Zählmaschine. -->
+				<a
+					class="door-hotspot"
+					href={archiveDoor.href}
+					aria-label="{archiveDoor.sub}: {archiveDoor.label}"
+					title="{archiveDoor.sub}: {archiveDoor.label}"
+					onclick={setDoorOrigin}
+				></a>
+			{/if}
+		{/snippet}
 		{#snippet scene2()}
 			<!-- Zweite Ebene: die Lesepulte der Teilnehmer nehmen von unten ihre
 			     Plätze ein (Kantenprinzip) — generisch aus modelTracks, N Pulte
@@ -178,6 +206,52 @@
 {/if}
 
 <style>
+	/* ---- Tür-Hotspot (Ratssaal-eigene Werte) ------------------------------
+	   Türzone des hall-Plate (1672×941, 16:9), am gerenderten Plate gemessen
+	   x ≈ 43,5–57,9 %, y ≈ 18,3–65,9 %. Unterkante bewusst bei 66 %, NICHT
+	   tiefer — sonst liegt der Hotspot über der Zählmaschine auf ihrem Sockel
+	   und schluckt sie. object-position center top → die Mitte überlebt jeden
+	   cover-Crop; ab 1200 px immer wirksam. Zwei Fälle je Viewport-Ratio ggü.
+	   16:9 (wie Study/Archive). Hover/Fokus öffnet die Tür (Crossfade in
+	   StageHero); die Blende liest ihr Rechteck beim Klick aus
+	   getBoundingClientRect(). */
+	.door-hotspot {
+		display: none;
+	}
+	@media (min-width: 1200px) {
+		.door-hotspot {
+			display: block;
+			position: absolute;
+			border-radius: 6px;
+			cursor: pointer;
+			pointer-events: auto;
+		}
+	}
+	/* Bild füllt die Höhe (Viewport schmaler als 16:9): Bildbreite = 177,78 svh,
+	   Mitte bei 50 vw → Türzone in svh um 50 vw; y direkt in svh. */
+	@media (min-width: 1200px) and (max-aspect-ratio: 16/9) {
+		.door-hotspot {
+			left: calc(50vw - 11.56svh);
+			top: 18.3svh;
+			width: 25.6svh;
+			height: 47.6svh;
+		}
+	}
+	/* Bild füllt die Breite (Viewport breiter als 16:9): Bildhöhe = 56,25 vw,
+	   Vertikal-Crop ab top → Türzone komplett in vw. */
+	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
+		.door-hotspot {
+			left: 43.5vw;
+			top: 10.29vw;
+			width: 14.4vw;
+			height: 26.78vw;
+		}
+	}
+	.door-hotspot:focus-visible {
+		outline: 2px solid #d7aa55;
+		outline-offset: 2px;
+	}
+
 	/* „Wie gezählt wurde": je Bereich eine Zeile — Kopf mit Emblem, Bereich und
 	   Zählstand, darunter die Modell-Marken mit den Nennungen (Revisionen in
 	   der Marke: Erstvotum durchgestrichen, Schlussvotum darunter). */
