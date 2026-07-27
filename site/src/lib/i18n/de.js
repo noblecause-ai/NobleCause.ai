@@ -269,6 +269,8 @@ export const de = {
 	archive: {
 		roomWord: 'Archive',
 		lead: 'Jede Sitzung, vollständig und unverändert — Empfehlungen, Uneinigkeit, Kosten.',
+		// Alt-Text der Karteikästen (zweite Ebene): reine Kulisse, kein Datenbezug.
+		registerAlt: 'Karteikasten des Archivs',
 		sessionsTitle: 'Sitzungsarchiv',
 		sessionLabel: (number) => `Sitzung ${number}`,
 		// Chip-Markierung eines offenen Bereichs in der Sitzungszeile (§5.2).

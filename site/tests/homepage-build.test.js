@@ -413,7 +413,9 @@ test('Embleme, Szenen und Tür-Bilder sind referenziert und im Deploy enthalten'
 		'scenes/hall-display.avif',
 		'scenes/archive-display.avif',
 		'scenes/archive-portrait-display.avif',
-		'scenes/archive-portrait-800.avif'
+		'scenes/archive-portrait-800.avif',
+		'scenes/archive-door-open-display.avif',
+		'actors/register.avif'
 	];
 	for (const asset of assets) {
 		assert.ok(html.includes(`/media/${asset}`), `kein Raum referenziert ${asset}`);
@@ -550,12 +552,15 @@ test('Bühne: zweite Ebene — Akteure und Wolkenzug stehen im pragerenderten HT
 		'studyEn: Scout-Satz fehlt (EN)'
 	);
 	assert.ok(!studyEnHtml.includes('der Späher'), 'studyEn: deutscher Gloss darf EN nicht erscheinen');
-	// Scout/Warden gehören nur in die Study; das Council trägt eigene Akteure
-	// (Lesepulte — eigener Test unten), das Archiv bleibt bis zur
-	// Register-Lieferung ohne Akteur-Ebene.
+	// Scout/Warden gehören nur in die Study; das Council trägt Lesepulte, das
+	// Archiv trägt Karteikästen (register) — je eigener Test unten. Kein Raum
+	// trägt die Cutouts eines anderen.
 	const archiveHtml = readBuilt(PAGES.archive);
 	if (archiveHtml === null) return context.skip('zuerst npm run build ausführen');
-	assert.ok(!archiveHtml.includes('/media/actors/'), 'archive: Akteur-Ebene gehört nicht in diesen Raum');
+	assert.ok(
+		!archiveHtml.includes('/media/actors/lectern.avif'),
+		'archive: Lesepult gehört ins Council, nicht ins Archiv'
+	);
 	for (const room of ['council', 'archive']) {
 		const html = readBuilt(PAGES[room]);
 		assert.ok(!html.includes('/media/actors/scout.avif'), `${room}: Scout gehört nicht in diesen Raum`);
@@ -615,6 +620,48 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 	]) {
 		assert.ok(fs.existsSync(path.join(SITE, 'build', 'media', asset)), `Deploy fehlt: ${asset}`);
 	}
+});
+
+test('Bühne: zweite Ebene Archiv — zwei Karteikästen + Tür-Hotspot (DE+EN)', (context) => {
+	// No-JS-Wahrheit: die Karteikästen sind Teil des statischen Dokuments —
+	// REINE KULISSE (keine Datenbindung, feste Zahl 2, generisches alt), kein
+	// Tab-Stopp auf den Figuren. Der Tür-Hotspot führt zurück in die Study.
+	const archiveHtml = readBuilt(PAGES.archive);
+	const archiveEnHtml = readBuilt(PAGES.archiveEn);
+	if (archiveHtml === null || archiveEnHtml === null) {
+		return context.skip('zuerst npm run build ausführen');
+	}
+	for (const [html, room] of [
+		[archiveHtml, 'archive'],
+		[archiveEnHtml, 'archiveEn']
+	]) {
+		assert.ok(html.includes('/media/actors/register.avif'), `${room}: Register-Cutout fehlt`);
+		assert.equal(
+			(html.match(/class="rail register/g) ?? []).length,
+			2,
+			`${room}: erwartet genau zwei Karteikästen (feste Kulisse, keine Datenbindung)`
+		);
+		assert.ok(
+			!/class="reg-figure[^"]*"[^>]*tabindex/.test(html),
+			`${room}: Karteikasten-Figur trägt tabindex (nicht-interaktiv = kein Tab-Stopp)`
+		);
+		assert.ok(html.includes('class="door-hotspot'), `${room}: Tür-Hotspot fehlt`);
+	}
+	// Alt-Text generisch (kein Datenbezug) — DE/EN gespiegelt.
+	assert.ok(archiveHtml.includes('Karteikasten des Archivs'), 'archive: generisches Register-alt fehlt');
+	assert.ok(
+		archiveEnHtml.includes('Card index of the archive'),
+		'archiveEn: generisches Register-alt fehlt (EN)'
+	);
+	// Der Tür-Hotspot führt zurück in die Study (Rundgang schließt sich).
+	assert.ok(
+		archiveHtml.includes('aria-label="Zurück: The Study"'),
+		'archive: Tür-Hotspot-Ziel/aria (Zurück: The Study) fehlt'
+	);
+	assert.ok(
+		archiveEnHtml.includes('aria-label="Back: The Study"'),
+		'archiveEn: Tür-Hotspot-Ziel/aria (Back: The Study) fehlt'
+	);
 });
 
 test('Zeitschicht: schedule.last_journal zeigt auf einen Research-Lauf (search_queries > 0)', () => {
