@@ -116,72 +116,83 @@ export async function runDoorPassage({
 		abortCurrent = null;
 	};
 
-	// Ziel vorbereiten, DANN erst fahren (Handoff §6.3).
-	await prepareTarget(href, farSrc);
-	if (aborted) return finish();
-
-	// Ebene sanft einblenden (kaschiert Hover→Frame-1, §6.4). Frame 1 gleicht dem
-	// Ruhe-Stapel (offene Flügel) — der Einblend ist damit unmerklich.
-	layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 90, fill: 'forwards' });
-	await nextFrame();
-
-	// Die Flügel stehen offen und bleiben stehen (§6-Nachtrag: sie sitzen näher,
-	// müssen die Wand früher verlassen) — keine Spreiz-Animation mehr, nur der
-	// leafFade unten (früher als die Wand). Ihr translateX steht als inline-Style.
-
-	// Kamerafahrt: translateZ 0 → Z_FAR. Der einzige Kern-Antrieb.
-	const ride = dolly.animate(
-		[{ transform: 'translateZ(0px)' }, { transform: `translateZ(${Z_FAR}px)` }],
-		{ duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' }
-	);
-
-	// Die nahe Wand erst SPÄT ausblenden — sie soll riesig am Rand VORBEIZIEHEN,
-	// nicht wegblenden. Blur hochziehen, während sie vorbeizieht (nur noch Textur).
-	// Ausgeblendet, BEVOR sie zum Riesen-Blur wird (die Wand passiert die Kamera bei
-	// ≈61 % der Strecke) — sonst deckt der Blur den Zielraum. Blur zieht vorher hoch.
-	const nearFade = [
-		{ opacity: 1, filter: 'blur(0px)', offset: 0 },
-		{ opacity: 1, filter: 'blur(2px)', offset: 0.5 },
-		{ opacity: 0.7, filter: 'blur(8px)', offset: 0.66 },
-		{ opacity: 0, filter: 'blur(14px)', offset: 0.78 },
-		{ opacity: 0, filter: 'blur(14px)', offset: 1 }
-	];
-	nearHole.animate(nearFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
-	// Die Flügel stehen vorn und verlassen die Wand etwas FRÜHER (vordere Tiefenstufe).
-	const leafFade = [
-		{ opacity: 1, filter: 'blur(0px)', offset: 0 },
-		{ opacity: 1, filter: 'blur(4px)', offset: 0.5 },
-		{ opacity: 0, filter: 'blur(10px)', offset: 0.66 },
-		{ opacity: 0, filter: 'blur(10px)', offset: 1 }
-	];
-	leafLeft.animate(leafFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
-	leafRight.animate(leafFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
-
-	// Warmer Schwellen-Bloom an der Laibung im Moment des Durchtritts.
-	layer.animate(
-		[
-			{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 0 },
-			{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 0.68 },
-			{ boxShadow: 'inset 0 0 42vw rgba(255,196,118,0.18)', offset: 0.88 },
-			{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 1 }
-		],
-		{ duration: RIDE_MS, fill: 'forwards' }
-	);
-
-	// Gegen Fahrtende navigieren; onNavigate() unterdrückt die VT-Fahrt.
-	await delay(RIDE_MS * NAV_AT);
-	if (aborted) return finish();
-	onNavigate?.();
+	// Der ganze Fahrt-Körper steht in try/catch (Runde G): würfe eine .animate()-
+	// Stufe (o. Ä.), bliebe `active` sonst dauerhaft true und JEDER Folgeklick fiele
+	// auf die Blende (State-Leak, exakt das „Durchgang ist weg"-Bild aus anderer
+	// Ursache). finish() setzt `active` in jedem Fall zurück und entfernt die Ebene;
+	// die Bühne holt der Watchdog (passGuard) zurück.
 	try {
-		await goto(href);
-	} catch {
-		/* Navigation abgebrochen */
-	}
+		// Ziel vorbereiten, DANN erst fahren (Handoff §6.3).
+		await prepareTarget(href, farSrc);
+		if (aborted) return finish();
 
-	// Fahrt auslaufen lassen (letzter Frame = ferne Ebene bei Cover 1,0), dann
-	// abbauen: der reale Study-Raum steht bereits dahinter (deckungsgleich).
-	await Promise.race([ride.finished.catch(() => {}), delay(RIDE_MS - RIDE_MS * NAV_AT + 400)]);
-	await nextFrame();
-	finish();
-	onDone?.(); // playStage() extern
+		// Ebene sanft einblenden (kaschiert Hover→Frame-1, §6.4). Frame 1 gleicht dem
+		// Ruhe-Stapel (offene Flügel) — der Einblend ist damit unmerklich.
+		layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 90, fill: 'forwards' });
+		await nextFrame();
+
+		// Die Flügel stehen offen und bleiben stehen (§6-Nachtrag: sie sitzen näher,
+		// müssen die Wand früher verlassen) — keine Spreiz-Animation mehr, nur der
+		// leafFade unten (früher als die Wand). Ihr translateX steht als inline-Style.
+
+		// Kamerafahrt: translateZ 0 → Z_FAR. Der einzige Kern-Antrieb.
+		const ride = dolly.animate(
+			[{ transform: 'translateZ(0px)' }, { transform: `translateZ(${Z_FAR}px)` }],
+			{ duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' }
+		);
+
+		// Die nahe Wand erst SPÄT ausblenden — sie soll riesig am Rand VORBEIZIEHEN,
+		// nicht wegblenden. Blur hochziehen, während sie vorbeizieht (nur noch Textur).
+		// Ausgeblendet, BEVOR sie zum Riesen-Blur wird (die Wand passiert die Kamera bei
+		// ≈61 % der Strecke) — sonst deckt der Blur den Zielraum. Blur zieht vorher hoch.
+		const nearFade = [
+			{ opacity: 1, filter: 'blur(0px)', offset: 0 },
+			{ opacity: 1, filter: 'blur(2px)', offset: 0.5 },
+			{ opacity: 0.7, filter: 'blur(8px)', offset: 0.66 },
+			{ opacity: 0, filter: 'blur(14px)', offset: 0.78 },
+			{ opacity: 0, filter: 'blur(14px)', offset: 1 }
+		];
+		nearHole.animate(nearFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
+		// Die Flügel stehen vorn und verlassen die Wand etwas FRÜHER (vordere Tiefenstufe).
+		const leafFade = [
+			{ opacity: 1, filter: 'blur(0px)', offset: 0 },
+			{ opacity: 1, filter: 'blur(4px)', offset: 0.5 },
+			{ opacity: 0, filter: 'blur(10px)', offset: 0.66 },
+			{ opacity: 0, filter: 'blur(10px)', offset: 1 }
+		];
+		leafLeft.animate(leafFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
+		leafRight.animate(leafFade, { duration: RIDE_MS, easing: RIDE_EASE, fill: 'forwards' });
+
+		// Warmer Schwellen-Bloom an der Laibung im Moment des Durchtritts.
+		layer.animate(
+			[
+				{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 0 },
+				{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 0.68 },
+				{ boxShadow: 'inset 0 0 42vw rgba(255,196,118,0.18)', offset: 0.88 },
+				{ boxShadow: 'inset 0 0 0 rgba(255,196,118,0)', offset: 1 }
+			],
+			{ duration: RIDE_MS, fill: 'forwards' }
+		);
+
+		// Gegen Fahrtende navigieren; onNavigate() unterdrückt die VT-Fahrt.
+		await delay(RIDE_MS * NAV_AT);
+		if (aborted) return finish();
+		onNavigate?.();
+		try {
+			await goto(href);
+		} catch {
+			/* Navigation abgebrochen */
+		}
+
+		// Fahrt auslaufen lassen (letzter Frame = ferne Ebene bei Cover 1,0), dann
+		// abbauen: der reale Study-Raum steht bereits dahinter (deckungsgleich).
+		await Promise.race([ride.finished.catch(() => {}), delay(RIDE_MS - RIDE_MS * NAV_AT + 400)]);
+		await nextFrame();
+		finish();
+		onDone?.(); // playStage() extern
+	} catch (e) {
+		// Härtung: aktive Fahrt in jedem Fall sauber beenden — sonst hinge active.
+		console.error('Passage: Fahrt fehlgeschlagen, Ebene wird abgebaut:', e);
+		finish();
+	}
 }
