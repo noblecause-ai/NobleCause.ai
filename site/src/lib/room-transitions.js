@@ -22,7 +22,7 @@ import {
 } from './stage.js';
 import { langOfPath } from './i18n/index.js';
 import { runDoorPassage, passageActive } from './door-passage.js';
-import { DOOR_PASSAGES } from './door-passages.js';
+import { DOOR_PASSAGES, passageOrigin } from './door-passages.js';
 
 // DE- und EN-Räume bilden je eine eigene Folge — Übergänge nur innerhalb einer
 // Sprache; der Sprachwechsel selbst ist ein schlichter, sofortiger Wechsel.
@@ -119,7 +119,10 @@ export function installRoomTransitions() {
 					leafLeft: passage.leafLeft,
 					leafRight: passage.leafRight,
 					far: passage.farHi,
-					origin: passage.origin,
+					// Origin zur Laufzeit aus der Cover-Rechnung (Council: aus
+					// aperturePlate; Study/Archiv: feste Konstante) — korrekter
+					// Viewport ist der beim Klick.
+					origin: passageOrigin(passage),
 					onDone: () => {
 						clearTimeout(passGuard);
 						clearPassage();

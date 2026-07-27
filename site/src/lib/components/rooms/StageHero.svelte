@@ -1,4 +1,5 @@
 <script>
+	import { passageOrigin } from '$lib/door-passages.js';
 	// Bühnen-Hero (§3 Schritt 2): RoomHero-Funktionalität (feste Vollbild-Bildebene,
 	// Plakette, Overlay-Slot) plus Choreografie-Slots und die Prozess-Röhre unten.
 	// Plakette (Titelbereich-Neuordnung, docs/titelbereich-neuordnung-fuer-kimi.md):
@@ -28,6 +29,22 @@
 		tube,
 		scene2 = null
 	} = $props();
+
+	// Ruhe-Stapel-Origin (Runde E §2): Türen mit aperturePlate (Council) leiten die
+	// perspective-origin zur Laufzeit aus der Cover-Rechnung ab und führen sie bei
+	// resize nach — eine Quelle mit der Fahrt. Türen mit fester `origin` (Study/
+	// Archiv) bleiben unangetastet. SSR/ohne JS steht die Konstante bzw. der
+	// CSS-Fallback; sichtbar wird die Origin ohnehin erst beim Hover (JS-Gate).
+	let restOrigin = $state(passage?.origin ?? null);
+	$effect(() => {
+		if (!passage?.aperturePlate) return;
+		const update = () => {
+			restOrigin = passageOrigin(passage);
+		};
+		update();
+		window.addEventListener('resize', update);
+		return () => window.removeEventListener('resize', update);
+	});
 </script>
 
 <header
@@ -56,7 +73,7 @@
 		     (Frame 1 = dieses Ruhebild, konstruktiv, §C). Beim Hover spreizen die
 		     Flügel und geben das Ziel frei. Nur Desktop; Spreizung nur mit JS +
 		     ohne Reduced-Motion (§0). -->
-		<div class="rest-stack" aria-hidden="true" style:--rest-origin={passage.origin}>
+		<div class="rest-stack" aria-hidden="true" style:--rest-origin={restOrigin}>
 			<div class="rest-dolly">
 				<img class="rs-plane rs-far" src={passage.farLo} alt="" decoding="async" />
 				<img class="rs-plane rs-leaf rs-leaf-l" src={passage.leafLeft} alt="" decoding="async" />

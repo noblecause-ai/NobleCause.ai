@@ -10,8 +10,35 @@
 // dasselbe far-z — nur die Auflösung der fernen Ebene (Ruhe klein, Fahrt voll)
 // und die Kamera (Ruhe 0, Fahrt 0→Z_FAR) unterscheiden sich.
 //
-// `origin` = am gerenderten Cover-Crop gemessene Aperturmitte (perspective-origin,
-// §6-Nachtrag Ursache 2), je Tür verschieden. `target` = Zielraum (roomOfPath).
+// Origin je Tür: entweder `origin` = am Cover-Crop gemessene, feste Viewport-%
+// (Study/Archiv — sie sitzen und werden nicht angefasst), ODER `aperturePlate` =
+// Aperturmitte in PLATE-Koordinaten (Council). Aus aperturePlate wird die Origin
+// zur LAUFZEIT über dieselbe Cover-Rechnung abgeleitet, die auch die Tür on-screen
+// platziert — so wandert sie mit dem Cover-Crop mit, statt als feste % zu klaffen
+// (Runde E §2: eine Quelle, keine zweite Konstante). `target` = Zielraum.
+
+// Cover-Abbildung (object-fit:cover, object-position:center top) eines Punkts auf
+// dem Plate (px,py) → Viewport-% als perspective-origin-String. Dieselbe Rechnung,
+// die das StageHero-Plate rendert; nur Client (nutzt window).
+export function coverOrigin(px, py, plateW = 1672, plateH = 941) {
+	// clientWidth/Height statt innerWidth/Height: die fixe Bildebene füllt den
+	// Viewport OHNE Scrollbar, und perspective-origin-% lösen gegen genau diese
+	// Box auf — mit innerWidth klaffte sonst die Scrollbarbreite (~0,5 pt in x).
+	const vw = document.documentElement.clientWidth;
+	const vh = document.documentElement.clientHeight;
+	const scale = Math.max(vw / plateW, vh / plateH);
+	const xOff = (vw - plateW * scale) / 2; // center
+	const yOff = 0; // top
+	const sx = xOff + px * scale;
+	const sy = yOff + py * scale;
+	return `${((sx / vw) * 100).toFixed(2)}% ${((sy / vh) * 100).toFixed(2)}%`;
+}
+
+// Die zu benutzende Origin: abgeleitet, wenn aperturePlate gesetzt ist, sonst die
+// feste Konstante. Einziger Ableitungsort für beide Verbraucher (Fahrt + Ruhe).
+export function passageOrigin(cfg) {
+	return cfg.aperturePlate ? coverOrigin(cfg.aperturePlate.x, cfg.aperturePlate.y) : cfg.origin;
+}
 
 export const DOOR_PASSAGES = {
 	archive: {
@@ -39,6 +66,10 @@ export const DOOR_PASSAGES = {
 		leafRight: '/media/actors/hall-leaf-right.avif',
 		farHi: '/media/scenes/archive-display.avif',
 		farLo: '/media/scenes/archive-display-lo.avif',
-		origin: '50.5% 48%'
+		// Zielpunkt der Fahrt auf dem 1672×941-Plate = visuelle Türmitte: x = Naht
+		// (wo man durchtritt; die Tür ist leicht asymmetrisch, darum nicht die
+		// Rechteckmitte der Öffnung), y = Mitte der Öffnung [212,610]. Origin folgt
+		// daraus zur Laufzeit über coverOrigin. (Schnitt-Apertur ist x[712,950].)
+		aperturePlate: { x: 850, y: 411 }
 	}
 };
