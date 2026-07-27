@@ -9,7 +9,10 @@
 	// Locale-Array study.flow; Schritt 3 trägt die Teilnehmerzahl aus den Daten.
 	// Der DIFF zwischen Räumen (2→5, rückwärts −1) ist Vertical-Slice — hier
 	// läuft nur die Eintritts-Staffelung der Perlen von rechts.
-	let { flow, filledCount, participantCount, label, status } = $props();
+	// caption: optionale persistente Zeit-Zeile je Raum (Zeitschicht) — als Snippet,
+	// weil sie Markup trägt (formatiertes Datum, Manifest-Link). Sitzt unter der
+	// Röhre, immer sichtbar (auch auf Touch), No-JS = vollständig.
+	let { flow, filledCount, participantCount, label, status, caption } = $props();
 
 	let steps = $derived(
 		flow.map((step, i) => ({
@@ -37,6 +40,7 @@
 			</li>
 		{/each}
 	</ol>
+	{#if caption}<div class="tube-caption">{@render caption()}</div>{/if}
 </div>
 
 <style>
@@ -60,6 +64,32 @@
 		gap: 0.4rem;
 		padding: 1.2rem 1rem 0.75rem;
 		background: linear-gradient(rgba(5, 9, 11, 0), rgba(5, 9, 11, 0.68) 55%);
+	}
+	/* Zeitschicht-Zeile unter der Röhre. Der Wrapper liegt in StageTube-Scope; die
+	   Snippet-Inhalte kommen aus dem Raum (andere Scope) → Farbe/Font erben, Link
+	   und <time> per :global. text-shadow trägt die Lesbarkeit über dem Scrim. */
+	.tube-caption {
+		max-width: 46rem;
+		margin-top: 0.1rem;
+		color: #b7bdad;
+		font-size: 0.74rem;
+		line-height: 1.4;
+		text-align: center;
+		text-shadow: 0 1px 6px rgba(3, 6, 7, 0.92);
+	}
+	.tube-caption :global(a) {
+		color: #e6b45c;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
+	.tube-caption :global(a:hover) {
+		color: #f2d9a0;
+	}
+	.tube-caption :global(time) {
+		white-space: nowrap;
+	}
+	.tube-caption :global(p) {
+		margin: 0;
 	}
 	.tube-rail {
 		margin: 0;

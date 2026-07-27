@@ -114,14 +114,28 @@ export function buildHomepageViewModel({ session, sessions, registry }) {
 	}
 	const organizations = registryMap(registry);
 	const modelTracks = buildModelTracks(session, organizations);
+	// Klartext-Schicht (§1 des Raum-Content): laienverständliche Übersetzung als
+	// eigenes, vom Wart freigegebenes Datenfeld. Liegt noch in KEINER Sitzung
+	// vor — bis dahin sind die Felder null und die Räume zeigen die
+	// Rekord-Schicht mit dem Vermerk „Klartext folgt" (Publikation wird nie
+	// verzögert). EN fällt auf DE zurück (plainEnDe markiert das), bis
+	// plain_en im selben Freigabe-Verfahren nachkommt. Das Frontend
+	// paraphrasiert nie — es liest das Feld nur, wenn es existiert.
+	const plain = session.plain ?? null;
+	const plainEn = session.plain_en ?? plain;
 	return {
 		currentSession: {
 			id: session.id,
 			number: session.number,
 			date: session.date,
 			title: session.title,
-			question: session.question
+			question: session.question,
+			// Sitzinhaber des Warden-Amts, wörtlich aus led_by (versiegelte Datennaht).
+			ledBy: session.led_by ?? null
 		},
+		plain,
+		plainEn,
+		plainEnDe: Boolean(plain && !session.plain_en),
 		recommendations: buildRecommendations(session, organizations),
 		modelTracks,
 		revisions: modelTracks.flatMap((track) =>
@@ -130,13 +144,41 @@ export function buildHomepageViewModel({ session, sessions, registry }) {
 		correction: session.correction_notice ?? null,
 		dissent: session.dissent_md,
 		dissentHighlights: normalizeHighlights(session.dissent_highlights),
+		// Offene Bereiche der aktuellen Sitzung mit ihren Klartext-Zeilen
+		// (§5.3 — Tatsache/Gegenstand des Dissenses; die Argumente bleiben
+		// Wortlaut im Ausklapp). Ohne plain-Feld ist plain je Zeile null.
+		dissentOpen: (session.recommendations ?? [])
+			.filter((recommendation) => !recommendation.has_consensus)
+			.map((recommendation) => ({
+				pillar: recommendation.pillar,
+				pillarName: PILLARS[recommendation.pillar],
+				plain: plain?.dissent?.[recommendation.pillar] ?? null,
+				plainEn: plainEn?.dissent?.[recommendation.pillar] ?? null
+			})),
 		costs: session.costs,
 		wartDossier: session.wart_dossier ?? null,
 		archive: sessions.map((item) => ({
 			...item,
 			nonConsensusPillars: (item.recommendations ?? [])
 				.filter((recommendation) => !recommendation.has_consensus)
-				.map((recommendation) => recommendation.pillar)
+				.map((recommendation) => recommendation.pillar),
+			// Ergebnis-Chips je Bereich (§5.2 — das Regal zeigt Ergebnisse,
+			// keine Dateinamen). Auflösung Registry zuerst (kanonischer Name),
+			// bei Miss der protokollierte String — NIE werfen: das Archiv läuft
+			// über alle Sitzungen, eine alte Organisation kann aus der Registry
+			// gefallen sein. (Das strikte resolveOrganization mit throw gilt
+			// weiterhin nur für die aktuelle Sitzung.)
+			chips: ['A', 'B', 'C', 'D'].map((pillar) => {
+				const recommendation = (item.recommendations ?? []).find((r) => r.pillar === pillar);
+				if (!recommendation) return { pillar, status: 'missing', name: null };
+				if (!recommendation.has_consensus) return { pillar, status: 'open', name: null };
+				const organization = organizations.get(recommendation.organization_id);
+				return {
+					pillar,
+					status: 'consensus',
+					name: organization?.canonical_name ?? recommendation.organization ?? null
+				};
+			})
 		}))
 	};
 }

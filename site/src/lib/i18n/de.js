@@ -40,6 +40,25 @@ export const de = {
 		ofWord: 'von',
 		// Vermerk bei publiziertem Protokoll — nur im EN-Modus nötig (siehe en.js).
 		recordNote: null,
+		// Kennzeichnung der Klartext-Schicht (§1): sie IST die summary-Zeile des
+		// Ausklapps zum Rats-Wortlaut, kein separater Disclaimer. Die Frage trägt
+		// eine eigene Variante (study.questionKlartextNote).
+		klartextNote: 'Vereinfachte Fassung, verantwortet vom Wart · Wortlaut des Rates ▸',
+		// Fehlt die Freigabe des Klartexts, erscheint die Rekord-Schicht mit
+		// diesem Vermerk — Verständlichkeit darf die Publikation nie verhindern.
+		klartextPending: 'Klartext folgt — bis zur Freigabe steht hier der Wortlaut des Rates.',
+		// Stabiler Kopf auf ALLEN drei Raum-Seiten (Titelbereich-Neuordnung):
+		// die Leitfrage als h1, darunter der Verfahrenssatz (Pitch) in derselben
+		// Schrift/Farbe — „Warum so umständlich?" ist die inline-Fortsetzung
+		// desselben Satzes. Bewusst ohne Familiennamen und ohne Zahl:
+		// „verschiedener Familien" hält die Council-Erweiterung aus.
+		heroTitle: 'Wo hilft meine Spende am meisten?',
+		heroPitch:
+			'Je ein KI-Modell verschiedener Familien prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt.',
+		// Count-agnostisch („mehrere", „je mehr") — rahmt Wachstum als Gewinn.
+		whySummary: 'Warum so umständlich? ▸',
+		whyBody:
+			'Ein einzelnes Modell kann irren oder eine blinde Stelle haben. Deshalb urteilen mehrere unabhängige Modelle getrennt über dieselben Belege, lesen einander, und ein einfaches Programm zählt nur, worauf sie sich einigen — veröffentlicht wird alles, auch die Uneinigkeit. Je mehr unabhängige Stimmen mitentscheiden, desto belastbarer die Empfehlung. Der Scout läuft wöchentlich, der Council tagt anlassbezogen — zwischen den Läufen entscheidet kein Mensch.',
 		// Hinweis, wenn eine Organisationsbeschreibung nur auf Deutsch vorliegt.
 		langHint: null,
 		switchLabel: 'English version',
@@ -63,20 +82,59 @@ export const de = {
 
 	// Die vier Bereiche — Alltagswort (Verfassungssprache) + Emblem.
 	pillars: {
-		A: { label: 'Zukunft', src: '/media/pillars/pillar-future-display.jpg' },
-		B: { label: 'Leid lindern', src: '/media/pillars/pillar-relieve-suffering-display.jpg' },
-		C: { label: 'Große Gefahren', src: '/media/pillars/pillar-major-risks-display.jpg' },
-		D: { label: 'Was sonst übersehen wird', src: '/media/pillars/pillar-overlooked-display.jpg' }
+		A: { label: 'Zukunft', src: '/media/pillars/pillar-future-display.avif' },
+		B: { label: 'Leid lindern', src: '/media/pillars/pillar-relieve-suffering-display.avif' },
+		C: { label: 'Große Gefahren', src: '/media/pillars/pillar-major-risks-display.avif' },
+		D: { label: 'Was sonst übersehen wird', src: '/media/pillars/pillar-overlooked-display.avif' }
+	},
+
+	// Prozess-Röhre (StageTube): Name und Screenreader-Status des Instruments.
+	// Füllstand kommt aus der Route (Study 2, Council 5, Archive 6), die
+	// Schritt-Inhalte aus study.flow — hier steht nur die Chrome.
+	tube: {
+		label: 'Verfahrensstand',
+		status: (n, total) => `Schritt ${n} von ${total} erreicht`
 	},
 
 	study: {
-		eyebrow: 'The Study · das Vorzimmer',
-		title: 'Wo hilft meine Spende am meisten?',
-		// families: deduplizierte Familienliste aus den Daten (Intl.ListFormat-gejoint).
-		lead: (families) =>
-			`Je ein KI-Modell der Familien ${families} prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt.`,
-		boardTitle: 'Die Antwort dieser Sitzung',
-		flowTitle: 'So läuft es',
+		// Dynamischer Raumteil unter dem stabilen Kopf (Titelbereich-Neuordnung):
+		// EIN Wort (englischer Eigenname, ohne „The"/Gloss) + Raum-Lead.
+		roomWord: 'Study',
+		lead: 'Jede Sitzung beginnt hier — mit einer Frage und den Belegen dazu.',
+		boardTitle: 'Die Antwort der letzten Sitzung',
+		// Datenzeile unter dem Tafeltitel: Nummer MUSS mit — alle drei Sitzungen
+		// tragen dasselbe Datum, ein Datum allein wäre mehrdeutig.
+		boardSession: (number) => `Sitzung ${number}`,
+		// Zeitschicht-Zeile unter der Röhre (Study): Rhythmus + letzter belegter
+		// Lauf + Manifest. Der Termin lebt im Rhythmus (nächster Montag), nicht in
+		// schedule.json — kann so nie überfällig sein.
+		rhythm: 'Der Scout läuft jeden Montagmorgen, 06:00 UTC.',
+		lastCheck: (dateStr) => `Letzte Prüfung: ${dateStr}.`,
+		manifestLead: 'Die Bereiche und Kanons:',
+		manifestLink: 'Das Manifest ▸',
+		// §3.3: die Lese-Fassung der Tafel — gleiche Embleme und Reihenfolge
+		// (visueller Reim), begründet die Tafel, wiederholt sie nicht.
+		answerTitle: 'Die Empfehlungen dieser Sitzung',
+		// Akteure der zweiten Ebene (StudyActors): englische Eigennamen (kein Gloss).
+		// Der Sitzinhaber (Modell) kommt aus den Daten, nicht aus der Copy. Die vier
+		// Bereichsembleme stehen als Reihe unter dem Scout-Satz (nicht im Satz).
+		actors: {
+			sitzPrefix: 'Aktuell:',
+			deputyPrefix: 'In Vertretung:',
+			scout: {
+				name: 'The Scout',
+				sentence:
+					'sucht die wirksamsten Organisationen fürs Wohl der Menschheit — in vier Bereichen.'
+			},
+			warden: {
+				name: 'The Warden',
+				sentence:
+					'entscheidet anhand der Belege, ob der Council tagt, leitet dann die Sitzung und veröffentlicht alles.',
+				lastPrefix: 'Zuletzt:',
+				convened: 'einberufen',
+				notConvened: 'nicht einberufen'
+			}
+		},
 		// Die Ablauf-Leiste: alle sechs kanonischen Schritte als gerichteter Prozess.
 		// Schritt 3 trägt die Teilnehmerzahl aus den Daten (Funktion von n) — das Label
 		// „Drei Antworten" ist bewusst hartkodiert (bekannter Touchpoint: bei einer
@@ -85,40 +143,42 @@ export const de = {
 			{
 				name: 'Die Frage',
 				text: 'Eine Frage pro Sitzung — vier Bereiche, je eine Empfehlung.',
-				src: '/media/process/process-question-display.jpg'
+				src: '/media/process/process-question-display.avif'
 			},
 			{
 				name: 'Die Belege',
 				text: 'Der Späher sammelt Studien, Kosten-Wirksamkeit und Finanzierungslücken.',
-				src: '/media/process/process-evidence-display.jpg'
+				src: '/media/process/process-evidence-display.avif'
 			},
 			{
 				name: 'Drei Antworten',
 				text: (n) => `${zahlwort(n)} Modelle antworten getrennt — jedes Votum öffentlich.`,
-				src: '/media/process/process-three-answers-display.jpg'
+				src: '/media/process/process-three-answers-display.webp'
 			},
 			{
 				name: 'Umdenken',
 				text: 'Sie lesen einander und dürfen ihre Empfehlung ändern.',
-				src: '/media/process/process-reconsider-display.jpg'
+				src: '/media/process/process-reconsider-display.avif'
 			},
 			{
 				name: 'Zählen',
 				text: 'Ein einfaches Programm zählt nur die Nennungen.',
-				src: '/media/process/process-count-display.jpg'
+				src: '/media/process/process-count-display.avif'
 			},
 			{
 				name: 'Veröffentlichen',
 				text: 'Der Wart veröffentlicht alles — Empfehlungen, Uneinigkeit, Kosten.',
-				src: '/media/process/process-publish-display.jpg'
+				src: '/media/process/process-publish-display.avif'
 			}
 		],
 		dossiersTitle: 'Dossiers',
-		// Sichtbarer Klartext-Kontext (kuratierter Protokolltext aus den Daten),
-		// darunter die rohe Frage als Zitat-Beleg hinter Ausklapp.
-		questionContext: 'Worum es ging',
-		questionSummary: 'Frage wörtlich aus dem Protokoll',
-		researchSummary: 'Recherche zeigen',
+		// §3.4: Der Dossier-Block öffnet mit der Frage dieser Sitzung in Klartext
+		// (plain.question aus den Daten; Fallback: der kuratierte Protokoll-
+		// Kontext session.summary + „Klartext folgt"). Der Wortlaut hängt an der
+		// Kennzeichnungs-Summary (eine Tiefe, Regel 2.1).
+		questionTitle: 'Die Frage dieser Sitzung',
+		questionKlartextNote: 'Vereinfachte Fassung, verantwortet vom Wart · Die Frage im Wortlaut ▸',
+		researchSummary: 'Suchanfragen des Spähers ▸',
 		researchNote: 'Suchanfragen des Spähers, wörtlich:',
 		dossierLink: 'Dossier öffnen →',
 		readProtocol: 'Vollständig lesen →',
@@ -130,7 +190,7 @@ export const de = {
 		doors: [
 			{
 				href: '/ratssaal/',
-				img: '/media/scene-thumbnails/doorway-display.jpg',
+				img: '/media/scene-thumbnails/doorway-display.avif',
 				width: 640,
 				height: 360,
 				sub: 'Durch die große Tür',
@@ -139,7 +199,7 @@ export const de = {
 			},
 			{
 				href: '/archiv/',
-				img: '/media/doors/door-study-archive-display.jpg',
+				img: '/media/doors/door-study-archive-display.avif',
 				width: 480,
 				height: 640,
 				sub: 'Die schlichte Tür',
@@ -150,40 +210,44 @@ export const de = {
 	},
 
 	council: {
-		eyebrow: 'The Council · der Ratssaal',
-		// h1 des Raums — die Teilnehmerzahl kommt aus den Daten (Zahlwort im Satz klein).
-		title: (n) => `Wie ${zahlwort(n).toLowerCase()} Modelle entscheiden`,
-		sessionPrefix: 'Sitzung',
-		recTitle: 'Vier Empfehlungen',
+		roomWord: 'Council',
+		lead: 'Getrennt abgestimmt, dann öffentlich gezählt. Was mehrfach genannt wird, wird Empfehlung.',
+		// Zeitschicht-Zeile unter der Röhre (Council): Sitzungstakt als Plan. Datum
+		// aus schedule.next_session; verstrichenes Datum wird clientseitig entfernt.
+		rhythm: 'Der Council tagt, wenn genug Neues vorliegt.',
+		nextSession: (dateStr) => `Laut Terminplan: ${dateStr}.`,
+		// Zweite Ebene (CouncilActors): die Lesepulte tragen die Teilnehmer aus
+		// den Daten (label/family) — die i18n-Schicht gibt nur die Rolle,
+		// gespiegelt an Röhren-Schritt 3 („… antworten getrennt — jedes Votum
+		// öffentlich").
+		actors: {
+			pult: {
+				role: 'antwortet getrennt — jedes Votum öffentlich.'
+			}
+		},
+		// §4.2 „Wie gezählt wurde" — ein Block ersetzt drei (Empfehlungen /
+		// Revisionen / Zählwerk). Revisionen leben in der Modell-Marke selbst
+		// (Erstvotum durchgestrichen, Schlussvotum darunter), der Zählstand-
+		// Slot sagt bei Uneinigkeit „getrennt" statt „x von N".
+		countTitle: 'Wie gezählt wurde',
+		countIntro: 'Das Programm zählt nur gleiche Nennungen.',
+		countSplit: 'getrennt',
 		noConsensus: 'Noch keine Einigkeit',
-		noConsensusText: 'Keine zwei gleichen Nennungen.',
-		reservation: 'Unter Vorbehalt',
-		machineTitle: 'Zählwerk',
-		machineText: 'Das Programm zählt nur gleiche Nennungen.',
-		machineSame: 'gleich',
-		machineSplit: 'getrennt',
-		pulpitsTitle: 'Voten je Modell — erst und nach dem Gegenlesen',
-		allVotes: 'Alle Voten zeigen',
+		reservation: 'Vorbehalt ▸',
+		allVotesVerbatim: 'Alle Voten im Wortlaut ▸',
 		initial: 'Erst',
 		final: 'Schluss',
 		noVote: 'kein Votum',
 		readVotes: 'Voten lesen →',
-		revisionsTitle: 'Änderungen nach dem Gegenlesen',
-		revisionLead: (count) =>
-			count === 1
-				? 'Nach dem Gegenlesen änderte ein Modell seine Empfehlung.'
-				: `Nach dem Gegenlesen änderten ${count} Modelle ihre Empfehlung.`,
-		revisionInitial: 'Erstvotum',
-		revisionChangedTo: 'geändert zu',
 		head: {
 			title: 'NobleCause — The Council',
 			description:
-				'Vier Empfehlungen nach öffentlicher Beratung: Zählstände, Vorbehalte, Erst- und Schlussvoten, Revisionen und direkte Spendenlinks.'
+				'Wie die Empfehlungen zustande kommen: Nennungen je Modell, Zählstände, Vorbehalte, Erst- und Schlussvoten im Wortlaut und direkte Spendenlinks.'
 		},
 		doors: [
 			{
 				href: '/',
-				img: '/media/scene-thumbnails/antechamber-display.jpg',
+				img: '/media/scene-thumbnails/antechamber-display.avif',
 				width: 640,
 				height: 274,
 				sub: 'Zurück durch die Tür',
@@ -192,7 +256,7 @@ export const de = {
 			},
 			{
 				href: '/archiv/',
-				img: '/media/doors/door-council-archive-display.jpg',
+				img: '/media/doors/door-council-archive-display.avif',
 				width: 480,
 				height: 640,
 				sub: 'Die schlichte Tür',
@@ -203,20 +267,19 @@ export const de = {
 	},
 
 	archive: {
-		eyebrow: 'The Archive · das Archiv',
-		title: 'The Archive',
+		roomWord: 'Archive',
+		lead: 'Jede Sitzung, vollständig und unverändert — Empfehlungen, Uneinigkeit, Kosten.',
 		sessionsTitle: 'Sitzungsarchiv',
 		sessionLabel: (number) => `Sitzung ${number}`,
-		allAreas: 'Empfehlungen in allen Bereichen',
-		dissentIn: (areas) => `Noch keine Einigkeit: ${areas}`,
+		// Chip-Markierung eines offenen Bereichs in der Sitzungszeile (§5.2).
+		noConsensusNote: 'keine Einigung',
 		costsTitle: 'Kosten',
 		costsLead: (total) => `Kosten dieser Sitzung: ${total}.`,
 		costsModel: 'Modell',
 		costsAmount: 'Kosten',
 		correctionTitle: 'Korrekturhinweis',
 		dissentTitle: 'Noch keine Einigkeit',
-		dissentHighlightsTitle: 'Auszug aus dem Protokoll',
-		dissentFull: 'Vollständiger Wortlaut',
+		dissentFull: 'Wortlaut des Rates ▸',
 		protocolLink: 'Vollständiges Protokoll öffnen →',
 		protocolNote: null,
 		head: {
@@ -227,7 +290,7 @@ export const de = {
 		doors: [
 			{
 				href: '/',
-				img: '/media/scene-thumbnails/antechamber-display.jpg',
+				img: '/media/scene-thumbnails/antechamber-display.avif',
 				width: 640,
 				height: 274,
 				sub: 'Zurück',
@@ -236,7 +299,7 @@ export const de = {
 			},
 			{
 				href: '/ratssaal/',
-				img: '/media/scene-thumbnails/hall-display.jpg',
+				img: '/media/scene-thumbnails/hall-display.avif',
 				width: 640,
 				height: 360,
 				sub: 'Zurück',

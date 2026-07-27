@@ -23,7 +23,13 @@
 	// Zwei-Fälle-Modell wie der Tür-Hotspot (Plate 16:9 quer, center top;
 	// Hochformat-Plate 2:3 unter 1200 px) — Prozentzonen der Plates, rem-frei
 	// nur hier, weil die Ebene AN das Plate gebunden ist (Bühne, kein Text).
-	let { t } = $props();
+	import { formatDate } from '$lib/format.js';
+	// Sitzinhaber & Warden-Entscheid aus den Daten (wörtlich durchgereicht):
+	// Scout-Sitz = Modell des letzten Research-Laufs, Warden-Sitz = session.led_by.
+	// Beide sind aktuell dieselbe Instanz (claude-fable-5) — zwei Ämter, ein Sitz,
+	// offen gezeigt. Eine Vertretung (deputationNote) wird angezeigt, nicht geglättet.
+	let { t, lastResearch = null, ledBy = null } = $props();
+	const pillars = ['A', 'B', 'C', 'D'];
 </script>
 
 <div class="scene2" aria-hidden="false">
@@ -49,7 +55,7 @@
 	     die Figur darauf die Einfahrt (transform getrennt, kein Konflikt). -->
 	<div class="rail scout" style="--side: -1">
 		<figure class="actor scout">
-			<img src="/media/actors/scout.avif" alt="{t.study.actors.scout.name}{t.study.actors.scout.gloss ? ` — ${t.study.actors.scout.gloss}` : ''}: {t.study.actors.scout.role}" width="935" height="1168" decoding="async" />
+			<img src="/media/actors/scout.avif" alt="{t.study.actors.scout.name}: {t.study.actors.scout.sentence}" width="935" height="1168" decoding="async" />
 			<!-- Boden-Reflexion: Diele ist spiegelnd, der Raum trägt die Figur. -->
 			<span class="reflection" aria-hidden="true"><img src="/media/actors/scout.avif" alt="" width="935" height="1168" decoding="async" loading="lazy" /></span>
 			<!-- Prise Leben: das Schirmlicht flackert leise (zwei verschachtelte
@@ -57,21 +63,71 @@
 			<span class="lamp lamp-desk" aria-hidden="true"><span class="lamp-a"></span><span class="lamp-b"></span></span>
 			<span class="lamp lamp-screen" aria-hidden="true"><span class="lamp-c"></span></span>
 			<figcaption>
-				<strong>{t.study.actors.scout.name}</strong>
-				{#if t.study.actors.scout.gloss}<span class="gloss">{t.study.actors.scout.gloss}</span>{/if}
-				<span class="role">{t.study.actors.scout.role}</span>
+				<!-- Sitzzeile aus den Daten. Bei Vertretung (deputationNote vorhanden)
+				     kurzes Label „In Vertretung: {model}" statt „Aktuell:" — der volle
+				     Wortlaut steht im Rekord (journal/[id]), die Plakette zitiert ihn
+				     nicht (115-px-Budget, kein Link/pointer-events). -->
+				<span class="cap-name"
+					><strong>{t.study.actors.scout.name}</strong>{#if lastResearch?.model}<span class="sitz">
+							· {lastResearch.deputationNote
+								? t.study.actors.deputyPrefix
+								: t.study.actors.sitzPrefix}
+							{lastResearch.model}</span
+						>{/if}</span
+				>
+				<span class="cap-body"
+					><img
+						class="sigil"
+						src="/media/process/process-question-display.avif"
+						alt=""
+						width="30"
+						height="30"
+						decoding="async"
+					/>{t.study.actors.scout.sentence}</span
+				>
+				<!-- Bereichsreihe: TRÄGT die vier Bereiche (nicht dekorativ) → alt=label. -->
+				<span class="pillars">
+					{#each pillars as k}<img
+							src={t.pillars[k].src}
+							alt={t.pillars[k].label}
+							width="30"
+							height="30"
+							decoding="async"
+							loading="lazy"
+						/>{/each}
+				</span>
 			</figcaption>
 		</figure>
 	</div>
 	<div class="rail warden" style="--side: 1">
 		<figure class="actor warden">
-			<img src="/media/actors/warden.avif" alt="{t.study.actors.warden.name}{t.study.actors.warden.gloss ? ` — ${t.study.actors.warden.gloss}` : ''}: {t.study.actors.warden.role}" width="1024" height="1536" decoding="async" />
+			<img src="/media/actors/warden.avif" alt="{t.study.actors.warden.name}: {t.study.actors.warden.sentence}" width="1024" height="1536" decoding="async" />
 			<span class="reflection" aria-hidden="true"><img src="/media/actors/warden.avif" alt="" width="1024" height="1536" decoding="async" loading="lazy" /></span>
 			<span class="lamp lamp-desk" aria-hidden="true"><span class="lamp-a"></span><span class="lamp-b"></span></span>
 			<figcaption>
-				<strong>{t.study.actors.warden.name}</strong>
-				{#if t.study.actors.warden.gloss}<span class="gloss">{t.study.actors.warden.gloss}</span>{/if}
-				<span class="role">{t.study.actors.warden.role}</span>
+				<span class="cap-name"
+					><strong>{t.study.actors.warden.name}</strong>{#if ledBy?.model}<span class="sitz">
+							· {t.study.actors.sitzPrefix} {ledBy.model}</span
+						>{/if}</span
+				>
+				<span class="cap-body"
+					><img
+						class="sigil"
+						src="/media/process/process-evidence-display.avif"
+						alt=""
+						width="30"
+						height="30"
+						decoding="async"
+					/>{t.study.actors.warden.sentence}</span
+				>
+				<!-- Warden-Entscheid aus den Daten (convene/date des letzten Laufs). -->
+				{#if lastResearch?.date}<span class="last"
+						>{t.study.actors.warden.lastPrefix}
+						{lastResearch.convene
+							? t.study.actors.warden.convened
+							: t.study.actors.warden.notConvened} ·
+						<time datetime={lastResearch.date}>{formatDate(lastResearch.date, t.lang)}</time></span
+					>{/if}
 			</figcaption>
 		</figure>
 	</div>
@@ -367,11 +423,14 @@
 		transform: translate(-50%, calc(-100% - 0.4rem));
 		z-index: 2;
 		width: max-content;
-		max-width: 20rem;
-		padding: 0.4rem 1.2rem 0.5rem;
+		max-width: 17rem;
+		padding: 0.35rem 0.95rem 0.45rem;
 		text-align: center;
-		background: radial-gradient(ellipse 78% 92% at 50% 50%, rgba(3, 6, 7, 0.82), rgba(3, 6, 7, 0) 74%);
+		background: radial-gradient(ellipse 82% 94% at 50% 50%, rgba(3, 6, 7, 0.84), rgba(3, 6, 7, 0) 76%);
 		text-shadow: 0 1px 7px rgba(3, 6, 7, 0.95);
+		/* Die Plakette liegt im Tür-Hotspot (§3.4) — nie Hotspot oder :hover-
+		   Türöffnung blockieren. Reine Anzeige, kein Ziel für den Zeiger. */
+		pointer-events: none;
 		opacity: 0;
 		transition: opacity 0.35s ease;
 	}
@@ -384,41 +443,80 @@
 	   sie bei schmaleren Breiten hinter der Tafel (N5). */
 	.actor.scout figcaption {
 		--head: 0.177;
-		left: 72%;
+		left: 79%;
 	}
 	/* Warden (rechts verankert): Kopf bei ~68 % der Box, innen ruhige Wand, über
 	   dem Kopf das helle Fenster (unruhig) → schräg über den Kopf nach innen
 	   (links, weg vom Fenster). */
 	.actor.warden figcaption {
 		--head: 0.161;
-		left: 25%;
+		left: 14%;
 	}
 	.actor:hover figcaption {
 		opacity: 1;
 	}
-	/* Zwei Zeilen (Auftrag N4): Name + Gloss in EINER Zeile, Rolle darunter —
-	   ~79 px → ~50 px, damit die Plakette auch bei 605 px Höhe über die Kopflinie
-	   passt. */
+	/* Plakette-Innenleben (Auftrag §3): Namens-/Sitzzeile, Karten-Sigel + Satz,
+	   darunter die vier Bereichsembleme (Scout) bzw. der Warden-Entscheid.
+	   Höhe ist ~115/103 px (Steward akzeptiert: „vollständig über der Kopflinie"
+	   hält bei 1280×720 und 1440×700; 1200×605 kommt praktisch nicht vor).
+	   STELLSCHRAUBE bei Höhennot: die Sitzzeile ist bereits in der Namenszeile;
+	   dann den Satz kürzen — NIE die Emblemreihe verkleinern (sie ist der Grund
+	   dieser Fassung, §3.2). */
+	.actor figcaption .cap-name {
+		display: block;
+		line-height: 1.2;
+	}
 	.actor figcaption strong {
-		display: inline;
 		color: #f0d899;
 		font-size: 0.8rem;
 		font-weight: 600;
 		letter-spacing: 0.04em;
 	}
-	.actor figcaption .gloss {
-		display: inline;
-		margin-left: 0.4em;
-		color: #c9ab6e;
+	.actor figcaption .sitz {
+		color: #b7a67e;
 		font-size: 0.68rem;
-		font-style: italic;
 	}
-	.actor figcaption .role {
+	.actor figcaption .cap-body {
 		display: block;
-		margin-top: 0.2rem;
+		margin-top: 0.15rem;
 		color: #d9cfb6;
 		font-size: 0.72rem;
-		line-height: 1.35;
+		line-height: 1.28;
+	}
+	/* Karten-Sigel vor dem Satz — dieselbe Datei wie die Tube (Wiedererkennung),
+	   dekorativ (wiederholt den Satz) → alt="". */
+	.actor figcaption .sigil {
+		display: inline-block;
+		vertical-align: -0.35em;
+		width: 1.5rem;
+		height: 1.5rem;
+		margin-right: 0.4rem;
+		border-radius: 50%;
+		border: 1px solid rgba(190, 139, 58, 0.6);
+		background: #080b0c;
+		object-fit: cover;
+	}
+	/* Bereichsreihe bei ihren richtigen 1,9 rem — nicht verkleinern (§3.2). */
+	.actor figcaption .pillars {
+		display: flex;
+		justify-content: center;
+		gap: 0.45rem;
+		margin-top: 0.3rem;
+	}
+	.actor figcaption .pillars img {
+		width: 1.9rem;
+		height: 1.9rem;
+		border-radius: 50%;
+		border: 1px solid rgba(190, 139, 58, 0.6);
+		background: #080b0c;
+		object-fit: cover;
+	}
+	.actor figcaption .last {
+		display: block;
+		margin-top: 0.35rem;
+		color: #c9b98f;
+		font-size: 0.68rem;
+		letter-spacing: 0.02em;
 	}
 
 	/* Eintritts-Takt 2 (0,55–2,3 s): Schienen-Einfahrt — Scout von links,

@@ -42,6 +42,24 @@ export const en = {
 		ofWord: 'of',
 		// Vermerk überall dort, wo deutscher Rekordtext auf einer EN-Seite erscheint.
 		recordNote: 'Original protocol in German.',
+		// Kennzeichnung der Klartext-Schicht (§1): sie IST die summary-Zeile des
+		// Ausklapps zum Rats-Wortlaut, kein separater Disclaimer. Die Frage trägt
+		// eine eigene Variante (study.questionKlartextNote).
+		klartextNote: "Simplified version, approved by the Warden · The council's wording ▸",
+		// Fehlt die Freigabe des Klartexts, erscheint die Rekord-Schicht mit
+		// diesem Vermerk — Verständlichkeit darf die Publikation nie verhindern.
+		klartextPending: "Plain-language version pending — the council's wording is shown until approval.",
+		// Stable head on ALL three room pages (title reorder): the core question
+		// as h1, below it the process sentence (pitch) in the same font/color —
+		// "Why so elaborate?" is the inline continuation of the same sentence.
+		// Deliberately no family names and no number: "different families"
+		// survives council growth.
+		heroTitle: 'Where does my donation help the most?',
+		heroPitch:
+			'One AI model each from different families reviews the same evidence and publicly recommends where a donation is likely to achieve the most.',
+		whySummary: 'Why so elaborate? ▸',
+		whyBody:
+			'A single model can be wrong or have a blind spot. That is why several independent models judge the same evidence separately, read each other, and a simple program only counts what they agree on — everything is published, including the disagreement. The more independent voices take part in the decision, the more robust the recommendation. The Scout runs weekly, the Council meets as needed — between the runs, no human decides.',
 		// Hinweis, wenn eine Organisationsbeschreibung nur auf Deutsch vorliegt.
 		langHint:
 			'Organisation description in German — an English translation is being prepared.',
@@ -62,20 +80,59 @@ export const en = {
 	},
 
 	pillars: {
-		A: { label: 'Future', src: '/media/pillars/pillar-future-display.jpg' },
-		B: { label: 'Relieve suffering', src: '/media/pillars/pillar-relieve-suffering-display.jpg' },
-		C: { label: 'Major risks', src: '/media/pillars/pillar-major-risks-display.jpg' },
-		D: { label: 'Easily overlooked', src: '/media/pillars/pillar-overlooked-display.jpg' }
+		A: { label: 'Future', src: '/media/pillars/pillar-future-display.avif' },
+		B: { label: 'Relieve suffering', src: '/media/pillars/pillar-relieve-suffering-display.avif' },
+		C: { label: 'Major risks', src: '/media/pillars/pillar-major-risks-display.avif' },
+		D: { label: 'Easily overlooked', src: '/media/pillars/pillar-overlooked-display.avif' }
+	},
+
+	// Process tube (StageTube): accessible name and screenreader status.
+	// Fill level comes from the route (Study 2, Council 5, Archive 6), step
+	// content from study.flow — this is only the chrome.
+	tube: {
+		label: 'Process state',
+		status: (n, total) => `Step ${n} of ${total} reached`
 	},
 
 	study: {
-		eyebrow: 'The Study',
-		title: 'Where does my donation help the most?',
-		// families: deduplicated family list from the data (joined via Intl.ListFormat).
-		lead: (families) =>
-			`One AI model each from ${families} reviews the same evidence and publicly recommends where a donation is likely to achieve the most.`,
-		boardTitle: "This session's answer",
-		flowTitle: 'How it works',
+		// Dynamic room part below the stable head (title reorder): ONE word
+		// (English proper name, no "The"/gloss) + room lead.
+		roomWord: 'Study',
+		lead: 'Every session begins here — with a question and the evidence for it.',
+		boardTitle: "The last session's answer",
+		// Data line under the board title: the number MUST be present — all three
+		// sessions carry the same date, a date alone would be ambiguous.
+		boardSession: (number) => `Session ${number}`,
+		// Time layer line under the tube (Study): rhythm + last recorded run +
+		// manifesto. The date lives in the rhythm (next Monday), not in
+		// schedule.json — so it can never be overdue.
+		rhythm: 'The Scout runs every Monday morning, 06:00 UTC.',
+		lastCheck: (dateStr) => `Last check: ${dateStr}.`,
+		manifestLead: 'The domains and canons:',
+		manifestLink: 'The Manifesto ▸',
+		// §3.3: the reading version of the board — same emblems and order
+		// (visual rhyme); it explains the board, it does not repeat it.
+		answerTitle: "This session's recommendations",
+		// Actors of the second layer (StudyActors): English proper nouns (no gloss).
+		// The seat-holder (model) comes from the data, not the copy. The four domain
+		// emblems sit as a row under the Scout's sentence (not inside the sentence).
+		actors: {
+			sitzPrefix: 'Currently:',
+			deputyPrefix: 'Standing in:',
+			scout: {
+				name: 'The Scout',
+				sentence:
+					'seeks the most effective organisations for the good of humanity — across four domains.'
+			},
+			warden: {
+				name: 'The Warden',
+				sentence:
+					'decides, from the evidence, whether the Council meets, then chairs the session and publishes everything.',
+				lastPrefix: 'Last:',
+				convened: 'convened',
+				notConvened: 'not convened'
+			}
+		},
 		// The process rail: all six canonical steps as a directed flow.
 		// Step 3 carries the participant count from the data (function of n) — the
 		// label "Three answers" is deliberately hardcoded (known touchpoint: revisit
@@ -84,40 +141,43 @@ export const en = {
 			{
 				name: 'The question',
 				text: 'One question per session — four areas, one recommendation each.',
-				src: '/media/process/process-question-display.jpg'
+				src: '/media/process/process-question-display.avif'
 			},
 			{
 				name: 'The evidence',
 				text: 'The Scout gathers studies, cost-effectiveness and funding gaps.',
-				src: '/media/process/process-evidence-display.jpg'
+				src: '/media/process/process-evidence-display.avif'
 			},
 			{
 				name: 'Three answers',
 				text: (n) => `${numWord(n)} models answer separately — every vote public.`,
-				src: '/media/process/process-three-answers-display.jpg'
+				src: '/media/process/process-three-answers-display.webp'
 			},
 			{
 				name: 'Second thoughts',
 				text: 'They read each other and may change their recommendation.',
-				src: '/media/process/process-reconsider-display.jpg'
+				src: '/media/process/process-reconsider-display.avif'
 			},
 			{
 				name: 'The count',
 				text: 'A simple program only counts the mentions.',
-				src: '/media/process/process-count-display.jpg'
+				src: '/media/process/process-count-display.avif'
 			},
 			{
 				name: 'Publication',
 				text: 'The Warden publishes everything — recommendations, disagreement, costs.',
-				src: '/media/process/process-publish-display.jpg'
+				src: '/media/process/process-publish-display.avif'
 			}
 		],
 		dossiersTitle: 'Dossiers',
-		// Visible plain-language context (curated protocol text from the data),
-		// with the raw question below as a verbatim quote behind a toggle.
-		questionContext: 'What this session was about',
-		questionSummary: 'The question — verbatim from the protocol',
-		researchSummary: 'Show the research trail',
+		// §3.4: The dossier block opens with this session's question in plain
+		// language (plain.question from the data; fallback: the curated protocol
+		// context session.summary + "plain text pending"). The verbatim question
+		// hangs on the designation summary (one level, rule 2.1).
+		questionTitle: "This session's question",
+		questionKlartextNote:
+			'Simplified version, approved by the Warden · The question verbatim ▸',
+		researchSummary: "The Scout's search queries ▸",
 		researchNote: "The Scout's search queries, verbatim:",
 		dossierLink: 'Open the dossier →',
 		readProtocol: 'Read in full →',
@@ -129,7 +189,7 @@ export const en = {
 		doors: [
 			{
 				href: '/en/council/',
-				img: '/media/scene-thumbnails/doorway-display.jpg',
+				img: '/media/scene-thumbnails/doorway-display.avif',
 				width: 640,
 				height: 360,
 				sub: 'Through the grand door',
@@ -138,7 +198,7 @@ export const en = {
 			},
 			{
 				href: '/en/archive/',
-				img: '/media/doors/door-study-archive-display.jpg',
+				img: '/media/doors/door-study-archive-display.avif',
 				width: 480,
 				height: 640,
 				sub: 'The plain door',
@@ -149,40 +209,43 @@ export const en = {
 	},
 
 	council: {
-		eyebrow: 'The Council',
-		// Room h1 — the participant count comes from the data (number word, lower case).
-		title: (n) => `How ${numWord(n).toLowerCase()} models decide`,
-		sessionPrefix: 'Session',
-		recTitle: 'Four recommendations',
+		roomWord: 'Council',
+		lead: 'Voted separately, then counted publicly. What is named multiple times becomes a recommendation.',
+		// Time layer line under the tube (Council): session cadence as a plan. Date
+		// from schedule.next_session; a past date is dropped client-side.
+		rhythm: 'The Council meets when enough is new.',
+		nextSession: (dateStr) => `Per the schedule: ${dateStr}.`,
+		// Second layer (CouncilActors): the lecterns carry the participants from
+		// the data (label/family) — i18n only provides the role, mirroring
+		// process step 3 ("… answer separately — every vote public").
+		actors: {
+			pult: {
+				role: 'answers separately — every vote public.'
+			}
+		},
+		// §4.2 "How the votes were counted" — one block replaces three
+		// (recommendations / revisions / counting machine). Revisions live inside
+		// the model mark itself (first vote struck through, final vote below);
+		// the tally slot says "split" instead of "x of N" when there is no match.
+		countTitle: 'How the votes were counted',
+		countIntro: 'The program only counts matching mentions.',
+		countSplit: 'split',
 		noConsensus: 'No agreement yet',
-		noConsensusText: 'No two matching mentions.',
-		reservation: 'With reservation',
-		machineTitle: 'The counting machine',
-		machineText: 'The program only counts matching mentions.',
-		machineSame: 'matching',
-		machineSplit: 'split',
-		pulpitsTitle: 'Votes by model — first and after cross-reading',
-		allVotes: 'Show all votes',
+		reservation: 'Reservation ▸',
+		allVotesVerbatim: 'All votes, verbatim ▸',
 		initial: 'First',
 		final: 'Final',
 		noVote: 'no vote',
 		readVotes: 'Read the votes →',
-		revisionsTitle: 'Changes after cross-reading',
-		revisionLead: (count) =>
-			count === 1
-				? 'After cross-reading, one model changed its recommendation.'
-				: `After cross-reading, ${count} models changed their recommendation.`,
-		revisionInitial: 'First vote',
-		revisionChangedTo: 'changed to',
 		head: {
 			title: 'NobleCause — The Council',
 			description:
-				'Four recommendations after public deliberation: tallies, reservations, first and final votes, revisions and direct donation links.'
+				'How the recommendations come about: mentions by model, tallies, reservations, first and final votes verbatim and direct donation links.'
 		},
 		doors: [
 			{
 				href: '/en/',
-				img: '/media/scene-thumbnails/antechamber-display.jpg',
+				img: '/media/scene-thumbnails/antechamber-display.avif',
 				width: 640,
 				height: 274,
 				sub: 'Back through the door',
@@ -191,7 +254,7 @@ export const en = {
 			},
 			{
 				href: '/en/archive/',
-				img: '/media/doors/door-council-archive-display.jpg',
+				img: '/media/doors/door-council-archive-display.avif',
 				width: 480,
 				height: 640,
 				sub: 'The plain door',
@@ -202,20 +265,19 @@ export const en = {
 	},
 
 	archive: {
-		eyebrow: 'The Archive',
-		title: 'The Archive',
+		roomWord: 'Archive',
+		lead: 'Every session, complete and unchanged — recommendations, disagreement, costs.',
 		sessionsTitle: 'Session archive',
 		sessionLabel: (number) => `Session ${number}`,
-		allAreas: 'Recommendations in all areas',
-		dissentIn: (areas) => `No agreement yet: ${areas}`,
+		// Chip marker of an open area in the session row (§5.2).
+		noConsensusNote: 'no agreement',
 		costsTitle: 'Costs',
 		costsLead: (total) => `Cost of this session: ${total}.`,
 		costsModel: 'Model',
 		costsAmount: 'Cost',
 		correctionTitle: 'Correction notice',
 		dissentTitle: 'No agreement yet',
-		dissentHighlightsTitle: 'Excerpt from the protocol',
-		dissentFull: 'Full text',
+		dissentFull: "The council's wording ▸",
 		protocolLink: 'Open the full protocol →',
 		protocolNote: 'The full protocol is published in German.',
 		head: {
@@ -226,7 +288,7 @@ export const en = {
 		doors: [
 			{
 				href: '/en/',
-				img: '/media/scene-thumbnails/antechamber-display.jpg',
+				img: '/media/scene-thumbnails/antechamber-display.avif',
 				width: 640,
 				height: 274,
 				sub: 'Back',
@@ -236,7 +298,7 @@ export const en = {
 			},
 			{
 				href: '/en/council/',
-				img: '/media/scene-thumbnails/hall-display.jpg',
+				img: '/media/scene-thumbnails/hall-display.avif',
 				width: 640,
 				height: 360,
 				sub: 'Back',

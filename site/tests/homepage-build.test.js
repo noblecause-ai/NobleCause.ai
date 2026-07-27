@@ -76,7 +76,7 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		'/ratssaal/', // Tür zu The Council
 		'/archiv/', // Tür zu The Archive
 		// Das Board trägt die Antwort — pragerendert, ohne JS im HTML.
-		'Die Antwort dieser Sitzung',
+		'Die Antwort der letzten Sitzung',
 		'3 von 3',
 		// Tür-Hotspot im Raumbild — pragerenderter Link, trägt ohne JS.
 		// (Klasse trägt im Build den Svelte-Scope-Hash: class="door-hotspot svelte-…")
@@ -111,7 +111,7 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	);
 	// Das Board steht im Dokument VOR der Lese-Fassung — die Antwort begrüßt den Eingang.
 	assert.ok(
-		html.indexOf('Die Antwort dieser Sitzung') < html.indexOf('Die Empfehlungen dieser Sitzung'),
+		html.indexOf('Die Antwort der letzten Sitzung') < html.indexOf('Die Empfehlungen dieser Sitzung'),
 		'Antwort-Board steht nicht mehr vor der Lese-Fassung'
 	);
 });
@@ -238,7 +238,7 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		'Original protocol in German.', // Rekord-Vermerk bei der aktuellen Frage
 		'lang="de"', // Rekordtext maschinell als deutsch markiert
 		// Das Board trägt die Antwort — pragerendert, ohne JS im HTML.
-		"This session's answer",
+		"The last session's answer",
 		'3 of 3',
 		// Tür-Hotspot im Raumbild — pragerenderter Link, trägt ohne JS.
 		// (Klasse trägt im Build den Svelte-Scope-Hash: class="door-hotspot svelte-…")
@@ -466,7 +466,14 @@ test('Bühne: Röhren-Füllstand steht in jedem Raum (DE+EN) korrekt im prageren
 			6,
 			`${room}: erwartet 6 Erklärtexte an den Kugeln`
 		);
-		assert.ok(!html.includes('tube-caption'), `${room}: lose Röhren-Caption noch vorhanden`);
+		// Zeitschicht-Zeile unter der Röhre: Study + Council tragen sie (Rhythmus +
+		// letzter Lauf / Sitzungstermin), das Archiv nicht (keine Zukunft).
+		const wantsCaption = /^(study|council)/.test(room);
+		assert.equal(
+			html.includes('tube-caption'),
+			wantsCaption,
+			`${room}: Zeitschicht-Röhrenzeile ${wantsCaption ? 'fehlt' : 'gehört nicht in diesen Raum'}`
+		);
 	}
 });
 
@@ -475,12 +482,12 @@ test('Bühne: Dokument komplett ohne JS — Stage-Klassen nur per Script, genau 
 	// Klassen setzt ausschließlich das Boot-Script per classList) und jede Route
 	// enthält genau EINE semantische ResultBoard-Instanz — auch das Archiv.
 	const boardTitle = {
-		study: 'Die Antwort dieser Sitzung',
-		council: 'Die Antwort dieser Sitzung',
-		archive: 'Die Antwort dieser Sitzung',
-		studyEn: "This session's answer",
-		councilEn: "This session's answer",
-		archiveEn: "This session's answer"
+		study: 'Die Antwort der letzten Sitzung',
+		council: 'Die Antwort der letzten Sitzung',
+		archive: 'Die Antwort der letzten Sitzung',
+		studyEn: "The last session's answer",
+		councilEn: "The last session's answer",
+		archiveEn: "The last session's answer"
 	};
 	for (const [room, rel] of Object.entries(PAGES)) {
 		const html = readBuilt(rel);
@@ -523,11 +530,25 @@ test('Bühne: zweite Ebene — Akteure und Wolkenzug stehen im pragerenderten HT
 			`${room}: Akteur-Figur trägt tabindex (nicht-interaktiv = kein Tab-Stopp)`
 		);
 	}
-	// Name + Rolle je Sprache (Eigennamen englisch; deutscher Gloss nur DE).
-	assert.ok(studyHtml.includes('The Scout — der Späher'), 'study: Scout-Gloss fehlt (DE)');
-	assert.ok(studyHtml.includes('sammelt die Belege für die Sitzung.'), 'study: Scout-Rolle fehlt (DE)');
+	// Name + Sitz (Modell aus den DATEN, keine Copy) + Satz je Sprache; die
+	// Bereichs-Emblemreihe trägt die vier Bereiche (alt=label, nicht dekorativ).
+	// Gloss ist entfallen.
+	assert.ok(studyHtml.includes('The Scout'), 'study: Scout-Name fehlt (DE)');
+	assert.ok(studyHtml.includes('Aktuell: claude-fable-5'), 'study: Sitz (Modell aus Daten) fehlt (DE)');
+	assert.ok(
+		studyHtml.includes('sucht die wirksamsten Organisationen'),
+		'study: Scout-Satz fehlt (DE)'
+	);
+	assert.ok(studyHtml.includes('alt="Zukunft"'), 'study: Bereichs-Emblemreihe (alt=label) fehlt');
+	assert.ok(!studyHtml.includes('der Späher'), 'study: Gloss nicht mehr entfernt');
+	// Warden-Entscheid + „letzte Prüfung" aus den Daten — zugleich Beleg, dass
+	// master hereingezogen ist (20. Juli 2026, nicht 8. Juli).
+	assert.ok(studyHtml.includes('20. Juli 2026'), 'study: lastResearch-Datum (master-Zug) fehlt');
 	assert.ok(studyEnHtml.includes('The Scout'), 'studyEn: Scout-Name fehlt (EN)');
-	assert.ok(studyEnHtml.includes('gathers the evidence for the session.'), 'studyEn: Scout-Rolle fehlt (EN)');
+	assert.ok(
+		studyEnHtml.includes('seeks the most effective organisations'),
+		'studyEn: Scout-Satz fehlt (EN)'
+	);
 	assert.ok(!studyEnHtml.includes('der Späher'), 'studyEn: deutscher Gloss darf EN nicht erscheinen');
 	// Scout/Warden gehören nur in die Study; das Council trägt eigene Akteure
 	// (Lesepulte — eigener Test unten), das Archiv bleibt bis zur
@@ -594,4 +615,20 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 	]) {
 		assert.ok(fs.existsSync(path.join(SITE, 'build', 'media', asset)), `Deploy fehlt: ${asset}`);
 	}
+});
+
+test('Zeitschicht: schedule.last_journal zeigt auf einen Research-Lauf (search_queries > 0)', () => {
+	// Datenvertrag (Steward-Auflage): lastResearch wird über schedule.last_journal
+	// aufgelöst, NICHT über das neueste Journal-Datum (das wäre der Klartext-
+	// Bootstrap 2026-07-24, kein Research-Lauf). Strukturelles Signal ist
+	// search_queries — kein Parsen von Prosa. Zeigt der Zeiger auf einen Nicht-
+	// Research-Eintrag, muss der Build laut scheitern (Guard in (rooms)/+layout.server.js).
+	const ROOT = path.resolve(SITE, '..');
+	const schedule = JSON.parse(fs.readFileSync(path.join(ROOT, 'schedule.json'), 'utf8'));
+	const id = schedule.last_journal.replace(/^\/?journal\//, '').replace(/\/$/, '');
+	const entry = JSON.parse(fs.readFileSync(path.join(ROOT, 'journal', id, 'entry.json'), 'utf8'));
+	assert.ok(
+		(entry.search_queries?.length ?? 0) > 0,
+		`schedule.last_journal (${id}) ist kein Research-Lauf (keine search_queries)`
+	);
 });

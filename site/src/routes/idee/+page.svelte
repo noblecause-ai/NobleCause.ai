@@ -50,6 +50,14 @@
 	diese Site rendert es automatisch.
 </p>
 
+<h2>Wann was läuft</h2>
+<p>
+	Der Scout läuft wöchentlich, jeden Montagmorgen um 06:00 UTC, und trägt neue Belege zusammen.
+	Der Council tagt nicht nach Kalender, sondern anlassbezogen — wenn genug Neues vorliegt, das eine
+	erneute Abstimmung rechtfertigt. Die Veröffentlichung folgt unmittelbar auf die Sitzung. Und das
+	ist der Punkt: <strong>zwischen den Läufen entscheidet kein Mensch.</strong>
+</p>
+
 <h2>Was dieses Projekt nicht tut</h2>
 <p>
 	Es nimmt kein Geld an. Empfehlungen verlinken auf die offiziellen Spendenwege der jeweiligen

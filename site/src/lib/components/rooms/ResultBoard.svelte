@@ -6,6 +6,7 @@
 	// durchgehend rem. Inhalt unverändert aus home.recommendations gelesen (nie
 	// neu gezählt); Spendenlinks kommen registry-aufgelöst aus den Daten.
 	// Kreide-Duktus für Bereich/Titel, klare Type für Organisation + Spendenlink.
+	import { formatDate } from '$lib/format.js';
 	let { home, t, emphasizeCount = false } = $props();
 </script>
 
@@ -16,10 +17,20 @@
 	aria-labelledby="result-board-title"
 >
 	<h2 id="result-board-title">{t.study.boardTitle}</h2>
+	{#if home.currentSession?.number}
+		<!-- Zeitschicht: Identität der Tafel — welche Sitzung. Nummer + Datum, weil
+		     alle Bestandssitzungen dasselbe Datum tragen (Datum allein mehrdeutig). -->
+		<p class="board-session">
+			{t.study.boardSession(home.currentSession.number)} ·
+			<time datetime={home.currentSession.date}
+				>{formatDate(home.currentSession.date, t.lang)}</time
+			>
+		</p>
+	{/if}
 	<ol>
 		{#each home.recommendations as rec (rec.pillar)}
 			<li>
-				<img src={t.pillars[rec.pillar]?.src} alt="" width="64" height="64" />
+				<img src={t.pillars[rec.pillar]?.src} alt="" width="64" height="64" loading="lazy" />
 				<span class="board-area">{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
 				{#if rec.hasConsensus}
 					<strong
@@ -44,19 +55,38 @@
 		width: min(26rem, calc(100% - 2rem));
 		margin: 2.2rem auto 0;
 		padding: 1rem 1.3rem 0.4rem;
-		background: linear-gradient(160deg, rgba(19, 26, 27, 0.93), rgba(8, 12, 13, 0.95));
-		border: 1px solid rgba(166, 123, 61, 0.6);
-		box-shadow:
-			0 1rem 2.5rem rgba(0, 0, 0, 0.5),
-			inset 0 0 2.5rem rgba(0, 0, 0, 0.4);
+		/* Weg A (Tafel-Auftrag): schwebende Vignette statt opakem Kasten + Goldrahmen
+		   (dieselbe Formsprache wie .room-plaque/StageHero, die die Akteur-Plaketten
+		   schon tragen). Rahmen, Deckgrund und Messing-Schatten sind raus. Die Tafel
+		   trägt die Antwort + Spendenlinks in ALLEN DREI Räumen an derselben Stelle —
+		   Lesbarkeit ist Boden: kräftiger Scrim (bis 82 % deckend, dann weich aus) +
+		   text-shadow, Kontrast gegen echte Pixel gemessen (§6.1). */
+		background: radial-gradient(
+			ellipse farthest-corner at 50% 46%,
+			rgba(3, 6, 7, 0.9) 58%,
+			rgba(3, 6, 7, 0.78) 100%
+		);
+		text-shadow: 0 1px 8px rgba(3, 6, 7, 0.95);
+		/* Tafel-Reise (Vertical Slice): genau EINE Instanz je Route (per Test
+		   garantiert) — die Tafel wandert als Shared Element durch die Fahrt.
+		   view-transition-name BLEIBT (Weg A, Steward-Entscheid): die Übergangs-
+		   Behinderung wird bewusst in Kauf genommen, Weg B ist ein Nachtrag. */
+		view-transition-name: board;
 	}
 	h2 {
-		margin: 0 0 0.4rem;
+		margin: 0 0 0.2rem;
 		color: #dde4d6;
 		font-size: 0.95rem;
 		font-weight: 600;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
+	}
+	/* Zeitschicht-Datenzeile: welche Sitzung — ruhig unter dem Titel. */
+	.board-session {
+		margin: 0 0 0.55rem;
+		color: #aeb6a6;
+		font-size: 0.7rem;
+		letter-spacing: 0.03em;
 	}
 	ol {
 		margin: 0;
@@ -126,11 +156,33 @@
 	@media (min-width: 1200px) {
 		.result-board {
 			position: fixed;
-			top: 1.25rem;
+			top: 15.5rem;
 			left: 1.25rem;
 			z-index: 2;
 			width: 22rem;
 			margin: 0;
+			/* Der stabile Kopf (Masthead) steht seit dem Nachtrag 24.07. GANZ
+			   OBEN über die volle Breite — die Tafel beginnt UNTER dem
+			   Kopf-Streifen inkl. Raumteil. Bemessen am schlimmsten Fall:
+			   der EN-Council-Lead bricht auf zwei Zeilen, Raumteil-Ende
+			   ≈ 236 px (CDP-Messung 1200/1440) → top 15.5 rem = 248 px.
+			   Die Kappe hält die Tafel über der Prozess-Röhre am unteren
+			   Rand; bei kurzen Viewports scrollt sie intern, Inhalt bleibt
+			   voll erreichbar, No-JS = natives Scrollen. */
+			max-height: calc(100svh - 24rem);
+			overflow-y: auto;
+			/* Weg-A §5.1: ohne Rahmen fehlt die Kante, die den internen Scroll als
+			   Abschnitt lesbar macht. Statt einer Scrollleiste eine weiche Maske an
+			   der Unterkante — sonst wirkt abgeschnittener Text wie fehlender. Die
+			   Tafel overflowt bei den meisten Viewports (4 Empfehlungen + Sitzungs-
+			   zeile > Kappe), darum greift die Maske im GANZEN ≥1200-Block, nicht nur
+			   kurz. No-JS scrollt nativ (nur die Leiste ist aus). */
+			scrollbar-width: none;
+			mask-image: linear-gradient(to bottom, #000 calc(100% - 0.9rem), transparent);
+			-webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 0.9rem), transparent);
+		}
+		.result-board::-webkit-scrollbar {
+			display: none;
 		}
 	}
 	/* Kurze Viewports: kompaktere Dichte, damit die Tafel nicht in die
@@ -140,8 +192,12 @@
 			padding: 0.7rem 1rem 0.2rem;
 		}
 		h2 {
-			margin-bottom: 0.25rem;
+			margin-bottom: 0.15rem;
 			font-size: 0.82rem;
+		}
+		.board-session {
+			margin-bottom: 0.35rem;
+			font-size: 0.66rem;
 		}
 		li {
 			padding: 0.35rem 0;
@@ -155,6 +211,33 @@
 		}
 		.board-donate {
 			font-size: 0.82rem;
+		}
+	}
+
+	/* ---- Eintritts-Takt 3 (nur frischer Aufruf) -----------------------------
+	   Bei Ankunft durch die Tür steht die Tafel von Anfang an (mode-arrival
+	   greift hier nicht ein) — die Ergebnisse erscheinen nie ein zweites Mal.
+	   Anfangszustand nur unter stage-armed (JS) + no-preference: ohne JS und
+	   bei Reduced-Motion ist die Tafel sofort vollständig da. */
+	@media (prefers-reduced-motion: no-preference) {
+		:global(html.stage-armed.mode-fresh) .result-board {
+			opacity: 0;
+		}
+		:global(html.stage-armed.mode-fresh.stage-play) .result-board {
+			/* Der Endwert muss explizit stehen — das implizite `to` des Keyframes
+			   liest sonst die statische Versteck-Regel (opacity: 0) mit. */
+			opacity: 1;
+			animation: board-in 0.5s ease-out 0.85s both;
+		}
+		:global(html.stage-skip) .result-board {
+			animation-duration: 0.01ms !important;
+			animation-delay: 0ms !important;
+		}
+	}
+	@keyframes board-in {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
 		}
 	}
 </style>

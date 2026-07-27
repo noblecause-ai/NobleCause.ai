@@ -1,7 +1,9 @@
 <script>
 	// The Study: Ergebnis-Tafel (eigenständiges Schiefer-Panel, ab 1200 px fix —
-	// siehe ResultBoard.svelte), Prozess-Leiste (geteilte FlowRail-Komponente),
-	// Dossiers mit sichtbarem Klartext-Kontext + Zitat-Beleg, Türen.
+	// siehe ResultBoard.svelte), Klartext-Antwort, Dossiers mit sichtbarem
+	// Klartext-Kontext + Zitat-Beleg, Türen. Der Prozess läuft nur noch über
+	// die Röhre (StageTube) — die FlowRail ist mit der Titelbereich-Neuordnung
+	// entfallen; der Kopf ist der stabile, auf allen Räumen identische Block.
 	// Sprache kommt als Prop; Texte aus locales[lang]. Teilnehmerzahl und Familien
 	// kommen aus den Daten (modelTracks) — nichts davon steht fest in der Copy.
 	// Publizierte Rekordtexte (Sitzungs-Kontext, Frage, Suchanfragen) bleiben
@@ -9,26 +11,30 @@
 	// die vier Empfehlungen aus home.recommendations — gelesen, niemals neu
 	// gezählt; Spendenlinks kommen registry-aufgelöst aus den Daten.
 	import Door from './Door.svelte';
-	import FlowRail from './FlowRail.svelte';
 	import ResultBoard from './ResultBoard.svelte';
-	import RoomHero from './RoomHero.svelte';
+	import StageHero from './StageHero.svelte';
+	import StageTube from './StageTube.svelte';
+	import StudyActors from './StudyActors.svelte';
 	import { locales, roomPaths } from '$lib/i18n/index.js';
+	import { formatDate } from '$lib/format.js';
+	import { TUBE_FILLED } from '$lib/stage.js';
 
 	let { home, lang = 'de' } = $props();
 
 	let t = $derived(locales[lang]);
 	let tracks = $derived(home?.modelTracks ?? []);
 	let participantCount = $derived(tracks.length);
-	// Anzeigenamen der Familien kommen aus der Locale; unbekannte Familien
-	// fallen auf den Rohwert aus den Daten zurück.
-	let families = $derived(
-		new Intl.ListFormat(lang === 'de' ? 'de' : 'en', { type: 'conjunction' }).format([
-			...new Set(tracks.map((track) => t.common.familyNames?.[track.family] ?? track.family))
-		])
-	);
-	// Rekordtexte (Sitzungs-Kontext, Frage, Suchanfragen) sind deutsch — im
+	// Rekordtexte (Frage, Suchanfragen, Rats-Wortlaut) sind deutsch — im
 	// EN-Modus markiert.
 	let recordLang = $derived(lang === 'en' ? 'de' : undefined);
+	// Klartext-Schicht (§1): liegt das Feld vor, ersetzt es die Rekord-Fassung;
+	// EN fällt auf DE zurück (plainEnDe) und wird dann als deutscher Text
+	// markiert. Das Frontend paraphrasiert nie — es liest das Feld nur.
+	let plain = $derived(lang === 'en' ? home?.plainEn : home?.plain);
+	let plainIsDe = $derived(lang === 'en' && home?.plainEnDe);
+	// Klartext der Frage: plain.question, sonst der kuratierte Protokoll-Kontext
+	// (session.summary) mit dem Vermerk „Klartext folgt" (§1-Fallback).
+	let questionText = $derived(plain?.question ?? home?.questionSummary ?? null);
 	// Die große Tür im Plate führt in den Council — Daten wie bei der Tür-Karte.
 	let councilDoor = $derived(t.study.doors.find((door) => door.label === 'The Council'));
 
@@ -53,13 +59,18 @@
 </svelte:head>
 
 {#if home}
-	<RoomHero
-		scene="/media/scenes/antechamber-display.jpg"
-		sceneMobile="/media/scenes/antechamber-portrait-display.jpg"
-		bgPos="left top"
-		eyebrow={t.study.eyebrow}
-		title={t.study.title}
-		lead={t.study.lead(families)}
+	<StageHero
+		scene="/media/scenes/antechamber-display.avif"
+		sceneMobile="/media/scenes/antechamber-portrait-display.avif"
+		sceneMobile800="/media/scenes/antechamber-portrait-800.avif"
+		sceneOpen="/media/scenes/antechamber-door-open-display.avif"
+		bgPos="center top"
+		title={t.common.heroTitle}
+		pitch={t.common.heroPitch}
+		whySummary={t.common.whySummary}
+		whyBody={t.common.whyBody}
+		roomWord={t.study.roomWord}
+		roomLead={t.study.lead}
 	>
 		{#snippet overlay()}
 			{#if councilDoor}
@@ -75,29 +86,133 @@
 				></a>
 			{/if}
 		{/snippet}
-	</RoomHero>
+		{#snippet scene2()}
+			<!-- Zweite Ebene: Wolkenzug im Fenster + die Akteure (Einfahr-Beat).
+			     Sitzinhaber (Scout = letzter Research-Lauf, Warden = led_by) und der
+			     Warden-Entscheid kommen aus den Daten, wörtlich durchgereicht. -->
+			<StudyActors {t} lastResearch={home?.lastResearch} ledBy={home?.currentSession?.ledBy} />
+		{/snippet}
+		{#snippet tube()}
+			<!-- Prozess-Röhre: The Study zeigt Frage + Belege (Stand 2 von 6). -->
+			<StageTube
+				flow={t.study.flow}
+				filledCount={TUBE_FILLED.study}
+				{participantCount}
+				label={t.tube.label}
+				status={t.tube.status(2, t.study.flow.length)}
+			>
+				{#snippet caption()}
+					<!-- Zeitschicht (Study): Rhythmus + letzter belegter Lauf + Manifest.
+					     Absolutes Datum server-gerendert (No-JS vollständig); der Termin
+					     lebt im Rhythmus, nicht in schedule.json. -->
+					<p>
+						{t.study.rhythm}{#if home?.lastResearch?.date}{' '}{t.study.lastCheck(
+								formatDate(home.lastResearch.date, t.lang)
+							)}{/if}{' '}{t.study.manifestLead}
+						<a href="/manifest">{t.study.manifestLink}</a>
+					</p>
+				{/snippet}
+			</StageTube>
+		{/snippet}
+	</StageHero>
 
 	<main>
 		<!-- Die Tafel trägt die Antwort — pragerendert, No-JS liest sie am Eingang. -->
 		<ResultBoard {home} {t} />
 
-		<FlowRail flow={t.study.flow} {participantCount} title={t.study.flowTitle} />
+		<!-- §3.3 Klartext-Antwort dieser Sitzung: vier Zeilen, gleiche Embleme
+		     und Reihenfolge wie die Tafel. Liegt die Klartext-Schicht (plain)
+		     vor, trägt jede Zeile die publizierte Klartext-Zeile WORTGLEICH
+		     (sie enthält bereits Bereich, Organisation und Warum — das
+		     Frontend setzt sie nie selbst zusammen) und der Rats-Wortlaut
+		     rückt hinter die Kennzeichnungs-Summary; bis dahin steht die
+		     Rekord-Schicht sichtbar da (Vermerk „Klartext folgt") —
+		     nie paraphrasiert. -->
+		<section class="room-section" aria-labelledby="answer-title">
+			<h2 id="answer-title">{t.study.answerTitle}</h2>
+			{#if !plain?.recommendations}
+				<small class="record-note pending">{t.common.klartextPending}</small>
+			{/if}
+			<ol class="answer-lines">
+				{#each home.recommendations as rec (rec.pillar)}
+					{@const why = plain?.recommendations?.[rec.pillar] ?? null}
+					<li>
+						<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
+						<div class="answer-body">
+							<p class="klartext" lang={plainIsDe && why ? 'de' : undefined}>
+								{#if why && rec.hasConsensus}
+									{why}
+								{:else}
+									<span class="answer-area">{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
+									<span aria-hidden="true">→</span>
+									{#if rec.hasConsensus}
+										<strong>{rec.organization.name}</strong>
+									{:else}
+										<strong>{t.council.noConsensus}</strong>
+									{/if}
+								{/if}
+							</p>
+							{#if rec.hasConsensus && rec.organization.donationUrl}
+								<a class="answer-donate" href={rec.organization.donationUrl}>{t.common.donate}</a>
+							{/if}
+							{#if why && rec.hasConsensus}
+								<details class="answer-record">
+									<summary>{t.common.klartextNote}</summary>
+									<p lang={recordLang}>{rec.title} — {rec.count} {t.common.ofWord} {rec.total}</p>
+									{#each rec.reservations as reservation (reservation.model)}
+										<p class="answer-reservation" lang={recordLang}>
+											{reservation.model}: {reservation.reservation}
+										</p>
+									{/each}
+									{#if t.common.recordNote}
+										<small class="record-note">{t.common.recordNote}</small>
+									{/if}
+								</details>
+							{:else if rec.hasConsensus}
+								<p class="answer-verbatim" lang={recordLang}>{rec.title}</p>
+								{#if t.common.recordNote}
+									<small class="record-note">{t.common.recordNote}</small>
+								{/if}
+							{:else}
+								<ul class="answer-votes" lang={recordLang}>
+									{#each rec.votes as vote (vote.model)}
+										<li>
+											{vote.model}: {vote.organization.name}
+											{#if vote.organization.donationUrl}
+												<a href={vote.organization.donationUrl}>{t.common.donate}</a>
+											{/if}
+										</li>
+									{/each}
+								</ul>
+								{#if t.common.recordNote}
+									<small class="record-note">{t.common.recordNote}</small>
+								{/if}
+							{/if}
+						</div>
+					</li>
+				{/each}
+			</ol>
+		</section>
 
 		<section class="room-section" aria-labelledby="dossiers-title">
 			<h2 id="dossiers-title">{t.study.dossiersTitle}</h2>
-			{#if home.questionSummary}
-				<!-- Sichtbar zuerst: der kuratierte Protokoll-Kontext, wörtlich aus
-				     den Daten durchgereicht (keine Frontend-Paraphrase). -->
+			{#if questionText}
+				<!-- §3.4: sichtbar zuerst die Frage dieser Sitzung in Klartext
+				     (plain.question; Fallback: kuratierter Protokoll-Kontext aus den
+				     Daten — wörtlich durchgereicht, keine Frontend-Paraphrase). -->
 				<div class="question-context">
-					<h3>{t.study.questionContext}</h3>
-					<p lang={recordLang}>{home.questionSummary}</p>
-					{#if t.common.recordNote}
+					<h3>{t.study.questionTitle}</h3>
+					<p lang={plain?.question ? (plainIsDe ? 'de' : undefined) : recordLang}>{questionText}</p>
+					{#if !plain?.question}
+						<small class="record-note pending">{t.common.klartextPending}</small>
+					{/if}
+					{#if t.common.recordNote && (plainIsDe || !plain?.question)}
 						<small class="record-note">{t.common.recordNote}</small>
 					{/if}
 				</div>
 			{/if}
 			<details class="dossier">
-				<summary>{t.study.questionSummary}</summary>
+				<summary>{t.study.questionKlartextNote}</summary>
 				<blockquote class="question" lang={recordLang}>
 					<p>{home.currentSession.question}</p>
 				</blockquote>
@@ -133,61 +248,144 @@
 
 <style>
 	/* ---- Tür-Hotspot ------------------------------------------------------
-	   Tür-Zone der Landscape-Plate: x 86,5–99,5 %, y 5–82 %. Nur sichtbar,
-	   wenn die Tür im cover-Ausschnitt liegt (object-position:left top →
-	   Seitenverhältnis ≥ 2,1); darunter tragen die Tür-Karten die Navigation.
-	   Reine Deko — die Pixelkette an die gemalte Tür ist hier der Zweck. */
+	   Tür-Zone der 1b-Plate (1672×941, Tür ZENTRAL: x 40–60 %, y 17–82 %).
+	   object-position:center top → die Mitte überlebt jeden cover-Crop, der
+	   Hotspot ist ab 1200 px immer wirksam (das war der Sinn der zentrierten
+	   Tür). Zwei Fälle je nach Viewport-Ratio gegenüber dem Bild-Ratio 16/9:
+	   breiter → Bild füllt die Breite (Vertikaler-Crop, Zone in vw);
+	   schmaler → Bild füllt die Höhe (Horizontal-Crop um die Mitte, Zone in
+	   svh um 50 vw). Hover/Fokus öffnet die Tür (Crossfade in StageHero);
+	   die Tür-Karten unten bleiben der auffindbare Weg. */
 	.door-hotspot {
 		display: none;
 	}
-	@media (min-width: 1200px) and (min-aspect-ratio: 21/10) {
+	@media (min-width: 1200px) {
 		.door-hotspot {
 			display: block;
 			position: absolute;
-			left: 201.75svh;
-			top: 5svh;
-			width: 30.32svh;
-			height: 77svh;
 			border-radius: 6px;
 			cursor: pointer;
-			opacity: 0;
 			pointer-events: auto;
-			background:
-				radial-gradient(
-					ellipse 62% 55% at 50% 45%,
-					rgba(255, 202, 128, 0.52),
-					rgba(255, 182, 98, 0.22) 55%,
-					rgba(255, 182, 98, 0) 78%
-				),
-				radial-gradient(
-					ellipse 110% 100% at 50% 50%,
-					rgba(255, 190, 110, 0.12),
-					rgba(255, 190, 110, 0) 70%
-				);
-			mix-blend-mode: screen;
-			transition: opacity 0.45s ease;
 		}
 	}
-	@media (min-width: 1200px) and (min-aspect-ratio: 1600/686) {
+	/* Bild füllt die Höhe (Viewport schmaler als 16/9): Bildbreite = 177,78 svh,
+	   Mitte bei 50 vw → Tür x 40–60 % = 50 vw ± 17,78 svh; y direkt in svh. */
+	@media (min-width: 1200px) and (max-aspect-ratio: 16/9) {
 		.door-hotspot {
-			left: 86.5vw;
-			top: 2.14vw;
-			width: 13vw;
-			height: 33.01vw;
+			left: calc(50vw - 17.78svh);
+			top: 17svh;
+			width: 35.56svh;
+			height: 65svh;
 		}
 	}
-	.door-hotspot:hover,
-	.door-hotspot:focus-visible {
-		opacity: 1;
+	/* Bild füllt die Breite (Viewport breiter als 16/9): Bildhöhe = 56,25 vw,
+	   Vertikal-Crop ab top → Tür-Zone komplett in vw. */
+	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
+		.door-hotspot {
+			left: 40vw;
+			top: 9.56vw;
+			width: 20vw;
+			height: 36.56vw;
+		}
 	}
 	.door-hotspot:focus-visible {
 		outline: 2px solid #d7aa55;
 		outline-offset: 2px;
 	}
-	@media (prefers-reduced-motion: reduce) {
-		.door-hotspot {
-			transition: none;
-		}
+
+	/* ---- Klartext-Antwort (§3.3) --------------------------------------------
+	   Vier Zeilen mit denselben Emblemen wie die Tafel; der Warum-Satz kommt
+	   aus plain.*, die Rekord-Schicht (Titel im Wortlaut) sichtbar als
+	   Fallback bzw. hinter der Kennzeichnungs-Summary. */
+	.answer-lines {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		display: grid;
+	}
+	.answer-lines > li {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.8rem;
+		align-items: start;
+		padding: 0.7rem 0;
+	}
+	.answer-lines > li + li {
+		border-top: 1px solid rgba(166, 123, 61, 0.3);
+	}
+	.answer-lines img {
+		width: 2.2rem;
+		height: 2.2rem;
+		border: 1px solid rgba(190, 139, 58, 0.65);
+		border-radius: 50%;
+		background: #080b0c;
+		object-fit: cover;
+	}
+	.klartext {
+		margin: 0;
+		color: #e2d8c0;
+		font-size: 1rem;
+		line-height: 1.45;
+	}
+	.klartext strong {
+		color: #f0e6cd;
+	}
+	.answer-area {
+		color: #c9ab6e;
+		font: 600 0.66rem ui-sans-serif, system-ui;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+	.answer-donate {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		color: #e6b45c;
+		font-size: 0.9rem;
+	}
+	.answer-verbatim {
+		margin: 0.1rem 0 0;
+		color: #a9997d;
+		font-size: 0.85rem;
+		line-height: 1.45;
+	}
+	.answer-record summary {
+		cursor: pointer;
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		color: #9e927f;
+		font-size: 0.78rem;
+	}
+	.answer-record summary:hover {
+		color: #c4b89e;
+	}
+	.answer-record summary:focus-visible {
+		outline: 2px solid #d7aa55;
+		outline-offset: 3px;
+	}
+	.answer-record p {
+		margin: 0.1rem 0 0.35rem;
+		color: #c7bca7;
+		font-size: 0.88rem;
+	}
+	.answer-reservation {
+		color: #a9997d !important;
+		font-size: 0.82rem !important;
+	}
+	.answer-votes {
+		margin: 0.15rem 0 0;
+		padding-left: 1.2rem;
+		color: #c7bca7;
+		font-size: 0.88rem;
+		display: grid;
+		gap: 0.3rem;
+	}
+	.answer-votes a {
+		color: #e6b45c;
+	}
+	.pending {
+		margin: 0 0 0.7rem;
 	}
 
 	/* ---- Frage-Kontext ------------------------------------------------------
