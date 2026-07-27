@@ -31,6 +31,14 @@ export const DOOR_PASSAGES = {
 		farHi: '/media/scenes/hall-display.avif',
 		farLo: '/media/scenes/hall-display-lo.avif',
 		origin: '49.5% 55%'
+	},
+	council: {
+		target: 'archive',
+		wallHole: '/media/scenes/hall-wall-hole.avif',
+		leafLeft: '/media/actors/hall-leaf-left.avif',
+		leafRight: '/media/actors/hall-leaf-right.avif',
+		farHi: '/media/scenes/archive-display.avif',
+		farLo: '/media/scenes/archive-display-lo.avif',
+		origin: '50.5% 48%'
 	}
-	// council (→ archive) folgt nach abgenommenem Study.
 };

@@ -22,6 +22,7 @@
 	import { locales, roomPaths } from '$lib/i18n/index.js';
 	import { formatDate } from '$lib/format.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
+	import { DOOR_PASSAGES } from '$lib/door-passages.js';
 
 	let { home, lang = 'de', orgEn = {} } = $props();
 	void orgEn; // Prop bleibt verdrahtet (Mechanismus), hat hier keine Anzeigefläche.
@@ -81,7 +82,7 @@
 		scene="/media/scenes/hall-display.avif"
 		sceneMobile="/media/scenes/hall-portrait-display.avif"
 		sceneMobile800="/media/scenes/hall-portrait-800.avif"
-		sceneOpen="/media/scenes/hall-door-open-display.avif"
+		passage={DOOR_PASSAGES.council}
 		bgPos="center top"
 		title={t.common.heroTitle}
 		pitch={t.common.heroPitch}
