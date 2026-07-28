@@ -90,7 +90,22 @@
 					><span class="lamp-a"></span><span class="lamp-b"></span></span
 				>
 				<figcaption>
-					<strong>{track.label}</strong>
+					<!-- §M: das Modell-Medaillon als festes Zeichen NEBEN dem Namen
+					     (nie statt seiner — Schutz gegen „Nightingale empfiehlt").
+					     alt="" — der Name steht als Text daneben; das Bildnis ist
+					     Zierde, keine zweite Textquelle (keine SR-Doppelung). -->
+					<span class="head">
+						<img
+							class="medallion"
+							src="/media/medallions/{track.model}-lo.avif"
+							alt=""
+							width="256"
+							height="256"
+							loading="lazy"
+							decoding="async"
+						/>
+						<strong>{track.label}</strong>
+					</span>
 					<span class="gloss">{familyName(track)}</span>
 					<span class="role">{role}</span>
 				</figcaption>
@@ -276,6 +291,20 @@
 	}
 	.pult-figure:hover figcaption {
 		opacity: 1;
+	}
+	/* §M Kopfzeile: Medaillon neben dem Namen. */
+	.pult-figure figcaption .head {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.45rem;
+	}
+	.pult-figure figcaption .medallion {
+		width: 1.9rem;
+		height: 1.9rem;
+		flex: none;
+		/* Alpha ist bereits kreisrund; ein Hauch Schatten hebt es vom Grund. */
+		filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
 	}
 	.pult-figure figcaption strong {
 		display: block;
