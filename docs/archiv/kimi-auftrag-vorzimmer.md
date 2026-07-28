@@ -1,3 +1,5 @@
+> **Archiviert 2026-07-28 (CC) — Kimi-Bauphase, durch den council-rooms-Bau abgelöst.** Verschoben nach docs/archiv/, nicht gelöscht (erklärt die Historie, warum Dinge so sind).
+
 # Auftrag für Kimi — Korrektur „Das Vorzimmer" (The Study)
 
 ## Rolle & Rahmen

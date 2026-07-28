@@ -232,11 +232,20 @@ Jede Zeile hier hat bereits einmal Zeit gekostet — bitte nicht erneut „entde
     im geschlossenen Zustand `display:none` setzen (Mobil-Overflow-Bug).
 12. **Node 20 hat kein WebSocket** — CDP-Helferskripte (Screenshots, Messungen)
     brauchen Node ≥ 22 (lokal: `/opt/homebrew/opt/node@22/bin`).
+13. **`Page.captureScreenshot`-`clip` ist dokument-relativ, nicht viewport-relativ**
+    (Brave/Chrome 150 headless) — bei gescrollter Seite Clip-y um `scrollY` erhöhen,
+    sonst schwarze Frames. Betraf den B2-Fokusring-Nachweis an den Tür-Karten.
 
 Harte Randbedingungen, die aus diesen Fallen folgen: No-JS-Vollwahrheit jedes
 Zustands; `prefers-reduced-motion` ⇒ sofortiger Wechsel ohne jede Animation;
 ein wirksames h1 je Seite; Tippziele ≥ 44 px; Reflow 320/390 ohne Überlauf;
 Kontraste ≥ AA auf Panels/Scrims.
+
+**Standing Rule (Steward, 2026-07-19): „Was zweimal verschoben wurde, wird beim
+dritten Mal sperrend."** Präzedenzfall ist der 320-px-Nachweis (vgl. Falle 9):
+zweimal aufgeschoben, beim dritten Mal Freigabe-sperrend (B1 des Slice-Gates).
+Wer einen Nachweis aufschiebt, dokumentiert ihn mit Termin — beim zweiten
+Aufschub ist der nächste Schritt gesperrt.
 
 ## 8) Tabu-Pfade, Guard-Hook, Arbeitsregeln
 

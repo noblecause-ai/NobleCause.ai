@@ -1,3 +1,5 @@
+> **Archiviert 2026-07-28 (CC) — Kimi-Bauphase, durch den council-rooms-Bau abgelöst.** Verschoben nach docs/archiv/, nicht gelöscht (erklärt die Historie, warum Dinge so sind).
+
 # Kimi-Baubericht: Asset-Integration + Drei Räume (feat/council-rooms)
 
 **Datum:** 17.07.2026 · **Vorher:** `docs/kimi-analysis.md` (Phase 1, genehmigt)

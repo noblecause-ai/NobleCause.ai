@@ -286,3 +286,224 @@ Quelle liefert nicht mehr Auflösung; Hochskalieren verworfen.
 |---|---:|---|
 | `scenes/antechamber-portrait-display.jpg` | 235.984 | `058130470964bf9eb5d443736c0884f7f407090b3f08b9b6fd08308b0fd893a8` |
 | `scenes/archive-portrait-display.jpg` | 354.127 | `fe0672e50a3ef18ebad434db5066509a4a2e77921330175fe1d5df3349bbc39d` |
+
+## Serie 1 · The Study — Bühnenspiel-Plates (20.07.2026)
+
+Sechs Master aus der Bestellung `docs/codex-serie-1-study.md` (Aufträge 1–6), Gate
+`docs/review/serie-1-gate/`: Kontaktbogen §7 **bestanden** für die vier Plates
+(Farbtemperatur, Schwarzpunkt, Messing, Mondblau, Pinselstil, Perspektive, Tür-/Tafel-
+und Fensterwirkung konsistent; A↔B nur Türzustand; quer↔hoch eigenständige Komposition).
+Kompositions-Grammatik erfüllt: **Tür zentral (±5 %), Tafelzone links frei, Mondfenster
+rechts, ruhige dunkle untere Textzone, kein Text.** C2PA-Marker je Datei per
+Strings-Scan verifiziert (gpt-image).
+
+| Original unter `docs/asset-originals/media/provenance/serie-1-study/` | Rolle | Maße | Bytes | SHA-256 |
+|---|---|---|---:|---|
+| `study-plate-a-desktop.png` | **Study Plate A quer** — Tür geschlossen | 1672 × 941 | 1.672.545 | `323579821207983fec83be0fde86f506c8ea72be9b53e12d895fb67963aa0f39` |
+| `study-plate-b-desktop.png` | **Study Plate B quer** — Tür offen (Spalt, warmer Durchblick) | 1672 × 941 | 1.589.921 | `8acadfe99c052ecc2d13f73f470752e372f3833455567cea2e2ee2cefe2e6c0a` |
+| `study-plate-a-mobile.png` | **Study Plate A hoch** — Tür geschlossen | 1024 × 1536 | 1.994.828 | `acecc5551c9654ed5df87f05c117962f7059d72400372291f6707b8bd8ed5c86` |
+| `study-plate-b-mobile.png` | **Study Plate B hoch** — Tür offen | 1024 × 1536 | 1.887.147 | `886b05b93a9bc459ed519b004048d05a1ff18e25cfba2bfffac00ba3fa7b300d` |
+| `scout-cutout.png` | **The Scout** — Figur + Stehtisch (⚠ weißer Grund, **kein Alpha** → Nachbestellung, siehe unten) | 1024 × 1536 | 1.403.852 | `f97260af645f5cf45df3efb5c051eb35777637bc01536c165686d21cef3228b4` |
+| `warden-cutout.png` | **The Warden** — Figur + Schreibtisch (⚠ weißer Grund, **kein Alpha** → Nachbestellung) | 1024 × 1536 | 1.532.698 | `52f39050786efa3506f3efbb50036ecefdf1cc822d0c723b442cf3c4ae8ecdc7` |
+
+**Cutout-Maße (% der Bildhöhe, Auflage aus dem Horizont-Test, gilt auch für die
+Nachbestellung):** Scout Augenhöhe ≈ 13 %, Tischoberkante ≈ 42 %, Fußlinie ≈ 87 % ·
+Warden Augenhöhe ≈ 15 %, Tischoberkante ≈ 53 %, Fußlinie ≈ 88 %.
+
+**Alpha-Abweichung (5/6):** stilistisch bestanden, technisch ohne Alpha-Kanal geliefert
+— **nicht eingebaut**, Nachbestellung mit unverändertem Motiv + Alpha-Auflage:
+`docs/review/serie-1-gate/nachbestellung-cutouts.md` (Fallback-Formulierung chroma-grün).
+Die gelieferten PNGs bleiben als Stil-/Posereferenz archiviert.
+
+**Derivate (AVIF gewann 8/8 gegen WebP q80; `avifenc -s 6 -q 55`):** Plate A ersetzt die
+bisherigen `antechamber-*`-Slots (gleiche Dateinamen, keine Code-Umstellung); Plate B
+und die Tür-Crops liegen als **unverdrahtete Slots** für die künftige Lock-/Peek-
+Choreografie bereit. Ersetzte AVIFs der hellen Fassung werden nicht separat archiviert —
+Quellfassung und Master liegen bereits in `provenance/scenes-display-v2-hell/` bzw.
+`vorraum.png`.
+
+| Deploytes Derivat (`site/static/media/`) | Maße | Bytes | SHA-256 |
+|---|---|---:|---|
+| `scenes/antechamber-display.avif` | 1600 × 900 | 44.191 | `26403587bb2bf3e22bc42c3ab558da8b2f63bc394a92462be61fa652b78ff7ea` |
+| `scenes/antechamber-portrait-display.avif` | 1024 × 1536 | 62.962 | `448c03038b890b0f946bffb200fc44d41efc67f135be9cdcf7cab7fb156b7145` |
+| `scenes/antechamber-portrait-800.avif` | 800 × 1200 | 36.239 | `351cdb432c298d4a8f87266e63d83564462606ef81022d044a3d343f7b0abbd9` |
+| `scenes/antechamber-b-display.avif` (Slot, unverdrahtet) | 1600 × 900 | 43.976 | `890c90f25fea20cb1842818c50913341f32d88d8eeadce7831ed191a0d8ea364` |
+| `scenes/antechamber-b-portrait-display.avif` (Slot) | 1024 × 1536 | 56.449 | `33490838feefe0126cc73e98210fa4e7c8500a13634f6a2cd6cf1978abb3527e` |
+| `scenes/antechamber-b-portrait-800.avif` (Slot) | 800 × 1200 | 33.388 | `284996aa65255cd33a2545713868fb752d8220107df181ab98922874b0910fdb` |
+| `doors/study-door-crop-quer.avif` (Slot, sips-Crop aus Plate A quer) | 385 × 640 | 10.600 | `42f2ddd5823650ce8939c035c971565396f2d003e85bf7459e94a87e6724020c` |
+| `doors/study-door-crop-hoch.avif` (Slot, sips-Crop aus Plate A hoch) | 300 × 476 | 7.949 | `170a621aebd3c3e66bcaf98b830fbc7a4e6be44ff9b4539e08d1af219432a8ba` |
+
+## Serie 1b · The Study — Nachbestellung (20.07.2026)
+
+Sieben Master aus der Bestellung `docs/codex-serie-1b-study-nachbestellung.md`
+(ersetzt die Serie-1-Cutouts mit weißem Grund sowie die Plates mit gemalten Tischen),
+Gate `docs/review/serie-1b-gate/`. C2PA-Marker 7/7 per Strings-Scan verifiziert
+(gpt-image), formal kein Alpha-Kanal (0/7 — erwartet, Freistellung aus gemaltem
+Schachbrett-Hintergrund).
+
+**Gate-Stand: Kontaktbogen §8 STILISTISCH BESTANDEN (7/7)** — eine Welt mit Serie 1,
+A↔B deckungsgleich nur Türzustand, quer↔hoch eigenständige Komposition, Tische
+entfernt, Pflanzen gedämpftes Grün, Tafel frei, Scout als Rechercheur am Schreibtisch
+(leuchtender Schirm im Messingrahmen). Schirm enthält unleserliche Pseudotext-
+Strichzeilen — bei Anzeigegröße ≤ 600 px reine Textur, kein Vertragsbruch (Vermerk in
+`checks.txt`). **Freistellung der Cutouts an der Hintergrund-Spezifikation
+GESCHEITERT** (weiß/hellgrau-Schachbrett kollidiert mit hellen Motiv-Pixeln,
+Farbdistanz 0; Generator malte Lichtschein um Schirm/Lampe und Bodennebel mit —
+kein Farb-Key möglich): **Nachbestellung der zwei Cutouts empfohlen**, Details in
+`docs/review/serie-1b-gate/` (Bericht + `checks.txt`). Wolke: Kachel-Naht nicht
+nahtlos (MAD 9, max 45) — verwendbar mit Ping-Pong-Drift statt Endlos-Loop.
+**Keine Derivate, kein Einbau in diesem Gate** — folgt nach Steward-Freigabe.
+
+| Original unter `docs/asset-originals/media/provenance/serie-1b-study/` | Rolle | Maße | Bytes | SHA-256 |
+|---|---|---|---:|---|
+| `study-plate-a-desktop.png` | **Study Plate A quer** — Tür geschlossen, ohne Tische, Pflanzen | 1672 × 941 | 1.680.137 | `f4f4310589a77a4653e9100eee2c6e5fd11cf82787d5053a006f97b3e20095c9` |
+| `study-plate-b-desktop.png` | **Study Plate B quer** — Tür offen | 1672 × 941 | 1.658.383 | `36fded2a0557116d3aa119ad958eff7a283ffc713e9a96b035141b589286975d` |
+| `study-plate-a-mobile.png` | **Study Plate A hoch** — Tür geschlossen | 1024 × 1536 | 1.893.693 | `d91de3cfd6d8a53bca03b1b5b580dae8da046496439aab2392c9d07b2be483c8` |
+| `study-plate-b-mobile.png` | **Study Plate B hoch** — Tür offen | 1024 × 1536 | 1.798.679 | `1e650d0aac8eb5262d9ac4a4418a1df536d411a7a158693cc41beef6f39423ea` |
+| `scout-cutout.png` | **The Scout** — Rechercheur am Schreibtisch, Schirm (⚠ Schachbrett hell, Lichtschein/Boden mitgemalt → Nachbestellung empfohlen) | 1024 × 1536 | 1.704.583 | `88d2d2ce865373b15cbf263b959f07ec0c5f5d4dc7601f2fd8707eb4e4884b0f` |
+| `warden-cutout.png` | **The Warden** — am Pult (⚠ Schachbrett hell, Bodennebel mitgemalt → Nachbestellung empfohlen) | 1024 × 1536 | 1.517.210 | `20dfbf61377dafe5a978a91dcb633b3fdf44a766193574715ff65f8905d0dda4` |
+| `clouds-layer.png` | **Wolkenzug-Ebene** — für Mondfenster-Ambient (Naht MAD 9/max 45 → Ping-Pong-Drift, kein Endlos-Loop) | 1536 × 1024 | 1.540.598 | `dccfe8d1ef36d5218148cfb5001c5652138e3e3161c73321ceb4b63b9e0c0e93` |
+
+**Cutout-Maße (% der Bildhöhe, aus der Montage-Probe, ±1,5 % — Auflage gilt auch für
+die Cutout-Nachbestellung):** Scout Augenhöhe ≈ 21 %, Tischoberkante ≈ 47 %,
+Fußlinie ≈ 74 % · Warden Augenhöhe ≈ 21 %, Pult-Oberkante ≈ 43 %, Basislinie
+(Pult-Sockel) ≈ 67 %. Köpfe beider Figuren beginnen ≈ 14 % — Ausrichtung im Plate
+über diese Anker, nicht über die Bildunterkante.
+
+## Serie 1c · The Study — Cutout-Nachbestellung 2, Magenta-Backdrop (20.07.2026)
+
+Zwei Master aus der Bestellung `docs/review/serie-1b-gate/nachbestellung-cutouts-2.md`
+(absichts-basierter Prompt: unbeleuchtete Magenta-Fotowand statt Motiv-Beschreibung),
+Gate `docs/review/serie-1c-gate/`: **BESTANDEN (5/5)** — Backdrop flach (Eck-SAD 5,
+Hub < 3,5, Band 100 % rein), Motiv-Masse beginnt erst ab SAD ~240 (Histogramm), Key
+T=100 kollisionsfrei, Motiv-Konstanz zu 1b deckungsgleich, C2PA 2/2 (gpt-image).
+**Lösen die 1b-Cutouts ab** (1b-Master bleiben als Stilreferenz archiviert).
+**Kein Einbau in diesem Gate** — Derivate (Alpha-AVIF/WebP aus der dokumentierten
+v5-Kette) + Einbau folgen nach Steward-Freigabe.
+
+| Original unter `docs/asset-originals/media/provenance/serie-1c-study/` | Rolle | Maße | Bytes | SHA-256 |
+|---|---|---|---:|---|
+| `scout-cutout.png` | **The Scout** — Rechercheur am Schreibtisch, leuchtender Schirm, Magenta-Backdrop | 1024 × 1536 | 1.682.203 | `55f84c0a9306154740d238e808a48e99c77eb1538417f709a28f4d9d093c5873` |
+| `warden-cutout.png` | **The Warden** — am Pult, Magenta-Backdrop | 1024 × 1536 | 1.608.613 | `00c3f4ed3133cc06421ed041757862872f8cbdf312a69531c9ff55781b24da13` |
+
+**Freistell-Pipeline (dokumentiert in `docs/review/serie-1c-gate/checks.txt`, Skripte
+/tmp — flüchtig, bei Einbau neu laufen lassen):** globaler Distanz-Key SAD ≤ 100 →
+Loch-Klassifikation (Nicht-Rand-Key-CCs füllen nur bei size < 100 oder meanSad > 15 —
+echte Durchsichten hinter Schirm-Gestell/Tischbeinen bleiben offen) → 1-px-Erode →
+Despill-Sweep (opake Magenta-Cluster SAD ≤ 220, < 3000 px, entfernen). Ergebnis:
+Magenta-Rest 0 px, Montage auf Plate A ohne sichtbare Kante. Gelernte Falle:
+**Loch ≠ Loch** — pauschales Füllen aller Nicht-Rand-Komponenten holt Durchsichten
+als Magenta-Flächen ins Motiv zurück.
+
+**Cutout-Maße 1c (% der Bildhöhe, v5-Alpha-BBox):** Scout Kopf 13,9 % / Fuß
+(Tisch-Strebe) 85 % · Warden Kopf 16,1 % / Pult-Basis 81 %. Augenhöhe beide ≈ 21 %
+(Vollbild-Sichtung, ±1,5 %). **Achtung:** kein Bodennebel mehr — Platzierungs-Anker
+ist die BBox-Unterkante (85/81 %), nicht die 1b-Fußlinie (74/67 %).
+
+### Serie 1c — Derivate und Einbau (20.07.2026, nach Steward-Freigabe)
+
+| Deploytes Derivat (`site/static/media/`) | Maße | Bytes | Quelle |
+|---|---|---:|---|
+| `actors/scout.avif` | 540 × 810 (Alpha) | 24.922 | v5-Kette aus `serie-1c-study/scout-cutout.png`, AVIF q55 (gewann vs WebP 36.092) |
+| `actors/warden.avif` | 540 × 810 (Alpha) | 19.505 | v5-Kette aus `serie-1c-study/warden-cutout.png`, AVIF q55 (WebP 26.800) |
+| `ambient/clouds-study.avif` | 384 × 512 | 10.536 | mittleres Band (768×1024 ab x=384) aus `serie-1b-study/clouds-layer.png`, AVIF q55 (WebP 11.622) |
+
+Dimensionierung nach MP-Nachmessung heruntergesetzt (geplant 600×900/576×768 —
+Deckel-Logik in `docs/asset-budget.md` §5 Nachtrag 20.07.): Akteure 540×810
+(0,44 MP; Anzeige 42svh ≈ 378 px, DPR2-Deckung 756 ≤ 810), Wolke 384×512
+(0,20 MP, Ambient-Blur).
+
+**Nebenbefund — Embleme re-dimensioniert (gleicher Pass, MP-Deckel):** alle zehn
+Embleme aus `provenance/emblems-v2/` neu abgeleitet 320² → **160²** (Anzeige ≤ 64 px,
+DPR2 = 128). AVIF gewann 9/10; `process-three-answers-display` ist jetzt **.webp**
+(1.164 B < 1.495 B — Referenzen in `de.js`/`en.js` und der Testliste angepasst).
+Gesamt 83 KB → 30 KB, 1,02 MP → 0,26 MP. Masters unverändert; Re-Derivation jederzeit
+möglich. Schärfe am gebauten Artefakt gesichtet (Tafel + Röhre).
+
+## Wolken-Ebene — Freistellung statt Nachbestellung (23.07.2026)
+
+Bug `docs/bug-wolken-raster-und-scroll.md` Befund 1: das bisherige Derivat war RGB
+ohne Alpha, das „Transparenz"-Schachbrett des Masters leuchtete als Raster über der
+Szene. Steward-Freigabe (Neugenerierung ODER Freistellung, Entscheidung bei Kimi) —
+Weg: **Freistellung des 1b-Masters** (Chroma-Key auf Bläulichkeit, weiche
+Alpha-Rampe), weil das Motiv hell auf flachem neutralen Schachbrett liegt.
+
+Kette (`clouds-layer.png`, unverändert in Provenienz): RGB σ8-Blur (das Schachbrett
+schlug durch die halbtransparent gemalten Wolken und sass als Luminanz-Raster IM
+Wolken-RGB) → Bläulichkeit `B−(R+G)/2`, σ10-geblurrt (Kachel ist Hochfrequenz und
+mittelt sich weg; Wolken sind grossflächig) → smoothstep-Key t0=8/t1=22 → Feder σ1,2
+→ 3:4-Center-Crop (768×1024 ab x=384) → Lanczos 384×512 RGBA. Encoder-Duell:
+AVIF q60/qalpha60 (16.472 B) schlug WebP q85 (43.532 B).
+
+| Deploytes Derivat (`site/static/media/`) | Maße | Bytes | Quelle |
+|---|---|---|---|
+| `ambient/clouds-study.avif` (ersetzt die 10.536-B-RGB-Fassung) | 384 × 512 **RGBA** | 16.472 | Retusche aus `serie-1b-study/clouds-layer.png`, AVIF q60 |
+
+Abnahme `docs/review/wolken-fix/`: kein Raster über Dunkelblau/Grau und in situ
+(1440/390, oben + 600 px Scroll, reduced-motion); Ebene bleibt aktiviert.
+Befund 2 (scrollte mit): Ebene auf `position:fixed; z-index:0` wie `.room-bg`.
+
+## Nachtrag: The Scout sitzend (24.07.2026, Steward-Lieferung)
+
+Neuer Scout-Cutout ausserhalb der Codex-Serien (direkte Steward-Lieferung, ChatGPT,
+C2PA im Master). Ersetzt den stehenden Scout aus Serie 1c **im selben Slot**
+(`/media/actors/scout.avif`) — Einbau nach dem Szene-Kantenprinzip
+(`docs/szene-kantenprinzip-fuer-kimi.md`, links verankert).
+
+| Datei (`provenance/nachtrag-study-scout-sitzend/`) | Motiv / Rolle | Maße | Bytes | SHA-256 |
+|---|---|---|---|---|
+| `scout-sitzend-cutout.png` | **The Scout** — sitzend am Schreibtisch (Lampe, Monitor, Bücher, Stuhl), weisser Grund, C2PA | 1122 × 1402 | 1.328.434 | `81f5e819bda0a5343ed975766c5e8c806a94e2106ea283db203118118cf0b3ca` |
+
+**Cutout-Maße (% der Bildhöhe, vermessen am Alpha-Master):** Augenhöhe ≈ 26 % ·
+Tischoberkante ≈ 49,5 % · Fußlinie ≈ 82 % (Alpha-Bbox x 5,6–99,6 %, y 17,8–82 %).
+
+**Freistell-Pipeline (Browser-Canvas per CDP, Skript /tmp — flüchtig):** Rand-Flood-Fill
+auf Entsättigung+Helligkeit (mn > 150, mx−mn < 30 — erfasst den grauen Bodenschatten-
+Verlauf) → Loch-Füllung nur für grosse randferne CCs (> 4000 px, meanSat < 12,
+meanMn > 190 — schützt Papier/Buch/Halstuch/Monitor) plus Bodenschatten-Reste
+(cy > 66 %, sat < 14, mn > 150, ≥ 20 px) → **Schatten-Unmultiply** (untere Zone,
+entsättigte Mitteltöne → fast schwarz, Alpha ∝ Abdunklung × 0,6 — weicher
+Kontaktschatten statt grauem Fleck) → 1-px-Erode (halbe Kante). Messung: 0 opake
+Weiss-Reste; Montage auf dunklem Grund ohne sichtbaren Saum.
+
+| Deploytes Derivat (`site/static/media/`) | Maße | Bytes | Quelle |
+|---|---|---|---|
+| `actors/scout.avif` | 935 × 1168 **RGBA** | 41.382 | `nachtrag-study-scout-sitzend/scout-sitzend-cutout.png`, AVIF q55 (schlug WebP q80: 60.992 B) |
+
+## Nachtrag: The Council — Saal-Serie + Lesepult (24.07.2026, Steward-Lieferung)
+
+Council-Serie ausserhalb der Codex-Serien (direkte Steward-Lieferung, ChatGPT,
+C2PA in allen Mastern): Saal-Plates quer/hoch je geschlossen/offen (Zählmaschine
+bereits gemalt, Tür zentriert), Lesepult auf weissem Grund, Zählmaschinen-Einzelbild.
+Einbau nach dem Szene-Kantenprinzip (`docs/szene-kantenprinzip-fuer-kimi.md`,
+Pulte von unten). `15_36_54.png` ist bytidentisch mit `15_37_38.png` (nur ein Master
+archiviert); `15_36_34.png` ist ein Kontaktbogen der STUDY-Serie (Dokumentation,
+kein Asset — nicht archiviert).
+
+| Datei (`provenance/nachtrag-council-serie/`) | Motiv / Rolle | Maße | Bytes | SHA-256 |
+|---|---|---|---|---|
+| `council-plate-quer-geschlossen.png` | Saal 16:9, Tür geschlossen, Zählmaschine mittig, C2PA | 1672 × 941 | 2.115.607 | `15126961360a3e62939a9528869bb627ab2c8767f0c3933c324c5bbe6382ea9f` |
+| `council-plate-quer-offen.png` | Saal 16:9, Tür OFFEN (warmer Spalt), C2PA | 1672 × 941 | 1.976.708 | `d37ccd9d19655dca0c33f7baf32bd9c23263d6a4681c65c2b9e718f8abb6b357` |
+| `council-plate-hoch-geschlossen.png` | Saal 2:3, Tür geschlossen (Mobil-Slot, bislang null), C2PA | 1024 × 1536 | 1.956.371 | `234cd4830d635c748e582f11ebee249f8a141ff0b7773ff992793c08d5ce1d7d` |
+| `council-plate-hoch-offen.png` | Saal 2:3, Tür offen — nur Provenienz (Tür-offen-Ebene ist Desktop-only), C2PA | 1024 × 1536 | 1.815.211 | `f6dacc733f6953926468df07498fc4274ef574ad045f5dc89cd23ef8f2e63854` |
+| `lesepult-cutout.png` | **Lesepult** mit Lämpchen und Buchfläche, weisser Grund, C2PA | 1024 × 1536 | 1.642.695 | `46611eff4ff8be6bcff334f1387c80f58371e46eec2409a12c89b80c3aeb0a06` |
+| `zaehlmaschine.png` | Zählmaschine auf Rundtisch, dunkler gemalter Grund — nur Provenienz (in den Plates gemalt; Freistellung gegen Dunkel unsauber), C2PA | 1448 × 1086 | 2.082.507 | `22ae8795b94b70e3dbc5624c7bfa30d95c936452d8db9599c73f85b2968d86c5` |
+
+**Lesepult-Maße (% der Bildhöhe, vermessen am Alpha-Master):** Lampenmitte ≈ 16 % ·
+Buchfläche ≈ 26 % · Basislinie ≈ 88,7 % (Alpha-Bbox x 17,9–79,3 %, y 13,9–88,7 %).
+
+**Freistell-Pipeline (Browser-Canvas per CDP, Skript /tmp — flüchtig):** wie Scout-
+Nachtrag (Rand-Flood-Fill mn > 150/mx−mn < 30 → Loch-Füllung grosser randferner CCs
+→ 1-px-Erode), zwei Anpassungen: **Warmhalo-Rettung** in der oberen Bildhälfte
+(bg-markierte warme Pixel r > b+15, mn > 140 → transluzent statt hart abgeschnittener
+Lampenschein, 53 px) und Sockelschatten-Unmultiply enger auf y > 84 % H (das Pult
+reicht fast bis zum Bildgrund). Messung: 352 px behaltene Reste (Lampen-Blendenfleck
+auf der Buchfläche + Staub ≤ 8 px), Montage auf dem Saal-Plate ohne sichtbaren Saum.
+
+| Deploytes Derivat (`site/static/media/`) | Maße | Bytes | Quelle |
+|---|---|---|---|
+| `actors/lectern.avif` | 1024 × 1536 **RGBA** | 55.514 | `lesepult-cutout.png`, AVIF q55 (schlug WebP q80: 80.148 B) |
+| `scenes/hall-display.avif` (ersetzt die 1600×900-Fassung vom 17.07.) | 1672 × 941 | 91.160 | `council-plate-quer-geschlossen.png`, AVIF q55 (WebP: 118.534 B) |
+| `scenes/hall-door-open-display.avif` | 1672 × 941 | 76.964 | `council-plate-quer-offen.png`, AVIF q55 (WebP: 94.976 B) |
+| `scenes/hall-portrait-display.avif` | 1024 × 1536 | 61.777 | `council-plate-hoch-geschlossen.png`, AVIF q55 (WebP: 79.734 B) |
+| `scenes/hall-portrait-800.avif` | 800 × 1200 | 34.894 | `council-plate-hoch-geschlossen.png` via sips, AVIF q55 (WebP: 43.118 B) |

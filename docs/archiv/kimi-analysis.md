@@ -1,3 +1,5 @@
+> **Archiviert 2026-07-28 (CC) — Kimi-Bauphase, durch den council-rooms-Bau abgelöst.** Verschoben nach docs/archiv/, nicht gelöscht (erklärt die Historie, warum Dinge so sind).
+
 # Kimi-Analyse: Drei-Räume-Umbau der Startseite (feat/council-rooms)
 
 **Status:** Phase 1 — Analyse und Plan. Keine Quelldatei außer diesem Dokument geändert.

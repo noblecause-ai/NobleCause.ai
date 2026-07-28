@@ -1,3 +1,5 @@
+> **Archiviert 2026-07-28 (CC) — Codex-Bauphase, durch den council-rooms-Bau abgelöst.** Verschoben nach docs/archiv/, nicht gelöscht (erklärt die Historie, warum Dinge so sind).
+
 # Korrekturauftrag an Codex
 ## NobleCause.ai · Die Bühne ist das Produkt
 

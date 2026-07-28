@@ -1,3 +1,5 @@
+> **Archiviert 2026-07-28 (CC) — überholter --SKIP-Bühnenspiel-Entwurf, nie Teil der Baseline.** Verschoben nach docs/archiv/, nicht gelöscht (erklärt die Historie, warum Dinge so sind).
+
 > **SKIP — Kimi-eigener Entwurf für ein künftiges Konzept.**
 > Diese Datei ist NICHT Teil der Übergabe-Baseline (`docs/handover-baseline.md`).
 > Für den Drei-Wege-Vergleich: überspringen — sie enthält einen Lösungsweg, keinen Ist-Zustand.
