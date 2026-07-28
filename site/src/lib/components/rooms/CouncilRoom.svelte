@@ -14,6 +14,7 @@
 	// stabile, auf allen Räumen identische Block. Die Teilnehmerzahl steckt in
 	// den Datenpfaden (modelTracks, Röhren-Schritt 3), nicht in der Copy.
 	import CouncilActors from './CouncilActors.svelte';
+	import CouncilMachine from './CouncilMachine.svelte';
 	import Door from './Door.svelte';
 	import ModelPulpits from './ModelPulpits.svelte';
 	import ResultBoard from './ResultBoard.svelte';
@@ -107,6 +108,9 @@
 			{/if}
 		{/snippet}
 		{#snippet scene2()}
+			<!-- Zweite Ebene: die Zählmaschine (P10, deckungsgleich über der
+			     gemalten) — hinter den Pulten, trägt später §7-Verdeckung/§8-Ruck. -->
+			<CouncilMachine {t} />
 			<!-- Zweite Ebene: die Lesepulte der Teilnehmer nehmen von unten ihre
 			     Plätze ein (Kantenprinzip) — generisch aus modelTracks, N Pulte
 			     im Saal; Türachse und Zählmaschine bleiben frei. -->
