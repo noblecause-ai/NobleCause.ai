@@ -223,6 +223,11 @@ export const de = {
 		actors: {
 			pult: {
 				role: 'antwortet getrennt — jedes Votum öffentlich.'
+			},
+			// Die Zählmaschine (§8): die Plakette nennt die Aggregationsregel —
+			// eine Prozessaussage, kein Ergebnis (die Datennaht bleibt versiegelt).
+			machine: {
+				rule: 'Zwei gleiche Nennungen ergeben eine Empfehlung.'
 			}
 		},
 		// §4.2 „Wie gezählt wurde" — ein Block ersetzt drei (Empfehlungen /

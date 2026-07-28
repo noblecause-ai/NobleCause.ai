@@ -221,6 +221,11 @@ export const en = {
 		actors: {
 			pult: {
 				role: 'answers separately — every vote public.'
+			},
+			// The counting machine (§8): the plaque states the aggregation rule —
+			// a process statement, not a result (the data seam stays sealed).
+			machine: {
+				rule: 'Two matching mentions make a recommendation.'
 			}
 		},
 		// §4.2 "How the votes were counted" — one block replaces three
