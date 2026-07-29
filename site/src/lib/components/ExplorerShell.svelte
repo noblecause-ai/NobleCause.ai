@@ -75,6 +75,7 @@
 	}
 	.explorer :global(.rec-rows > li) {
 		padding: 1.1rem 0;
+		scroll-margin-top: 1.5rem;
 	}
 	.explorer :global(.rec-rows > li + li) {
 		border-top: 1px solid rgba(166, 123, 61, 0.28);
@@ -203,67 +204,54 @@
 		line-height: 1.55;
 	}
 
-	/* ---- §2 Adressierbare Filter (Links, kein Zustand) ---------------------- */
-	.explorer :global(.filterbar) {
+	/* ---- Sprungleiste: reine Anker-Links, kein Schaltzustand, nichts dimmt ---
+	   Jeder Sprungpunkt trägt sein Zeichen (Säulen-Emblem), Zeichen links, Name
+	   rechts, Vignette statt Kasten. Ohne JS trägt der Fragment-Anker das Springen.
+	   Wo später nach Modell gesprungen wird, steht dort das Medaillon (§4). */
+	.explorer :global(.jumpbar) {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.4rem 0.5rem;
-		margin: 0 0 0.7rem;
+		gap: 0.3rem 0.6rem;
+		margin: 0 0 1.4rem;
 	}
-	.explorer :global(.filterlink) {
+	.explorer :global(.jumplink) {
 		display: inline-flex;
 		align-items: center;
-		min-height: 34px;
-		padding: 0.3rem 0.7rem;
-		border: 1px solid rgba(166, 123, 61, 0.4);
+		gap: 0.55rem;
+		min-height: 44px;
+		padding: 0.3rem 0.9rem 0.3rem 0.4rem;
 		border-radius: 999px;
 		color: #c9ab6e;
-		font: 600 0.68rem ui-sans-serif, system-ui, sans-serif;
-		letter-spacing: 0.06em;
+		font: 600 0.66rem ui-sans-serif, system-ui, sans-serif;
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
 		text-decoration: none;
+		background: radial-gradient(ellipse 88% 100% at 26% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 72%);
 	}
-	.explorer :global(.filterlink:hover) {
-		border-color: #a67b3d;
+	.explorer :global(.jumplink .emblem) {
+		width: 1.9rem;
+		height: 1.9rem;
+		flex: none;
+		border: 1px solid rgba(190, 139, 58, 0.6);
+		border-radius: 50%;
+		background: #080b0c;
+		object-fit: cover;
+	}
+	.explorer :global(.jumplink:hover) {
 		color: #e7c881;
 	}
-	.explorer :global(.filterlink.active) {
-		background: rgba(213, 166, 87, 0.16);
+	.explorer :global(.jumplink:hover .emblem) {
 		border-color: #a67b3d;
-		color: #f0d899;
 	}
-	.explorer :global(.filternote) {
-		margin: 0 0 1.2rem;
-		color: #9e927f;
-		font-size: 0.85rem;
-	}
-	.explorer :global(.rec-area),
-	.explorer :global(.mark-model),
-	.explorer :global(.voice-name) {
+	/* Bereichs-Label an den Zeilen: nur noch Beschriftung, kein Link. */
+	.explorer :global(.rec-area) {
 		text-decoration: none;
 	}
-	.explorer :global(.rec-area:hover),
-	.explorer :global(.mark-model:hover),
-	.explorer :global(.voice-name:hover) {
-		color: #e7c881;
-	}
-	.explorer :global(.mark-org),
-	.explorer :global(.tally-org),
-	.explorer :global(.pillar-org) {
-		color: inherit;
-		text-decoration-color: rgba(166, 123, 61, 0.45);
-	}
 	.explorer :global(.mark-org) {
+		color: #e6dbc4;
 		font-weight: 600;
 	}
-	/* Hervorheben: der nicht adressierte Slice dimmt, die volle Liste bleibt. */
-	.explorer :global(.dim) {
-		opacity: 0.32;
-		transition: opacity 0.25s ease;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.explorer :global(.dim) {
-			transition: none;
-		}
+	.explorer :global(.pillar-org) {
+		color: #e6dbc4;
 	}
 </style>
