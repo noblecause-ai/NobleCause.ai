@@ -1,5 +1,8 @@
-import { listSessions } from '$lib/server/content.js';
+import { getAllSessions, getOrganizations } from '$lib/server/content.js';
+import { buildSessionSummaries } from '$lib/server/homepage.js';
 
 export function load() {
-	return { sessions: listSessions() };
+	// Je Sitzung ein Bereichs-Kurzstatus (Zählstand + genannte Organisation),
+	// lenient aufgelöst — der Explorer läuft über alle Sitzungen.
+	return { sessions: buildSessionSummaries(getAllSessions(), getOrganizations()) };
 }

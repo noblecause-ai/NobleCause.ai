@@ -50,6 +50,17 @@ export function getOrganizations() {
 	return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
 
+// Medaillon-Register (models.json, Repo-Root): je Modell die Selbstdarstellung
+// (Motiv/Begründung/Person) und das Medaillon-Asset. Der Explorer hängt sie an
+// die Voten (Konzept §4 — Motiv/Begründung „eine Ebene unter dem Medaillon").
+// Rückgabe als Map model → Eintrag; fehlt die Datei, leere Map (kein Wurf).
+export function getModelsRegistry() {
+	const file = path.join(ROOT, 'models.json');
+	if (!fs.existsSync(file)) return new Map();
+	const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+	return new Map((data.models ?? []).map((entry) => [entry.model, entry]));
+}
+
 export function getAllSessions() {
 	return listSessions().map((item) => getSession(item.id));
 }

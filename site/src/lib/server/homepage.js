@@ -108,6 +108,38 @@ export function buildRecommendations(session, registry) {
 	});
 }
 
+// Übersicht des Explorers (/sessions): je Sitzung ein Bereichs-Kurzstatus
+// (Zählstand + genannte Organisation). Auflösung LENIENT wie das Archiv — der
+// Explorer läuft über ALLE Sitzungen, eine alte Organisation kann aus der
+// Registry gefallen sein; niemals werfen (das strikte resolveOrganization gilt
+// nur für die aktuelle Sitzung der Räume).
+export function buildSessionSummaries(sessions, registry) {
+	const organizations = registryMap(registry);
+	return sessions.map((session) => ({
+		id: session.id,
+		number: session.number,
+		date: session.date,
+		title: session.title,
+		question: session.question,
+		total_eur: session.costs?.total ?? null,
+		pillars: ['A', 'B', 'C', 'D'].map((pillar) => {
+			const recommendation = (session.recommendations ?? []).find((r) => r.pillar === pillar);
+			if (!recommendation) return { pillar, status: 'missing', name: null, count: null, total: null };
+			if (!recommendation.has_consensus) {
+				return { pillar, status: 'open', name: null, count: null, total: null };
+			}
+			const organization = organizations.get(recommendation.organization_id);
+			return {
+				pillar,
+				status: 'consensus',
+				name: organization?.canonical_name ?? recommendation.organization ?? null,
+				count: recommendation.convergence?.count ?? null,
+				total: recommendation.convergence?.total ?? null
+			};
+		})
+	}));
+}
+
 export function buildHomepageViewModel({ session, sessions, registry }) {
 	if ((session.unresolved_votes ?? []).length) {
 		throw new Error(`Sitzung ${session.id} enthält unaufgelöste Stimmen`);
