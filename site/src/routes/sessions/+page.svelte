@@ -1,27 +1,33 @@
 <script>
-	import { PILLARS, PILLAR_ORDER } from '$lib/pillars.js';
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
+	import { PILLARS, PILLAR_ORDER, pillarOfSlug } from '$lib/pillars.js';
 
 	let { data } = $props();
 
-	const MONTHS = [
-		'Januar',
-		'Februar',
-		'März',
-		'April',
-		'Mai',
-		'Juni',
-		'Juli',
-		'August',
-		'September',
-		'Oktober',
-		'November',
-		'Dezember'
-	];
+	const MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 	function fmtDate(iso) {
 		const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso ?? '');
-		if (!m) return iso ?? '';
-		return `${+m[3]}. ${MONTHS[+m[2] - 1]} ${m[1]}`;
+		return m ? `${+m[3]}. ${MONTHS[+m[2] - 1]} ${m[1]}` : (iso ?? '');
 	}
+
+	// Adressierbare Filter (Schritt 2): Links, kein Schaltzustand. Ohne JS ist die
+	// volle Liste der Inhalt; mit JS hebt der adressierte Slice hervor, der Rest
+	// dimmt. Reaktiv aus der URL — teilbar, im Verlauf auffindbar.
+	// url.searchParams ist bei Prerendering verboten — nur im Browser lesen. SSR
+	// rendert also ohne Filter (volle Liste, §0); der Client hebt reaktiv hervor.
+	const bereich = $derived(browser ? page.url.searchParams.get('bereich') : null);
+	const org = $derived(browser ? page.url.searchParams.get('org') : null);
+	const filtering = $derived(Boolean(bereich || org));
+	// Ziel-URL mit gesetzten/gelöschten Parametern (andere bleiben erhalten).
+	function href(overrides) {
+		const p = new URLSearchParams(browser ? page.url.searchParams : '');
+		for (const [k, v] of Object.entries(overrides)) v == null ? p.delete(k) : p.set(k, v);
+		const q = p.toString();
+		return q ? `/sessions/?${q}` : '/sessions/';
+	}
+	const isHit = (cell, pil) =>
+		(!bereich || pil === pillarOfSlug(bereich)) && (!org || cell?.organization_id === org);
 </script>
 
 <svelte:head>
@@ -35,6 +41,22 @@
 	Jede Sitzung im Wortlaut — die vier Bereiche mit Zählstand und genannter Organisation. Neueste
 	zuerst.
 </p>
+
+<nav class="filterbar" aria-label="Nach Bereich filtern">
+	<a class="filterlink" class:active={!bereich} href={href({ bereich: null })}>Alle Bereiche</a>
+	{#each PILLAR_ORDER as p (p)}
+		<a
+			class="filterlink"
+			class:active={bereich === PILLARS[p].slug}
+			href={href({ bereich: bereich === PILLARS[p].slug ? null : PILLARS[p].slug })}
+		>{PILLARS[p].label}</a>
+	{/each}
+</nav>
+{#if org}
+	<p class="filternote">
+		Organisation adressiert. <a href={href({ org: null })}>zurücksetzen</a>
+	</p>
+{/if}
 
 {#if data.sessions.length === 0}
 	<p class="muted">
@@ -51,14 +73,14 @@
 					<span class="session-title">{s.title}</span>
 					<time class="session-date" datetime={s.date}>{fmtDate(s.date)}</time>
 				</a>
-				<ul class="pillars">
+				<ul class="pillars" class:filtering>
 					{#each PILLAR_ORDER as p (p)}
 						{@const cell = s.pillars.find((x) => x.pillar === p)}
-						<li class="pillar">
+						<li class="pillar" class:hit={isHit(cell, p)}>
 							<img class="emblem" src={PILLARS[p].emblem} alt="" width="40" height="40" loading="lazy" />
-							<span class="rec-area">{PILLARS[p].label}</span>
+							<a class="rec-area" href={href({ bereich: bereich === PILLARS[p].slug ? null : PILLARS[p].slug })}>{PILLARS[p].label}</a>
 							{#if cell?.status === 'consensus'}
-								<span class="pillar-org">{cell.name}</span>
+								<a class="pillar-org" href={href({ org: org === cell.organization_id ? null : cell.organization_id })}>{cell.name}</a>
 								{#if cell.count != null}
 									<span class="rec-tally">{cell.count} von {cell.total}</span>
 								{/if}
@@ -80,7 +102,7 @@
 
 <style>
 	.lead {
-		margin: 0 0 2rem;
+		margin: 0 0 1.4rem;
 		color: #c7bca7;
 	}
 	.session-list {
@@ -133,12 +155,18 @@
 			grid-template-columns: repeat(4, minmax(0, 1fr));
 		}
 	}
+	/* Hervorheben: der adressierte Slice bleibt, der Rest dimmt (Konzept-treu —
+	   die volle Liste bleibt der Inhalt). */
+	.pillars.filtering .pillar:not(.hit) {
+		opacity: 0.32;
+	}
 	.pillar {
 		display: grid;
 		grid-template-columns: auto 1fr;
 		grid-template-rows: auto auto auto;
 		column-gap: 0.6rem;
 		align-content: start;
+		transition: opacity 0.25s ease;
 	}
 	.pillar .emblem {
 		grid-row: 1 / 3;
@@ -151,11 +179,16 @@
 	}
 	.pillar .rec-area {
 		align-self: end;
+		text-decoration: none;
+	}
+	.pillar .rec-area:hover {
+		color: #e7c881;
 	}
 	.pillar-org {
 		grid-column: 2;
 		color: #e6dbc4;
 		font-size: 0.92rem;
+		text-decoration-color: rgba(166, 123, 61, 0.5);
 	}
 	.pillar .rec-tally,
 	.pillar .rec-tally.split,
@@ -168,5 +201,10 @@
 		color: #9e927f;
 		font-size: 0.82rem;
 		font-family: ui-sans-serif, system-ui, sans-serif;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.pillar {
+			transition: none;
+		}
 	}
 </style>

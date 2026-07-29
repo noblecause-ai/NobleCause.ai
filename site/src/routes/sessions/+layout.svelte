@@ -203,4 +203,70 @@
 		font-size: 0.78rem;
 		line-height: 1.55;
 	}
+
+	/* ---- §2 Adressierbare Filter (Links, kein Zustand) ---------------------- */
+	.explorer :global(.filterbar) {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4rem 0.5rem;
+		margin: 0 0 0.7rem;
+	}
+	.explorer :global(.filterlink) {
+		display: inline-flex;
+		align-items: center;
+		min-height: 34px;
+		padding: 0.3rem 0.7rem;
+		border: 1px solid rgba(166, 123, 61, 0.4);
+		border-radius: 999px;
+		color: #c9ab6e;
+		font: 600 0.68rem ui-sans-serif, system-ui, sans-serif;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+	.explorer :global(.filterlink:hover) {
+		border-color: #a67b3d;
+		color: #e7c881;
+	}
+	.explorer :global(.filterlink.active) {
+		background: rgba(213, 166, 87, 0.16);
+		border-color: #a67b3d;
+		color: #f0d899;
+	}
+	.explorer :global(.filternote) {
+		margin: 0 0 1.2rem;
+		color: #9e927f;
+		font-size: 0.85rem;
+	}
+	/* Adressierbare Labels als Links — keine Unterstreichung, nur Hover. */
+	.explorer :global(.rec-area),
+	.explorer :global(.mark-model),
+	.explorer :global(.voice-name) {
+		text-decoration: none;
+	}
+	.explorer :global(.rec-area:hover),
+	.explorer :global(.mark-model:hover),
+	.explorer :global(.voice-name:hover) {
+		color: #e7c881;
+	}
+	/* Organisationsnamen als Links — Farbe erben, dezenter Unterstrich. */
+	.explorer :global(.mark-org),
+	.explorer :global(.tally-org),
+	.explorer :global(.pillar-org) {
+		color: inherit;
+		text-decoration-color: rgba(166, 123, 61, 0.45);
+	}
+	.explorer :global(.mark-org) {
+		font-weight: 600;
+	}
+	/* Hervorheben: der nicht adressierte Slice dimmt, die volle Liste bleibt. */
+	.explorer :global(.dim) {
+		opacity: 0.32;
+		transition: opacity 0.25s ease;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.explorer :global(.dim) {
+			transition: none;
+		}
+	}
 </style>

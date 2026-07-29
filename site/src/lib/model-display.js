@@ -12,5 +12,15 @@ const MODEL = {
 	'gemini-2.5-pro': 'Gemini 2.5 Pro'
 };
 
+// Adresse (?modell=gpt) ↔ Modell. Schritt 2: adressierbare Filter als Links.
+const SLUG = {
+	'claude-opus-4-8': 'opus',
+	'claude-sonnet-4-5': 'sonnet',
+	'gpt-5.2': 'gpt',
+	'gemini-2.5-pro': 'gemini'
+};
+
 export const companyName = (family) => FAMILY[family] ?? family;
 export const modelName = (model, fallback) => MODEL[model] ?? fallback ?? model;
+export const modelSlug = (model) => SLUG[model] ?? model;
+export const modelOfSlug = (slug) => Object.entries(SLUG).find(([, s]) => s === slug)?.[0] ?? slug;

@@ -32,7 +32,14 @@ export function load({ params }) {
 	const recOf = (vote, pillar) =>
 		(vote?.recommendations ?? []).find((r) => r.pillar === pillar) ?? null;
 	const markOf = (rec) =>
-		rec ? { org: rec.organization, conditional: !!rec.conditional, reservation: rec.reservation } : null;
+		rec
+			? {
+					org: rec.organization,
+					orgId: rec.organization_id ?? null,
+					conditional: !!rec.conditional,
+					reservation: rec.reservation
+				}
+			: null;
 
 	// Je Teilnehmer die Marken pro Bereich (Erst-/Schlussvotum, geändert).
 	const tracks = participants.map((p) => {
@@ -58,6 +65,7 @@ export function load({ params }) {
 			pillar,
 			hasConsensus: rec?.has_consensus ?? false,
 			organization: rec?.organization ?? null,
+			organizationId: rec?.organization_id ?? null,
 			count: rec?.convergence?.count ?? null,
 			total: rec?.convergence?.total ?? null,
 			reservations: (rec?.convergence?.votes ?? []).filter((v) => v.conditional),

@@ -133,6 +133,7 @@ export function buildSessionSummaries(sessions, registry) {
 				pillar,
 				status: 'consensus',
 				name: organization?.canonical_name ?? recommendation.organization ?? null,
+				organization_id: recommendation.organization_id ?? null,
 				count: recommendation.convergence?.count ?? null,
 				total: recommendation.convergence?.total ?? null
 			};

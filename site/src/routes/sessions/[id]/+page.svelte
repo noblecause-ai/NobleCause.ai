@@ -1,12 +1,37 @@
 <script>
-	import { PILLARS, PILLAR_ORDER } from '$lib/pillars.js';
-	import { companyName, modelName } from '$lib/model-display.js';
+	import { browser } from '$app/environment';
+	import { page } from '$app/state';
+	import { PILLARS, PILLAR_ORDER, pillarOfSlug } from '$lib/pillars.js';
+	import { companyName, modelName, modelOfSlug, modelSlug } from '$lib/model-display.js';
 
 	let { data } = $props();
 	const s = $derived(data.session);
 	const participants = $derived(data.participants);
 	const tracks = $derived(data.tracks);
 	const pillars = $derived(data.pillars);
+
+	// Adressierbare Filter (Schritt 2): Bereich/Modell/Org als Links, kein Zustand.
+	// Ohne JS die volle Seite; mit JS hebt der adressierte Slice hervor, der Rest
+	// dimmt. Reaktiv aus der URL.
+	// url.searchParams ist bei Prerendering verboten — nur im Browser lesen. SSR
+	// rendert ohne Filter (volle Seite, §0); der Client hebt reaktiv hervor.
+	const fBereich = $derived(browser ? page.url.searchParams.get('bereich') : null);
+	const fModell = $derived(browser ? page.url.searchParams.get('modell') : null);
+	const fOrg = $derived(browser ? page.url.searchParams.get('org') : null);
+	const bereichPillar = $derived(fBereich ? pillarOfSlug(fBereich) : null);
+	const modellModel = $derived(fModell ? modelOfSlug(fModell) : null);
+	const filtering = $derived(Boolean(fBereich || fModell || fOrg));
+	const basePath = $derived(`/sessions/${data.session.id}/`);
+	function href(overrides) {
+		const p = new URLSearchParams(browser ? page.url.searchParams : '');
+		for (const [k, v] of Object.entries(overrides)) v == null ? p.delete(k) : p.set(k, v);
+		const q = p.toString();
+		return q ? `${basePath}?${q}` : basePath;
+	}
+	const pillarHit = (p) => !bereichPillar || p === bereichPillar;
+	const markHit = (p, model, orgId) =>
+		pillarHit(p) && (!modellModel || model === modellModel) && (!fOrg || orgId === fOrg);
+	const voiceHit = (model) => !modellModel || model === modellModel;
 
 	const MONTHS = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 	function fmtDate(iso) {
@@ -31,6 +56,24 @@
 <h1>{s.title}</h1>
 <blockquote class="question">{s.question}</blockquote>
 
+<nav class="filterbar" aria-label="Bereich adressieren">
+	<a class="filterlink" class:active={!fBereich} href={href({ bereich: null })}>Alle Bereiche</a>
+	{#each PILLAR_ORDER as p (p)}
+		<a
+			class="filterlink"
+			class:active={fBereich === PILLARS[p].slug}
+			href={href({ bereich: fBereich === PILLARS[p].slug ? null : PILLARS[p].slug })}
+		>{PILLARS[p].label}</a>
+	{/each}
+</nav>
+{#if fModell || fOrg}
+	<p class="filternote">
+		{#if fModell}Modell adressiert. <a href={href({ modell: null })}>zurücksetzen</a>{/if}
+		{#if fModell && fOrg} · {/if}
+		{#if fOrg}Organisation adressiert. <a href={href({ org: null })}>zurücksetzen</a>{/if}
+	</p>
+{/if}
+
 {#if s.correction_html}
 	<aside class="correction">
 		<p class="correction-label">Korrektur</p>
@@ -52,15 +95,17 @@
 	darüber der Zählstand. Das Programm zählt nur gleiche Nennungen: zwei gleiche ergeben eine
 	Empfehlung.
 </p>
-<ol class="rec-rows">
+<ol class="rec-rows" class:filtering>
 	{#each PILLAR_ORDER as p (p)}
 		{@const pil = pillars.find((x) => x.pillar === p)}
 		<li>
-			<div class="rec-head">
+			<div class="rec-head" class:dim={!pillarHit(p)}>
 				<img class="emblem" src={PILLARS[p].emblem} alt="" width="48" height="48" loading="lazy" />
-				<span class="rec-area">{PILLARS[p].label}</span>
+				<a class="rec-area" href={href({ bereich: fBereich === PILLARS[p].slug ? null : PILLARS[p].slug })}>{PILLARS[p].label}</a>
 				{#if pil?.hasConsensus}
-					<span class="rec-tally">{pil.organization} · {pil.count} von {pil.total}</span>
+					<span class="rec-tally">
+						{#if pil.organizationId}<a class="tally-org" href={href({ org: fOrg === pil.organizationId ? null : pil.organizationId })}>{pil.organization}</a>{:else}{pil.organization}{/if} · {pil.count} von {pil.total}
+					</span>
 				{:else}
 					<span class="rec-tally split">getrennt — keine Empfehlung</span>
 				{/if}
@@ -68,20 +113,20 @@
 			<div class="marks">
 				{#each participants as pt (pt.model)}
 					{@const row = rowFor(pt.model, p)}
-					<div class="mark">
+					<div class="mark" class:dim={!markHit(p, pt.model, row?.final?.orgId)}>
 						{#if pt.medallion}
 							<img class="med" src={pt.medallion} alt="" width="256" height="256" loading="lazy" />
 						{:else}
 							<span class="med-none"></span>
 						{/if}
-						<span class="mark-model">
+						<a class="mark-model" href={href({ modell: fModell === modelSlug(pt.model) ? null : modelSlug(pt.model) })}>
 							{modelName(pt.model, pt.label)} <span class="mark-company">· {companyName(pt.family)}</span>
-						</span>
+						</a>
 						<span class="mark-vote">
 							{#if row?.changed}
-								<del>{row.initial.org}</del><strong class="mark-org">{row.final.org}</strong>
+								<del>{row.initial.org}</del>{#if row.final?.orgId}<a class="mark-org" href={href({ org: fOrg === row.final.orgId ? null : row.final.orgId })}>{row.final.org}</a>{:else}<strong class="mark-org">{row.final.org}</strong>{/if}
 							{:else if row?.final}
-								<strong class="mark-org">{row.final.org}</strong>
+								{#if row.final.orgId}<a class="mark-org" href={href({ org: fOrg === row.final.orgId ? null : row.final.orgId })}>{row.final.org}</a>{:else}<strong class="mark-org">{row.final.org}</strong>{/if}
 							{:else}
 								<span class="mark-none">kein Votum</span>
 							{/if}
@@ -99,16 +144,16 @@
 
 <h2 id="vollprotokoll">Die Stimmen im Wortlaut</h2>
 <p class="muted small">Ungekürzt. Jede Stimme trägt ihr Medaillon; darunter die Selbstdarstellung.</p>
-<ol class="voices">
+<ol class="voices" class:filtering>
 	{#each participants as pt (pt.model)}
-		<li id={pt.model}>
+		<li id={pt.model} class:dim={!voiceHit(pt.model)}>
 			<div class="voice-head">
 				{#if pt.medallion}
 					<img class="med-lg" src={pt.medallion} alt="" width="256" height="256" loading="lazy" />
 				{:else}
 					<span class="med-lg med-none"></span>
 				{/if}
-				<span class="voice-name">{modelName(pt.model, pt.label)}</span>
+				<a class="voice-name" href={href({ modell: fModell === modelSlug(pt.model) ? null : modelSlug(pt.model) })}>{modelName(pt.model, pt.label)}</a>
 				<span class="voice-company">{companyName(pt.family)}{#if pt.person} · {pt.person}{/if}</span>
 			</div>
 			{#if pt.motiv || pt.begruendung}
