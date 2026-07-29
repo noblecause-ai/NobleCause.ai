@@ -6,7 +6,6 @@
 	import { browser } from '$app/environment';
 	import { page } from '$app/state';
 	import { installRoomTransitions } from '$lib/room-transitions.js';
-	import { installDeskPassage } from '$lib/desk-passage.js';
 	import { installStage } from '$lib/stage.js';
 	import { langOfPath, locales, roomPaths, siblingPath } from '$lib/i18n/index.js';
 
@@ -20,7 +19,6 @@
 
 	if (browser) {
 		installRoomTransitions();
-		installDeskPassage();
 		installStage();
 	}
 </script>
@@ -240,54 +238,6 @@
 	:global(.passage-layer .p-near-hole),
 	:global(.passage-layer .p-leaf) {
 		transform: translateZ(0);
-	}
-
-	/* ---- Lesetisch-Übergang (Hinweg Archiv → Explorer) ---------------------
-	   Von desk-passage.js per JS erzeugt (kein Scope-Hash → :global). Der Tisch
-	   fährt von unten herein, das Lampenlicht weitet sich, der Raum dahinter sinkt
-	   in Unschärfe/Dunkel. §0: entsteht nur bei JS + no-preference + Nicht-Modifier. */
-	:global(.desk-layer) {
-		position: fixed;
-		inset: 0;
-		z-index: 60;
-		overflow: hidden;
-		pointer-events: none;
-	}
-	/* Der Raum dahinter: Deckung fährt über die Opazität hoch (WAAPI), die
-	   Unschärfe steht als backdrop-filter (kein Animieren von backdrop-filter). */
-	:global(.desk-scrim) {
-		position: absolute;
-		inset: 0;
-		background: rgba(3, 5, 7, 0.74);
-		backdrop-filter: blur(7px);
-		-webkit-backdrop-filter: blur(7px);
-	}
-	/* Das Lampenlicht: warmer Radial-Kegel von unten (screen-Blend wie die
-	   Pult-Lampe), weitet sich über die WAAPI-Skalierung. */
-	:global(.desk-glow) {
-		position: absolute;
-		left: 50%;
-		bottom: 0;
-		width: 96vw;
-		height: 78vh;
-		transform: translateX(-50%);
-		mix-blend-mode: screen;
-		background: radial-gradient(
-			ellipse 58% 52% at 50% 82%,
-			rgba(255, 201, 128, 0.5),
-			rgba(255, 180, 100, 0.13) 50%,
-			rgba(255, 180, 100, 0) 72%
-		);
-	}
-	/* Das Pult-Cutout füllt den unteren Bildrand; Startlage unter der Kante. */
-	:global(.desk-img) {
-		position: absolute;
-		left: 50%;
-		bottom: 0;
-		transform: translate(-50%, 100%);
-		width: min(44rem, 90vw);
-		height: auto;
-		filter: drop-shadow(0 -10px 34px rgba(0, 0, 0, 0.6));
 	}
 
 	/* Übergänge zwischen den Räumen (nur installiert, wenn API + no-preference). */

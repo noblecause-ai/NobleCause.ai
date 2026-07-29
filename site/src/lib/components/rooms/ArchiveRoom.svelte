@@ -113,7 +113,7 @@
 			<ol class="session-list">
 				{#each home.archive as item (item.id)}
 					<li>
-						<a class="desk-link" href="/sessions/{item.id}/">
+						<a href="/sessions/{item.id}/">
 							<span class="session-meta">{t.archive.sessionLabel(item.number)} · {item.date}</span>
 							<!-- Ergebnis-Chips (§5.2): das Regal zeigt Ergebnisse, keine
 							     Dateinamen. Namen registry-aufgelöst (Fallback: der
@@ -216,7 +216,7 @@
 		</section>
 
 		<section class="room-section">
-			<a class="protocol-link desk-link" href="/sessions/{home.currentSession.id}/">{t.archive.protocolLink}</a>
+			<a class="protocol-link" href="/sessions/{home.currentSession.id}/">{t.archive.protocolLink}</a>
 			{#if t.archive.protocolNote}
 				<small class="record-note">{t.archive.protocolNote}</small>
 			{/if}
