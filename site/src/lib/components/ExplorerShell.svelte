@@ -74,11 +74,23 @@
 		list-style: none;
 	}
 	.explorer :global(.rec-rows > li) {
-		padding: 1.1rem 0;
+		padding: 1.1rem 0 1.1rem 0.9rem;
 		scroll-margin-top: 1.5rem;
 	}
 	.explorer :global(.rec-rows > li + li) {
 		border-top: 1px solid rgba(166, 123, 61, 0.28);
+	}
+	/* Adressierung über :target (reines CSS, ohne JS): der angesprungene Bereich
+	   bekommt die Messing-Haarlinie (linker Brass-Akzent, kein Reflow) und sein
+	   Emblem leuchtet — statisch, kein Puls. Die übrigen behalten vollen Kontrast. */
+	.explorer :global(.rec-rows > li:target) {
+		box-shadow: inset 2px 0 0 0 #b8863c;
+	}
+	.explorer :global(.rec-rows > li:target .emblem) {
+		border-color: #e7c881;
+		box-shadow:
+			0 0 0 1px rgba(213, 166, 87, 0.5),
+			0 0 14px rgba(213, 166, 87, 0.32);
 	}
 	.explorer :global(.rec-head) {
 		display: flex;

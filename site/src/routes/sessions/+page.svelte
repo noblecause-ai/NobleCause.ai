@@ -145,6 +145,13 @@
 		background: #080b0c;
 		object-fit: cover;
 	}
+	/* Adressierung über :target (ohne JS): die angesprungene Zelle leuchtet. */
+	.pillar:target .emblem {
+		border-color: #e7c881;
+		box-shadow:
+			0 0 0 1px rgba(213, 166, 87, 0.5),
+			0 0 12px rgba(213, 166, 87, 0.3);
+	}
 	.pillar .rec-area {
 		align-self: end;
 	}
