@@ -151,18 +151,20 @@
 		<section class="room-section" aria-labelledby="count-title">
 			<h2 id="count-title">{t.council.countTitle}</h2>
 			<p class="count-intro">{t.council.countIntro}</p>
-			<!-- Sprungleiste (§3, adressierbar): reine Anker auf die Bereichszeilen.
-			     :target hebt den adressierten Bereich hervor, die anderen bleiben voll
-			     lesbar — kein JS, alle Viewports. Die Trommel spricht dazu, wenn sie
-			     sichtbar ist (Teil B, CouncilMachine). -->
-			<nav class="count-jump" aria-label={t.council.jumpToArea}>
-				{#each countRows as { rec } (rec.pillar)}
-					<a class="count-jumplink" href="#zaehlstrang-{rec.pillar}">
+			<!-- Fokus-Auswahl als CSS-Radiogruppe: der Klick auf ein Emblem aktualisiert
+			     NUR den Trichter (Maschinenergebnis), kein Sprung — kein Fragment, kein
+			     Scroll. Jedes Radio liegt IN seinem Label und füllt es unsichtbar (bleibt
+			     im Blick → kein Fokus-Scroll). Reveal über .room-section:has(:checked).
+			     Vorgabe: erster Bereich (Zukunft). Kein JS; tastaturbedienbar. -->
+			<div class="count-jump" role="radiogroup" aria-label={t.council.jumpToArea}>
+				{#each countRows as { rec }, i (rec.pillar)}
+					<label class="count-jumplink">
+						<input class="cf-radio" type="radio" name="cf-focus" id="cf-{rec.pillar}" checked={i === 0} />
 						<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
 						{t.pillars[rec.pillar]?.label ?? rec.pillarName}
-					</a>
+					</label>
 				{/each}
-			</nav>
+			</div>
 			<!-- 2b: der Zählstrang als senkrechter Trichter — drei Pulte → Trichter →
 			     Trommel, EIN Bereich im Fokus (Vorgabe Zukunft; Auswahl über die
 			     Embleme via :target/:has, kein JS). Kastenlos: Vignette + Haarlinie.
@@ -216,7 +218,7 @@
 			</div>
 			<ol class="count-rows">
 				{#each countRows as { rec, marks } (rec.pillar)}
-					<li id="zaehlstrang-{rec.pillar}">
+					<li>
 						<div class="count-head">
 							<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
 							<span class="count-area">{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
@@ -364,7 +366,30 @@
 	.count-jumplink:hover img {
 		border-color: #a67b3d;
 	}
-	.count-jumplink:focus-visible {
+	.count-jumplink {
+		position: relative;
+		cursor: pointer;
+	}
+	/* Das Radio füllt sein Label unsichtbar — der Klick trifft es direkt, der Fokus
+	   bleibt im sichtbaren Bereich (kein Scroll). Fokussierbar (Tastatur). */
+	.cf-radio {
+		position: absolute;
+		inset: 0;
+		margin: 0;
+		opacity: 0;
+		cursor: pointer;
+	}
+	/* Gewähltes Emblem leuchtet; Tastatur-Fokus als Ring am Label. */
+	.count-jumplink:has(.cf-radio:checked) {
+		color: #f0d899;
+	}
+	.count-jumplink:has(.cf-radio:checked) img {
+		border-color: #e7c881;
+		box-shadow:
+			0 0 0 1px rgba(213, 166, 87, 0.5),
+			0 0 12px rgba(213, 166, 87, 0.3);
+	}
+	.count-jumplink:has(.cf-radio:focus-visible) {
 		outline: 2px solid #d7aa55;
 		outline-offset: 3px;
 	}
@@ -379,22 +404,24 @@
 		position: relative;
 		isolation: isolate;
 		margin: 0.4rem 0 1.6rem;
-		padding: 1.4rem 1rem 1.1rem;
+		padding: 1.4rem 1.1rem 1.1rem;
+		/* Ein weicher Rand fasst den Block, der Grund bleibt halbtransparent (die
+		   Szene dahinter schimmert durch, ist aber gedämpft). */
+		border: 1px solid rgba(166, 123, 61, 0.34);
+		border-radius: 7px;
 	}
 	.counting-funnel::before {
 		content: '';
 		position: absolute;
-		inset: -0.8rem -0.8rem;
+		inset: 0;
 		z-index: -1;
 		pointer-events: none;
-		/* Deckt den ganzen Block satt ab (dämpft die fixe Szenenmaschine dahinter),
-		   verläuft nur an den Rändern weich aus — Lichtkegel-Logik, kein Kasten. */
+		border-radius: inherit;
 		background: radial-gradient(
-			ellipse 96% 92% at 50% 50%,
-			rgba(2, 4, 6, 0.97),
-			rgba(2, 4, 6, 0.95) 55%,
-			rgba(2, 4, 6, 0.72) 82%,
-			rgba(2, 4, 6, 0) 100%
+			ellipse 94% 90% at 50% 46%,
+			rgba(2, 4, 6, 0.66),
+			rgba(2, 4, 6, 0.5) 68%,
+			rgba(2, 4, 6, 0.28) 100%
 		);
 	}
 	/* Drei Spalten: Medaillon, Versalien-Name, Votum (nur der Fokus-Bereich). */
@@ -527,29 +554,17 @@
 		font-size: 0.82rem;
 		font-style: italic;
 	}
-	/* Fokus-Steuerung: Vorgabe Bereich A (Zukunft); der adressierte Bereich löst
-	   A ab. Reines CSS :has()+:target, lokal auf den Abschnitt begrenzt, kein JS.
-	   Ältere Browser ohne :has() zeigen die Vorgabe A; die Liste trägt alle vier. */
-	.cf-vote[data-b='A'],
-	.cf-plaque[data-b='A'] {
-		display: block;
-	}
-	:global(.room-section:has(#zaehlstrang-B:target)) .cf-vote[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-C:target)) .cf-vote[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-D:target)) .cf-vote[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-B:target)) .cf-plaque[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-C:target)) .cf-plaque[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-D:target)) .cf-plaque[data-b='A'] {
-		display: none;
-	}
-	:global(.room-section:has(#zaehlstrang-A:target)) .cf-vote[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-B:target)) .cf-vote[data-b='B'],
-	:global(.room-section:has(#zaehlstrang-C:target)) .cf-vote[data-b='C'],
-	:global(.room-section:has(#zaehlstrang-D:target)) .cf-vote[data-b='D'],
-	:global(.room-section:has(#zaehlstrang-A:target)) .cf-plaque[data-b='A'],
-	:global(.room-section:has(#zaehlstrang-B:target)) .cf-plaque[data-b='B'],
-	:global(.room-section:has(#zaehlstrang-C:target)) .cf-plaque[data-b='C'],
-	:global(.room-section:has(#zaehlstrang-D:target)) .cf-plaque[data-b='D'] {
+	/* Fokus-Steuerung über die Radiogruppe: nur der gewählte Bereich ist sichtbar.
+	   Vorgabe A ist per checked gesetzt. :has() auf dem Abschnitt entkoppelt die
+	   DOM-Position der Radios — reines CSS, kein JS, kein Fragment/Scroll. */
+	:global(.room-section:has(#cf-A:checked)) .cf-vote[data-b='A'],
+	:global(.room-section:has(#cf-B:checked)) .cf-vote[data-b='B'],
+	:global(.room-section:has(#cf-C:checked)) .cf-vote[data-b='C'],
+	:global(.room-section:has(#cf-D:checked)) .cf-vote[data-b='D'],
+	:global(.room-section:has(#cf-A:checked)) .cf-plaque[data-b='A'],
+	:global(.room-section:has(#cf-B:checked)) .cf-plaque[data-b='B'],
+	:global(.room-section:has(#cf-C:checked)) .cf-plaque[data-b='C'],
+	:global(.room-section:has(#cf-D:checked)) .cf-plaque[data-b='D'] {
 		display: block;
 	}
 	@media (max-width: 34rem) {
@@ -574,22 +589,10 @@
 		display: grid;
 	}
 	.count-rows > li {
-		padding: 0.7rem 0 0.7rem 0.9rem;
-		scroll-margin-top: 1.2rem;
+		padding: 0.7rem 0;
 	}
 	.count-rows > li + li {
 		border-top: 1px solid rgba(166, 123, 61, 0.3);
-	}
-	/* Adressierung über :target (reines CSS, kein JS): Messing-Haarlinie + Emblem
-	   leuchtet, statisch. Die übrigen Bereiche behalten vollen Kontrast. */
-	.count-rows > li:target {
-		box-shadow: inset 2px 0 0 0 #b8863c;
-	}
-	.count-rows > li:target .count-head img {
-		border-color: #e7c881;
-		box-shadow:
-			0 0 0 1px rgba(213, 166, 87, 0.5),
-			0 0 14px rgba(213, 166, 87, 0.32);
 	}
 	.count-head {
 		display: flex;

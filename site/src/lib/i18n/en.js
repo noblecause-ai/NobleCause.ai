@@ -242,7 +242,7 @@ export const en = {
 		// the tally slot says "split" instead of "x of N" when there is no match.
 		countTitle: 'How the votes were counted',
 		countIntro: 'The program only counts matching mentions.',
-		jumpToArea: 'Jump to an area',
+		jumpToArea: 'Choose an area for the counting machine',
 		changedMark: 'changed',
 		drumWord: 'Drum',
 		resultToBoard: 'the result moves to the board',
