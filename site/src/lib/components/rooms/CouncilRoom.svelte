@@ -204,7 +204,7 @@
 					<div class="cf-cutout"></div>
 					{#each countRows as { rec } (rec.pillar)}
 						<div class="cf-plaque" data-b={rec.pillar}>
-							<span class="cf-plaque-head">{t.council.drumWord} · {t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
+							<img class="cf-plaque-emblem" src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
 							{#if rec.hasConsensus}
 								<span class="cf-plaque-count">{rec.count} {t.common.ofWord} {rec.total}</span>
 								<span class="cf-plaque-org">{rec.organization.name}</span>
@@ -214,7 +214,6 @@
 						</div>
 					{/each}
 				</div>
-				<p class="cf-result">↓ {t.council.resultToBoard}</p>
 			</div>
 			<ol class="count-rows">
 				{#each countRows as { rec, marks } (rec.pillar)}
@@ -524,12 +523,16 @@
 		background: radial-gradient(ellipse 84% 98% at 50% 50%, rgba(3, 6, 7, 0.92), rgba(3, 6, 7, 0) 78%);
 		text-shadow: 0 1px 8px rgba(3, 6, 7, 0.96);
 	}
-	.cf-plaque-head {
+	/* Statt der Textzeile „Trommel · <Säule>" das Säulen-Emblem über dem Zählstand. */
+	.cf-plaque-emblem {
 		display: block;
-		color: #c9ab6e;
-		font: 600 0.62rem ui-sans-serif, system-ui;
-		letter-spacing: 0.13em;
-		text-transform: uppercase;
+		width: 2rem;
+		height: 2rem;
+		margin: 0 auto 0.15rem;
+		border: 1px solid rgba(190, 139, 58, 0.7);
+		border-radius: 50%;
+		background: #080b0c;
+		object-fit: cover;
 	}
 	.cf-plaque-count {
 		display: block;
@@ -546,13 +549,6 @@
 		display: block;
 		color: #e6dbc4;
 		font-size: 0.92rem;
-	}
-	.cf-result {
-		margin: 0.8rem 0 0;
-		text-align: center;
-		color: #9e927f;
-		font-size: 0.82rem;
-		font-style: italic;
 	}
 	/* Fokus-Steuerung über die Radiogruppe: nur der gewählte Bereich ist sichtbar.
 	   Vorgabe A ist per checked gesetzt. :has() auf dem Abschnitt entkoppelt die

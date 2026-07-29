@@ -246,8 +246,6 @@ export const de = {
 		countIntro: 'Das Programm zählt nur gleiche Nennungen.',
 		jumpToArea: 'Bereich für die Zählmaschine wählen',
 		changedMark: 'geändert',
-		drumWord: 'Trommel',
-		resultToBoard: 'das Ergebnis wandert auf die Tafel',
 		countSplit: 'getrennt',
 		noConsensus: 'Noch keine Einigkeit',
 		reservation: 'Vorbehalt ▸',

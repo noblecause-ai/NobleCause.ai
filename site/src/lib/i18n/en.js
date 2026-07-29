@@ -244,8 +244,6 @@ export const en = {
 		countIntro: 'The program only counts matching mentions.',
 		jumpToArea: 'Choose an area for the counting machine',
 		changedMark: 'changed',
-		drumWord: 'Drum',
-		resultToBoard: 'the result moves to the board',
 		countSplit: 'split',
 		noConsensus: 'No agreement yet',
 		reservation: 'Reservation ▸',
