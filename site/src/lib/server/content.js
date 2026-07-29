@@ -91,8 +91,15 @@ export function listJournalEntries() {
 				id: e.name,
 				date: j.date ?? e.name,
 				convene: j.convene ?? false,
+				convene_rationale: j.convene_rationale ?? null,
 				session_ref: j.session_ref ?? null,
+				model: j.model ?? null,
+				model_label: j.model_label ?? null,
+				type: j.type ?? null,
+				commission_ref: j.commission_ref ?? null,
+				deputation: Boolean(j.deputation_note),
 				findings_count: (j.findings ?? []).length,
+				queries_count: (j.search_queries ?? []).length,
 				cost_eur: j.costs?.total ?? null
 			};
 		})
@@ -102,5 +109,15 @@ export function listJournalEntries() {
 
 export function getJournalEntry(id) {
 	const file = path.join(ROOT, 'journal', id, 'entry.json');
+	return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+// Bestell-Kommission (commissions/<date>/commission.json). ref wie
+// "/commissions/2026-07-27/". Fehlt sie, null (kein Wurf).
+export function getCommission(ref) {
+	const name = (ref ?? '').replace(/^\/?commissions\//, '').replace(/\/$/, '');
+	if (!name) return null;
+	const file = path.join(ROOT, 'commissions', name, 'commission.json');
+	if (!fs.existsSync(file)) return null;
 	return JSON.parse(fs.readFileSync(file, 'utf8'));
 }
