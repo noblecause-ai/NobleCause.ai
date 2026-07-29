@@ -163,34 +163,56 @@
 					</a>
 				{/each}
 			</nav>
-			<!-- Die stille Abbildung der Zählmaschine — im Fluss, kleiner als in der
-			     Szene, ohne Glüh-/Ruck-/Orbit-Ebene. Darunter die Regel; daneben, bei
-			     adressiertem Bereich, dessen drei Voten mit Haarlinien ins Cutout. Alles
-			     im selben Baum, lokal verdrahtet über :has()+:target — kein JS,
-			     bewegungslos, aria-hidden (die Voten stehen vollständig in der Liste). -->
-			<div class="counting-stage" aria-hidden="true">
-				<img
-					class="stage-machine"
-					src="/media/actors/council-machine.avif"
-					alt=""
-					width="1672"
-					height="941"
-					loading="lazy"
-				/>
-				<p class="stage-rule">{t.council.actors.machine.rule}</p>
-				{#each countRows as { rec, marks } (rec.pillar)}
-					<div class="stage-votes" data-b={rec.pillar}>
-						{#each marks as mark (mark.label)}
-							<div class="stage-vote">
-								<img class="sv-med" src="/media/medallions/{mark.model}-lo.avif" alt="" width="256" height="256" loading="lazy" />
-								<span class="sv-model">{mark.label}</span>
-								<span class="sv-org">
-									{#if mark.row?.changed}<del>{mark.row.initial.organization.name}</del> {mark.row.final.organization.name}{:else if mark.row?.final}{mark.row.final.organization.name}{:else}<span class="mark-none">{t.council.noVote}</span>{/if}
-								</span>
-							</div>
-						{/each}
-					</div>
-				{/each}
+			<!-- 2b: der Zählstrang als senkrechter Trichter — drei Pulte → Trichter →
+			     Trommel, EIN Bereich im Fokus (Vorgabe Zukunft; Auswahl über die
+			     Embleme via :target/:has, kein JS). Kastenlos: Vignette + Haarlinie.
+			     Eigener dunkler Schleier hinter dem Block, damit der Trichter für sich
+			     steht (nicht die Szenenmaschine dahinter). aria-hidden — die
+			     Vier-Bereiche-Liste darunter ist der vollständige, lesbare Rekord. -->
+			<div class="counting-funnel" aria-hidden="true">
+				<div class="cf-columns">
+					{#each tracks as track (track.model)}
+						<div class="cf-col">
+							<img class="cf-med" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" loading="lazy" />
+							<span class="cf-model">{track.label}</span>
+							<span class="cf-votes">
+								{#each track.rows as row (row.pillar)}
+									<span class="cf-vote" data-b={row.pillar}>
+										{#if row.changed}<del>{row.initial.organization.name}</del> <strong>{row.final.organization.name}</strong> <em class="cf-changed">{t.council.changedMark}</em>{:else if row.final}<strong>{row.final.organization.name}</strong>{:else}<span class="mark-none">{t.council.noVote}</span>{/if}
+									</span>
+								{/each}
+							</span>
+						</div>
+					{/each}
+				</div>
+				<!-- Der Trichter: Haarlinien aus den Spaltenmitten laufen auf einen Punkt
+				     mittig unten zusammen. non-scaling-stroke hält die Linie hauchdünn. -->
+				<svg class="cf-lines" viewBox="0 0 100 40" preserveAspectRatio="none">
+					{#each tracks as _track, i (i)}
+						<line
+							x1={(((i + 0.5) / tracks.length) * 100).toFixed(2)}
+							y1="0"
+							x2="50"
+							y2="40"
+							vector-effect="non-scaling-stroke"
+						/>
+					{/each}
+				</svg>
+				<div class="cf-machine">
+					<div class="cf-cutout"></div>
+					{#each countRows as { rec } (rec.pillar)}
+						<div class="cf-plaque" data-b={rec.pillar}>
+							<span class="cf-plaque-head">{t.council.drumWord} · {t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
+							{#if rec.hasConsensus}
+								<span class="cf-plaque-count">{rec.count} {t.common.ofWord} {rec.total}</span>
+								<span class="cf-plaque-org">{rec.organization.name}</span>
+							{:else}
+								<span class="cf-plaque-count split">{t.council.countSplit}</span>
+							{/if}
+						</div>
+					{/each}
+				</div>
+				<p class="cf-result">↓ {t.council.resultToBoard}</p>
 			</div>
 			<ol class="count-rows">
 				{#each countRows as { rec, marks } (rec.pillar)}
@@ -346,103 +368,203 @@
 		outline: 2px solid #d7aa55;
 		outline-offset: 3px;
 	}
-	/* ---- Die Zählmaschinen-Abbildung: stilles Cutout + Regel, daneben (bei
-	   adressiertem Bereich) dessen drei Voten mit Haarlinien ins Cutout. Reines
-	   :has()+:target, lokal im selben Baum — kein JS, bewegungslos. ---------- */
-	.counting-stage {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		grid-template-areas:
-			'machine votes'
-			'rule votes';
-		align-items: start;
-		column-gap: 1.6rem;
-		margin: 0.2rem 0 1.4rem;
-	}
-	.stage-machine {
-		grid-area: machine;
-		width: clamp(7rem, 20vw, 10rem);
-		height: auto;
-		opacity: 0.62;
-		filter: saturate(0.85) brightness(0.92);
-	}
-	.stage-rule {
-		grid-area: rule;
-		margin: 0.6rem 0 0;
-		max-width: 12rem;
-		color: #c9ab6e;
-		font-size: 0.9rem;
-		font-style: italic;
-		line-height: 1.4;
-	}
-	.stage-votes {
-		display: none;
-		grid-area: votes;
-		align-content: center;
-		gap: 0.75rem;
-	}
-	/* Reveal des adressierten Bereichs — lokal auf den Abschnitt begrenzt. Ältere
-	   Browser ohne :has() zeigen nur Cutout+Regel; die Voten stehen in der Liste. */
-	:global(.room-section:has(#zaehlstrang-A:target) .stage-votes[data-b='A']),
-	:global(.room-section:has(#zaehlstrang-B:target) .stage-votes[data-b='B']),
-	:global(.room-section:has(#zaehlstrang-C:target) .stage-votes[data-b='C']),
-	:global(.room-section:has(#zaehlstrang-D:target) .stage-votes[data-b='D']) {
-		display: grid;
-	}
-	.stage-vote {
+	/* ---- 2b: der senkrechte Zählstrang (Trichter) ---------------------------
+	   Drei Modell-Spalten → Haarlinien laufen nach unten auf einen Punkt zusammen
+	   → größeres Maschinen-Cutout mit Plakette → „wandert auf die Tafel". EIN
+	   Bereich im Fokus (Vorgabe A/Zukunft, Auswahl via :has()+:target). Kastenlos:
+	   Vignette + Haarlinie. Eigener dunkler Schleier (Lichtkegel-Logik), damit der
+	   Trichter für sich steht. isolation:isolate hält den Schleier über der fixen
+	   Szene, unter dem Blockinhalt. Kein JS, bewegungslos. */
+	.counting-funnel {
 		position: relative;
-		display: grid;
-		grid-template-columns: 1.8rem 1fr;
-		column-gap: 0.6rem;
-		align-items: center;
+		isolation: isolate;
+		margin: 0.4rem 0 1.6rem;
+		padding: 1.4rem 1rem 1.1rem;
 	}
-	/* Haarlinie ins Cutout: läuft vom Votum nach links in den Spaltenabstand. */
-	.stage-vote::before {
+	.counting-funnel::before {
 		content: '';
 		position: absolute;
-		right: 100%;
-		top: 50%;
-		width: 1.6rem;
-		border-top: 1px solid rgba(190, 139, 58, 0.5);
+		inset: -0.8rem -0.8rem;
+		z-index: -1;
+		pointer-events: none;
+		/* Deckt den ganzen Block satt ab (dämpft die fixe Szenenmaschine dahinter),
+		   verläuft nur an den Rändern weich aus — Lichtkegel-Logik, kein Kasten. */
+		background: radial-gradient(
+			ellipse 96% 92% at 50% 50%,
+			rgba(2, 4, 6, 0.97),
+			rgba(2, 4, 6, 0.95) 55%,
+			rgba(2, 4, 6, 0.72) 82%,
+			rgba(2, 4, 6, 0) 100%
+		);
 	}
-	.sv-med {
-		grid-row: 1 / 3;
-		width: 1.8rem;
-		height: 1.8rem;
+	/* Drei Spalten: Medaillon, Versalien-Name, Votum (nur der Fokus-Bereich). */
+	.cf-columns {
+		display: flex;
+		gap: 1rem;
+		align-items: start;
+	}
+	.cf-col {
+		flex: 1 1 0;
+		min-width: 0;
+		display: grid;
+		justify-items: center;
+		gap: 0.3rem;
+		text-align: center;
+	}
+	.cf-med {
+		width: 3.2rem;
+		height: 3.2rem;
 		border-radius: 50%;
-		filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+		filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.75));
 	}
-	.sv-model {
-		align-self: end;
-		color: #f0d899;
-		font: 600 0.6rem ui-sans-serif, system-ui;
-		letter-spacing: 0.07em;
+	.cf-model {
+		color: #d5a657;
+		font: 600 0.64rem ui-sans-serif, system-ui;
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
 	}
-	.sv-org {
-		align-self: start;
-		color: #e6dbc4;
-		font-size: 0.9rem;
+	.cf-votes {
+		margin-top: 0.15rem;
 	}
-	.sv-org del {
-		margin-right: 0.2rem;
+	/* Votum als Vignette, kein Kasten. Nur der Fokus-Bereich ist sichtbar. */
+	.cf-vote {
+		display: none;
+		padding: 0.4rem 0.7rem 0.5rem;
+		color: #e6dbc4;
+		font-size: 0.95rem;
+		line-height: 1.35;
+		background: radial-gradient(ellipse 92% 100% at 50% 45%, rgba(3, 6, 7, 0.72), rgba(3, 6, 7, 0) 82%);
+	}
+	.cf-vote del {
+		display: block;
 		color: #8f866f;
+		font-size: 0.84rem;
 		text-decoration-color: rgba(197, 145, 60, 0.8);
 	}
+	.cf-vote strong {
+		font-weight: 600;
+	}
+	.cf-changed {
+		margin-left: 0.35rem;
+		color: #dfbd70;
+		font: 600 0.58rem ui-sans-serif, system-ui;
+		font-style: normal;
+		letter-spacing: 0.09em;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+	/* Der Trichter: Haarlinien aus den Spaltenmitten auf einen Punkt mittig unten. */
+	.cf-lines {
+		display: block;
+		width: 100%;
+		height: 2.6rem;
+		margin: 0.1rem 0 0;
+		overflow: visible;
+	}
+	.cf-lines line {
+		stroke: rgba(190, 139, 58, 0.62);
+		stroke-width: 1;
+	}
+	/* Der Zielpunkt: das Cutout, deutlich größer, zentriert; die Plakette daran. */
+	.cf-machine {
+		position: relative;
+		width: max-content;
+		max-width: 100%;
+		margin: 0 auto;
+	}
+	/* Nur die Maschine + Podest aus dem großen, registrierten Plate-Asset (die
+	   Maschine sitzt dort unten-mittig in einem meist leeren Frame) — per
+	   Background-Crop freigestellt, deutlich größer als eine Randnotiz. */
+	.cf-cutout {
+		width: clamp(12rem, 30vw, 16rem);
+		aspect-ratio: 320 / 305;
+		background-image: url(/media/actors/council-machine.avif);
+		background-repeat: no-repeat;
+		background-size: 522% auto;
+		background-position: 51% 92%;
+		filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.6));
+	}
+	.cf-plaque {
+		display: none;
+		position: absolute;
+		left: 50%;
+		bottom: 6%;
+		transform: translateX(-50%);
+		width: max-content;
+		max-width: 94%;
+		text-align: center;
+		padding: 0.45rem 1.4rem 0.6rem;
+		background: radial-gradient(ellipse 84% 98% at 50% 50%, rgba(3, 6, 7, 0.92), rgba(3, 6, 7, 0) 78%);
+		text-shadow: 0 1px 8px rgba(3, 6, 7, 0.96);
+	}
+	.cf-plaque-head {
+		display: block;
+		color: #c9ab6e;
+		font: 600 0.62rem ui-sans-serif, system-ui;
+		letter-spacing: 0.13em;
+		text-transform: uppercase;
+	}
+	.cf-plaque-count {
+		display: block;
+		margin: 0.1rem 0 0.05rem;
+		color: #f0d899;
+		font: 400 1.7rem Georgia, 'Times New Roman', serif;
+		letter-spacing: 0.03em;
+	}
+	.cf-plaque-count.split {
+		font-size: 1.05rem;
+		color: #c7bca7;
+	}
+	.cf-plaque-org {
+		display: block;
+		color: #e6dbc4;
+		font-size: 0.92rem;
+	}
+	.cf-result {
+		margin: 0.8rem 0 0;
+		text-align: center;
+		color: #9e927f;
+		font-size: 0.82rem;
+		font-style: italic;
+	}
+	/* Fokus-Steuerung: Vorgabe Bereich A (Zukunft); der adressierte Bereich löst
+	   A ab. Reines CSS :has()+:target, lokal auf den Abschnitt begrenzt, kein JS.
+	   Ältere Browser ohne :has() zeigen die Vorgabe A; die Liste trägt alle vier. */
+	.cf-vote[data-b='A'],
+	.cf-plaque[data-b='A'] {
+		display: block;
+	}
+	:global(.room-section:has(#zaehlstrang-B:target)) .cf-vote[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-C:target)) .cf-vote[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-D:target)) .cf-vote[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-B:target)) .cf-plaque[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-C:target)) .cf-plaque[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-D:target)) .cf-plaque[data-b='A'] {
+		display: none;
+	}
+	:global(.room-section:has(#zaehlstrang-A:target)) .cf-vote[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-B:target)) .cf-vote[data-b='B'],
+	:global(.room-section:has(#zaehlstrang-C:target)) .cf-vote[data-b='C'],
+	:global(.room-section:has(#zaehlstrang-D:target)) .cf-vote[data-b='D'],
+	:global(.room-section:has(#zaehlstrang-A:target)) .cf-plaque[data-b='A'],
+	:global(.room-section:has(#zaehlstrang-B:target)) .cf-plaque[data-b='B'],
+	:global(.room-section:has(#zaehlstrang-C:target)) .cf-plaque[data-b='C'],
+	:global(.room-section:has(#zaehlstrang-D:target)) .cf-plaque[data-b='D'] {
+		display: block;
+	}
 	@media (max-width: 34rem) {
-		.counting-stage {
-			grid-template-columns: 1fr;
-			grid-template-areas:
-				'machine'
-				'rule'
-				'votes';
-			column-gap: 0;
+		.cf-columns {
+			gap: 0.5rem;
 		}
-		.stage-votes {
-			margin-top: 0.6rem;
+		.cf-med {
+			width: 2.5rem;
+			height: 2.5rem;
 		}
-		.stage-vote::before {
-			display: none;
+		.cf-vote {
+			font-size: 0.85rem;
+		}
+		.cf-cutout {
+			width: clamp(10rem, 60vw, 14rem);
 		}
 	}
 	.count-rows {
