@@ -38,7 +38,22 @@
 	// deshalb bleibt der Übergang unsichtbar, die Kanten stehen. State-Guard
 	// (rucking): ein Hover ein Ruck; schnelles Hin und Her schaukelt nicht auf.
 	// §0: unter reduced-motion/No-JS bleibt der Ruck aus (Plakette steht).
-	let { t } = $props();
+	//
+	// §7 Medaillon-Orbit: drei Modell-Medaillons kreisen auf einer Billboard-
+	// Ellipse (b≪a, Aufsicht leicht von oben) um die Maschinenmitte. Aus dem
+	// Winkel folgt die Tiefe d=(sinθ+1)/2 → Skalierung, Helligkeit, Blur. Die
+	// hintere Hälfte liegt UNTER P10, die vordere darüber — echte Verdeckung.
+	// Trick statt z-index-Chirurgie: jedes Medaillon existiert ZWEIMAL — eine
+	// „hinten"-Kopie (DOM vor cm-plate → unter P10) und eine „vorn"-Kopie (DOM
+	// nach cm-drum → über P10); der rAF blendet je nach Tiefe die passende Kopie
+	// ein. Umgeschaltet wird an den Ellipsen-Seiten (d=0,5), wo beide Kopien
+	// deckungsgleich sind und nichts von P10 verdeckt wird → unsichtbar.
+	// Position: CSS-Two-Case (svh/vw wie der Türhotspot) aus den Custom-Props
+	// --mcos/--msin — im SSR gesetzt (§0: still an den Bahnpunkten ohne JS), vom
+	// rAF je Frame aktualisiert. Eine rAF-Schleife (40–60 s/Umdrehung), pausiert
+	// bei document.hidden und außerhalb des Viewports. Einflug nach dem Pult-
+	// Takt, von unten mit leichtem Überschwingen. Modellname immer am Medaillon.
+	let { t, tracks = [] } = $props();
 
 	let rucking = $state(false);
 	function ruck() {
@@ -47,9 +62,139 @@
 		if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
 		rucking = true;
 	}
+
+	// ---- §7 Orbit ----------------------------------------------------------
+	const TAU = Math.PI * 2;
+	const familyName = (track) => t.common?.familyNames?.[track.family] ?? track.family;
+	// Startwinkel 120° versetzt; θ0=90° setzt eins vorn-unten, zwei hinten.
+	const medallions = $derived(
+		tracks.map((track, i) => ({
+			track,
+			theta0: Math.PI / 2 + (i * TAU) / Math.max(tracks.length, 1)
+		}))
+	);
+	const depthOf = (sin) => (sin + 1) / 2;
+	// SSR-Ruhezustand je Kopie: Position/Skalierung aus dem Startwinkel, die
+	// passende Kopie sichtbar (§0: ohne JS still an den Bahnpunkten).
+	function restVars(theta, copy) {
+		const c = Math.cos(theta),
+			s = Math.sin(theta),
+			d = depthOf(s);
+		const vis = copy === 'rear' ? d < 0.5 : d >= 0.5;
+		return (
+			`--mcos:${c.toFixed(4)};--msin:${s.toFixed(4)};` +
+			`--mscale:${(0.62 + 0.38 * d).toFixed(3)};--mbright:${(0.6 + 0.4 * d).toFixed(3)};` +
+			`--mblur:${((1 - d) * 1.1).toFixed(2)}px;--mfly:0svh;opacity:${vis ? 1 : 0};`
+		);
+	}
+
+	let rearEls = $state([]);
+	let frontEls = $state([]);
+
+	$effect(() => {
+		if (typeof window === 'undefined') return;
+		// §0-Gate: nur Desktop, nur bei Bewegungswunsch. Sonst bleibt der SSR-
+		// Ruhezustand stehen (still an den Bahnpunkten, keine rAF).
+		if (!window.matchMedia('(min-width: 1200px)').matches) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		const rear = rearEls.filter(Boolean);
+		const front = frontEls.filter(Boolean);
+		if (rear.length !== medallions.length || front.length !== medallions.length) return;
+
+		const PERIOD = 52000; // ms/Umdrehung
+		const OMEGA = TAU / PERIOD;
+		const FLY_DELAY = 2450; // nach dem Eintrittstakt der Pulte
+		const FLY_DUR = 1150;
+		const FLY_FROM = 34; // svh unter der Bahn (außerhalb des Bildrands)
+		const t0 = performance.now();
+		// Überschwing-Ease (back-out): leichtes Übersteuern bei der Ankunft.
+		const ease = (p) => {
+			const k = 1.6;
+			return 1 + (k + 1) * Math.pow(p - 1, 3) + k * Math.pow(p - 1, 2);
+		};
+		const readRetreat = () => parseFloat(getComputedStyle(rear[0]).getPropertyValue('--retreat')) || 0;
+
+		let visible = true;
+		let raf = 0;
+		const frame = (now) => {
+			const since = now - t0 - FLY_DELAY;
+			const introP = Math.max(0, Math.min(1, since / FLY_DUR));
+			const circT = Math.max(0, since - FLY_DUR);
+			const fly = ((1 - ease(introP)) * FLY_FROM).toFixed(2);
+			const flyOp = introP;
+			const widen = 1 + readRetreat() * 0.5;
+			for (let i = 0; i < medallions.length; i++) {
+				const theta = medallions[i].theta0 + OMEGA * circT;
+				const c = Math.cos(theta);
+				const s = Math.sin(theta);
+				const d = depthOf(s);
+				const scale = (0.62 + 0.38 * d).toFixed(3);
+				const bright = (0.6 + 0.4 * d).toFixed(3);
+				const blur = ((1 - d) * 1.1).toFixed(2);
+				const cw = (c * widen).toFixed(4);
+				const sw = (s * widen).toFixed(4);
+				const set = (el, vis) => {
+					const st = el.style;
+					st.setProperty('--mcos', cw);
+					st.setProperty('--msin', sw);
+					st.setProperty('--mscale', scale);
+					st.setProperty('--mbright', bright);
+					st.setProperty('--mblur', blur + 'px');
+					st.setProperty('--mfly', fly + 'svh');
+					st.opacity = vis ? flyOp.toFixed(2) : '0';
+				};
+				set(rear[i], d < 0.5);
+				set(front[i], d >= 0.5);
+			}
+			raf = requestAnimationFrame(frame);
+		};
+		const stop = () => {
+			if (raf) {
+				cancelAnimationFrame(raf);
+				raf = 0;
+			}
+		};
+		const go = () => {
+			if (!raf && !document.hidden && visible) raf = requestAnimationFrame(frame);
+		};
+		const onVis = () => (document.hidden ? stop() : go());
+		document.addEventListener('visibilitychange', onVis);
+		// „Außerhalb des Viewports": die Maschine ist fix, verschwindet also nicht
+		// durch Scrollen aus dem Viewport — sie wird vom Raum-Inhalt überdeckt.
+		// Darum am Scroll messen: ist die Bühne (Hero, 100 svh) weggescrollt,
+		// pausiert die Schleife (kein IntersectionObserver — der träfe am fixen
+		// Element immer „sichtbar").
+		const onScroll = () => {
+			const v = window.scrollY < window.innerHeight * 1.1;
+			if (v !== visible) {
+				visible = v;
+				v ? go() : stop();
+			}
+		};
+		window.addEventListener('scroll', onScroll, { passive: true });
+		go();
+
+		return () => {
+			stop();
+			document.removeEventListener('visibilitychange', onVis);
+			window.removeEventListener('scroll', onScroll);
+		};
+	});
 </script>
 
 <div class="council-machine">
+	<!-- §7 Orbit, hintere Hälfte: DOM VOR cm-plate → liegt unter P10 (Verdeckung).
+	     Jedes Medaillon hier UND in der vorderen Gruppe; der rAF zeigt je Tiefe
+	     die passende Kopie. Ruhezustand (SSR) trägt §0. -->
+	<div class="cm-orbit cm-orbit-rear" aria-hidden="true">
+		{#each medallions as { track, theta0 }, i (track.model)}
+			<div class="cm-medallion" bind:this={rearEls[i]} style={restVars(theta0, 'rear')}>
+				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
+				<span class="cm-med-name">{track.label}</span>
+			</div>
+		{/each}
+	</div>
+
 	<img class="cm-plate" src="/media/actors/council-machine.avif" alt="" aria-hidden="true" decoding="async" />
 
 	<!-- §8 Ruck-Ebene: die Trommel-Silhouette (P11-Alpha) als mask auf dem
@@ -64,6 +209,16 @@
 			decoding="async"
 			onanimationend={() => (rucking = false)}
 		/>
+	</div>
+
+	<!-- §7 Orbit, vordere Hälfte: DOM NACH cm-plate/cm-drum → liegt über P10. -->
+	<div class="cm-orbit cm-orbit-front" aria-hidden="true">
+		{#each medallions as { track, theta0 }, i (track.model)}
+			<div class="cm-medallion" bind:this={frontEls[i]} style={restVars(theta0, 'front')}>
+				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
+				<span class="cm-med-name">{track.label}</span>
+			</div>
+		{/each}
 	</div>
 
 	<!-- §8 Maschinenzone: Hotspot (Hover-Fläche, kein Ziel) + Aufwach-Licht +
@@ -256,6 +411,69 @@
 		.cm-glow,
 		.cm-plaque {
 			transition: none;
+		}
+	}
+
+	/* ---- §7 Medaillon-Orbit -----------------------------------------------
+	   Zwei Gruppen (rear/front) straddeln cm-plate im DOM → echte Verdeckung
+	   ohne z-index-Chirurgie. Beide fix am Viewport, z-index 0 (unter der
+	   room-overlay-UI z1). Die Medaillons darin absolut positioniert; Ort und
+	   Tiefe kommen aus den Custom-Props (SSR-Ruhe, rAF je Frame). */
+	.cm-orbit {
+		position: fixed;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+	}
+	.cm-medallion {
+		position: absolute;
+		aspect-ratio: 1;
+		/* translate(-50%,-50%): der Ort (left/top) ist die Medaillon-MITTE.
+		   translateY(--mfly): Einflug von unten. scale(--mscale): Tiefe. */
+		transform: translate(-50%, -50%) translateY(var(--mfly, 0)) scale(var(--mscale, 1));
+		filter: brightness(var(--mbright, 1)) blur(var(--mblur, 0px));
+		will-change: transform, opacity, left, top;
+	}
+	.cm-med-img {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+	/* Der Modellname steht IMMER am Medaillon (Schutz gegen „Nightingale
+	   empfiehlt"). Unter dem Bildnis, Plaketten-Grammatik (Schatten statt Kasten). */
+	.cm-med-name {
+		position: absolute;
+		top: 100%;
+		left: 50%;
+		transform: translateX(-50%);
+		margin-top: 0.2rem;
+		white-space: nowrap;
+		text-align: center;
+		color: #ecdfc0;
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.03em;
+		text-shadow:
+			0 1px 6px rgba(3, 6, 7, 0.96),
+			0 0 3px rgba(3, 6, 7, 0.9);
+		pointer-events: none;
+	}
+	/* Position + Basisgröße: Two-Case wie der Türhotspot. Ellipsenmitte auf der
+	   Maschinenmitte Plate x50,42 %, y72 % (≈ Trommelmitte); a=15 % (Breite),
+	   b=7 % (Höhe, b≪a). So läuft die Rückseite (θ=270°, y65 %) HINTER die
+	   Trommel (Verdeckung durch P10), die Vorderseite (y79 %) davor. */
+	@media (min-width: 1200px) and (max-aspect-ratio: 16/9) {
+		.cm-medallion {
+			left: calc(50vw + (0.42 + 15 * var(--mcos, 0)) * 1.7778svh);
+			top: calc((72 + 7 * var(--msin, 0)) * 1svh);
+			width: 6.4svh;
+		}
+	}
+	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
+		.cm-medallion {
+			left: calc((50.42 + 15 * var(--mcos, 0)) * 1vw);
+			top: calc((72 + 7 * var(--msin, 0)) * 0.5625vw);
+			width: 3.6vw;
 		}
 	}
 </style>
