@@ -9,26 +9,51 @@
 	// Lampen-Glow fährt mit. Ruheposition steht im pragerenderten HTML; Anfangs-
 	// zustände nur unter html.stage-armed + no-preference; reduced-motion/No-JS =
 	// statischer Endzustand (§0).
-	let { t } = $props();
+	//
+	// NEU (Übergabe §7.1): der Möbelkörper ist der Eingang zum Protokoll. Nur der
+	// KÖRPER klickt (.pult-hit, pointer-events:auto über der Pultplatte abwärts) —
+	// die transparenten Ecken bleiben klickdurchlässig, damit ein Klick dort den
+	// Rekordtext nicht wegklickt. clip-path scheidet aus: es würde die Leuchte
+	// visuell abschneiden (sie steht oberhalb des Körpers) und den Ruhezustand
+	// brechen. Ruhezustand also unverändert; Hover/:focus-visible zieht die Leuchte
+	// an (.lamp-draw) und blendet eine Beschriftung links ein — beide reines CSS,
+	// ohne transform. Mobil: kein Eingang am Möbel (der Fluss-Link trägt).
+	import { formatDate } from '$lib/format.js';
+	let { t, session } = $props();
 </script>
 
 <div class="scene2">
-	<!-- rechts: das leuchtende Pult — mit warmem Lampen-Glow, fährt von rechts ein. -->
+	<!-- rechts: das leuchtende Pult — mit warmem Lampen-Glow, fährt von rechts ein.
+	     Der Link umschließt die Figur; klickbar ist aber nur der Körper (.pult-hit). -->
 	<div class="rail pult-desk" data-side="right" style="--x: 80; --side: 1">
-		<figure class="reg-figure">
-			<img
-				src="/media/actors/pult-lamp.avif"
-				alt={t.archive.pultAlt}
-				width="1026"
-				height="1148"
-				decoding="async"
-			/>
-			<!-- Prise Leben: der Messingschirm leuchtet leise (zwei Glow-Ebenen,
-			     teilerfremde Perioden — wie die Council-Pulte). -->
-			<span class="lamp" aria-hidden="true"
-				><span class="lamp-a"></span><span class="lamp-b"></span></span
-			>
-		</figure>
+		<a
+			class="pult-link"
+			href="/sessions/{session.id}/"
+			aria-label="{t.archive.protocolLink} — {t.archive.sessionLabel(session.number)}, {formatDate(
+				session.date,
+				t.lang
+			)}"
+		>
+			<figure class="reg-figure">
+				<img src="/media/actors/pult-lamp.avif" alt="" width="1026" height="1148" decoding="async" />
+				<!-- Prise Leben: der Messingschirm leuchtet leise (zwei Glow-Ebenen,
+				     teilerfremde Perioden). .lamp-draw ist die Hover-Verstärkung. -->
+				<span class="lamp" aria-hidden="true"
+					><span class="lamp-a"></span><span class="lamp-b"></span><span class="lamp-draw"></span
+					></span
+				>
+				<!-- Klickfläche = nur der Möbelkörper (ab Pultplatte abwärts). -->
+				<span class="pult-hit" aria-hidden="true"></span>
+				<!-- Beschriftung, links neben dem Möbel, nur im Hover/Fokus sichtbar. -->
+				<span class="pult-label" aria-hidden="true">
+					<span class="pl-meta"
+						>{t.archive.sessionLabel(session.number)} ·
+						<time datetime={session.date}>{formatDate(session.date, t.lang)}</time></span
+					>
+					<span class="pl-title">{t.archive.protocolLink}</span>
+				</span>
+			</figure>
+		</a>
 	</div>
 </div>
 
@@ -144,6 +169,92 @@
 		100% { opacity: 0.1; }
 	}
 
+	/* ---- Eingang zum Protokoll (Übergabe §7.1) -----------------------------
+	   Der Link umschließt die Figur, ändert die Positionierung aber NICHT
+	   (inset:0 der 0-breiten Schiene → die Figur ankert wie zuvor). Nur .pult-hit
+	   klickt; Figur, Leuchte und transparente Ecken bleiben klickdurchlässig.
+	   z-index hebt NUR die Klick-/Beschriftungsebene über den Fluss — das gemalte
+	   Möbel bleibt an seinem Ruheplatz (Ruhezustand unverändert). */
+	.pult-link {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		text-decoration: none;
+	}
+	.pult-hit {
+		position: absolute;
+		/* Möbelkörper ab Pultplatte abwärts — am AVIF gemessen (1026×1148). */
+		inset: 41% 4% 0 3%;
+		z-index: 4;
+		pointer-events: auto;
+		cursor: pointer;
+	}
+	.pult-link:focus-visible .pult-hit {
+		outline: 2px solid var(--line-strong);
+		outline-offset: 3px;
+	}
+
+	/* Hover/Fokus 1 — die Leuchte zieht an: eine dritte, ungeflackerte Glow-Ebene
+	   blendet auf; das Flackern (lamp-a/-b) läuft weiter. Kein transform. */
+	.lamp-draw {
+		opacity: 0;
+		transition: opacity 0.4s ease;
+	}
+	.pult-link:hover .lamp-draw,
+	.pult-link:focus-visible .lamp-draw {
+		opacity: 0.46;
+	}
+
+	/* Hover/Fokus 2 — Beschriftung links neben dem Möbel, auf Höhe der Pultplatte,
+	   rechtsbündig an der linken Möbelkante endend. Dunkler halbtransparenter
+	   Grund (über dem Fluss lesbar). Nur Licht/Opazität, kein transform. */
+	.pult-label {
+		position: absolute;
+		right: 100%;
+		top: 40%;
+		z-index: 4;
+		margin-right: 0.5rem;
+		width: max-content;
+		max-width: 15rem;
+		padding: 0.5rem 0.75rem 0.55rem;
+		text-align: right;
+		background: rgba(6, 9, 11, 0.82);
+		opacity: 0;
+		transition: opacity 0.35s ease;
+		pointer-events: none;
+	}
+	.pult-link:hover .pult-label,
+	.pult-link:focus-visible .pult-label {
+		opacity: 1;
+	}
+	.pl-meta {
+		display: block;
+		font-family: ui-sans-serif, system-ui, sans-serif;
+		font-size: 0.62rem;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--muted);
+		white-space: nowrap;
+	}
+	.pl-title {
+		display: block;
+		margin-top: 0.15rem;
+		font-family: Georgia, 'Iowan Old Style', serif;
+		font-size: 0.98rem;
+		color: var(--ink);
+		white-space: nowrap;
+	}
+
+	/* Mobil: kein Eingang am Möbel — der Fluss-Link (.protocol-link) trägt allein. */
+	@media (max-width: 1199px) {
+		.pult-hit {
+			pointer-events: none;
+		}
+		.pult-label {
+			display: none;
+		}
+	}
+
 	/* ---- Eintritts-Takt: Einfahrt von RECHTS (wie der Warden) — Default; mobil
 	   von unten (Override im <1200-Block). 1,7 s sichtbares Gleiten, Delay 0,55 s,
 	   dieselbe Kurve wie actor-in-right. */
@@ -209,12 +320,15 @@
 
 	@media (min-width: 1200px) {
 		/* Bild füllt die Höhe (Viewport schmaler als 16:9): Bildbreite 177,78 svh.
-		   Rückzug HORIZONTAL nach rechts (--side), Einfahrt von rechts (Default). */
+		   Rückzug HORIZONTAL nach rechts (--side), Einfahrt von rechts (Default).
+		   z-index hebt das Pult (nur Desktop, wo es der Eingang ist) über den Fluss
+		   und die Prozess-Röhre, damit der Körper klickbar ist. */
 		.rail.pult-desk {
 			left: calc(50vw + (var(--x, 50) - 50) * 1.7778svh);
 			height: 38svh;
 			bottom: calc(-0.05 * 38svh);
 			transform: translateX(calc(var(--retreat, 0) * var(--side, 1) * 13vw));
+			z-index: 4;
 		}
 	}
 	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {

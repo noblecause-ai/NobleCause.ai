@@ -651,10 +651,11 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 });
 
 test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Tür-Hotspot (DE+EN)', (context) => {
-	// No-JS-Wahrheit: das Möbel ist Teil des statischen Dokuments — REINE KULISSE
-	// (keine Datenbindung, generisches alt), kein Tab-Stopp auf der Figur. Runde B §2:
-	// nur EIN Möbel (das Pult mit Leuchte, rechts) — das Regal ist ersatzlos entfallen,
-	// die linke Flanke bleibt leer. Der Tür-Hotspot führt zurück in die Study.
+	// No-JS-Wahrheit: das Möbel ist Teil des statischen Dokuments. Übergabe §7.1: der
+	// Möbelkörper ist jetzt der Eingang zum Protokoll (Link auf die aktuelle Sitzung,
+	// aria-label), das Bild dekorativ (alt=""). Die FIGUR selbst trägt keinen tabindex
+	// (der native Anker ist der Tab-Stopp). Runde B §2: nur EIN Möbel (das Pult mit
+	// Leuchte, rechts) — das Regal ist ersatzlos entfallen. Tür-Hotspot → zurück Study.
 	const archiveHtml = readBuilt(PAGES.archive);
 	const archiveEnHtml = readBuilt(PAGES.archiveEn);
 	if (archiveHtml === null || archiveEnHtml === null) {
@@ -680,15 +681,23 @@ test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Tür-Hotspot (DE+EN)', 
 		);
 		assert.ok(html.includes('class="door-hotspot'), `${room}: Tür-Hotspot fehlt`);
 	}
-	// Alt-Text generisch (kein Datenbezug) — DE/EN gespiegelt.
-	assert.ok(
-		archiveHtml.includes('Archivpult mit Leseleuchte'),
-		'archive: generisches Pult-alt fehlt'
-	);
-	assert.ok(
-		archiveEnHtml.includes('Archive desk with a reading lamp'),
-		'archiveEn: generisches Pult-alt fehlt (EN)'
-	);
+	// Übergabe §7.1: der Möbelkörper ist jetzt der Eingang zum Protokoll — das Pult
+	// trägt einen Link auf die aktuelle Sitzung, das Bild ist dekorativ (alt=""),
+	// der Name steht im aria-label. DE/EN gespiegelt. Kein generisches Bild-alt mehr.
+	for (const [html, room, ariaStart, oldAlt] of [
+		[archiveHtml, 'archive', 'Vollständiges Protokoll öffnen', 'Archivpult mit Leseleuchte'],
+		[archiveEnHtml, 'archiveEn', 'Open the full protocol', 'Archive desk with a reading lamp']
+	]) {
+		assert.ok(
+			/class="pult-link[^"]*"\s+href="\/sessions\//.test(html),
+			`${room}: Pult-Eingang (pult-link → /sessions/) fehlt`
+		);
+		assert.ok(
+			html.includes(`aria-label="${ariaStart}`),
+			`${room}: aria-label des Pult-Eingangs (Protokoll + Sitzung) fehlt`
+		);
+		assert.ok(!html.includes(oldAlt), `${room}: Bild ist dekorativ (alt=""), kein generisches Pult-alt mehr`);
+	}
 	// Der Tür-Hotspot führt zurück in die Study (Rundgang schließt sich).
 	assert.ok(
 		archiveHtml.includes('aria-label="Zurück: The Study"'),

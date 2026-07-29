@@ -88,8 +88,9 @@
 			{/if}
 		{/snippet}
 		{#snippet scene2()}
-			<!-- Zweite Ebene: zwei Karteikästen an den unteren Ecken (reine Kulisse). -->
-			<ArchiveActors {t} />
+			<!-- Zweite Ebene: das Lesepult — mit klickbarem Körper der Eingang zum
+			     Protokoll (Übergabe §7.1). Braucht die aktuelle Sitzung für Ziel/Label. -->
+			<ArchiveActors {t} session={home.currentSession} />
 		{/snippet}
 		{#snippet tube()}
 			<!-- Prozess-Röhre: The Archive ist voll (Stand 6 von 6). -->
