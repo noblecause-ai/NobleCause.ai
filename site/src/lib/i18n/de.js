@@ -244,6 +244,7 @@ export const de = {
 		// Slot sagt bei Uneinigkeit „getrennt" statt „x von N".
 		countTitle: 'Wie gezählt wurde',
 		countIntro: 'Das Programm zählt nur gleiche Nennungen.',
+		jumpToArea: 'Zu einem Bereich springen',
 		countSplit: 'getrennt',
 		noConsensus: 'Noch keine Einigkeit',
 		reservation: 'Vorbehalt ▸',

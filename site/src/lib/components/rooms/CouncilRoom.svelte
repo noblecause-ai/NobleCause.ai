@@ -63,6 +63,7 @@
 			rec,
 			marks: tracks.map((track) => ({
 				label: track.label,
+				model: track.model,
 				row: track.rows.find((row) => row.pillar === rec.pillar) ?? null
 			}))
 		}))
@@ -150,9 +151,50 @@
 		<section class="room-section" aria-labelledby="count-title">
 			<h2 id="count-title">{t.council.countTitle}</h2>
 			<p class="count-intro">{t.council.countIntro}</p>
+			<!-- Sprungleiste (§3, adressierbar): reine Anker auf die Bereichszeilen.
+			     :target hebt den adressierten Bereich hervor, die anderen bleiben voll
+			     lesbar — kein JS, alle Viewports. Die Trommel spricht dazu, wenn sie
+			     sichtbar ist (Teil B, CouncilMachine). -->
+			<nav class="count-jump" aria-label={t.council.jumpToArea}>
+				{#each countRows as { rec } (rec.pillar)}
+					<a class="count-jumplink" href="#zaehlstrang-{rec.pillar}">
+						<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
+						{t.pillars[rec.pillar]?.label ?? rec.pillarName}
+					</a>
+				{/each}
+			</nav>
+			<!-- Die stille Abbildung der Zählmaschine — im Fluss, kleiner als in der
+			     Szene, ohne Glüh-/Ruck-/Orbit-Ebene. Darunter die Regel; daneben, bei
+			     adressiertem Bereich, dessen drei Voten mit Haarlinien ins Cutout. Alles
+			     im selben Baum, lokal verdrahtet über :has()+:target — kein JS,
+			     bewegungslos, aria-hidden (die Voten stehen vollständig in der Liste). -->
+			<div class="counting-stage" aria-hidden="true">
+				<img
+					class="stage-machine"
+					src="/media/actors/council-machine.avif"
+					alt=""
+					width="1672"
+					height="941"
+					loading="lazy"
+				/>
+				<p class="stage-rule">{t.council.actors.machine.rule}</p>
+				{#each countRows as { rec, marks } (rec.pillar)}
+					<div class="stage-votes" data-b={rec.pillar}>
+						{#each marks as mark (mark.label)}
+							<div class="stage-vote">
+								<img class="sv-med" src="/media/medallions/{mark.model}-lo.avif" alt="" width="256" height="256" loading="lazy" />
+								<span class="sv-model">{mark.label}</span>
+								<span class="sv-org">
+									{#if mark.row?.changed}<del>{mark.row.initial.organization.name}</del> {mark.row.final.organization.name}{:else if mark.row?.final}{mark.row.final.organization.name}{:else}<span class="mark-none">{t.council.noVote}</span>{/if}
+								</span>
+							</div>
+						{/each}
+					</div>
+				{/each}
+			</div>
 			<ol class="count-rows">
 				{#each countRows as { rec, marks } (rec.pillar)}
-					<li>
+					<li id="zaehlstrang-{rec.pillar}">
 						<div class="count-head">
 							<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
 							<span class="count-area">{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
@@ -265,6 +307,144 @@
 		color: #c7bca7;
 		font-size: 0.95rem;
 	}
+	/* Sprungleiste: Anker mit Säulen-Emblem, Vignette statt Kasten (wie im Explorer). */
+	.count-jump {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.3rem 0.6rem;
+		margin: 0 0 1rem;
+	}
+	.count-jumplink {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 44px;
+		padding: 0.3rem 0.85rem 0.3rem 0.35rem;
+		border-radius: 999px;
+		color: #c9ab6e;
+		font: 600 0.62rem ui-sans-serif, system-ui;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		text-decoration: none;
+		background: radial-gradient(ellipse 88% 100% at 26% 50%, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 72%);
+	}
+	.count-jumplink img {
+		width: 1.8rem;
+		height: 1.8rem;
+		border: 1px solid rgba(190, 139, 58, 0.6);
+		border-radius: 50%;
+		background: #080b0c;
+		object-fit: cover;
+	}
+	.count-jumplink:hover {
+		color: #e7c881;
+	}
+	.count-jumplink:hover img {
+		border-color: #a67b3d;
+	}
+	.count-jumplink:focus-visible {
+		outline: 2px solid #d7aa55;
+		outline-offset: 3px;
+	}
+	/* ---- Die Zählmaschinen-Abbildung: stilles Cutout + Regel, daneben (bei
+	   adressiertem Bereich) dessen drei Voten mit Haarlinien ins Cutout. Reines
+	   :has()+:target, lokal im selben Baum — kein JS, bewegungslos. ---------- */
+	.counting-stage {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-areas:
+			'machine votes'
+			'rule votes';
+		align-items: start;
+		column-gap: 1.6rem;
+		margin: 0.2rem 0 1.4rem;
+	}
+	.stage-machine {
+		grid-area: machine;
+		width: clamp(7rem, 20vw, 10rem);
+		height: auto;
+		opacity: 0.62;
+		filter: saturate(0.85) brightness(0.92);
+	}
+	.stage-rule {
+		grid-area: rule;
+		margin: 0.6rem 0 0;
+		max-width: 12rem;
+		color: #c9ab6e;
+		font-size: 0.9rem;
+		font-style: italic;
+		line-height: 1.4;
+	}
+	.stage-votes {
+		display: none;
+		grid-area: votes;
+		align-content: center;
+		gap: 0.75rem;
+	}
+	/* Reveal des adressierten Bereichs — lokal auf den Abschnitt begrenzt. Ältere
+	   Browser ohne :has() zeigen nur Cutout+Regel; die Voten stehen in der Liste. */
+	:global(.room-section:has(#zaehlstrang-A:target) .stage-votes[data-b='A']),
+	:global(.room-section:has(#zaehlstrang-B:target) .stage-votes[data-b='B']),
+	:global(.room-section:has(#zaehlstrang-C:target) .stage-votes[data-b='C']),
+	:global(.room-section:has(#zaehlstrang-D:target) .stage-votes[data-b='D']) {
+		display: grid;
+	}
+	.stage-vote {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1.8rem 1fr;
+		column-gap: 0.6rem;
+		align-items: center;
+	}
+	/* Haarlinie ins Cutout: läuft vom Votum nach links in den Spaltenabstand. */
+	.stage-vote::before {
+		content: '';
+		position: absolute;
+		right: 100%;
+		top: 50%;
+		width: 1.6rem;
+		border-top: 1px solid rgba(190, 139, 58, 0.5);
+	}
+	.sv-med {
+		grid-row: 1 / 3;
+		width: 1.8rem;
+		height: 1.8rem;
+		border-radius: 50%;
+		filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+	}
+	.sv-model {
+		align-self: end;
+		color: #f0d899;
+		font: 600 0.6rem ui-sans-serif, system-ui;
+		letter-spacing: 0.07em;
+		text-transform: uppercase;
+	}
+	.sv-org {
+		align-self: start;
+		color: #e6dbc4;
+		font-size: 0.9rem;
+	}
+	.sv-org del {
+		margin-right: 0.2rem;
+		color: #8f866f;
+		text-decoration-color: rgba(197, 145, 60, 0.8);
+	}
+	@media (max-width: 34rem) {
+		.counting-stage {
+			grid-template-columns: 1fr;
+			grid-template-areas:
+				'machine'
+				'rule'
+				'votes';
+			column-gap: 0;
+		}
+		.stage-votes {
+			margin-top: 0.6rem;
+		}
+		.stage-vote::before {
+			display: none;
+		}
+	}
 	.count-rows {
 		margin: 0;
 		padding: 0;
@@ -272,10 +452,22 @@
 		display: grid;
 	}
 	.count-rows > li {
-		padding: 0.7rem 0;
+		padding: 0.7rem 0 0.7rem 0.9rem;
+		scroll-margin-top: 1.2rem;
 	}
 	.count-rows > li + li {
 		border-top: 1px solid rgba(166, 123, 61, 0.3);
+	}
+	/* Adressierung über :target (reines CSS, kein JS): Messing-Haarlinie + Emblem
+	   leuchtet, statisch. Die übrigen Bereiche behalten vollen Kontrast. */
+	.count-rows > li:target {
+		box-shadow: inset 2px 0 0 0 #b8863c;
+	}
+	.count-rows > li:target .count-head img {
+		border-color: #e7c881;
+		box-shadow:
+			0 0 0 1px rgba(213, 166, 87, 0.5),
+			0 0 14px rgba(213, 166, 87, 0.32);
 	}
 	.count-head {
 		display: flex;
