@@ -70,7 +70,15 @@ export const en = {
 		// Display names of the model families (proper names, identical in both
 		// languages). Data carries the family in lower case (“anthropic”); an
 		// unknown family falls back to the raw value until a display name is added.
-		familyNames: { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' }
+		familyNames: { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' },
+		// Model designation + version of the current seat-holder (proper names, same
+		// in both languages). Key = participant.model (like the medallion filename);
+		// unknown models fall back to the short label.
+		modelNames: {
+			'claude-opus-4-8': 'Claude Opus 4.8',
+			'gpt-5.2': 'GPT-5.2',
+			'gemini-2.5-pro': 'Gemini 2.5 Pro'
+		}
 	},
 
 	rooms: {

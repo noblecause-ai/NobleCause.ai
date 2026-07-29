@@ -1,4 +1,6 @@
 <script>
+	import { orbitRest, orbitStateAt } from '$lib/orbit.js';
+
 	// The Council — die Zählmaschine als eigene Ebene (§1, Runde H).
 	//
 	// P10 (Maschine + rundes Podest, freigestellt) liegt DECKUNGSGLEICH über der
@@ -64,8 +66,13 @@
 	}
 
 	// ---- §7 Orbit ----------------------------------------------------------
+	// Bahnmathematik: reine Zeit-Funktion in $lib/orbit.js (unit-getestet). θ ist
+	// ZEITBASIERT — jede Pause bleibt folgenlos, θ steht beim nächsten Frame
+	// wieder korrekt zur echten Zeit.
 	const TAU = Math.PI * 2;
 	const familyName = (track) => t.common?.familyNames?.[track.family] ?? track.family;
+	// Modellbezeichnung + Version des aktuellen Sitzinhabers (Fallback: Kurz-Label).
+	const modelName = (track) => t.common?.modelNames?.[track.model] ?? track.label;
 	// Startwinkel 120° versetzt; θ0=90° setzt eins vorn-unten, zwei hinten.
 	const medallions = $derived(
 		tracks.map((track, i) => ({
@@ -73,19 +80,29 @@
 			theta0: Math.PI / 2 + (i * TAU) / Math.max(tracks.length, 1)
 		}))
 	);
-	const depthOf = (sin) => (sin + 1) / 2;
-	// SSR-Ruhezustand je Kopie: Position/Skalierung aus dem Startwinkel, die
-	// passende Kopie sichtbar (§0: ohne JS still an den Bahnpunkten).
-	function restVars(theta, copy) {
-		const c = Math.cos(theta),
-			s = Math.sin(theta),
-			d = depthOf(s);
-		const vis = copy === 'rear' ? d < 0.5 : d >= 0.5;
+	// SSR-Ruhezustand je Kopie aus orbitRest (§0: ohne JS still an den Bahnpunkten).
+	function restVars(theta0, copy) {
+		const s = orbitRest(theta0);
+		const vis = copy === 'rear' ? s.rearVisible : s.frontVisible;
 		return (
-			`--mcos:${c.toFixed(4)};--msin:${s.toFixed(4)};` +
-			`--mscale:${(0.62 + 0.38 * d).toFixed(3)};--mbright:${(0.6 + 0.4 * d).toFixed(3)};` +
-			`--mblur:${((1 - d) * 1.1).toFixed(2)}px;--mfly:0svh;opacity:${vis ? 1 : 0};`
+			`--mcos:${s.cos.toFixed(4)};--msin:${s.sin.toFixed(4)};` +
+			`--mscale:${s.scale.toFixed(3)};--mbright:${s.bright.toFixed(3)};` +
+			`--mblur:${s.blur.toFixed(2)}px;--mfly:0svh;opacity:${vis ? 1 : 0};` +
+			// nur die sichtbare Kopie fängt den Zeiger (Doppel-Render-Falle)
+			`pointer-events:${vis ? 'auto' : 'none'};`
 		);
+	}
+	function writeOne(el, s, vis) {
+		const st = el.style;
+		st.setProperty('--mcos', s.cos.toFixed(4));
+		st.setProperty('--msin', s.sin.toFixed(4));
+		st.setProperty('--mscale', s.scale.toFixed(3));
+		st.setProperty('--mbright', s.bright.toFixed(3));
+		st.setProperty('--mblur', s.blur.toFixed(2) + 'px');
+		st.setProperty('--mfly', s.fly.toFixed(2) + 'svh');
+		st.opacity = vis ? s.opacity.toFixed(2) : '0';
+		// nur die sichtbare Kopie ist hoverbar — sonst fängt die verdeckte mit.
+		st.pointerEvents = vis ? 'auto' : 'none';
 	}
 
 	let rearEls = $state([]);
@@ -101,84 +118,31 @@
 		const front = frontEls.filter(Boolean);
 		if (rear.length !== medallions.length || front.length !== medallions.length) return;
 
-		const PERIOD = 52000; // ms/Umdrehung
-		const OMEGA = TAU / PERIOD;
-		const FLY_DELAY = 2450; // nach dem Eintrittstakt der Pulte
-		const FLY_DUR = 1150;
-		const FLY_FROM = 34; // svh unter der Bahn (außerhalb des Bildrands)
 		const t0 = performance.now();
-		// Überschwing-Ease (back-out): leichtes Übersteuern bei der Ankunft.
-		const ease = (p) => {
-			const k = 1.6;
-			return 1 + (k + 1) * Math.pow(p - 1, 3) + k * Math.pow(p - 1, 2);
-		};
-		const readRetreat = () => parseFloat(getComputedStyle(rear[0]).getPropertyValue('--retreat')) || 0;
-
-		let visible = true;
 		let raf = 0;
+		// Die Schleife läuft IMMER und plant IMMER den nächsten Frame (erste Zeile).
+		// „Pausiert" heißt nur: nichts rechnen/schreiben (früher return) — ein
+		// rAF-Tick mit return kostet nichts. KEIN stop/start an Events
+		// (scroll/visibility): so gibt es keinen Zustand ohne Rückweg (Lehre wie
+		// bei passageActive). Weggescrollt → Leerlauf; sobald der Raum wieder oben
+		// steht, rechnet der ohnehin geplante nächste Frame weiter — es braucht
+		// kein Ereignis zum Wiederanlauf (scrollTo(0,0) feuert bei bereits 0 keins).
+		// Verdeckt/hidden drosselt der Browser rAF selbst und nimmt es selbst
+		// wieder auf. Abbruch NUR beim Unmount.
 		const frame = (now) => {
-			const since = now - t0 - FLY_DELAY;
-			const introP = Math.max(0, Math.min(1, since / FLY_DUR));
-			const circT = Math.max(0, since - FLY_DUR);
-			const fly = ((1 - ease(introP)) * FLY_FROM).toFixed(2);
-			const flyOp = introP;
-			const widen = 1 + readRetreat() * 0.5;
-			for (let i = 0; i < medallions.length; i++) {
-				const theta = medallions[i].theta0 + OMEGA * circT;
-				const c = Math.cos(theta);
-				const s = Math.sin(theta);
-				const d = depthOf(s);
-				const scale = (0.62 + 0.38 * d).toFixed(3);
-				const bright = (0.6 + 0.4 * d).toFixed(3);
-				const blur = ((1 - d) * 1.1).toFixed(2);
-				const cw = (c * widen).toFixed(4);
-				const sw = (s * widen).toFixed(4);
-				const set = (el, vis) => {
-					const st = el.style;
-					st.setProperty('--mcos', cw);
-					st.setProperty('--msin', sw);
-					st.setProperty('--mscale', scale);
-					st.setProperty('--mbright', bright);
-					st.setProperty('--mblur', blur + 'px');
-					st.setProperty('--mfly', fly + 'svh');
-					st.opacity = vis ? flyOp.toFixed(2) : '0';
-				};
-				set(rear[i], d < 0.5);
-				set(front[i], d >= 0.5);
-			}
 			raf = requestAnimationFrame(frame);
-		};
-		const stop = () => {
-			if (raf) {
-				cancelAnimationFrame(raf);
-				raf = 0;
+			if (window.scrollY >= window.innerHeight * 1.1) return; // weggescrollt: Leerlauf
+			const widen =
+				1 + (parseFloat(getComputedStyle(rear[0]).getPropertyValue('--retreat')) || 0) * 0.5;
+			const elapsed = now - t0;
+			for (let i = 0; i < medallions.length; i++) {
+				const s = orbitStateAt(elapsed, medallions[i].theta0, widen);
+				writeOne(rear[i], s, s.rearVisible);
+				writeOne(front[i], s, s.frontVisible);
 			}
 		};
-		const go = () => {
-			if (!raf && !document.hidden && visible) raf = requestAnimationFrame(frame);
-		};
-		const onVis = () => (document.hidden ? stop() : go());
-		document.addEventListener('visibilitychange', onVis);
-		// „Außerhalb des Viewports": die Maschine ist fix, verschwindet also nicht
-		// durch Scrollen aus dem Viewport — sie wird vom Raum-Inhalt überdeckt.
-		// Darum am Scroll messen: ist die Bühne (Hero, 100 svh) weggescrollt,
-		// pausiert die Schleife (kein IntersectionObserver — der träfe am fixen
-		// Element immer „sichtbar").
-		const onScroll = () => {
-			const v = window.scrollY < window.innerHeight * 1.1;
-			if (v !== visible) {
-				visible = v;
-				v ? go() : stop();
-			}
-		};
-		window.addEventListener('scroll', onScroll, { passive: true });
-		go();
-
-		return () => {
-			stop();
-			document.removeEventListener('visibilitychange', onVis);
-			window.removeEventListener('scroll', onScroll);
-		};
+		raf = requestAnimationFrame(frame);
+		return () => cancelAnimationFrame(raf);
 	});
 </script>
 
@@ -190,7 +154,10 @@
 		{#each medallions as { track, theta0 }, i (track.model)}
 			<div class="cm-medallion" bind:this={rearEls[i]} style={restVars(theta0, 'rear')}>
 				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
-				<span class="cm-med-name">{track.label}</span>
+				<span class="cm-med-plaque">
+					<strong class="cm-med-name">{familyName(track)}</strong>
+					<span class="cm-med-model">{modelName(track)}</span>
+				</span>
 			</div>
 		{/each}
 	</div>
@@ -216,7 +183,10 @@
 		{#each medallions as { track, theta0 }, i (track.model)}
 			<div class="cm-medallion" bind:this={frontEls[i]} style={restVars(theta0, 'front')}>
 				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
-				<span class="cm-med-name">{track.label}</span>
+				<span class="cm-med-plaque">
+					<strong class="cm-med-name">{familyName(track)}</strong>
+					<span class="cm-med-model">{modelName(track)}</span>
+				</span>
 			</div>
 		{/each}
 	</div>
@@ -439,24 +409,59 @@
 		width: 100%;
 		height: 100%;
 	}
-	/* Der Modellname steht IMMER am Medaillon (Schutz gegen „Nightingale
-	   empfiehlt"). Unter dem Bildnis, Plaketten-Grammatik (Schatten statt Kasten). */
-	.cm-med-name {
+	/* Plakette unter dem Bildnis (Pult-Grammatik, von den Pulten übernommen): der
+	   Modellname steht IMMER (Schutz gegen „Nightingale empfiehlt"), Family + Rolle
+	   erscheinen auf Hover, dazu eine schwebende Vignette (Schatten statt Kasten).
+	   Die Plakette selbst fängt keinen Zeiger — das Medaillon-DIV trägt den Hover. */
+	.cm-med-plaque {
 		position: absolute;
-		top: 100%;
+		/* ÜBER dem Medaillon (statt darunter, wo die Prozess-Röhre sie verdeckte). */
+		bottom: 100%;
 		left: 50%;
 		transform: translateX(-50%);
-		margin-top: 0.2rem;
-		white-space: nowrap;
+		margin: 0 0 0.24rem;
+		padding: 0.18rem 0.84rem 0.34rem;
+		width: max-content;
+		max-width: 13rem;
 		text-align: center;
-		color: #ecdfc0;
-		font-size: 0.7rem;
+		background: radial-gradient(ellipse 82% 94% at 50% 50%, rgba(3, 6, 7, 0), rgba(3, 6, 7, 0) 76%);
+		transition: background 0.35s ease;
+		pointer-events: none;
+	}
+	.cm-medallion:hover .cm-med-plaque {
+		background: radial-gradient(ellipse 82% 94% at 50% 50%, rgba(3, 6, 7, 0.88), rgba(3, 6, 7, 0) 78%);
+	}
+	.cm-med-name {
+		display: block;
+		white-space: nowrap;
+		color: #f0d899;
+		font-size: 0.84rem;
 		font-weight: 600;
 		letter-spacing: 0.03em;
 		text-shadow:
 			0 1px 6px rgba(3, 6, 7, 0.96),
 			0 0 3px rgba(3, 6, 7, 0.9);
-		pointer-events: none;
+	}
+	/* Auf Hover: Modellbezeichnung + Version des aktuellen Sitzinhabers. */
+	.cm-med-model {
+		display: block;
+		margin-top: 0.16rem;
+		white-space: nowrap;
+		opacity: 0;
+		transition: opacity 0.35s ease;
+		color: #c9ab6e;
+		font-size: 0.74rem;
+		letter-spacing: 0.01em;
+		text-shadow: 0 1px 6px rgba(3, 6, 7, 0.95);
+	}
+	.cm-medallion:hover .cm-med-model {
+		opacity: 1;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.cm-med-plaque,
+		.cm-med-model {
+			transition: none;
+		}
 	}
 	/* Position + Basisgröße: Two-Case wie der Türhotspot. Ellipsenmitte auf der
 	   Maschinenmitte Plate x50,42 %, y72 % (≈ Trommelmitte); a=15 % (Breite),
@@ -466,14 +471,14 @@
 		.cm-medallion {
 			left: calc(50vw + (0.42 + 15 * var(--mcos, 0)) * 1.7778svh);
 			top: calc((72 + 7 * var(--msin, 0)) * 1svh);
-			width: 6.4svh;
+			width: 7.04svh;
 		}
 	}
 	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
 		.cm-medallion {
 			left: calc((50.42 + 15 * var(--mcos, 0)) * 1vw);
 			top: calc((72 + 7 * var(--msin, 0)) * 0.5625vw);
-			width: 3.6vw;
+			width: 3.96vw;
 		}
 	}
 </style>

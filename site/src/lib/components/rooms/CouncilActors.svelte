@@ -120,6 +120,15 @@
 		inset: 0;
 		pointer-events: none;
 	}
+	/* Ab 1200 px ersetzen die um die Zählmaschine kreisenden Medaillons (§7,
+	   CouncilMachine) die Lesepulte — die tragen dort auch den Hover-Rahmen
+	   (Name/Family/Rolle). Die Pulte bleiben Mobil-only: dort gibt es keine
+	   Maschine und keine Medaillons, sie sind die einzige Teilnehmer-Darstellung. */
+	@media (min-width: 1200px) {
+		.scene2 {
+			display: none;
+		}
+	}
 
 	/* ---- Schiene -----------------------------------------------------------
 	   Dieselbe Grammatik wie die Study-Rails: die .rail trägt Position und

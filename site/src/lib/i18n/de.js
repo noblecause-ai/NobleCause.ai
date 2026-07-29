@@ -69,7 +69,15 @@ export const de = {
 		// Die Daten liefern die Familie klein („anthropic“); unbekannte Familien
 		// fallen bei einer Council-Erweiterung auf den Rohwert zurück, bis hier
 		// ein Anzeigename ergänzt wird.
-		familyNames: { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' }
+		familyNames: { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' },
+		// Modellbezeichnung + Version des aktuellen Sitzinhabers (Eigennamen, in
+		// beiden Sprachen gleich). Schlüssel = participant.model (wie der Medaillon-
+		// Dateiname); unbekannte Modelle fallen auf das Kurz-Label zurück.
+		modelNames: {
+			'claude-opus-4-8': 'Claude Opus 4.8',
+			'gpt-5.2': 'GPT-5.2',
+			'gemini-2.5-pro': 'Gemini 2.5 Pro'
+		}
 	},
 
 	// Raum- und Akteur-Namen sind in beiden Sprachen englische Eigennamen;
