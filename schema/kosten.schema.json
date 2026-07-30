@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://noblecause.ai/schema/kosten.schema.json",
+  "title": "Kostenaggregat (kosten.json) — VORSCHLAG, Datei existiert NICHT",
+  "description": "kosten.json ist noch nicht gebaut (P0.4). Dieses Schema ist ein VORSCHLAG, abgeleitet aus den vorhandenen costs-Blöcken in sessions/*/session.json ({total, by_model[]}) und journal/*/entry.json (flach mit usd_tokens/usd_web_search/web_search_requests). Fortschreibung analog schedule.json geplant. NICHT im Code erzwungen.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "currency", "total", "by_month", "runs"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "currency": { "const": "EUR" },
+    "fx_rate_usd_eur": { "type": "number" },
+    "total": { "type": "number", "description": "Gesamtsumme aller Läufe" },
+    "by_month": {
+      "type": "object",
+      "description": "Schlüssel YYYY-MM -> EUR-Summe",
+      "additionalProperties": { "type": "number" }
+    },
+    "by_model": {
+      "type": "object",
+      "description": "Modell-String -> EUR-Summe über alle Läufe",
+      "additionalProperties": { "type": "number" }
+    },
+    "runs": {
+      "type": "array",
+      "description": "ein Eintrag je Lauf (Sitzung ODER Wart-Journal)",
+      "items": {
+        "type": "object",
+        "required": ["kind", "ref", "date", "eur"],
+        "properties": {
+          "kind": { "enum": ["session", "wart"] },
+          "ref": { "type": "string", "description": "session-id bzw. journal-Datum" },
+          "date": { "type": "string" },
+          "eur": { "type": "number" },
+          "by_model": {
+            "type": "array",
+            "items": { "type": "object", "required": ["model", "eur"] }
+          }
+        }
+      }
+    }
+  }
+}

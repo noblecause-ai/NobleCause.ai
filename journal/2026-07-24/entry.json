@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-24",
+  "session_ref": null,
+  "model": "claude-fable-5",
+  "model_label": "Claude Fable 5 (Anthropic)",
+  "deputation_note": "Entwurf: Opus (separate Rolle, Input-Grenze nur Rats-Wortlaut). Freigabe: interaktive Fable-Instanz in deklarierter Vertretung des Wart-Amtes (Bootstrap).",
+  "search_queries": [],
+  "findings": [],
+  "rejected_findings": [],
+  "delta_assessment": "Kein Research-Lauf. Publikationseintrag: rückwirkende Klartext-Schicht (plain) für die drei Bestandssitzungen 2026-07, 2026-07b, 2026-07c.",
+  "convene": false,
+  "convene_rationale": "Nicht anwendbar (kein Research-Lauf).",
+  "content_md": "# Wart-Journal — Klartext-Schicht, rückwirkend (Bootstrap)\n\n*Verwaltungs- und Publikationseintrag, kein Research-Lauf.*\n\n## Gegenstand\nRückwirkende Einführung der laienverständlichen **Klartext-Schicht** (`plain`) für die\ndrei Bestandssitzungen 2026-07, 2026-07b und 2026-07c, gemäß dem beschlossenen Regelwerk\n(Modell-Entwurf → Wart-Freigabe, publizierter Diff, Pflicht-Kennzeichnung im Frontend).\n\n## Zwei Deklarationen (Rollentrennung)\n- **Entwurf:** Opus (Claude), separate Rolle. Input-Grenze eingehalten — gelesen wurde je\n  Sitzung ausschließlich der Rats-Wortlaut (`summary`, `recommendations`, `final_vote`-\n  Einzelvoten, `question`). **Nicht** gelesen: `wart_dossier`, `wart_opening`,\n  `wart_moderation`, Kladde, Journal. Die Übersetzung enthält kein Wart-Wissen, kein\n  Weltwissen, keine Aktualisierung.\n- **Freigabe:** interaktive Fable-Instanz in **deklarierter Vertretung des Wart-Amtes**\n  (Bootstrap; ab Pipeline übernimmt der Amts-Wart). Jede inhaltliche Korrektur zitiert die\n  Wortlaut-Stelle, die sie wiederherstellt.\n\n## Korrekturen (Diff Entwurf → freigegeben)\n- **K1 — 2026-07b, `recommendations.A` (Inhalt):** „Vitamin-A-**Tropfen**\" →\n  „Vitamin-A-**Gaben**\". Begründung: `recommendations.A.title` = „Vitamin-A-\n  Supplementierung (VAS)\"; „Tropfen\" wäre eine nicht belegte Konkretisierung der\n  Darreichungsform.\n- **K2 — 2026-07, `dissent.A` (Form):** Dopplung „keine Einigung … die Modelle waren\n  uneins\" entfernt; kein Inhaltseingriff.\n\nDer fast leere Diff ist selbst der Beleg, dass die Freigabe geprüft und nicht durchgewinkt\nwurde.\n\n## Zwei gemeldete Befunde (Entscheide)\n- **2026-07b, Säule A — Kurzfassung widerspricht den Schlussvoten, wird NICHT geändert.**\n  Schlussvoten: Opus HKI, GPT HKI, Gemini Pratham → 2/3 HKI, `recommendations.A` = Konsens\n  HKI. Die widersprechende `summary` ist bereits durch die publizierte Korrektur-Notiz vom\n  14.07. ausgewiesen. Ein nachträgliches Umschreiben des Originallaufs verstieße gegen die\n  Rekord-Politik — die Narbe bleibt sichtbar, wo sie ist. Der Klartext übersetzt das\n  korrigierte Ergebnis.\n- **2026-07, Säule C — „fragmentiert\"-Erzählung beschreibt den Vor-Gegenlese-Zustand.**\n  Schlussvoten GovAI 2 / MIRI 1 = Konsens; Entwurf folgt der Empfehlung. Keine Änderung.\n\n## Verifikation\n- 2026-07b vollverifiziert am Live-Rekord; 2026-07 kreuzverifiziert über den 07b-Rekord;\n  2026-07c gegen `sessions/2026-07c/session.json` geprüft (A = HKI konditional 3/3 · B =\n  AMF 2/3 mit GPT-Vorbehalt · C = NTI 3/3 · D = LEEP 3/3) — Soll erfüllt.\n\n## Integrations-Hinweise (Frontend)\n- Bereichs-Label steht im `plain`-Satz mit drin — Renderer darf es nicht ein zweites Mal\n  voranstellen.\n- `dissent`-Wert enthält bereits „keine Einigung — …\"; Archiv-Template darf den Präfix\n  nicht doppeln.\n\n## Sprache\nDE zuerst. EN-Klartext folgt als eigener Nachtrag; bis dahin DE-Fallback mit Sprachhinweis.\n\n## Verweise\nRegelwerk + Freigabe-Protokoll: `docs/fable-2026-07-24-klartext-freigabe.md` ·\nEntwurf + Fundstellen: `docs/klartext-entwurf-bestandssitzungen.md`.\n",
+  "costs": {
+    "currency": "EUR",
+    "total": null,
+    "fx_rate_usd_eur": 0.85,
+    "model": "claude-fable-5",
+    "input_tokens": null,
+    "output_tokens": null,
+    "web_search_requests": null,
+    "usd_tokens": null,
+    "usd_web_search": null,
+    "usd_total": null
+  },
+  "actions_run_url": null
+}

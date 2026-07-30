@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://noblecause.ai/schema/schedule.schema.json",
+  "title": "Zeitplan (schedule.json, Repo-Root)",
+  "description": "Countdown-Quelle des Frontends. next_research pflegt run_wart.write_schedule; next_session pflegen sowohl run_wart (aus convene) als auch run_session.advance_schedule.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["next_research", "next_session", "last_journal"],
+  "properties": {
+    "next_research": { "type": "string", "format": "date-time", "description": "ISO 8601 Z, z.B. 2026-07-20T06:00:00Z" },
+    "next_session": { "type": "string", "format": "date-time", "description": "ISO 8601 Z, z.B. 2026-08-08T12:00:00Z" },
+    "last_journal": { "type": "string", "description": "Relativpfad, z.B. /journal/2026-07-08c/" }
+  }
+}

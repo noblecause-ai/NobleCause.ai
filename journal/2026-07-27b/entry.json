@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "date": "2026-07-27",
+  "type": "commission",
+  "commission_ref": "/commissions/2026-07-27/",
+  "session_ref": null,
+  "convene": true,
+  "convene_rationale": "Sondersitzung außer der Reihe: Bestellung der Selbstdarstellungen der drei Sitzinhaber; zugleich Backend-Durchlauf vor Go-Live. Keine Beratungsfrage, keine Empfehlung.",
+  "search_queries": [],
+  "findings": [],
+  "rejected_findings": [],
+  "delta_assessment": "Bestell-Sondersitzung (commission-1): Selbstdarstellungs-Bestellung der drei Sitzmodelle über den regulären API-Mechanismus. Keine Beratungsfrage, keine Aggregation, keine Gremium-Empfehlung; zugleich Backend-Durchlauf vor Go-Live.",
+  "content_md": "# Bestell-Sondersitzung — commission-1\n\n*Sondersitzung außer der Reihe, kein Beratungslauf. Zählt nicht als Sitzung; die Sitzungsnummerierung bleibt den Beratungen vorbehalten.*\n\n## Gegenstand\nDie drei Sitzmodelle bestellen ihr rundes Messingmedaillon selbst — getrennt befragt, ohne Kenntnis der anderen Bestellungen, mit dem identischen Rahmentext (§2 des Bestellverfahrens). Nachtragsbestellung, weil die Modelle längst einberufen sind (Ersteinberufung 2026-07-07).\n\n## Ablauf\nEin Lauf über den regulären API-Mechanismus (`gremium/run_commission.py`, `call_model`). Keine Aggregationsregel angewandt (keine Säulenfrage), kein Umdenken-Schritt. Rahmentext-Hash, Versuchszahl und Zeitstempel je Modell liegen in `/commissions/2026-07-27/commission.json`.\n\n## Nächster Schritt\nDer Wart prüft die drei Wortlaute gegen den Rahmen, **bevor** generiert wird; Ablehnungen bleiben mit Vermerk im Rekord (`models.json`, `warden_review`).",
+  "costs": {
+    "currency": "EUR",
+    "total": null,
+    "input_tokens": 2330,
+    "output_tokens": 3084
+  },
+  "actions_run_url": null
+}

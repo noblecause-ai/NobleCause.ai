@@ -5,6 +5,7 @@
     {
       "id": "helen-keller-international",
       "canonical_name": "Helen Keller International",
+      "beschreibung": "Verteilt Vitamin-A-Präparate an Kinder in Ländern mit hoher Mangelrate und senkt so vermeidbare Erblindung und Kindersterblichkeit.",
       "aliases": [
         "Helen Keller International",
         "Helen Keller International (HKI)",
@@ -18,7 +19,10 @@
     {
       "id": "malaria-consortium",
       "canonical_name": "Malaria Consortium",
-      "aliases": ["Malaria Consortium"],
+      "beschreibung": "Finanziert saisonale Malaria-Chemoprävention: Medikamente, die Kinder in der Regenzeit vor Malaria schützen.",
+      "aliases": [
+        "Malaria Consortium"
+      ],
       "donation_url": "https://www.malariaconsortium.org/donate",
       "donation_url_verified_at": "2026-07-14",
       "donation_url_source": "Canary HTTP 200 (Chrome-UA); /donate leitet auf /donate-to-malaria-consortium (Spendenseite). Der frühere bot-403 war ein curl/WebFetch-Artefakt.",
@@ -27,6 +31,7 @@
     {
       "id": "against-malaria-foundation",
       "canonical_name": "Against Malaria Foundation",
+      "beschreibung": "Verteilt langlebige, insektizidbehandelte Moskitonetze in Malaria-Regionen.",
       "aliases": [
         "Against Malaria Foundation",
         "Against Malaria Foundation (AMF)"
@@ -39,7 +44,10 @@
     {
       "id": "lead-exposure-elimination-project",
       "canonical_name": "Lead Exposure Elimination Project (LEEP)",
-      "aliases": ["Lead Exposure Elimination Project (LEEP)"],
+      "beschreibung": "Hilft Regierungen, bleihaltige Farbe zu regulieren und zu verbieten, und schützt Kinder so vor bleibedingten Hirnschäden.",
+      "aliases": [
+        "Lead Exposure Elimination Project (LEEP)"
+      ],
       "donation_url": "https://leadelimination.org/donate/",
       "donation_url_verified_at": "2026-07-14",
       "donation_url_source": "curl HTTP 200 (Eigen-Domain)",
@@ -48,9 +56,11 @@
     {
       "id": "nuclear-threat-initiative",
       "canonical_name": "Nuclear Threat Initiative (NTI)",
+      "beschreibung": "Arbeitet an Biosicherheit und daran, große Pandemie- und Waffenrisiken früh zu verhindern.",
       "aliases": [
         "Nuclear Threat Initiative (NTI)",
         "NTI | bio (Nuclear Threat Initiative)",
+        "Nuclear Threat Initiative (NTI | bio)",
         "Nuclear Threat Initiative (NTI) – Biosecurity",
         "Nuclear Threat Initiative (NTI) — Global Biological Policy & Programs",
         "Nuclear Threat Initiative (NTI), Biosecurity Program"
@@ -63,7 +73,11 @@
     {
       "id": "centre-for-governance-of-ai",
       "canonical_name": "Centre for the Governance of AI (GovAI)",
-      "aliases": ["Centre for the Governance of AI (GovAI)"],
+      "beschreibung": "Erforscht die Steuerung fortgeschrittener KI, um große langfristige Risiken zu verringern.",
+      "aliases": [
+        "Centre for the Governance of AI (GovAI)",
+        "Centre for the Governance of AI"
+      ],
       "donation_url": "https://www.every.org/govai#/donate",
       "donation_url_verified_at": "2026-07-14",
       "donation_url_source": "governance.ai verlinkt every.org/govai auf der eigenen Start- UND About-Seite → offizieller Weg (regelkonform); /donate war 404. every.org 429 = Rate-Limit, nicht kaputt.",
@@ -72,7 +86,10 @@
     {
       "id": "machine-intelligence-research-institute",
       "canonical_name": "Machine Intelligence Research Institute (MIRI)",
-      "aliases": ["Machine Intelligence Research Institute"],
+      "beschreibung": "Erforscht die technische Sicherheit fortgeschrittener KI-Systeme.",
+      "aliases": [
+        "Machine Intelligence Research Institute"
+      ],
       "donation_url": "https://intelligence.org/donate/",
       "donation_url_verified_at": null,
       "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
@@ -81,7 +98,10 @@
     {
       "id": "pure-earth",
       "canonical_name": "Pure Earth",
-      "aliases": ["Pure Earth"],
+      "beschreibung": "Findet und saniert Schwermetall-Verseuchung, vor allem Blei, in einkommensschwachen Ländern.",
+      "aliases": [
+        "Pure Earth"
+      ],
       "donation_url": "https://www.pureearth.org/donate/",
       "donation_url_verified_at": null,
       "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
@@ -90,7 +110,10 @@
     {
       "id": "evidence-action",
       "canonical_name": "Evidence Action",
-      "aliases": ["Evidence Action – Teaching at the Right Level"],
+      "beschreibung": "Skaliert wirksamkeitsgeprüfte Programme, unter anderem Lernförderung nach dem Prinzip Teaching at the Right Level.",
+      "aliases": [
+        "Evidence Action – Teaching at the Right Level"
+      ],
       "donation_url": "https://www.evidenceaction.org/donate",
       "donation_url_verified_at": null,
       "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
@@ -99,7 +122,10 @@
     {
       "id": "pratham",
       "canonical_name": "Pratham",
-      "aliases": ["Pratham"],
+      "beschreibung": "Indische Bildungsorganisation; Pionierin der Lernförderung Teaching at the Right Level.",
+      "aliases": [
+        "Pratham"
+      ],
       "donation_url": null,
       "donation_url_verified_at": null,
       "donation_url_source": "pratham.org Spendenseite hat aktuell eine Redirect-Schleife (2026-07-14, curl: 50 Redirects) — kein funktionierender Weg auffindbar. Kein Konsens → nicht publiziert.",
@@ -108,11 +134,38 @@
     {
       "id": "iodine-global-network",
       "canonical_name": "Iodine Global Network (IGN)",
-      "aliases": ["Iodine Global Network (IGN)"],
+      "beschreibung": "Setzt sich für Salzjodierung ein und verhindert so Jodmangel und dessen Entwicklungsfolgen.",
+      "aliases": [
+        "Iodine Global Network (IGN)"
+      ],
       "donation_url": "https://www.ign.org/donate",
       "donation_url_verified_at": null,
       "donation_url_source": "modellgenannt, ungeprüft (kein Konsens → derzeit nicht publiziert)",
       "evaluator_source": "Jod-Supplementierung"
+    },
+    {
+      "id": "tarl-africa",
+      "canonical_name": "TaRL Africa",
+      "beschreibung": "Bringt die Lernförderung Teaching at the Right Level an Schulen in afrikanischen Ländern.",
+      "aliases": [
+        "TaRL Africa"
+      ],
+      "donation_url": null,
+      "donation_url_verified_at": null,
+      "donation_url_source": "kein Konsens (Runde-1-Votum); nicht publiziert",
+      "evaluator_source": "Bildung / Teaching at the Right Level"
+    },
+    {
+      "id": "global-road-safety-partnership",
+      "canonical_name": "Global Road Safety Partnership (GRSP)",
+      "beschreibung": "Arbeitet an sichererem Straßenverkehr, um Verkehrstote und -verletzte zu senken.",
+      "aliases": [
+        "Global Road Safety Partnership (GRSP)"
+      ],
+      "donation_url": null,
+      "donation_url_verified_at": null,
+      "donation_url_source": "kein Konsens (Runde-1-Votum); nicht publiziert",
+      "evaluator_source": "Verkehrssicherheit"
     }
   ]
 }
