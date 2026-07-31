@@ -16,3 +16,10 @@ serve/
 # (site/package.json prebuild: cp ../schedule.json static/schedule.json) —
 # generiert, gehört nicht in den Baum.
 site/static/schedule.json
+
+# docs: Zeitstempel-Arbeitsbilder (ChatGPT-Exporte, Bild-Exporte, Screenshots).
+# Bewusst nach Go-Live behalten, aber nicht im Baum — sie blähen nur den Review-Diff.
+# Die Datei selbst bleibt auf der Platte, nur ungetrackt.
+docs/Bild *
+docs/ChatGPT Image *
+docs/screenshot-*
