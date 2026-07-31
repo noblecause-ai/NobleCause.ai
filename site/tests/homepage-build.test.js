@@ -189,7 +189,7 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 		'Wortlaut des Rates ▸', // aufklappbarer Dissens (gerendert, nicht roh)
 		'Korrekturhinweis',
 		'Kosten dieser Sitzung',
-		'/sessions/2026-07c/' // Link zum vollständigen Protokoll
+		'/sitzungen/2026-07c/' // Link zum vollständigen Protokoll
 	]);
 	assert.match(html, />Archive<\/p>/, 'Raumwort „Archive" fehlt');
 	assert.ok(!html.includes('The Archive · das Archiv'), 'alte Eyebrow noch sichtbar');
@@ -312,7 +312,7 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 		"The council's wording ▸",
 		'Correction notice',
 		'Cost of this session',
-		'/sessions/2026-07c/',
+		'/sitzungen/2026-07c/',
 		'Original protocol in German.', // Rekord-Vermerk (Korrektur/Dissens)
 		'The full protocol is published in German.', // Hinweis am Protokoll-Link
 		'lang="de"', // Rekordtexte maschinell als deutsch markiert
@@ -689,8 +689,8 @@ test('Bühne: zweite Ebene Archiv — Pult mit Leuchte + Tür-Hotspot (DE+EN)', 
 		[archiveEnHtml, 'archiveEn', 'Open the full protocol', 'Archive desk with a reading lamp']
 	]) {
 		assert.ok(
-			/class="pult-link[^"]*"\s+href="\/sessions\//.test(html),
-			`${room}: Pult-Eingang (pult-link → /sessions/) fehlt`
+			/class="pult-link[^"]*"\s+href="\/sitzungen\//.test(html),
+			`${room}: Pult-Eingang (pult-link → /sitzungen/) fehlt`
 		);
 		assert.ok(
 			html.includes(`aria-label="${ariaStart}`),

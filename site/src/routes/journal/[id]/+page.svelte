@@ -26,7 +26,7 @@
 <p class="meta">
 	{#if e.model}Modell <code>{e.model}</code>{:else if isCommission}Bestell-Kommission{:else}Steward{/if}
 	{#if e.costs?.total != null} · Laufkosten {e.costs.total.toFixed(2)} €{/if}
-	{#if e.session_ref} · Referenz <a href="/sessions/{e.session_ref}/">Sitzung {e.session_ref}</a>{/if}
+	{#if e.session_ref} · Referenz <a href="/sitzungen/{e.session_ref}/">Sitzung {e.session_ref}</a>{/if}
 </p>
 {#if e.deputation_note}
 	<p class="deputation">{e.deputation_note}</p>

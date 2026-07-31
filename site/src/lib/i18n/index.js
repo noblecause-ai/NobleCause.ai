@@ -6,7 +6,7 @@ import { en } from './en.js';
 
 export const locales = { de, en };
 
-// Die drei Räume in beiden Sprachen. Alle übrigen Routen (sessions, journal,
+// Die drei Räume in beiden Sprachen. Alle übrigen Routen (sitzungen, journal,
 // manifest, idee, impressum) bleiben deutsch-only — sie sind der Rekord.
 export const roomPaths = {
 	study: { de: '/', en: '/en/' },

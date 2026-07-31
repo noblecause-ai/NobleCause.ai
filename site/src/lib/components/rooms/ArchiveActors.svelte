@@ -28,7 +28,7 @@
 	<div class="rail pult-desk" data-side="right" style="--x: 80; --side: 1">
 		<a
 			class="pult-link"
-			href="/sessions/{session.id}/"
+			href="/sitzungen/{session.id}/"
 			aria-label="{t.archive.protocolLink} — {t.archive.sessionLabel(session.number)}, {formatDate(
 				session.date,
 				t.lang

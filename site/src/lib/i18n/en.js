@@ -31,7 +31,7 @@ export const en = {
 		siteNav: [
 			{ href: '/manifest/', label: 'Manifest' },
 			{ href: '/idee/', label: 'How a session works' },
-			{ href: '/sessions/', label: 'Sessions' },
+			{ href: '/sitzungen/', label: 'Sessions' },
 			{ href: '/journal/', label: "The Warden's journal" }
 		],
 		moneyFlow:

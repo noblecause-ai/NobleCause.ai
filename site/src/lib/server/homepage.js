@@ -108,7 +108,7 @@ export function buildRecommendations(session, registry) {
 	});
 }
 
-// Übersicht des Explorers (/sessions): je Sitzung ein Bereichs-Kurzstatus
+// Übersicht des Explorers (/sitzungen): je Sitzung ein Bereichs-Kurzstatus
 // (Zählstand + genannte Organisation). Auflösung LENIENT wie das Archiv — der
 // Explorer läuft über ALLE Sitzungen, eine alte Organisation kann aus der
 // Registry gefallen sein; niemals werfen (das strikte resolveOrganization gilt

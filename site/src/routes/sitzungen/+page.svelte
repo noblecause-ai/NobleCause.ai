@@ -41,7 +41,7 @@
 	<ol class="session-list">
 		{#each data.sessions as s, si (s.id)}
 			<li>
-				<a class="session-head" href="/sessions/{s.id}/">
+				<a class="session-head" href="/sitzungen/{s.id}/">
 					<span class="session-no">Sitzung {s.number}</span>
 					<span class="session-title">{s.title}</span>
 					<time class="session-date" datetime={s.date}>{fmtDate(s.date)}</time>

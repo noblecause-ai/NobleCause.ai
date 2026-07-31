@@ -110,7 +110,7 @@
 						{t.study.rhythm}{#if home?.lastResearch?.date}{' '}{t.study.lastCheck(
 								formatDate(home.lastResearch.date, t.lang)
 							)}{/if}{' '}{t.study.manifestLead}
-						<a href="/manifest">{t.study.manifestLink}</a>
+						<a href="/manifest/">{t.study.manifestLink}</a>
 					</p>
 				{/snippet}
 			</StageTube>
@@ -220,7 +220,7 @@
 				{#if t.common.recordNote}
 					<small class="record-note">{t.common.recordNote}</small>
 				{/if}
-				<a href="/sessions/{home.currentSession.id}/">{t.study.readProtocol}</a>
+				<a href="/sitzungen/{home.currentSession.id}/">{t.study.readProtocol}</a>
 			</details>
 			{#if home.wartDossier?.search_queries?.length}
 				<details class="dossier">
@@ -231,7 +231,7 @@
 							<li><code>{query}</code></li>
 						{/each}
 					</ul>
-					<a href="/sessions/{home.currentSession.id}/#wart-dossier">{t.study.dossierLink}</a>
+					<a href="/sitzungen/{home.currentSession.id}/#wart-dossier">{t.study.dossierLink}</a>
 				</details>
 			{/if}
 		</section>

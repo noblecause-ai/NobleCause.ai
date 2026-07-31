@@ -1,10 +1,10 @@
 <script>
-	// Protokoll-Explorer — die gemeinsame Gestalt für /sessions und /journal
+	// Protokoll-Explorer — die gemeinsame Gestalt für /sitzungen und /journal
 	// (Konzept §4). Die Räume erzählen den Vorgang, der Explorer hält den Rekord:
 	// gleiche Welt/Farben/Schrift, aber die Bühne steht still — keine Bewegung,
 	// kein Übergang. Kein Weiß, keine Kästen/Karten; ein Lichtkegel ersetzt jede
 	// Rahmung, Vignetten und Hairlines statt Boxen. Deutsch-only (der Rekord).
-	// Von sessions/+layout und journal/+layout umschlossen.
+	// Von sitzungen/+layout und journal/+layout umschlossen.
 	let { children } = $props();
 </script>
 

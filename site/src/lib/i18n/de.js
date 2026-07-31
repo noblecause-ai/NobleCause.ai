@@ -29,7 +29,7 @@ export const de = {
 		siteNav: [
 			{ href: '/manifest/', label: 'Manifest' },
 			{ href: '/idee/', label: 'Wie eine Sitzung funktioniert' },
-			{ href: '/sessions/', label: 'Sitzungen' },
+			{ href: '/sitzungen/', label: 'Sitzungen' },
 			{ href: '/journal/', label: 'Journal des Warts' }
 		],
 		moneyFlow: 'NobleCause nimmt kein Geld an. Spendenlinks führen direkt zu den Organisationen.',

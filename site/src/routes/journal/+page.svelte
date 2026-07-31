@@ -57,7 +57,7 @@
 					{/if}
 					{#if e.findings_count}· {e.findings_count} Fund{e.findings_count === 1 ? '' : 'e'}{/if}
 					{#if e.queries_count}· {e.queries_count} Suchanfrage{e.queries_count === 1 ? '' : 'n'}{/if}
-					{#if e.session_ref}· zu <a href="/sessions/{e.session_ref}/">Sitzung {e.session_ref}</a>{/if}
+					{#if e.session_ref}· zu <a href="/sitzungen/{e.session_ref}/">Sitzung {e.session_ref}</a>{/if}
 				</p>
 				{#if e.convene_rationale}
 					<p class="entry-rationale">{e.convene_rationale}</p>

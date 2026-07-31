@@ -8,7 +8,7 @@
 		<nav>
 			<a href="/manifest/">Manifest</a>
 			<a href="/idee/">Wie eine Sitzung funktioniert</a>
-			<a href="/sessions/">Sitzungen</a>
+			<a href="/sitzungen/">Sitzungen</a>
 			<a href="/journal/">Journal des Warts</a>
 		</nav>
 	</header>

@@ -27,7 +27,7 @@
 					{/each}
 				</tbody>
 			</table>
-			<a href="/sessions/{sessionId}/#vollprotokoll">{t.council.readVotes}</a>
+			<a href="/sitzungen/{sessionId}/#vollprotokoll">{t.council.readVotes}</a>
 		</section>
 	{/each}
 </div>
