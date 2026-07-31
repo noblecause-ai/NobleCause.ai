@@ -55,6 +55,10 @@
 	     die Figur darauf die Einfahrt (transform getrennt, kein Konflikt). -->
 	<div class="rail scout" style="--side: -1">
 		<figure class="actor scout">
+			<!-- Touch: native Checkbox schaltet die Plakette um (Tipp an, Tipp aus) —
+			     zuverlässiger als JS-Taps auf iOS. Nur unter hover:none wirksam
+			     (CSS), Desktop bleibt reines :hover; auf Desktop pointer-events:none. -->
+			<input class="info-toggle" type="checkbox" aria-label={t.study.actors.scout.name} />
 			<img src="/media/actors/scout.avif" alt="{t.study.actors.scout.name}: {t.study.actors.scout.sentence}" width="935" height="1168" decoding="async" />
 			<!-- Boden-Reflexion: Diele ist spiegelnd, der Raum trägt die Figur. -->
 			<span class="reflection" aria-hidden="true"><img src="/media/actors/scout.avif" alt="" width="935" height="1168" decoding="async" loading="lazy" /></span>
@@ -101,6 +105,7 @@
 	</div>
 	<div class="rail warden" style="--side: 1">
 		<figure class="actor warden">
+			<input class="info-toggle" type="checkbox" aria-label={t.study.actors.warden.name} />
 			<img src="/media/actors/warden.avif" alt="{t.study.actors.warden.name}: {t.study.actors.warden.sentence}" width="1024" height="1536" decoding="async" />
 			<span class="reflection" aria-hidden="true"><img src="/media/actors/warden.avif" alt="" width="1024" height="1536" decoding="async" loading="lazy" /></span>
 			<span class="lamp lamp-desk" aria-hidden="true"><span class="lamp-a"></span><span class="lamp-b"></span></span>
@@ -452,8 +457,37 @@
 		--head: 0.161;
 		left: 14%;
 	}
-	.actor:hover figcaption {
-		opacity: 1;
+	/* Desktop-Maus: Plakette auf :hover. Auf Touch (hover:none) klebt :hover und
+	   schließt nicht — dort trägt die native Checkbox (.info-toggle) die Umschaltung. */
+	@media (hover: hover) {
+		.actor:hover figcaption {
+			opacity: 1;
+		}
+	}
+	/* Touch-Umschalter: transparente Checkbox über der Figur (getippt = gecheckt =
+	   Plakette an, nochmal = aus). Nur unter hover:none tippbar+wirksam — auf Desktop
+	   pointer-events:none, damit sie Hover/Tür-Hotspot nicht stört. */
+	.info-toggle {
+		position: absolute;
+		inset: 0;
+		z-index: 3;
+		margin: 0;
+		opacity: 0;
+		cursor: pointer;
+		-webkit-appearance: none;
+		appearance: none;
+		/* Kein helles Aufblitzen der ganzen Figur beim Tippen (iOS-Tap-Highlight). */
+		-webkit-tap-highlight-color: transparent;
+	}
+	@media (hover: hover) {
+		.info-toggle {
+			pointer-events: none;
+		}
+	}
+	@media (hover: none) {
+		.actor:has(.info-toggle:checked) figcaption {
+			opacity: 1;
+		}
 	}
 	/* Mobil (Hochformat): die Plaketten konvergieren sonst zur Mitte und legen
 	   sich über Überschrift/Untertitel UND übereinander (schmaler Viewport).
