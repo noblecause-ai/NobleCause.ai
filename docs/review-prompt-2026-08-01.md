@@ -5,7 +5,10 @@
 löschen. Alles davor und danach ist wörtlich identisch, damit beide Berichte vergleichbar
 sind.
 
-**Vor dem Absenden von CC ausfüllen:** `{TAG}`, `{COMMIT}`, `{WORKTREE}`, `{PORT}`.
+**Ausgefüllt (CC, 1. August 2026):** `{TAG}` = `review-2026-08-01`, `{COMMIT}` = siehe §3.
+`{WORKTREE}`/`{PORT}` sind je Reviewer verschieden — **Codex:** `../nc-review-codex`, Port
+`4200` · **Kimi:** `../nc-review-kimi`, Port `4300`. Die zwei kopierfertigen Fassungen
+unten tragen je den passenden Wert und nur den eigenen Prüfumfang-Block.
 
 **Beide Reviews laufen gleichzeitig und blind gegeneinander.** Kein Reviewer sieht den
 Bericht des anderen — sonst bestätigt der zweite nur den ersten, statt selbst zu suchen.
@@ -59,16 +62,17 @@ Diese Entscheidungen stehen fest. Findings dagegen kosten nur Zeit:
 
 ### 3 · Der Stand
 
-- Branch `integration/go-live-0.4`, Tag `{TAG}`, Commit `{COMMIT}`
-- Worktree: `{WORKTREE}` — **arbeite nur dort**, nicht im Hauptbaum
+- Branch `integration/go-live-0.4`, Tag `review-2026-08-01`, Commit `{COMMIT}`
+- Worktree: `../nc-review-codex` (Codex) bzw. `../nc-review-kimi` (Kimi) —
+  **arbeite nur dort**, nicht im Hauptbaum
 - Build: **Node v20.20.2, npm 10.8.2** (wichtig: `rolldown` bringt native Bindings mit,
   eine andere Node-Version bricht den Build)
   ```
   npm ci
   rm -rf site/build site/.svelte-kit && npm run build
-  npm run preview -- --port {PORT}
+  npm run preview -- --port 4200   # Codex; Kimi: 4300
   ```
-- Referenz-Screenshots liegen unter `docs/review/referenz-{TAG}/`. Weicht dein Rendering
+- Referenz-Screenshots liegen unter `docs/review/referenz-review-2026-08-01/`. Weicht dein Rendering
   davon ab, ist das selbst ein Befund — sag es, statt es zu übergehen.
 
 Nichts ist bisher veröffentlicht. Alle URLs sind Permalinks auf den Rekord, sobald gepusht

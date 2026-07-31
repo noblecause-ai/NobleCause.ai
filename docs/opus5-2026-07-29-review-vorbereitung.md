@@ -7,6 +7,28 @@ Arbeitsbaum ist kein Review, weil kein Reviewer sagen kann, *was* er geprüft ha
 
 ---
 
+## Ausgeführt — 1. August 2026 (CC)
+
+- **Branch:** `integration/go-live-0.4` (Frontend + versöhnter Rekord, konfliktfrei gemergt)
+- **Annotiertes Tag:** `review-2026-08-01` → Commit `<TAG-Commit — unten/im Prompt nachgetragen>`
+- **Build (Node v20.20.2, npm 10.8.2):**
+  ```
+  npm ci
+  rm -rf site/build site/.svelte-kit && npm run build
+  npm run preview -- --port <je Reviewer verschieden, s. u.>
+  ```
+  Wichtig: **dieselbe Node-Version** — `rolldown` bringt native Bindings mit.
+- **Reviewer-Worktrees (losgelöst auf dem Tag, bauen selbst mit `npm ci`):**
+  `../nc-review-codex` (Port 4200) · `../nc-review-kimi` (Port 4300) — je eigener Baum
+  und Port, blind gegeneinander.
+- **Referenz-Screenshots:** `docs/review/referenz-review-2026-08-01/` — Study/Council/
+  Archiv/Explorer je 1440 und 390, plus Ruhe/Hover für Türen, 2×2-Tafel, Pult-Eingang,
+  Zählstrang 2b und Medaillons.
+- **Prompt an die Reviewer:** `docs/review-prompt-2026-08-01.md` (die vier Platzhalter
+  gefüllt; zwei kopierfertige Fassungen — Codex-Block bzw. Kimi-Block).
+
+---
+
 ## 1 · Der eingefrorene Stand
 
 1. Arbeitsbaum sauber: kein `git status`-Eintrag außer bewusst ignorierten Pfaden.
@@ -41,14 +63,18 @@ dich eine Antwortrunde. Schreib die Prämissen an den Anfang, nicht ans Ende:
 
 ### 2.2 · Bekannte offene Punkte — bitte nicht melden
 
-Ohne diese Liste bekommst du zwanzig Findings zu Dingen, die längst auf der Liste stehen:
+Ohne diese Liste bekommst du zwanzig Findings zu Dingen, die längst auf der Liste stehen.
+**Erledigt und daher gestrichen:** die linke Ergebnis-Tafel (skaliert jetzt sauber, kein
+Abschnitt bei kurzem Viewport) und die Routen-Inkonsistenz (`/sessions/` → `/sitzungen/`).
+Ebenfalls erledigt: der Pult verdeckte Rekordtext (Beschriftung blendet beim Scrollen aus,
+Möbel zieht weiter zurück) und das Übergangs-Blinzeln (Passage blendet weich ein). Bleibt:
 
-- linke Ergebnis-Tafel schneidet bei kurzem Viewport unten ab (in Arbeit)
-- Routen-Inkonsistenz `/ratssaal/` · `/archiv/` gegen `/sessions/` · `/journal/` (in Arbeit)
 - erster Frame / LCP: Plate lädt sichtbar nach (Punktversion)
 - Explorer ohne visuelle Anbindung an die Bühne (Punktversion)
 - Szenentext scheint hinter den 2b-Karten durch (Punktversion)
-- 57 unsortierte Zeitstempel-Bilder in `docs/`
+- Explorer ist einsprachig deutsch, auch aus dem englischen Zweig heraus
+- Zeitstempel-Arbeitsbilder in `docs/` sind per `.gitignore` außen vor; `docs/` enthält
+  ansonsten unsortierte Arbeitsdokumente
 - nichts ist gepusht; Cache-/Auslieferungsparameter liegen beim Leitstand
 
 ### 2.3 · Prüfumfang, getrennt nach Reviewer
