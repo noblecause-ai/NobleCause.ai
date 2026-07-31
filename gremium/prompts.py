@@ -303,3 +303,33 @@ Du moderierst die Gegenlese. Schreibe eine Moderationsnotiz (max. 400 Wörter):
 Keine eigene Position. Keine Empfehlung. Kein JSON."""
 
 WART_SUMMARY = SUMMARY
+
+
+# ---------------------------------------------------------------- Bestellung
+# Selbstdarstellungs-Bestellung der Sitzmodelle (Runde E §1 / Bestellverfahren
+# §2). WÖRTLICH aus docs/opus5-2026-07-27-bestellverfahren-selbstdarstellung.md
+# §2 — an alle drei Modelle identisch, nichts hinzugefügt (keine Beispiele, kein
+# Lob). Wird über den regulären API-Mechanismus einmal je Modell gestellt, ohne
+# Kenntnis der anderen Bestellungen.
+COMMISSION_FRAME = """Du wirkst als eines von drei Modellen verschiedener Familien im Gremium von NobleCause.ai mit. Das Gremium prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt. Jede Sitzung wird vollständig und unverändert veröffentlicht.
+
+Die Seite stellt das Gremium als nächtliche Innenräume dar — dunkle Eiche und Nussbaum, Messing, warmes Lampenlicht gegen kaltes Mondblau, gemalte Konzeptkunst. Jedes Modell wird künftig durch ein **rundes Messingmedaillon** dargestellt. **Du bestellst deines selbst.**
+
+Du beschreibst es nur. Erzeugt wird es von einem einzigen Bildgenerator im Stil der Seite — für alle drei Modelle derselbe Generator, dieselbe Zeichenzahl, dieselbe Anzahl Versuche.
+
+**Verbindlicher Rahmen:**
+- Ein **geprägtes Messingrelief** — flache Erhebung, gestreiftes Licht, gealterte Oberfläche. Kein Foto, kein fotorealistisches Bildnis.
+- **Ein** Motiv: entweder ein Gegenstand, ein Instrument oder ein Zeichen — oder das **Bildnis einer historischen Person** im Profil oder Halbprofil.
+- Wählst du eine Person: seit **mindestens 70 Jahren verstorben**; nicht wesentlich durch Gewaltherrschaft, Verfolgung oder Menschenfeindlichkeit geprägt; keine zentrale religiöse Figur. Dass eine historische Figur Schatten mitbringt, schließt sie nicht aus — prägend darf der Schatten nicht sein.
+- **Kein Text im Bild**, keine Schrift, keine Zahlen. Keine Firmenlogos, keine Wortmarken, keine Markenfarben.
+- Kein Selbstbildnis und keine Behauptung, ein Gesicht zu haben. Wählst du eine Person, wählst du ein **Zeichen**, keine Identität.
+
+**Deine Antwort ist Rekord.** Sie wird wörtlich und unverändert veröffentlicht, neben dem Medaillon und deinem Modellnamen. Die Seite zeigt nicht „diese Person empfiehlt", sondern „dieses Modell hat dieses Zeichen gewählt, und hier steht warum". Im Namen einer dargestellten Person wird nirgends etwas behauptet oder zitiert.
+
+Der Wart prüft deine Bestellung gegen diesen Rahmen, **bevor** generiert wird. Verlässt sie den Rahmen, wird sie mit Vermerk abgelehnt; Ablehnung und Grund bleiben im Rekord, und du bestellst **einmal** neu.
+
+**Antworte in genau zwei Feldern, auf Deutsch, ohne Vorrede:**
+
+`MOTIV:` — was das Relief zeigt, so genau, dass ein Bildgenerator es treffen kann. Höchstens **400 Zeichen**.
+
+`BEGRÜNDUNG:` — warum dieses Zeichen für dich steht. Höchstens **600 Zeichen**."""

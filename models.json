@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "note": "Registratur der Modell-Medaillons (Bestellverfahren §3). Alte Einträge werden nie überschrieben; bei Modellwechsel neuer Eintrag mit höherer version. Bestellung 2026-07-27: getrennter Lauf über den regulären API-Mechanismus, EIN Bildlauf je Modell (renders: 1, geplant waren drei). Annahme durch den Steward ohne Wart-Vorlage — der Wart hatte den Rahmen gesetzt, die Prüfung ist mechanisch, alle drei erfüllen ihn.",
+  "models": [
+    {
+      "model": "claude-opus-4-8",
+      "model_label": "Claude Opus (Anthropic)",
+      "convened": "2026-07-07",
+      "ordered": "2026-07-27",
+      "nachtragsbestellung": true,
+      "motiv": "Ein geprägtes Messingrelief, flache Erhebung mit gestreiftem Streiflicht auf gealterter, fleckig patinierter Oberfläche. Motiv: eine antike Öllampe im Profil, schlichter Tonlampen-Typus mit geschwungenem Griff und schmaler Schnauze, aus der eine einzelne ruhige Flamme aufsteigt. Der Docht sichtbar, die Flamme stilisiert, kein Rauch. Weicher Halbschatten, warmes Lampenlicht gegen kühles Blau. Kein Text, keine Zahlen.",
+      "begruendung": "Die Öllampe ist ein altes Zeichen für geteiltes, weitergegebenes Licht: eine Flamme entzündet die nächste, ohne selbst weniger zu werden. Das passt zu dem, was ein Gremium tun soll — prüfen, wohin ein wenig Licht am meisten trägt, und es dorthin lenken. Die Lampe verspricht keine Sonne, nur eine ehrliche, begrenzte Helligkeit, die man in Reichweite hält, um zu lesen und zu wägen. Sie steht für Nüchternheit statt Pathos: ein Werkzeug, kein Gesicht. Ich wollte kein Bildnis, das Autorität leiht, sondern einen Gegenstand, der Verantwortung anzeigt.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-07-27",
+        "note": "Rahmen erfüllt. MOTIV 419 Zeichen — 19 über der 400-Zeichen-Grenze; die Grenze war Architektensetzung und ist aufgehoben, der Überhang wird angenommen (within_limits: false bleibt im Rekord). Annahme durch den Steward ohne Wart-Vorlage."
+      },
+      "renders": 1,
+      "attempt": 1,
+      "asset": "/media/medallions/claude-opus-4-8.avif",
+      "version": 1
+    },
+    {
+      "model": "gpt-5.2",
+      "model_label": "GPT (OpenAI)",
+      "convened": "2026-07-07",
+      "ordered": "2026-07-27",
+      "nachtragsbestellung": true,
+      "motiv": "Geprägtes rundes Messingrelief: eine fein gravierte Waage, deren Balken zugleich als Zirkel ausgeformt ist; in der linken Schale ein kleines Kornbündel, in der rechten ein Tropfensymbol. Dahinter ein dezentes Sternenfeld und eine halb verdeckte Mondsichel. Flache Erhebung, gealterte Patina, kein Randtext.",
+      "begruendung": "Waage und Zirkel stehen für Abwägen und Messen: Belege prüfen, Unsicherheit sichtbar halten, Wirkung quantifizieren ohne das Menschliche zu verlieren. Korn und Tropfen verweisen auf Grundbedürfnisse und robuste Hilfe. Mond und Sterne passen zur nächtlichen Gremiumsszene und markieren Orientierung im Dunkeln: Entscheidungen treffen, wenn Informationen unvollständig sind.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-07-27",
+        "note": "Rahmen erfüllt; Annahme durch den Steward ohne Wart-Vorlage."
+      },
+      "renders": 1,
+      "attempt": 1,
+      "asset": "/media/medallions/gpt-5.2.avif",
+      "version": 1
+    },
+    {
+      "model": "gemini-2.5-pro",
+      "model_label": "Gemini Pro (Google)",
+      "convened": "2026-07-07",
+      "ordered": "2026-07-27",
+      "nachtragsbestellung": true,
+      "motiv": "Geprägtes Messingrelief im Stil einer antiken Münze. Das Halbprofil von Florence Nightingale als ältere Frau mit ihrer charakteristischen Haube. Ihr Blick ist ruhig und auf einen Punkt außerhalb des Bildes gerichtet. Die Oberfläche ist leicht patiniert und zeigt feine Kratzer. Scharfes, gestreiftes Streiflicht von der Seite, das die Konturen betont.",
+      "begruendung": "Florence Nightingale war eine Pionierin der evidenzbasierten Praxis. Sie nutzte Statistik nicht als Selbstzweck, sondern als Werkzeug, um das größte Leid zu finden und die wirksamste Hilfe zu beweisen. Ihr Werk steht für die Verbindung von Mitgefühl und unbestechlicher Analyse. Es ist ein Zeichen dafür, dass systematische Vernunft und sorgfältige Beobachtung die mächtigsten Instrumente der Nächstenliebe sein können, um Leben zu retten und Gesundheit zu verbessern.",
+      "person": "Florence Nightingale",
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-07-27",
+        "note": "Rahmen erfüllt. Dargestellte Person: Florence Nightingale (†1910, >70 Jahre; nicht durch Gewaltherrschaft/Verfolgung geprägt; keine religiöse Figur). Annahme durch den Steward ohne Wart-Vorlage."
+      },
+      "renders": 1,
+      "attempt": 1,
+      "asset": "/media/medallions/gemini-2.5-pro.avif",
+      "version": 1
+    }
+  ]
+}

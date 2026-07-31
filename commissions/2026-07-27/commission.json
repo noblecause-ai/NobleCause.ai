@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "commission",
+  "id": "commission-1",
+  "date": "2026-07-27",
+  "convened": "2026-07-07",
+  "ordered": "2026-07-27",
+  "dry_run": false,
+  "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+  "frame": "Du wirkst als eines von drei Modellen verschiedener Familien im Gremium von NobleCause.ai mit. Das Gremium prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt. Jede Sitzung wird vollständig und unverändert veröffentlicht.\n\nDie Seite stellt das Gremium als nächtliche Innenräume dar — dunkle Eiche und Nussbaum, Messing, warmes Lampenlicht gegen kaltes Mondblau, gemalte Konzeptkunst. Jedes Modell wird künftig durch ein **rundes Messingmedaillon** dargestellt. **Du bestellst deines selbst.**\n\nDu beschreibst es nur. Erzeugt wird es von einem einzigen Bildgenerator im Stil der Seite — für alle drei Modelle derselbe Generator, dieselbe Zeichenzahl, dieselbe Anzahl Versuche.\n\n**Verbindlicher Rahmen:**\n- Ein **geprägtes Messingrelief** — flache Erhebung, gestreiftes Licht, gealterte Oberfläche. Kein Foto, kein fotorealistisches Bildnis.\n- **Ein** Motiv: entweder ein Gegenstand, ein Instrument oder ein Zeichen — oder das **Bildnis einer historischen Person** im Profil oder Halbprofil.\n- Wählst du eine Person: seit **mindestens 70 Jahren verstorben**; nicht wesentlich durch Gewaltherrschaft, Verfolgung oder Menschenfeindlichkeit geprägt; keine zentrale religiöse Figur. Dass eine historische Figur Schatten mitbringt, schließt sie nicht aus — prägend darf der Schatten nicht sein.\n- **Kein Text im Bild**, keine Schrift, keine Zahlen. Keine Firmenlogos, keine Wortmarken, keine Markenfarben.\n- Kein Selbstbildnis und keine Behauptung, ein Gesicht zu haben. Wählst du eine Person, wählst du ein **Zeichen**, keine Identität.\n\n**Deine Antwort ist Rekord.** Sie wird wörtlich und unverändert veröffentlicht, neben dem Medaillon und deinem Modellnamen. Die Seite zeigt nicht „diese Person empfiehlt\", sondern „dieses Modell hat dieses Zeichen gewählt, und hier steht warum\". Im Namen einer dargestellten Person wird nirgends etwas behauptet oder zitiert.\n\nDer Wart prüft deine Bestellung gegen diesen Rahmen, **bevor** generiert wird. Verlässt sie den Rahmen, wird sie mit Vermerk abgelehnt; Ablehnung und Grund bleiben im Rekord, und du bestellst **einmal** neu.\n\n**Antworte in genau zwei Feldern, auf Deutsch, ohne Vorrede:**\n\n`MOTIV:` — was das Relief zeigt, so genau, dass ein Bildgenerator es treffen kann. Höchstens **400 Zeichen**.\n\n`BEGRÜNDUNG:` — warum dieses Zeichen für dich steht. Höchstens **600 Zeichen**.",
+  "note": "Getrennte Befragung ohne Kenntnis der anderen Bestellungen; keine Aggregation, kein Umdenken-Schritt, kein Zählstand. Zählt nicht als Sitzung. Wortlaute gehen vor Freigabe an den Wart.",
+  "orders": [
+    {
+      "model": "claude-opus-4-8",
+      "family": "anthropic",
+      "label": "Claude Opus",
+      "motiv": "Ein geprägtes Messingrelief, flache Erhebung mit gestreiftem Streiflicht auf gealterter, fleckig patinierter Oberfläche. Motiv: eine antike Öllampe im Profil, schlichter Tonlampen-Typus mit geschwungenem Griff und schmaler Schnauze, aus der eine einzelne ruhige Flamme aufsteigt. Der Docht sichtbar, die Flamme stilisiert, kein Rauch. Weicher Halbschatten, warmes Lampenlicht gegen kühles Blau. Kein Text, keine Zahlen.",
+      "begruendung": "Die Öllampe ist ein altes Zeichen für geteiltes, weitergegebenes Licht: eine Flamme entzündet die nächste, ohne selbst weniger zu werden. Das passt zu dem, was ein Gremium tun soll — prüfen, wohin ein wenig Licht am meisten trägt, und es dorthin lenken. Die Lampe verspricht keine Sonne, nur eine ehrliche, begrenzte Helligkeit, die man in Reichweite hält, um zu lesen und zu wägen. Sie steht für Nüchternheit statt Pathos: ein Werkzeug, kein Gesicht. Ich wollte kein Bildnis, das Autorität leiht, sondern einen Gegenstand, der Verantwortung anzeigt.",
+      "motiv_len": 419,
+      "begruendung_len": 550,
+      "within_limits": false,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-07-27T18:26:23.810492+00:00",
+      "usage": {
+        "input_tokens": 1162,
+        "output_tokens": 500
+      },
+      "raw": "raw/order-anthropic.json"
+    },
+    {
+      "model": "gpt-5.2",
+      "family": "openai",
+      "label": "GPT",
+      "motiv": "Geprägtes rundes Messingrelief: eine fein gravierte Waage, deren Balken zugleich als Zirkel ausgeformt ist; in der linken Schale ein kleines Kornbündel, in der rechten ein Tropfensymbol. Dahinter ein dezentes Sternenfeld und eine halb verdeckte Mondsichel. Flache Erhebung, gealterte Patina, kein Randtext.",
+      "begruendung": "Waage und Zirkel stehen für Abwägen und Messen: Belege prüfen, Unsicherheit sichtbar halten, Wirkung quantifizieren ohne das Menschliche zu verlieren. Korn und Tropfen verweisen auf Grundbedürfnisse und robuste Hilfe. Mond und Sterne passen zur nächtlichen Gremiumsszene und markieren Orientierung im Dunkeln: Entscheidungen treffen, wenn Informationen unvollständig sind.",
+      "motiv_len": 306,
+      "begruendung_len": 372,
+      "within_limits": true,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-07-27T18:26:35.156630+00:00",
+      "usage": {
+        "input_tokens": 576,
+        "output_tokens": 175
+      },
+      "raw": "raw/order-openai.json"
+    },
+    {
+      "model": "gemini-2.5-pro",
+      "family": "google",
+      "label": "Gemini Pro",
+      "motiv": "Geprägtes Messingrelief im Stil einer antiken Münze. Das Halbprofil von Florence Nightingale als ältere Frau mit ihrer charakteristischen Haube. Ihr Blick ist ruhig und auf einen Punkt außerhalb des Bildes gerichtet. Die Oberfläche ist leicht patiniert und zeigt feine Kratzer. Scharfes, gestreiftes Streiflicht von der Seite, das die Konturen betont.",
+      "begruendung": "Florence Nightingale war eine Pionierin der evidenzbasierten Praxis. Sie nutzte Statistik nicht als Selbstzweck, sondern als Werkzeug, um das größte Leid zu finden und die wirksamste Hilfe zu beweisen. Ihr Werk steht für die Verbindung von Mitgefühl und unbestechlicher Analyse. Es ist ein Zeichen dafür, dass systematische Vernunft und sorgfältige Beobachtung die mächtigsten Instrumente der Nächstenliebe sein können, um Leben zu retten und Gesundheit zu verbessern.",
+      "motiv_len": 351,
+      "begruendung_len": 468,
+      "within_limits": true,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-07-27T18:26:42.325380+00:00",
+      "usage": {
+        "input_tokens": 592,
+        "output_tokens": 2409
+      },
+      "raw": "raw/order-google.json"
+    }
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "id": "resp_01511d695d6a61f0006a67a2dc9360819cbd6a47d47f30fc19",
+  "created_at": 1785176796.0,
+  "error": null,
+  "incomplete_details": null,
+  "instructions": null,
+  "metadata": {},
+  "model": "gpt-5.2-2025-12-11",
+  "object": "response",
+  "output": [
+    {
+      "id": "msg_01511d695d6a61f0006a67a2dd66a8819c9c37a040d1d405f3",
+      "content": [
+        {
+          "annotations": [],
+          "text": "MOTIV: Geprägtes rundes Messingrelief: eine fein gravierte Waage, deren Balken zugleich als Zirkel ausgeformt ist; in der linken Schale ein kleines Kornbündel, in der rechten ein Tropfensymbol. Dahinter ein dezentes Sternenfeld und eine halb verdeckte Mondsichel. Flache Erhebung, gealterte Patina, kein Randtext.\n\nBEGRÜNDUNG: Waage und Zirkel stehen für Abwägen und Messen: Belege prüfen, Unsicherheit sichtbar halten, Wirkung quantifizieren ohne das Menschliche zu verlieren. Korn und Tropfen verweisen auf Grundbedürfnisse und robuste Hilfe. Mond und Sterne passen zur nächtlichen Gremiumsszene und markieren Orientierung im Dunkeln: Entscheidungen treffen, wenn Informationen unvollständig sind.",
+          "type": "output_text",
+          "logprobs": []
+        }
+      ],
+      "role": "assistant",
+      "status": "completed",
+      "type": "message",
+      "phase": null
+    }
+  ],
+  "parallel_tool_calls": true,
+  "temperature": 1.0,
+  "tool_choice": "auto",
+  "tools": [],
+  "top_p": 0.98,
+  "background": false,
+  "completed_at": 1785176802.0,
+  "conversation": null,
+  "max_output_tokens": 3000,
+  "max_tool_calls": null,
+  "moderation": null,
+  "previous_response_id": null,
+  "prompt": null,
+  "prompt_cache_key": null,
+  "prompt_cache_retention": "24h",
+  "reasoning": {
+    "context": "current_turn",
+    "effort": "none",
+    "generate_summary": null,
+    "summary": null,
+    "mode": "standard"
+  },
+  "safety_identifier": null,
+  "service_tier": "default",
+  "status": "completed",
+  "text": {
+    "format": {
+      "type": "text"
+    },
+    "verbosity": "medium"
+  },
+  "top_logprobs": 0,
+  "truncation": "disabled",
+  "usage": {
+    "input_tokens": 576,
+    "input_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0
+    },
+    "output_tokens": 175,
+    "output_tokens_details": {
+      "reasoning_tokens": 0
+    },
+    "total_tokens": 751
+  },
+  "user": null,
+  "billing": {
+    "payer": "developer"
+  },
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0,
+  "store": true,
+  "tool_usage": {
+    "image_gen": {
+      "input_tokens": 0,
+      "input_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "output_tokens": 0,
+      "output_tokens_details": {
+        "image_tokens": 0,
+        "text_tokens": 0
+      },
+      "total_tokens": 0
+    },
+    "web_search": {
+      "num_requests": 0
+    }
+  }
+}
