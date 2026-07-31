@@ -5,7 +5,7 @@
 löschen. Alles davor und danach ist wörtlich identisch, damit beide Berichte vergleichbar
 sind.
 
-**Ausgefüllt (CC, 1. August 2026):** `{TAG}` = `review-2026-08-01`, `{COMMIT}` = siehe §3.
+**Ausgefüllt (CC, 1. August 2026):** `{TAG}` = `review-2026-08-01`, `44f47cf` (siehe §3).
 `{WORKTREE}`/`{PORT}` sind je Reviewer verschieden — **Codex:** `../nc-review-codex`, Port
 `4200` · **Kimi:** `../nc-review-kimi`, Port `4300`. Die zwei kopierfertigen Fassungen
 unten tragen je den passenden Wert und nur den eigenen Prüfumfang-Block.
@@ -62,7 +62,7 @@ Diese Entscheidungen stehen fest. Findings dagegen kosten nur Zeit:
 
 ### 3 · Der Stand
 
-- Branch `integration/go-live-0.4`, Tag `review-2026-08-01`, Commit `{COMMIT}`
+- Branch `integration/go-live-0.4`, Tag `review-2026-08-01`, Commit `44f47cf`
 - Worktree: `../nc-review-codex` (Codex) bzw. `../nc-review-kimi` (Kimi) —
   **arbeite nur dort**, nicht im Hauptbaum
 - Build: **Node v20.20.2, npm 10.8.2** (wichtig: `rolldown` bringt native Bindings mit,
@@ -140,7 +140,7 @@ Diese Punkte stehen bereits auf der Liste:
 
 ### 6 · Wie du berichtest
 
-Eine Datei: `docs/review/{TAG}-<dein-name>.md`. Je Finding:
+Eine Datei: `docs/review/review-2026-08-01-<dein-name>.md`. Je Finding:
 
 - **Ort:** Datei und Zeile, oder Route und Viewport
 - **Beobachtet:** was passiert

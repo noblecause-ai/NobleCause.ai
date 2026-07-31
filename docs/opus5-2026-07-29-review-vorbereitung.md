@@ -10,7 +10,7 @@ Arbeitsbaum ist kein Review, weil kein Reviewer sagen kann, *was* er geprüft ha
 ## Ausgeführt — 1. August 2026 (CC)
 
 - **Branch:** `integration/go-live-0.4` (Frontend + versöhnter Rekord, konfliktfrei gemergt)
-- **Annotiertes Tag:** `review-2026-08-01` → Commit `<TAG-Commit — unten/im Prompt nachgetragen>`
+- **Annotiertes Tag:** `review-2026-08-01` → Commit `44f47cf`
 - **Build (Node v20.20.2, npm 10.8.2):**
   ```
   npm ci
