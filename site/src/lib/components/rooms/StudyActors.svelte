@@ -455,6 +455,58 @@
 	.actor:hover figcaption {
 		opacity: 1;
 	}
+	/* Mobil (Hochformat): die Plaketten konvergieren sonst zur Mitte und legen
+	   sich über Überschrift/Untertitel UND übereinander (schmaler Viewport).
+	   Korrektur (Steward): jede Plakette über die EIGENE Figur zentriert
+	   (left:50 % der Box = Figurmitte → Scout links, Warden rechts, getrennt),
+	   tiefer gesetzt (über die Figur statt in die Überschrift) und schmaler
+	   (≤ 46 vw → beide passen nebeneinander). Sie dürfen die Figur überdecken;
+	   die Überschrift bleibt frei, beide bleiben lesbar. */
+	@media (max-width: 1199px) {
+		.actor.scout figcaption,
+		.actor.warden figcaption {
+			left: 50%;
+			top: auto;
+			bottom: 3%;
+			transform: translate(-50%, 0);
+			max-width: 50vw;
+		}
+		/* Kompakter, damit die Plakette in den schmalen Streifen über der Figur
+		   (unter der Überschrift) passt — auch bei 320. Emblemreihe bleibt, nur
+		   maßvoll kleiner, damit vier nebeneinander stehen. */
+		.actor figcaption {
+			padding: 0.25rem 0.5rem 0.3rem;
+		}
+		.actor figcaption strong {
+			font-size: 0.68rem;
+		}
+		.actor figcaption .sitz {
+			font-size: 0.56rem;
+		}
+		.actor figcaption .cap-body {
+			margin-top: 0.06rem;
+			font-size: 0.56rem;
+			line-height: 1.1;
+		}
+		.actor figcaption .sigil {
+			width: 1.15rem;
+			height: 1.15rem;
+			margin-right: 0.25rem;
+			vertical-align: -0.25em;
+		}
+		.actor figcaption .pillars {
+			gap: 0.25rem;
+			margin-top: 0.18rem;
+		}
+		.actor figcaption .pillars img {
+			width: 1.3rem;
+			height: 1.3rem;
+		}
+		.actor figcaption .last {
+			margin-top: 0.15rem;
+			font-size: 0.56rem;
+		}
+	}
 	/* Plakette-Innenleben (Auftrag §3): Namens-/Sitzzeile, Karten-Sigel + Satz,
 	   darunter die vier Bereichsembleme (Scout) bzw. der Warden-Entscheid.
 	   Höhe ist ~115/103 px (Steward akzeptiert: „vollständig über der Kopflinie"
