@@ -180,6 +180,8 @@
 		inset: 0;
 		pointer-events: none;
 		text-decoration: none;
+		/* Kein helles Aufblitzen beim Tippen (iOS-Tap-Highlight); erbt an Label/Hit. */
+		-webkit-tap-highlight-color: transparent;
 	}
 	.pult-hit {
 		position: absolute;
@@ -248,13 +250,23 @@
 		white-space: nowrap;
 	}
 
-	/* Mobil: kein Eingang am Möbel — der Fluss-Link (.protocol-link) trägt allein. */
+	/* Mobil: der Möbelkörper ist AUCH hier der Eingang zum Protokoll (Steward-Wunsch
+	   — die Mitte ist im Hochformat anfangs frei, Platz genug). Kein Hover auf Touch,
+	   darum die Beschriftung im Ruhezustand deutlicher (0.7 statt 0.36). Der
+	   Fluss-Link (.protocol-link) bleibt zusätzlich bestehen. */
 	@media (max-width: 1199px) {
 		.pult-hit {
-			pointer-events: none;
+			pointer-events: auto;
 		}
 		.pult-label {
-			display: none;
+			display: block;
+			/* Über dem angehobenen Möbel, in der freien Mitte. Pfeil „→" zeigt zum Möbel. */
+			top: 0%;
+			opacity: 0.7;
+			/* Auf Touch ist die Beschriftung SELBST das Tap-Ziel (sie liegt frei, im
+			   pult-link-<a>) — zuverlässiger als der Möbelkörper. */
+			pointer-events: auto;
+			cursor: pointer;
 		}
 	}
 
@@ -292,11 +304,14 @@
 	/* ---- Positionierung: drei Fälle wie die Study-Schienen ----------------
 	   x in Plate-Prozent (--x). Fußlinie ≈ 100 % → ~5 % Anschnitt. */
 	/* Mobil + Tablet (< 1200 px): Hochformat-Plate 2:3 (cover), Bildbreite 66,67 svh.
-	   Rückzug VERTIKAL, Einfahrt von unten (Override unten). */
+	   Rückzug VERTIKAL, Einfahrt von unten (Override unten). Höher gesetzt
+	   (bottom 14svh statt −1,5svh), damit das Möbel NICHT von der Prozess-Röhre
+	   (~11 svh am unteren Rand) verdeckt wird — svh-basiert, passt sich der
+	   Browserleiste an; die freie Mitte trägt es. */
 	.rail.pult-desk {
 		left: calc(50vw + (var(--x, 50) - 50) * 0.6667svh);
 		height: 30svh;
-		bottom: calc(-0.05 * 30svh);
+		bottom: 14svh;
 		transform: translateY(calc(var(--retreat, 0) * 18vh));
 	}
 	@media (max-width: 1199px) and (prefers-reduced-motion: no-preference) {
