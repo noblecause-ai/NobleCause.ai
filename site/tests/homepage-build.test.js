@@ -560,9 +560,10 @@ test('Bühne: zweite Ebene — Akteure und Wolkenzug stehen im pragerenderten HT
 	);
 	assert.ok(studyHtml.includes('alt="Zukunft"'), 'study: Bereichs-Emblemreihe (alt=label) fehlt');
 	assert.ok(!studyHtml.includes('der Späher'), 'study: Gloss nicht mehr entfernt');
-	// Warden-Entscheid + „letzte Prüfung" aus den Daten — zugleich Beleg, dass
-	// master hereingezogen ist (20. Juli 2026, nicht 8. Juli).
-	assert.ok(studyHtml.includes('20. Juli 2026'), 'study: lastResearch-Datum (master-Zug) fehlt');
+	// Warden-Entscheid + „letzte Prüfung" aus den Daten — zugleich Beleg, dass der
+	// versöhnte Rekord hereingezogen ist: die Wart-Recherche journal/2026-07-27
+	// (27. Juli 2026) ist der jüngste Lauf, neuer als master allein (20. Juli).
+	assert.ok(studyHtml.includes('27. Juli 2026'), 'study: lastResearch-Datum (Rekord-Zug) fehlt');
 	assert.ok(studyEnHtml.includes('The Scout'), 'studyEn: Scout-Name fehlt (EN)');
 	assert.ok(
 		studyEnHtml.includes('seeks the most effective organisations'),
