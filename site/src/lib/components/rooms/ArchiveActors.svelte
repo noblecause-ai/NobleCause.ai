@@ -224,7 +224,10 @@
 		padding: 0.5rem 0.75rem 0.55rem;
 		text-align: right;
 		background: rgba(6, 9, 11, 0.82);
-		opacity: 0.36;
+		/* Ruhezustand schwach sichtbar (0.36); beim Scrollen sofort weg — an --retreat
+		   gekoppelt (0 bei retreat≈0.15), damit sie nie hinter dem nachrückenden
+		   Rekordtext steht. Hover/Fokus holt sie zurück (Override unten). */
+		opacity: calc(0.36 - var(--retreat, 0) * 2.4);
 		transition: opacity 0.35s ease;
 		pointer-events: none;
 	}
@@ -262,7 +265,9 @@
 			display: block;
 			/* Über dem angehobenen Möbel, in der freien Mitte. Pfeil „→" zeigt zum Möbel. */
 			top: 0%;
-			opacity: 0.7;
+			/* Ruhezustand deutlicher (0.7, kein Hover auf Touch); beim Scrollen sofort
+			   weg — an --retreat gekoppelt, damit sie nicht hinter dem Rekordtext steht. */
+			opacity: calc(0.7 - var(--retreat, 0) * 4.7);
 			/* Auf Touch ist die Beschriftung SELBST das Tap-Ziel (sie liegt frei, im
 			   pult-link-<a>) — zuverlässiger als der Möbelkörper. */
 			pointer-events: auto;
@@ -345,7 +350,11 @@
 			left: calc(50vw + (var(--x, 50) - 50) * 1.7778svh);
 			height: 38svh;
 			bottom: calc(-0.05 * 38svh);
-			transform: translateX(calc(var(--retreat, 0) * var(--side, 1) * 13vw));
+			/* Rückzug nach rechts beim Scrollen. 22vw (statt 13) — erst dieser Weg zieht
+			   die opake Pultplatte aus der Flussspalte, die bei 1440 bis ~x1389 läuft;
+			   bei retreat=1 steht das Möbel am/über dem rechten Rand geparkt (Eingang in
+			   Ruhe voll sichtbar, beim Lesen an die Kante zurückgezogen — Kantenprinzip). */
+			transform: translateX(calc(var(--retreat, 0) * var(--side, 1) * 22vw));
 			z-index: 4;
 		}
 	}
