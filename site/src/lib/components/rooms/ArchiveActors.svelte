@@ -207,7 +207,10 @@
 
 	/* Hover/Fokus 2 — Beschriftung links neben dem Möbel, auf Höhe der Pultplatte,
 	   rechtsbündig an der linken Möbelkante endend. Dunkler halbtransparenter
-	   Grund (über dem Fluss lesbar). Nur Licht/Opazität, kein transform. */
+	   Grund (über dem Fluss lesbar). Nur Licht/Opazität, kein transform.
+	   Korrektur: im RUHEZUSTAND schwach sichtbar (0.36) statt unsichtbar — sonst
+	   liest niemand das Möbel als Eingang. Im Hover/Fokus tritt sie voll hervor.
+	   Kein Schild, kein neues Element — nur der vorhandene Text, gedämpft. */
 	.pult-label {
 		position: absolute;
 		right: 100%;
@@ -219,7 +222,7 @@
 		padding: 0.5rem 0.75rem 0.55rem;
 		text-align: right;
 		background: rgba(6, 9, 11, 0.82);
-		opacity: 0;
+		opacity: 0.36;
 		transition: opacity 0.35s ease;
 		pointer-events: none;
 	}
