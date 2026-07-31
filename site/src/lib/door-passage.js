@@ -85,6 +85,14 @@ export async function runDoorPassage({
 
 	const layer = document.createElement('div');
 	layer.className = 'passage-layer';
+	// Unsichtbar starten: die Ebene wird gleich angehängt, aber erst NACH dem
+	// prepareTarget-Warten eingeblendet. Ohne dieses opacity:0 stünde sie ab dem
+	// Anhängen bei Default-opacity 1 (deckt die Bühne sofort dunkel ab), und das
+	// spätere animate([{opacity:0},...]) risse sie kurz auf 0 zurück — die Bühne
+	// blitzte auf ("Blinzeln"), der Schienen-Rückzug liefe unsichtbar darunter.
+	// Mit opacity:0 bleibt die Bühne sichtbar (Akteure/Maschine weichen zurück),
+	// dann blendet die Passage weich darüber.
+	layer.style.opacity = '0';
 	// perspective-origin je Tür (die Kamera zielt auf DIESE Apertur, §6-Nachtrag
 	// Ursache 2) — inline statt CSS-fest, weil je Tür verschieden.
 	if (origin) layer.style.perspectiveOrigin = origin;
@@ -126,9 +134,12 @@ export async function runDoorPassage({
 		await prepareTarget(href, farSrc);
 		if (aborted) return finish();
 
-		// Ebene sanft einblenden (kaschiert Hover→Frame-1, §6.4). Frame 1 gleicht dem
-		// Ruhe-Stapel (offene Flügel) — der Einblend ist damit unmerklich.
-		layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 90, fill: 'forwards' });
+		// Ebene weich einblenden — jetzt als sichtbarer Übergang (§Freeze-Runde): die
+		// Bühne (Akteure/Maschine) weicht auf ihren Schienen zurück und löst sich
+		// über diese Blende in die Passage auf, statt hart abgedeckt zu werden. 320 ms
+		// statt 90, damit der Rückzug durch die noch halbtransparente Passage sichtbar
+		// bleibt (Frame 1 gleicht ohnehin dem Ruhe-Stapel — kein Zuschnapp).
+		layer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 320, fill: 'forwards' });
 		await nextFrame();
 
 		// Die Flügel stehen offen und bleiben stehen (§6-Nachtrag: sie sitzen näher,
