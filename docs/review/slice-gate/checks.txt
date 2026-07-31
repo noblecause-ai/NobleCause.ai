@@ -1,0 +1,138 @@
+Slice-Gate checks — 2026-07-19T18:10:59.916Z
+B1 320 DE /: OK — scrollWidth 320 ≤ viewport 320 (Eingang/Mitte/Ende)
+B1 320 DE Sonden: {"boardLabelPx":16.2,"boardLabelFits":true,"leep":{"lines":0,"fits":true},"h1Fits":true,"langBtnFits":true}
+B1 320 EN /en/: OK — scrollWidth 320 ≤ viewport 320 (Eingang/Mitte/Ende)
+B1 320 EN Sonden: {"boardLabelPx":16.2,"boardLabelFits":true,"leep":{"lines":0,"fits":true},"h1Fits":true,"langBtnFits":true}
+B1 390 DE /: OK — scrollWidth 390 ≤ viewport 390 (Eingang/Mitte/Ende)
+B1 390 DE Sonden: {"boardLabelPx":16.2,"boardLabelFits":true,"leep":{"lines":0,"fits":true},"h1Fits":true,"langBtnFits":true}
+B1 390 EN /en/: OK — scrollWidth 390 ≤ viewport 390 (Eingang/Mitte/Ende)
+B1 390 EN Sonden: {"boardLabelPx":16.2,"boardLabelFits":true,"leep":{"lines":0,"fits":true},"h1Fits":true,"langBtnFits":true}
+B1 320 DE LEEP-Sichtprobe: OK — „Lead Exposure Elimination Project (LEEP) · 3 von 3" bricht sauber auf 3 Zeilen, nichts abgeschnitten (b1-320-de-tafel-leep.png)
+B1 Befund+Fix: Röhrenschiene überlief den 320-px-Viewport (rechts ~18 px) — min-content der Perlen-Labels + rem-Breiten. Fix StageTube.svelte: .bead-name max-width:100%, neue ≤360-px-Stufe (Perle 2,5rem, Lücke 0,2rem). Re-Messung: alle vier Konfigurationen OK.
+B2 Tab-Sequenz (40 Halte):
+  1: [sprache] A „EN" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  2: [perle] LI „Die Frage" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  3: [perle] LI „Die Belege" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  4: [perle] LI „Drei Antworten" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  5: [perle] LI „Umdenken" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  6: [perle] LI „Zählen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  7: [perle] LI „Veröffentlichen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  8: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  9: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  10: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  11: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  12: [sonst] SUMMARY „Frage wörtlich aus dem Protokoll" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  13: [sonst] SUMMARY „Recherche zeigen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  14: [tuer] A „Durch die große Tür The Council →" fv=true outline=solid 2px rgb(215, 170, 85) shadow=JA
+  15: [tuer] A „Die schlichte Tür The Archive →" fv=true outline=solid 2px rgb(215, 170, 85) shadow=JA
+  16: [sonst] A „NobleCause.ai" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  17: [sonst] A „Manifest" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  18: [sonst] A „Wie eine Sitzung funktioniert" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  19: [sonst] A „Sitzungen" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  20: [sonst] A „Journal des Warts" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  21: [sprache] A „EN" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  22: [perle] LI „Die Frage" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  23: [perle] LI „Die Belege" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  24: [perle] LI „Drei Antworten" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  25: [perle] LI „Umdenken" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  26: [perle] LI „Zählen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  27: [perle] LI „Veröffentlichen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  28: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  29: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  30: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  31: [spende] A „Direkt spenden (extern) ↗" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  32: [sonst] SUMMARY „Frage wörtlich aus dem Protokoll" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  33: [sonst] SUMMARY „Recherche zeigen" fv=true outline=solid 2px rgb(215, 170, 85) shadow=none
+  34: [tuer] A „Durch die große Tür The Council →" fv=true outline=solid 2px rgb(215, 170, 85) shadow=JA
+  35: [tuer] A „Die schlichte Tür The Archive →" fv=true outline=solid 2px rgb(215, 170, 85) shadow=JA
+  36: [sonst] A „NobleCause.ai" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  37: [sonst] A „Manifest" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  38: [sonst] A „Wie eine Sitzung funktioniert" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  39: [sonst] A „Sitzungen" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+  40: [sonst] A „Journal des Warts" fv=true outline=auto 1px rgb(0, 95, 204) shadow=none
+B2 b2-perle-1: OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85), boxShadow=none
+B2 b2-perle-2: OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85), boxShadow=none
+B2 perle-3: OK — outline=solid 2px rgb(215, 170, 85) (ohne Clip)
+B2 perle-4: OK — outline=solid 2px rgb(215, 170, 85) (ohne Clip)
+B2 perle-5: OK — outline=solid 2px rgb(215, 170, 85) (ohne Clip)
+B2 b2-perle-6: OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85), boxShadow=none
+B2 b2-spendenlink-1: OK — :focus-visible=true, outline=auto 1px rgb(0, 95, 204), boxShadow=none
+B2 b2-spendenlink-2: OK — :focus-visible=true, outline=auto 1px rgb(0, 95, 204), boxShadow=none
+B2 b2-spendenlink-3: OK — :focus-visible=true, outline=auto 1px rgb(0, 95, 204), boxShadow=none
+B2 b2-spendenlink-4: OK — :focus-visible=true, outline=auto 1px rgb(0, 95, 204), boxShadow=none
+B2 b2-tuer-link-1: OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85), boxShadow=sichtbar
+B2 b2-tuer-link-2: OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85), boxShadow=sichtbar
+B2 Ergebnis: GRÜN — 4 Spendenlinks, 6 Perlen, 2 Tür-Links fokussiert
+B2 tuer-link-1 „Durch die große Tür The Counci" (Clip korrigiert, dokument-relativ): OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85)
+B2 tuer-link-2 „Die schlichte Tür The Archive " (Clip korrigiert, dokument-relativ): OK — :focus-visible=true, outline=solid 2px rgb(215, 170, 85)
+B2 Befund+Fix: Röhren-Perlen waren strukturell nicht fokussierbar (kein tabindex) — Minimal-Nachrüstung tabindex="0" + :focus-visible-Ring (Bernstein, wie Tür-Links). Messung danach: 6/6 OK.
+B2 Spendenlinks: kein eigener Stil, Browser-Default-Ring (auto, sichtbar auf dunkler Tafel) — Messung OK, kein Eingriff nötig.
+B2 Testfalle (dokumentiert): Page.captureScreenshot clip ist in Brave/Chrome 150 headless DOKUMENT-relativ, nicht viewport-relativ — bei gescrollter Seite Clip-y um scrollY erhöhen, sonst schwarze Frames.
+B4 Testfalle (eigener): erster Lauf filterte auf „ratssaal" in der Plate-URL — die Council-Plate heißt hall-display.jpg. Filterfehler, kein Code-Fehler. Korrigierte Re-Messung:
+B4.1 Preload feuert: OK — Ratssaal-Plate-Requests nach Tür-Sichtbarkeit: 1 (vorher 0) → /media/scenes/hall-display.jpg
+B4.2a Preload unter saveData unterdrückt: OK — Ratssaal-Plate-Requests: 0
+B4.2b Navigation ohne Preload (saveData, Tap): OK — /ratssaal/ mit Tafel gerendert nach ~832 ms
+B1-Replikation 320 DE-Council /ratssaal/: OK
+B1-Replikation 320 DE-Archive /archiv/: OK
+B1-Replikation 320 EN-Council /en/council/: OK
+B1-Replikation 320 EN-Archive /en/archive/: OK
+B1-Replikation 390 DE-Council /ratssaal/: OK
+B1-Replikation 390 DE-Archive /archiv/: OK
+B1-Replikation 390 EN-Council /en/council/: OK
+B1-Replikation 390 EN-Archive /en/archive/: OK
+B2-Replikation /ratssaal/: OK — 12 Perlen, 8 Spendenlinks, 4 Tür-Links, alle mit sichtbarem Ring
+B2-Replikation /archiv/: OK — 6 Perlen, 4 Spendenlinks, 2 Tür-Links, alle mit sichtbarem Ring
+A1 AVIF-Pipeline (cwebp q80 vs avifenc q55, kleinere gewinnt — überall AVIF): media/ 2197→761 KB. Grundlast-Re-Messung: / 798→349, /ratssaal/ 667→365, /archiv/ 1050→442 (Plate 579→184), Mobil / 702→316, /ratssaal/ 667→365, /archiv/ 817→358. Embleme 294→81. Alle Räume deutlich unter beiden Deckeln.
+A2 Ruhe Desktop /: 2.66 MP ≤ 4 MP — OK (Top: antechamber-display.avif=1.1, door-study-archive-display.avif=0.31, doorway-display.avif=0.23, process-question-display.avif=0.1, process-evidence-display.avif=0.1, process-three-answers-display.avif=0.1)
+A2 Ruhe Desktop /ratssaal/: 2.46 MP ≤ 4 MP — OK (Top: hall-display.avif=1.44, process-question-display.avif=0.1, process-evidence-display.avif=0.1, process-three-answers-display.avif=0.1, process-reconsider-display.avif=0.1, process-count-display.avif=0.1)
+A2 Ruhe Desktop /archiv/: 2.46 MP ≤ 4 MP — OK (Top: archive-display.avif=1.44, process-question-display.avif=0.1, process-evidence-display.avif=0.1, process-three-answers-display.avif=0.1, process-reconsider-display.avif=0.1, process-count-display.avif=0.1)
+A2 Ruhe Mobil /: 2.6 MP ≤ 4 MP — OK
+A2 Ruhe Mobil /ratssaal/: 2.46 MP ≤ 4 MP — OK
+A2 Ruhe Mobil /archiv/: 2.6 MP ≤ 4 MP — OK
+A2 Peak Fahrt Study→Council (Modell: Ruhe_alt 2.66 + Plate_neu 1.44 + 2 VT-Snapshots à 1.30): 6.69 MP ≤ 6 MP — FAIL
+A2 Peak-Befund (modellabhängig, zur Steward-Entscheidung): REALISTISCHES Modell (altes Dokument gibt Dekodierungen bei VT frei; Peak = Ruhe_neu 2,46 + 2 Root-Snapshots à 1,30) = 5,06 MP ≤ 6 — OK. STRENGES Worst-Case-Modell (altes Set bleibt komplett resident + neue Plate + 2 Snapshots) = 6,69 MP > 6 — über Deckel. Dominanter Term sind die 2 Viewport-Snapshots (2,6 MP, inhärent für jede Root-VT bei 1440×900); einziger Hebel Richtung strenges Modell ist kleineres Ruhe-Set (A3 800-px-Stufe wirkt mobil). Snapshots selbst sind nicht reduzierbar.
+A3 800-px-Stufe Mobil /: OK — geladen: portrait-800 (390×DPR2=780 ≤ 800)
+A3 Lazy-Embleme vor Scroll: FAIL — 10 Emblem-Requests initial (Röhren-Perlen ausgenommen? 6)
+A3 Lazy-Embleme nach Scroll: OK — 10 Emblem-Requests gesamt (alle 10 laden bei Annäherung)
+A3 Korrektur (Assertionsfehler, kein Code-Fehler): „0 Emblem-Requests initial" war die falsche Erwartung. Die 6 Prozess-URLs teilen sich Röhren-Perlen (eager, im Hero) und FlowRail (lazy) — ein Fetch je URL; die 4 Pillar-Embleme lädt die Browser-Lazy-Heuristik, weil die mobil mitlaufende Tafel innerhalb der Schwelle (~3000 px) beginnt. Lazy ist korrekt gesetzt (5 Render-Stellen; Röhre bewusst eager), spart auf Study initial ≈0 KB, wirkt bei längeren Strecken/lahmen Verbindungen (kleinere Schwelle). Reale A3-Ersparnis kommt aus der 800-px-Stufe: Plate 100→57 KB (Archiv) / 56→32 KB (Study), MP 1,57→0,96.
+A3 Endstand Grundlast (KB): Desktop / 350, /ratssaal/ 365, /archiv/ 442 · Mobil / 291, /ratssaal/ 365, /archiv/ 314 — alle ≤ 37 % der Deckel.
+B1-Revert Tab-Sequenz: OK — 0 Perlen in der Tab-Reihenfolge (erwartet 0, nicht-interaktiv)
+B1-Hinweis: Die früheren „B2 perle-* OK"-Zeilen (tabindex-Nachrüstung) sind durch Steward-Entscheid B1 revidiert — Perlen sind wieder keine Tab-Stopps; der Ring-CSS bleibt kommentiert für den künftigen Zähl-Fokus.
+B1-Revert Tab-Sequenz: OK — 0 Perlen in der Tab-Reihenfolge (erwartet 0, nicht-interaktiv)
+B1-Revert Ringe Tür/Spende: OK — 8 Spendenlinks, 4 Tür-Links mit sichtbarem Ring
+B1-Hinweis: Die früheren „B2 perle-* OK"-Zeilen (tabindex-Nachrüstung) sind durch Steward-Entscheid B1 revidiert — Perlen sind wieder keine Tab-Stopps; der Ring-CSS bleibt kommentiert für den künftigen Zähl-Fokus.
+B2-LEEP-Sonde 320 DE /: OK — „Lead Exposure Elimination Project (LEEP)· 3 von 3" auf 4 Zeilen (5 Range-Rects), rechts 280 ≤ Viewport 320 — Artefakt: b1-320-de-tafel-leep.png
+C1 Türfahrt vorwärts: OK — VT-Dauer 2046 ms (Ziel ~2000), ready 20 ms
+C2 Tafel-Reise: OK — genau 1 Board vor/während/nach (mid=1, after=1), viewTransitionName=board, board-traveling während Fahrt=true
+C3 Ankunft arrival-Modus: OK — stage-armed gesetzt, kein Re-Beat der Tafel
+C5 Browser Back: OK — navDir=back, Pfad=/, VT-Dauer 1233 ms (Ziel ~1200)
+C7 Direktaufruf /ratssaal/: OK — SSR-Füllstand 5, keine Diff-Klassen, mode-fresh-Sequenz läuft
+C8 Sprachwechsel DE→EN: OK — Pfad=/en/council/, stage-armed=false, VT-Aufrufe=0 (erwartet 0), Röhre steht (5)
+C9 No-JS /ratssaal/: OK — SSR-Füllstand 5, Board 1, stage-armed=false
+C10 Reduced-Motion: OK — sofortiger Wechsel (Pfad=/ratssaal/), SSR-Stand 5, 0 Diff-Klassen, 0 VT-Aufrufe (erwartet 0)
+C11 Reflow 320 /ratssaal/: OK — scrollW 320/320 ≤ 320, Übeltäter 0
+C11 Reflow 390 /ratssaal/: OK — scrollW 390/390 ≤ 390, Übeltäter 0
+C1 Türfahrt vorwärts: OK — VT-Dauer 2057 ms (Ziel ~2000), ready 16 ms
+C2 Tafel-Reise: OK — genau 1 Board vor/während/nach (mid=1, after=1), viewTransitionName=board, board-traveling während Fahrt=true
+C3 Ankunft arrival-Modus: OK — stage-armed gesetzt, kein Re-Beat der Tafel
+C4 Röhren-Diff 2→5: OK — während Fahrt 3 tube-diff-in (erwartet 3 = Herkunft 2), nach Clear 0, SSR-Stand 5
+C5 Browser Back: OK — navDir=back, Pfad=/, VT-Dauer 1245 ms (Ziel ~1200)
+C7 Direktaufruf /ratssaal/: OK — SSR-Füllstand 5, keine Diff-Klassen, mode-fresh-Sequenz läuft
+C8 Sprachwechsel DE→EN: OK — Pfad=/en/council/, stage-armed=false, VT-Aufrufe=0 (erwartet 0), Röhre steht (5)
+C9 No-JS /ratssaal/: OK — SSR-Füllstand 5, Board 1, stage-armed=false
+C10 Reduced-Motion: OK — sofortiger Wechsel (Pfad=/ratssaal/), SSR-Stand 5, 0 Diff-Klassen, 0 VT-Aufrufe (erwartet 0)
+C11 Reflow 320 /ratssaal/: OK — scrollW 320/320 ≤ 320, Übeltäter 0
+C11 Reflow 390 /ratssaal/: OK — scrollW 390/390 ≤ 390, Übeltäter 0
+C1 Türfahrt vorwärts: OK — VT-Dauer 2064 ms (Ziel ~2000), ready 15 ms
+C2 Tafel-Reise: OK — genau 1 Board vor/während/nach (mid=1, after=1), viewTransitionName=board, board-traveling während Fahrt=true
+C3 Ankunft arrival-Modus: OK — stage-armed gesetzt, kein Re-Beat der Tafel
+C4 Röhren-Diff 2→5: OK — während Fahrt 3 tube-diff-in (erwartet 3 = Herkunft 2), nach Clear 0, SSR-Stand 5
+C5 Browser Back: OK — navDir=back, Pfad=/, VT-Dauer 1223 ms (Ziel ~1200); Messbedingung: Study bei y=0 verlassen
+C6 Rückwärts-Diff 5→2: OK — während Fahrt 3 tube-diff-out (erwartet 3), nach Clear 0, SSR-Stand 2
+C7 Direktaufruf /ratssaal/: OK — SSR-Füllstand 5, keine Diff-Klassen, mode-fresh-Sequenz läuft
+C8 Sprachwechsel DE→EN: OK — Pfad=/en/council/, stage-armed=false, VT-Aufrufe=0 (erwartet 0), Röhre steht (5)
+C9 No-JS /ratssaal/: OK — SSR-Füllstand 5, Board 1, stage-armed=false
+C10 Reduced-Motion: OK — sofortiger Wechsel (Pfad=/ratssaal/), SSR-Stand 5, 0 Diff-Klassen, 0 VT-Aufrufe (erwartet 0)
+C11 Reflow 320 /ratssaal/: OK — scrollW 320/320 ≤ 320, Übeltäter 0
+C11 Reflow 390 /ratssaal/: OK — scrollW 390/390 ≤ 390, Übeltäter 0
+C-Korrektur-Notiz (Messgeschichte, FAIL-Zeilen entfernt): (1) C4 zählte 4 statt 3 tube-diff-in — echter Off-by-one im Code (blasse Perle mitgezählt), gefixt in site/src/lib/stage.js (primeTubeDiff: i >= tubeFrom && i < filled). (2) C6 zählte zweimal 0 tube-diff-out — KEIN Code-Bug: Fahrt 1 verließ die Study bei y>48 (scrollIntoView vor dem Türklick); Browser-Back stellt die Position wieder her, das scroll-Event löst den Skip-Listener aus und clearTubeDiff() läuft sofort (Produktdesign: Skip = SSR-Wahrheit). scrollRestoration='manual' von /ratssaal/ aus half nicht (der Modus klebt am History-Eintrag von / und bleibt auto). Faire Messbedingung: zweite Fahrt mit Study bei y=0 verlassen (JS-Klick ohne Scroll) → Back stellt y=0 wieder her → kein Skip → Diff sauber messbar. Produktverhalten bei echtem Back mit wiederhergestelltem Scroll: bewusster Sprung in den Endzustand (kohärent mit „Scroll während Aufbau = Sprung in den Lock-/Endzustand").

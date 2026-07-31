@@ -1,0 +1,102 @@
+
+## Pixel-Messungen (20.07.2026, Brave Canvas getImageData)
+Schachbrett Scout: Ecken-Topfarben ol=[252,252,252 ×4383 | 236,236,236 ×3099 | 240,240,240 ×763 | 244,244,244 ×305] ur=[252,252,252 ×4310 | 240,240,240 ×4254 | 248,248,248 ×287 | 244,244,244 ×192]
+Schachbrett Scout: Kachel-Periode ≈ 22/22 px (Zeile/Spalte); helle Motiv-Pixel (L>180): 3097, Mindest-Farbdistanz zu Kachelfarben: 0 (SAD RGB — >60 sicher für Key-Toleranz ~40)
+Schachbrett Warden: Ecken-Topfarben ol=[252,252,252 ×4813 | 244,244,244 ×2728 | 240,240,240 ×522 | 244,240,240 ×431] ur=[252,252,252 ×4390 | 244,244,244 ×3886 | 240,240,240 ×406 | 244,240,240 ×145]
+Schachbrett Warden: Kachel-Periode ≈ 30/30 px (Zeile/Spalte); helle Motiv-Pixel (L>180): 5565, Mindest-Farbdistanz zu Kachelfarben: 0 (SAD RGB — >60 sicher für Key-Toleranz ~40)
+Wolke: 1536×1024, mittlere Luminanz 80.6, Histogramm(10 Bins, L 0–255): [0, 45, 184669, 169027, 35947, 3528, 0, 0, 0, 0]
+Wolke: Ecken-Topfarben ol=[56,60,60 ×1559 | 72,72,76 ×1373 | 56,56,60 ×1097 | 68,72,72 ×964] ur=[56,56,60 ×1560 | 68,72,72 ×1472 | 68,68,72 ×514 | 56,60,60 ×489]
+Wolke Kachel-Naht: Randstreifen-Differenz links↔rechts (64 px) — MAD 9, max 45 (MAD < 3 ≈ nahtlos, < 8 ≈ unsichtbar bei 60–90 s-Drift)
+Test-Freistellung scout: 59.9 % transparent → /tmp/nc-s1b-scout-alpha.png (Flood-Fill, Toleranz 40, 1px-Feather)
+Test-Freistellung warden: 64.1 % transparent → /tmp/nc-s1b-warden-alpha.png (Flood-Fill, Toleranz 40, 1px-Feather)
+Pixel-Messungen fertig.
+# Serie 1b · The Study — Gate-Protokoll (checks.txt)
+
+Datum: 2026-07-20 · Quelle: docs/asset-originals/media/provenance/serie-1b-study/ (7 Master, C2PA 7/7, hasAlpha 0/7 — formal bestätigt)
+
+## §8-Checkliste (Kontaktbogen, alle sieben gemeinsam)
+
+- Farbtemperatur: OK — vier Plates + beide Figuren + Wolke in derselben warmen Nacht-Palette mit kaltem Fensterblau.
+- Schwarzpunkt: OK — einheitlich tief; Figuren-Schachbrett ist Lieferformat-Mangel (separater Befund), kein Stilbruch.
+- Messington: OK — warme Akzente (Türgriffe, Lampen, Schirmrahmen) konsistent.
+- Mondblau: OK — Fenster + Wolkenebene teilen dasselbe kalte Blaugrau.
+- Pinsel-/Konzeptkunststil: OK — Plates, Figuren, Wolke ein Duktus; kein Fotorealismus.
+- Perspektive/Kamera: OK — A↔B quer und hoch deckungsgleich (nur Türzustand; Pflanzen/Tafel/Fenster identisch), quer↔hoch eigenständige Kompositionen.
+- Türgröße/-lage: OK — zentral (±5 %), frontal, Crop-fähiger Rahmen (Crop-Test wie Serie 1 möglich).
+- Tafelgröße: OK — links vollständig frei (Auflage 1b erfüllt).
+- Fensterwirkung: OK — ruhiger Himmel wie bestellt (wenig Struktur), bereit für die Wolken-Drift.
+- Detailgrad: OK — Pflanzen gedämpft grün, geben Leben ohne Aufmerksamkeit (Auflage erfüllt); Tische entfernt (Auflage erfüllt).
+- Relative Gewichte: OK — Tür trägt, Tafel/Fenster/Pflanze balancieren; B-Spalt warm, kontrolliert, nicht dominant.
+- Scout-Erzählung: OK — Rechercheur am Schreibtisch mit leuchtendem Schirm (Messingrahmen, zeitunbestimmt), kein Fernrohr/Kartenrohr mehr. VERMERK: der Schirm trägt unleserliche Pseudotext-Strukturen (schematische Diagramme + Strichzeilen) — nicht lesbar, bei Anzeigegröße (≤600 px) reine Textur; kein Vertragsbruch im Wortlaut, transparent vermerkt.
+- Warden: OK — sitzend am schweren Schreibtisch, Journalband, Siegel, Banker-Lampe; ruhiger als Scout.
+
+GATE-URTEIL (Stil/Welt): alle sieben BESTANDEN — der Satz wirkt als eine Welt.
+Technische Befunde: (1) Alpha 0/7 — Schachbrett gemalt (Cutouts 252/236–244 hell, Periode 22/30 px; Wolke dunkel 56–72); (2) Wolke kachelt NICHT nahtlos (MAD 9, max 45); (3) helle Motiv-Pixel haben Distanz 0 zu Kachelfarben → nur Flood-Fill, kein globaler Key.
+
+## Freistellung v2 — Insel-Pass (20.07.2026)
+v2 scout: 59.9 % transparent, Insel-Pass entfernte 0 px → /tmp/nc-s1b-scout-alpha.png
+  scout Komponente #91 size=14577 fill=0.69 hell=0.49 dunkel=0.51 bbox=[467,882–589,1054] → bleibt
+  scout Komponente #93 size=10352 fill=0.62 hell=0.53 dunkel=0.47 bbox=[155,945–263,1098] → bleibt
+  scout Komponente #39 size=9224 fill=0.52 hell=0.54 dunkel=0.46 bbox=[812,394–875,669] → bleibt
+  scout Komponente #63 size=1348 fill=0.45 hell=0.6 dunkel=0.4 bbox=[427,600–474,662] → bleibt
+  scout Komponente #61 size=587 fill=0.33 hell=0.61 dunkel=0.39 bbox=[795,580–815,664] → bleibt
+  scout Komponente #102 size=257 fill=0.5 hell=0.32 dunkel=0.68 bbox=[384,1004–402,1030] → bleibt
+  scout Komponente #35 size=159 fill=0.68 hell=0.48 dunkel=0.52 bbox=[811,351–823,368] → bleibt
+  scout Komponente #48 size=126 fill=0.61 hell=0.85 dunkel=0.15 bbox=[784,450–806,458] → bleibt
+  scout Komponente #36 size=101 fill=0.27 hell=0.61 dunkel=0.39 bbox=[811,381–827,402] → bleibt
+  scout Komponente #116 size=84 fill=0.65 hell=0.08 dunkel=0.92 bbox=[323,1040–332,1052] → bleibt
+  scout Komponente #130 size=81 fill=0.74 hell=0.07 dunkel=0.93 bbox=[167,1076–177,1085] → bleibt
+  scout Komponente #77 size=71 fill=0.2 hell=0.77 dunkel=0.23 bbox=[665,649–716,655] → bleibt
+  scout Komponente #41 size=62 fill=0.57 hell=0.55 dunkel=0.45 bbox=[788,439–805,444] → bleibt
+  scout Komponente #108 size=48 fill=0.6 hell=0.23 dunkel=0.77 bbox=[402,1031–406,1046] → bleibt
+v2 warden: 64.1 % transparent, Insel-Pass entfernte 0 px → /tmp/nc-s1b-warden-alpha.png
+  warden Komponente #10 size=108 fill=0.55 hell=0.83 dunkel=0.17 bbox=[849,874–854,906] → bleibt
+  warden Komponente #145 size=101 fill=0.56 hell=0.21 dunkel=0.79 bbox=[791,1202–802,1216] → bleibt
+  warden Komponente #5 size=63 fill=0.75 hell=0.56 dunkel=0.44 bbox=[625,323–631,334] → bleibt
+  warden Komponente #9 size=50 fill=0.65 hell=0.76 dunkel=0.24 bbox=[301,507–311,513] → bleibt
+  warden Komponente #128 size=15 fill=0.31 hell=0 dunkel=1 bbox=[816,1192–823,1197] → bleibt
+  warden Komponente #194 size=15 fill=0.56 hell=0 dunkel=1 bbox=[630,1257–638,1259] → bleibt
+  warden Komponente #201 size=15 fill=0.54 hell=0 dunkel=1 bbox=[624,1260–630,1263] → bleibt
+  warden Komponente #142 size=14 fill=0.67 hell=0 dunkel=1 bbox=[803,1200–809,1202] → bleibt
+  warden Komponente #176 size=14 fill=0.58 hell=0 dunkel=1 bbox=[504,1240–509,1243] → bleibt
+  warden Komponente #192 size=13 fill=0.65 hell=0.08 dunkel=0.92 bbox=[589,1255–593,1258] → bleibt
+  warden Komponente #80 size=12 fill=0.8 hell=0 dunkel=1 bbox=[176,1130–178,1134] → bleibt
+  warden Komponente #198 size=11 fill=0.73 hell=0 dunkel=1 bbox=[576,1260–580,1262] → bleibt
+  warden Komponente #117 size=10 fill=0.5 hell=0 dunkel=1 bbox=[354,1183–358,1186] → bleibt
+  warden Komponente #199 size=10 fill=0.67 hell=0 dunkel=1 bbox=[586,1260–590,1262] → bleibt
+Freistellung v2 fertig.
+
+## Montage-Probe (20.07.2026, montage.html / montage.png, 1440×810)
+Aufbau: study-plate-a-desktop.png Vollbild + Test-Alphas (v1 = v2, Insel-Pass entfernte 0 px) als Ebenen,
+Figur-Höhe 42 % Viewport, Füße/Basis auf 80 %-Linie, Scout x≈30 %, Warden x≈68 %.
+
+Urteil Montage:
+- Maßstab: Figur+Tisch ≈ 70 % der Türhöhe — plausibel gegen Serie-1-Referenz (Figur ≈ 66 %), ok.
+- Bodenlinie: gemeinsame 80 %-Linie funktioniert für beide.
+- Licht: warme Tischlampen-Schirme (Scout rechts, Warden links) vs. kaltes Mondlicht von rechts —
+  verträglich (Innenraum-Warmquellen + kaltes Fenster), kein Widerspruch.
+- ABHAKEN NICHT BESTANDEN: helle Rest-Flächen leuchten vor dem dunklen Plate auf
+  (weißer Scheinblock rechts vom Scout; weißer Bodennebel unter beiden Tischen).
+
+Freistell-Qualitätsurteil (Sichtung der Test-Alphas, Regionen + Vollbild):
+- Motiv-Kanten selbst SAUBER: Haar, Gesicht, Hände, Tischkanten, Schirm-Rahmen, Lampen —
+  Rand-Flood-Fill (Toleranz 40) + 1px-Feather trennt das scharfe Schachbrett korrekt.
+- DEFEKT 1 (Scout): gemalter weißer Lichtschein hinter/um Schirm+Lampe bleibt opak
+  (Region ca. x 550–900, y 200–650) — wäre auf dem Plate ein weißer Fleck.
+- DEFEKT 2 (beide): verwischter heller Boden um Füße/Tischbeine/Pult-Sockel bleibt opak
+  (Scout ab y≈1100, Warden ab y≈1000) — Malstil verwäscht die Kacheln in Bodennähe,
+  weder Rand-Flood noch Farb-Key greifen dort (L < 232 bzw. |r-g| > 18 durch warmen Lichtschein).
+- Insel-Pass (CC über opake Kachel-Pixel, Signatur hell+dunkel ≥10 %, fill ≥ 0,85, size ≥ 3000):
+  entfernte 0 px — die Defektzonen sind keine Schachbrett-Inseln, sondern mitgemalter Hintergrund.
+  Scout: 3 große Kachel-Komponenten (14577/10352/9224 px, fill 0,52–0,69) = Reste IM Schein-/Bodenbereich;
+  Warden: keine großen Komponenten (max 108 px).
+- Folge: mechanische Freistellung per Farb-Key ist mit DIESEN Mastern prinzipiell unzureichend —
+  die Defekte entstehen an der Hintergrund-Spezifikation (weiß/hellgrau-Schachbrett kollidiert mit
+  hellen Motiv-Pixeln, Distanz 0; Schachbrett wurde vom Generator mitbemalt: Lichtschein, Bodennebel),
+  NICHT an der Bildqualität (Stil/Perspektive/Maßstab/Licht = §8 bestanden).
+
+Cutout-Ankerwerte (aus Vollbild-Sichtung der Alphas, ±1,5 %):
+- Scout: Augenhöhe ≈ 21 %, Tischoberkante ≈ 47 %, Fußlinie (Sohlen) ≈ 74 % der Bildhöhe.
+- Warden: Augenhöhe ≈ 21 %, Pult-Oberkante ≈ 43 %, Basislinie (Pult-Sockel) ≈ 67 % der Bildhöhe.
+- Konsistenz: beide Köpfe beginnen ≈ 14 %, beide Augen ≈ 21 % — gemeinsame Bodenlinie im Plate
+  über die unterschiedlichen Fuß-/Basislinien ausrichten (nicht über Bildunterkante).

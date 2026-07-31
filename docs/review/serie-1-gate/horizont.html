@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Horizont-Test — Cutouts gegen Plate A quer</title>
+<style>
+  body { margin: 0; background: #111; }
+  .stage { position: relative; width: 1440px; height: 810px; overflow: hidden; }
+  .plate { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  /* Mess-Artefakt: multiply neutralisiert den weißen Grund (kein Asset-Nachbessern) */
+  .fig { position: absolute; mix-blend-mode: multiply; }
+  /* Skala: Figur ≈ 66 % der Türhöhe (Tür 18–82 % = 64 % von 810 px); Füße auf Bodenlinie 80 % */
+  .scout  { height: 42%; left: 24%; bottom: 20%; }
+  .warden { height: 42%; right: 22%; bottom: 20%; }
+  .linie { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(0,255,120,.7); font: 11px system-ui; color: #0f8; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <img class="plate" src="../../../docs/asset-originals/media/provenance/serie-1-study/study-plate-a-desktop.png" alt="">
+  <img class="fig scout" src="../../../docs/asset-originals/media/provenance/serie-1-study/scout-cutout.png" alt="">
+  <img class="fig warden" src="../../../docs/asset-originals/media/provenance/serie-1-study/warden-cutout.png" alt="">
+  <div class="linie" style="top:18%">Tür-Oberkante 18 %</div>
+  <div class="linie" style="top:69%">Plate-Tischkanten ~69 %</div>
+  <div class="linie" style="top:80%">Bodenlinie 80 %</div>
+</div>
+</body>
+</html>

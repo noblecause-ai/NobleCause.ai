@@ -1,0 +1,26 @@
+320px study-de: scrollWidth 320 / client 320 → Overflow 0 OK
+320px council-de: scrollWidth 320 / client 320 → Overflow 0 OK
+320px archive-de: scrollWidth 320 / client 320 → Overflow 0 OK
+320px study-en: scrollWidth 320 / client 320 → Overflow 0 OK
+320px council-en: scrollWidth 320 / client 320 → Overflow 0 OK
+320px archive-en: scrollWidth 320 / client 320 → Overflow 0 OK
+390px study-de: scrollWidth 390 / client 390 → Overflow 0 OK
+390px council-de: scrollWidth 390 / client 390 → Overflow 0 OK
+390px archive-de: scrollWidth 390 / client 390 → Overflow 0 OK
+390px study-en: scrollWidth 390 / client 390 → Overflow 0 OK
+390px council-en: scrollWidth 390 / client 390 → Overflow 0 OK
+390px archive-en: scrollWidth 390 / client 390 → Overflow 0 OK
+1440x900 study: Plakettenmitte 720 vs Viewportmitte 720 (Δ 0 px), Tafel-Kollision: JA — FAIL · board {"t":21,"b":571,"l":21,"r":395} plaque {"t":563,"b":773,"l":329,"r":1111}
+1200x700 study: Plakettenmitte 600 vs Viewportmitte 600 (Δ 0 px), Tafel-Kollision: JA — FAIL · board {"t":21,"b":474,"l":21,"r":395} plaque {"t":363,"b":573,"l":209,"r":991}
+Kugel-Fokus (Tab LI): {"outlineStyle":"solid","outlineWidth":"2px","textOpacity":"0.972108","beadText":"Eine Frage pro Sitzung — vier Bereiche, je e"} FAIL
+Why-Ausklapp per Enter: {"open":false,"focusCls":"svelte-1cvc5d1","bodyText":"Ein einzelnes Modell kann irren oder ein"} FAIL
+No-JS: {"h1":"Wo hilft meine Spende am meisten?","roomWord":"Study","roomLead":"Jede Sitzung beginnt hier — mi","beads":6,"beadTexts":6,"whySummary":"Warum so umständlich? ▸","board":true,"plaqueOpacity":"1"} OK
+No-JS Hover-Reveal (reines CSS): bead-text opacity 1 OK
+
+--- Nachtrag (Tafel-Kappe 100svh-20rem, Preview nach Build neu gestartet) ---
+1200x700 study/council/archive: Text-Freiraum OK (Tafel-Ende 381 < h1-Anfang 390, Tafel intern scrollbar)
+1280x800 study/council/archive: Text-Freiraum OK (Tafel-Ende 481 < h1-Anfang 490, Tafel intern scrollbar)
+1440x900 study/council/archive: Text-Freiraum OK (Tafel-Ende 571 < h1-Anfang 590, keine Scrollerei)
+Kugel-Fokus (Tab-Sequenz, Verhalten): outline solid 2px + bead-text opacity 1 — OK
+Why-Ausklapp per Enter (Tastatur): details open=true — OK; Summary inline, Farbe rgb(240,216,153), underline
+Zentrierung: Plakettenmitte == Viewportmitte (Δ 0 px) bei 1200×700 und 1440×900

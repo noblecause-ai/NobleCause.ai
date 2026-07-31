@@ -1,0 +1,19 @@
+OK  fresh: armed+play gesetzt
+OK  fresh: Tafel zu Beginn verborgen
+OK  fresh: Lock erreicht
+OK  fresh: Tafel am Ende sichtbar
+OK  arrival: mode-arrival
+OK  arrival: Tafel NICHT erneut versteckt (steht von Beat 0 an)
+OK  arrival: Lock erreicht
+OK  back: navDir=back
+OK  back: Lock erreicht
+OK  back: Tafel sichtbar
+OK  language: kein stage-armed
+OK  language: Tafel steht (opacity 1)
+OK  language zurück: kein stage-armed
+OK  skip: stage-skip gesetzt
+OK  skip: Lock ohne Warten
+OK  skip: Tafel sofort sichtbar
+OK  reduced: Tafel sofort sichtbar
+OK  reduced: keine verborgenen Beats
+OK  mobil: Lock erreicht

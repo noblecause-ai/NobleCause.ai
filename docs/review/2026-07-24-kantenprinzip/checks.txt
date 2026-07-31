@@ -1,0 +1,41 @@
+desktop-1440 (1440x900): tafel-luecke=4.1 OK warden.r=1458 OK scout.b=810.9 OK aspect=0.800 OK overflow=0 OK | hotspot l=560 r=880 t=153 b=738 scout.r=723.6
+desktop-1200 (1200x700): tafel-luecke=4.1 OK warden.r=1214 OK scout.b=630.7 OK aspect=0.801 OK overflow=0 OK | hotspot l=475.5 r=724.4 t=119 b=574 scout.r=651.6
+ultrawide-1920 (1920x1080): scout.l=519.4 OK tafel-luecke=124.1 FAIL warden.r=1941.6 OK aspect=0.800 OK overflow=0 OK | hotspot l=768 r=1152 t=183.5 b=885.5 scout.r=882.2
+mobil-390 (390x844 mobile): scout.l=-17 OK warden.r=402.6 OK scout.b=692.1 OK aspect=0.801 OK overflow=0 OK
+mobil-320 (320x740 mobile): scout.l=-14.9 OK warden.r=331.1 OK scout.b=606.8 OK aspect=0.801 OK overflow=0 OK
+rueckzug: --retreat=1.000 scout.l 399.4 -> 212.2 OK warden.r 1458 -> 1645.2 OK
+reduced-motion: tafel-luecke=4.1 OK opacity=1 OK warden.r=1458 >= vw=1440 OK (vw=1440 vh=900 rem=17)
+no-js: tafel-luecke=-2.2 FAIL opacity=1 OK warden.r=1464.3 >= vw=1440 OK (vw=1440 vh=900 rem=17 scrollW=1440)
+reflow 320 /: scrollW=320 <= vw=320 OK
+reflow 320 /ratssaal/: scrollW=320 <= vw=320 OK
+reflow 320 /archiv/: scrollW=320 <= vw=320 OK
+reflow 320 /en/: scrollW=320 <= vw=320 OK
+reflow 320 /en/council/: scrollW=320 <= vw=320 OK
+reflow 320 /en/archive/: scrollW=320 <= vw=320 OK
+reflow 390 /: scrollW=390 <= vw=390 OK
+reflow 390 /ratssaal/: scrollW=390 <= vw=390 OK
+reflow 390 /archiv/: scrollW=390 <= vw=390 OK
+reflow 390 /en/: scrollW=390 <= vw=390 OK
+reflow 390 /en/council/: scrollW=390 <= vw=390 OK
+reflow 390 /en/archive/: scrollW=390 <= vw=390 OK
+no-js (Nachmessung, 4 s): scout.l=399.4 w=324.2 tafel-luecke=4.1 OK warden.r=1458 OK opacity=1 OK — identisch mit JS-Endzustand (fruehere FAIL-Zeile war Messtransient: zu frueh gemessen)
+---
+BEWERTUNGS-NACHTRAEGE (2026-07-24, Kimi):
+1) Zeile 3 (ultrawide, tafel-luecke=124.1 FAIL): Assertion falsch gesetzt, kein
+   Produktfehler. Auf Ultrawide steht der Scout bewusst NICHT an der CSS-Tafel
+   (Ausnahme im Komponenten-Kopf dokumentiert): volle linke Kante laege auch dort
+   hinter der fixen Tafel (bei 1920 px waere die Figur zu ~100 % verdeckt). Er steht
+   bei 36.5 vw in der Staffage-Zone zwischen Tafel und Tuer — visuell geprueft
+   (ultrawide-1920-gesamt.png): wirkt als natuerliche Raumstaffelung, nicht als
+   Schwebezustand. Bewertung: OK.
+2) Zeile 8 (no-js FAIL): durch Zeile 21 widerlegt (Messtransient, 1,8 s vs. 4 s;
+   computed styles JS an/aus bitidentisch, Probe in /tmp/nc-probe.mjs).
+3) Tuer-Hotspot-Overlap (Zahlen zu Zeilen 1–2): scout.r=723.6 ragt bei 1440 px in
+   die Hotspot-Box (l=560), ABER die gemalte Tuer beginnt bei ~624 px; der Schreib-
+   tisch deckt die linke Tuerbasis (99 px von 224 px Tuerbreite, nur unterhalb der
+   Tuerfluegel-Mitte). Tuer-Zentrum und rechter Fluegel bleiben frei klickbar;
+   zusaetzlich existiert die Tuer-Karte im Fluss. Bewertung: bewusst akzeptiert
+   (Buehnen-Staffelung), dem Steward zur Kenntnis.
+4) Ultrawide >= 21:9 (z. B. 3440x1440): nicht neu vermessen — dort ist eine groessere
+   Tuer-Overlap des Scouts vorbestehend (aus dem alten Layout geerbt). Als
+   Follow-up-Punkt gemeldet, nicht in diesem Pass geaendert.

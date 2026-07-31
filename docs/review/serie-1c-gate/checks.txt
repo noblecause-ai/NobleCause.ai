@@ -1,0 +1,140 @@
+# Serie-1c Gate — Cutouts (Magenta-Backdrop), 20.07.2026
+
+## Backdrop-Flachheit (Kriterium 1: Eck-SAD < 10, Hub < 8 / 100 px, Band-Reinheit)
+Scout: Schlüsselfarbe (Eck-Median) rgb(245,7,217); Ecken [244,7,216 | 245,7,217 | 245,7,217 | 245,7,217]
+Scout: Eck-Uniformität maxSAD=5 (<10 ok); 100px-Hub Zeilen15/30/50=3.1/3.5/2.8, Spalten15/30/50=3.4/3.3/3 (<8 ok)
+Scout: unteres Band (15 %) Key-Reinheit 100 %
+Warden: Schlüsselfarbe (Eck-Median) rgb(251,3,250); Ecken [251,3,249 | 251,3,250 | 250,3,249 | 251,3,250]
+Warden: Eck-Uniformität maxSAD=5 (<10 ok); 100px-Hub Zeilen15/30/50=2.1/2.5/2.7, Spalten15/30/50=2.7/3/2.5 (<8 ok)
+Warden: unteres Band (15 %) Key-Reinheit 100 %
+
+## Key-Test (Kriterien 2+3: globaler Key T=60, Rest < 0,3 %, keine Rest-CC > 500 px, Löcher)
+scout: Rest-Opazität nach Key+Erode 31.7 % (Motiv-Anteil, kein Kriteriumswert)
+scout: Löcher (transparente CC ohne Rand) = 46, Top-Größen [16374, 9648, 821, 650, 550]
+scout: opake CCs = 20, Top-Größen [498536, 36, 26, 19, 5] (Neben-CCs > 500 px wären Rest-Inseln)
+warden: Rest-Opazität nach Key+Erode 31.69 % (Motiv-Anteil, kein Kriteriumswert)
+warden: Löcher (transparente CC ohne Rand) = 6, Top-Größen [158, 66, 4, 4, 1]
+warden: opake CCs = 6, Top-Größen [498373, 9, 1, 1, 1] (Neben-CCs > 500 px wären Rest-Inseln)
+Gate-1c-Messung fertig.
+
+## Finales Alpha (Loch-Füllung: Nicht-Rand-Key-CC = per Konstruktion Motiv; Erode 1 px)
+scout: gefüllte Loch-Pixel = 28392, min. Motiv-Abstand zur Schlüsselfarbe = 0 (SAD), Motiv-Anteil 33.98 % → /tmp/nc-s1c-scout-alpha.png
+warden: gefüllte Loch-Pixel = 234, min. Motiv-Abstand zur Schlüsselfarbe = 3 (SAD), Motiv-Anteil 31.95 % → /tmp/nc-s1c-warden-alpha.png
+Alpha-Final fertig.
+
+## Alpha v3 — Loch-Klassifikation (füllen: size<100 oder meanSad>15; sonst Durchsicht offen)
+Hintergrund: v2 füllte ALLE Nicht-Rand-Löcher — Fehler: echte Durchsichten (hinter dem
+Schirm-Gestell, zwischen Tischbeinen) wurden magenta ins Motiv zurückgeholt. Klassisches
+Loch-≠-Loch-Problem; Trennung über mean-SAD der CC (Durchsicht ≈ exakt Key-Farbe).
+scout: gefüllt 1384 px, Durchsicht offen 27008 px
+  scout CC size=16374 meanSad=4.9 → DURCHSICHT offen
+  scout CC size=9648 meanSad=7.7 → DURCHSICHT offen
+  scout CC size=821 meanSad=13.6 → DURCHSICHT offen
+  scout CC size=650 meanSad=17.8 → gefüllt
+  scout CC size=550 meanSad=27.6 → gefüllt
+  scout CC size=165 meanSad=14.8 → DURCHSICHT offen
+  scout CC size=26 meanSad=21.5 → gefüllt
+  scout CC size=21 meanSad=27.5 → gefüllt
+  scout CC size=20 meanSad=17.1 → gefüllt
+  scout CC size=18 meanSad=27.7 → gefüllt
+warden: gefüllt 234 px, Durchsicht offen 0 px
+  warden CC size=158 meanSad=23.4 → gefüllt
+  warden CC size=66 meanSad=16.5 → gefüllt
+  warden CC size=4 meanSad=29.8 → gefüllt
+  warden CC size=4 meanSad=40.8 → gefüllt
+  warden CC size=1 meanSad=28 → gefüllt
+  warden CC size=1 meanSad=44 → gefüllt
+Alpha v3 fertig.
+
+## SAD-Histogramm (10er-Bins 0–290) — Begründung der Key-Toleranz
+scout: key rgb(245,7,217)
+scout: hist [0:1047263 10:14638 20:2602 30:1012 40:658 50:525 60:455 70:443 80:423 90:317 100:356 110:345 120:338 130:315 140:284 150:281 160:303 170:248 180:286 190:269 200:279 210:291 220:294 230:278 240:405 250:491 260:711 270:1330 280:2266 290:3533]
+warden: key rgb(251,3,250)
+warden: hist [0:1061727 10:6528 20:1204 30:476 40:300 50:253 60:226 70:193 80:157 90:177 100:149 110:143 120:130 130:123 140:123 150:143 160:152 170:128 180:102 190:114 200:126 210:108 220:113 230:108 240:108 250:141 260:128 270:128 280:123 290:147]
+
+## Alpha v4 — T=100 + Erode 1 + Loch-Klassifikation, Magenta-Rest (opak, SAD≤220, Cluster≥20px)
+scout: magenta-stichige opake Pixel gesamt = 3654; Cluster: [1016px@[426,588,467,652] | 928px@[795,568,817,654] | 844px@[319,1020,335,1129] | 197px@[811,339,824,359] | 126px@[661,637,717,645] | 47px@[619,632,651,637] | 40px@[458,274,465,290] | 40px@[444,294,452,303]]
+warden: magenta-stichige opake Pixel gesamt = 314; Cluster: [187px@[847,877,853,921] | 86px@[623,323,630,336]]
+Alpha v4 fertig.
+
+## Alpha v5 — Despill-Sweep (opake Magenta-Cluster SAD≤220, <3000 px → transparent)
+scout: Sweep entfernte 3654 px in 63 Clustern; Magenta-Rest danach: 0 px
+warden: Sweep entfernte 314 px in 9 Clustern; Magenta-Rest danach: 0 px
+Alpha v5 fertig.
+
+## Alpha-Bounding-Box (finale v5-Alphas, Anker für Platzierung)
+scout: BBox x 74–956, y 213–1306 (von 1024×1536); Kopf oben 13.9 %, Fuß/Basis 85 %
+warden: BBox x 84–916, y 247–1244 (von 1024×1536); Kopf oben 16.1 %, Fuß/Basis 81 %
+BBox fertig.
+
+## Motiv-Konstanz + Montage-Urteil (20.07.2026)
+- Kontaktbogen konstanz.html/.png (1b vs 1c, beide Figuren): Pose, Tische, Schirm, Lampe,
+  Stil deckungsgleich — einzige Differenz ist der Hintergrund (Schachbrett+Nebel → totales
+  Magenta). Kriterium 4 BESTANDEN.
+- Montage montage.html/.png (1b Plate A quer + v5-Alphas, 1440×810): keine Magenta-Reste,
+  keine Löcher, keine Halos; Figuren sitzen im Raum; Scout-Schirm leuchtet blau (Motiv,
+  kein Key-Artefakt); Durchsicht hinter dem Schirm-Gestell korrekt offen (dunkler Raum
+  scheint durch). Region-Shots beider Figuren auf 280×280: Kanten sauber.
+- Anker (v5-Alpha-BBox): Scout Kopf 13,9 % / Fuß (Tisch-Strebe) 85 % · Warden Kopf 16,1 % /
+  Pult-Basis 81 %. Achtung: 1c hat keinen Bodennebel — BBox-Unterkante ist der Platzierungs-
+  anker, nicht die 1b-Fußlinie (74/67 %).
+
+## Gesamturteil Gate 1c
+1. Backdrop-Flachheit: BESTANDEN (Eck-SAD 5 < 10; Hub < 3,5 < 8; Band 100 %)
+2. Kollisionsfreiheit: Motiv beginnt ab SAD ~240 (Histogramm), Key T=100 sicher — BESTANDEN
+3. Key-Test: Rest 0 px nach Pipeline (T=100 + Loch-Klassifikation meanSad>15/size<100 +
+   Erode 1 + Despill-Sweep <3000 px/Cluster) — BESTANDEN
+4. Motiv-Konstanz: BESTANDEN
+5. C2PA 2/2, Maße 1024×1536 — BESTANDEN
+GATE 1c: BESTANDEN (5/5). Pipeline-Notiz für die Derivate-Erzeugung: exakt diese v5-Kette
+verwenden (Skripte /tmp/nc-s1c-lab.html alphaFinal5 + /tmp/nc-s1c-v5.mjs); die erzeugten
+Alphas liegen flüchtig unter /tmp/nc-s1c-{scout,warden}-alpha.png — bei Einbau neu erzeugen.
+
+## Budget-Nachmessung nach Akteur-Einbau (20.07.2026, CDP Network, Cache aus)
+Study Desktop: gesamt 918 KB — html=430 plate=152 js=122 embleme=83 akteure=52 css=25 ambient=21 sonst=19 tuerbilder=14
+Study Desktop: dekodierte Fläche Ruhe 4.52 MP über 16 Bild-URLs (Deckel 3,4)
+Study Mobil: gesamt 806 KB — html=430 js=122 embleme=83 plate=73 akteure=52 css=25 ambient=21
+Study Mobil: dekodierte Fläche Ruhe 2.77 MP über 14 Bild-URLs (Deckel 3,4)
+Budget-Nachmessung fertig.
+
+## Budget-Nachmessung nach Akteur-Einbau (20.07.2026, CDP Network, Cache aus)
+Study Desktop: gesamt 901 KB — html=430 plate=152 js=122 embleme=83 akteure=45 css=25 sonst=19 tuerbilder=14 ambient=11
+Study Desktop: dekodierte Fläche Ruhe 4.07 MP über 16 Bild-URLs (Deckel 3,4)
+Study Mobil: gesamt 788 KB — html=430 js=122 embleme=83 plate=73 akteure=45 css=25 ambient=11
+Study Mobil: dekodierte Fläche Ruhe 2.32 MP über 14 Bild-URLs (Deckel 3,4)
+Budget-Nachmessung fertig.
+
+## Budget-Nachmessung nach Akteur-Einbau (20.07.2026, CDP Network, Cache aus)
+Study Desktop: gesamt 926 KB — html=430 plate=196 js=122 akteure=45 sonst=38 embleme=30 tuerbilder=29 css=25 ambient=11
+Study Desktop: dekodierte Fläche Ruhe 3.31 MP über 16 Bild-URLs (Deckel 3,4)
+Study Mobil: gesamt 735 KB — html=430 js=122 plate=73 akteure=45 embleme=30 css=25 ambient=11
+Study Mobil: dekodierte Fläche Ruhe 1.56 MP über 14 Bild-URLs (Deckel 3,4)
+Budget-Nachmessung fertig.
+
+## Einbau (20.07.2026, nach Steward-Freigabe „los")
+- Derivate: actors/{scout,warden}.avif 540×810 (24.922/19.505 B, AVIF gewann vs WebP;
+  Budget ≤600×900/90 KB eingehalten mit Reserve), ambient/clouds-study.avif 384×512
+  (10.536 B). Ursprung 600×900/576×768 nach MP-Messung herunterdimensioniert (s.u.).
+- Einbau: StudyActors.svelte (zweite Ebene: Wolkenzug + Akteure) via neuem scene2-
+  Snippet-Slot in StageHero; Beats 0,55–1,2 s Schienen-Einfahrt (fresh UND arrival);
+  i18n de/en (Gloss nur DE); No-JS = Endzustand; reduced-motion = sofort.
+- Tests: 19/19 grün (neuer Test 19: zweite Ebene im pragerenderten HTML, DE+EN,
+  kein tabindex auf nicht-interaktiven Figuren, Assets im Deploy, Study-only).
+- Screenshots site/: Beats 250/750/1300 ms, final Desktop, EN, Mobil 390, No-JS —
+  No-JS identisch mit dem JS-Endzustand (§0 hält am Artefakt).
+
+## MP-Befund + Re-Dimensionierung (Nachmessung Pflicht, asset-budget.md §5)
+- Erste Nachmessung: Ruhe 4,52 MP (Deckel 4,0, Gate 3,4) — Modell-Lücke entdeckt:
+  das Budget-Modell zählte Tür-Karten (0,54) und Tafel-Pfeiler (0,41) nie mit;
+  reale Seite lag VOR dem Einbau bereits bei ~3,0 statt 3,12 gerechnet.
+- Re-Dimensionierung (Regel „Überschreitung ⇒ dimensionieren, nicht hoffen"):
+  Wolke 576×768→384×512 (0,44→0,20 MP, 20,8→10,5 KB), Akteure 600×900→540×810
+  (0,54→0,44 MP je Figur, weiterhin ≤0,54 aus der Budget-Zeile), Embleme 320²→160²
+  (1,02→0,26 MP gesamt; 83→30 KB; AVIF 9/10, WebP bei process-three-answers —
+  Referenzen in de.js/en.js + Testliste angepasst; Masters unverändert, jederzeit
+  re-derivierbar). Anzeigegrößen: Embleme ≤64 px (DPR2=128 ≤ 160 ✓), Akteure
+  42svh ≈ 378 px (DPR2=756 ≤ 810 ✓), Wolke Ambient-Blur (Upscale unsichtbar).
+- Ergebnis: Ruhe Desktop 3,31 MP (Gate 3,4 ✓), Mobil 1,56 MP ✓.
+- KB (B3-Protokoll, vite preview :4173, Cache aus): Study Desktop 445 KB,
+  Study Mobil 299 KB (Deckel 1200/900; plate-Anteil enthält 104 KB Post-Lock-
+  Preload der Council-Plate — Initial-Last ≈ 341 KB).

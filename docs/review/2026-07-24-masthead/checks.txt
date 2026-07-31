@@ -1,0 +1,21 @@
+A-Klartext DE: Zeile A OK · Zeile B OK · Vermerk weg OK · keine Doppelung OK · plain.question OK · Fallback weg OK · Ausklapp da OK · lang=de nein
+A-Klartext EN: Zeile A OK · Zeile B OK · Vermerk weg OK · keine Doppelung OK · plain.question OK · Fallback weg OK · Ausklapp da OK · lang=de ja
+A-Archiv: Zeilen mit „keine Einigung" 1 · doppelt darin 0 OK · Bsp: keine Einigung
+B-Masthead: viewTransitionName="masthead" OK · Gruppen-Regel OK · h1 vorher top=46 left=349 → nachher (/ratssaal/) top=46 left=349 · pixelstabil+gleicher Text OK
+C-NoJS: Kopf opacity 1 OK · top 46 · im Viewport OK
+C-ReducedMotion: Kopf opacity 1 OK · top 46
+D-320px study-de: Overflow 0 OK
+D-320px council-de: Overflow 0 OK
+D-320px archive-de: Overflow 0 OK
+D-320px study-en: Overflow 0 OK
+D-320px council-en: Overflow 0 OK
+D-320px archive-en: Overflow 0 OK
+D-390px study-de: Overflow 0 OK
+D-390px council-de: Overflow 0 OK
+D-390px archive-de: Overflow 0 OK
+D-390px study-en: Overflow 0 OK
+D-390px council-en: Overflow 0 OK
+D-390px archive-en: Overflow 0 OK
+E-1440x900: Kopf top 46 (oben OK) · Raumteil-Ende 208 < Tafel-Top 264 OK · why-body Scrim rgba(3, 6, 7, 0.72)
+E-1200x700: Kopf top 46 (oben OK) · Raumteil-Ende 208 < Tafel-Top 264 OK · why-body Scrim rgba(3, 6, 7, 0.72)
+F-Wolken: drift-x 13s / drift-y 20s OK (Ruhewerte) · Frames f-wolken-t0/t6 zum Sichtvergleich

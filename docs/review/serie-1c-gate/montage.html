@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; }
+  .stage {
+    position: relative;
+    width: 1440px; height: 810px;
+    overflow: hidden;
+    background: #0a0d14;
+  }
+  .plate {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .fig {
+    position: absolute;
+    height: 42%;
+    bottom: 20%;
+    transform: translateX(-50%);
+  }
+  .scout  { left: 30%; }
+  .warden { left: 68%; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <img class="plate" src="../../asset-originals/media/provenance/serie-1b-study/study-plate-a-desktop.png" alt="">
+  <img class="fig scout"  src="/tmp/nc-s1c-scout-alpha.png"  alt="Scout">
+  <img class="fig warden" src="/tmp/nc-s1c-warden-alpha.png" alt="Warden">
+</div>
+</body>
+</html>

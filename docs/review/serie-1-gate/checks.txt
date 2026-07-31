@@ -1,0 +1,50 @@
+# Serie 1 · The Study — Gate-Protokoll (checks.txt)
+
+Datum: 2026-07-20 · Quelle: docs/asset-originals/media/provenance/serie-1-study/ · Kontaktbogen: kontaktbogen.png
+
+## §7-Checkliste (Kontaktbogen, alle sechs gemeinsam)
+
+- Farbtemperatur: OK — alle vier Plates in derselben warmen Nacht-Palette; kein Ausreißer zwischen quer/hoch/A/B.
+- Schwarzpunkt: OK — einheitlich tief in allen vier Plates; Cutouts stehen auf neutralem Weiß (freizustellen, separater Befund).
+- Messington: OK — warme Metall-/Holzakzente (Türgriffe, Tischkanten, Pulte) konsistent.
+- Mondblau: OK — Fenster in allen vier Plates gleiches kaltes Blau, Mond sichtbar, klarer Gegenpol.
+- Pinsel-/Konzeptkunststil: OK — Plates und beide Figuren derselbe gemalte Konzeptkunst-Duktus, kein Fotorealismus-Bruch.
+- Perspektive: OK — A↔B deckungsgleich (nur Türzustand ändert sich, Kamera identisch); quer↔hoch gleiche Raumgeometrie als eigenständige Komposition (mehr Boden im Hochformat), kein Crop.
+- Türgröße: OK — quer ~19 % Bildbreite, hoch ~26 %, beide zentral (±5 % eingehalten), Doppeltür proportional zur Wand.
+- Tafelgröße: OK — quer x≈1–30 % / y≈16–64 %, hoch x≈4–30 % / y≈14–36 % (links oben!); leere Schieferfläche ausreichend groß für Overlay.
+- Fensterwirkung: OK — rechts, gleiches Rastermaß, kalte Wirkung ohne Dominanz.
+- Detailgrad: OK — ruhige Flächen, untere Textzone dunkel und frei, keine Details in den äußeren 8–10 % oben/unten.
+- Relative visuelle Gewichte: OK — Tür trägt mittig, Tafel/Fenster balancieren; B-Spalt warm aber kontrolliert, nicht dominant.
+- Cutouts stilistisch: OK — Attribute gemäß Auftrag (Scout: Satchel+Kartenrohr+Papiere, schmaler Stehtisch, Blick nach rechts; Warden: Lampe+Journalband, schwerer Schreibtisch, Blick nach links).
+- Cutouts technisch: ABWEICHUNG — beide ohne Alpha-Kanal, weißer Hintergrund (Auftrag §0: freigestellt/Alpha). Kein Welt-Bruch, technische Spezifikationsabweichung → Nachbestellung (Option A, Steward-Direktive „melden statt nachbessern"), siehe nachbestellung-cutouts.md.
+
+GATE-URTEIL: Plates (Aufträge 1–4) BESTANDEN → Derivate freigegeben. Cutouts (5–6) stilistisch bestanden, technisch ABWEICHUNG → nicht eingebaut, Nachbestellung angefordert.
+
+## Tür-Crop-Test (sips, aus Plate A)
+
+- quer: `sips --cropOffset 141 635 -c 640 385` → crop-quer.png (385×640 aus 1672×941) — OK: Türblatt komplett, Rahmen ringsum sauber, Schwelle unten knapp aber sichtbar.
+- hoch: `sips --cropOffset 261 350 -c 476 300` → crop-hoch.png (300×476 aus 1024×1536) — OK nach Justage (erster Schnitt x=369 schnitt den linken Rahmen an; x=350/w=300 sitzt).
+- Urteil: Tür ist in beiden Formaten sauber freistellbar (frontal, rechteckige Kontur, genug Rahmen) — Auflage §0 erfüllt.
+
+## Horizont-Abgleich (Overlay horizont.png, Mess-Artefakt mit multiply — kein Asset-Eingriff)
+
+- Skala-Referenz TÜR (monumentale Doppeltür ~2,6 m): Figur ≈ 66 % der Türhöhe = 42 % der Plate-Bildhöhe; Füße auf Bodenlinie 80 %. Proportion Figur↔Tür: OK, steht plausibel im Raum.
+- BEFUND (Integrations-Hinweis, kein Gate-Bruch): die gemalten Plate-Tische sind niedrig geraten (~0,5 m bei 69 % Tischkante), die Cutout-Tische liegen bei realistischen 1,0–1,05 m — bei identischer Fußlinie ragt die Cutout-Tischkante ~15 %-Punkte höher. Empfehlung für den späteren Einbau: Endpositionen Richtung Türmitte (x≈30–32 % / 68–70 %), nicht direkt neben den gemalten Tischen; Skala 38–42 % feinjustieren.
+- Cutout-Maße (% der Cutout-Bildhöhe, für ASSETS.md): Scout Augenhöhe ≈ 13 %, Tischoberkante ≈ 42 %, Fußlinie ≈ 87 % · Warden Augenhöhe ≈ 15 %, Tischoberkante ≈ 53 %, Fußlinie ≈ 88 %.
+- Urteil: Horizont/Perspektive integrierbar; die Nachbestellung (Alpha) übernimmt diese Maße unverändert als Auflage (gleiche Kamera/Standfigur).
+S1 Grundlast Desktop /: 441 KB (Plate 148, Embleme 81, HTML 121, JS 49) — Plan-Plate ≤120 KB, Deckel 1200 KB · Plate-URLs: antechamber-display.avif:43, hall-display.avif:105
+S1 MP-Ruhe Desktop /: 3 MP ≤ 3,4 MP (Ziel) — OK (Top: antechamber-display.avif=1.44, door-study-archive-display.avif=0.31, doorway-display.avif=0.23, process-question-display.avif=0.1, process-evidence-display.avif=0.1)
+S1 Grundlast Mobil /: 331 KB (Plate 36, Embleme 81) — Plan-Plate ≤60 KB, Deckel 900 KB · Plate-URLs: antechamber-portrait-800.avif:36
+S1 MP-Ruhe Mobil /: 1.25 MP ≤ 3,4 MP (Ziel) — OK
+S1 Tür-Hotspot 1440×900: OK — rect left=560 top=153 w=320 h=585 (erwartet left≈560, w≈320; Tür 40–60 % der Bildmitte), display=block
+S1 Tür-Hotspot 2400×1000 (Ultrawide): OK — rect left=960 w=480 (erwartet left≈960=40vw, w≈480=20vw)
+S1 Reflow 320 /: scrollW 320 ≤ 320 — OK
+S1 Reflow 390 /: scrollW 390 ≤ 390 — OK
+S1 No-JS /: OK — Tafel pragerendert=true, Spendenlinks=4, stage-armed=false
+S1 Verifikation fertig.
+
+## Einbau-Verifikation (20.07.2026, nach Derivat-Einbau)
+
+- Grundlast-Hinweis: die 148 KB „Plate" Desktop = Study-Plate A 43 KB + Intent-Preload der Council-Plate (hall 105 KB, gewollt gemäß Preload-§8). Study-eigene Plate 43 KB ≤ 120 Plan; gesamt 441 KB ≤ 1200 ✓. Mobil 331 KB, Plate (portrait-800) 36 KB ≤ 60 Plan ✓.
+- Screenshots gesichtet: desktop-study-tuer-gluehen.png (Türglühen sitzt exakt auf der gemalten Doppeltür) · desktop-study-1440.png (fixe Ergebnis-Tafel überlagert die gemalte Schiefer-Zone deckend — gewollte „Tafel auf der Tafel") · mobil-study-390.png (zentrale Tür überlebt den cover-Crop, Röhre 2/6) · nojs-study-1440.png (voller Endzustand ohne JS).
+- Code-Änderungen am Einbau: bgPos left top → center top (zentrierte Tür, konsistent mit Council/Archive); Tür-Hotspot-Geometrie neu für die Serie-1-Plate (zwei Ratio-Fälle, ab 1200 px immer wirksam — kein Crop-Aus mehr wie bei der alten Seitentür). width/height-Umbau entfällt: die Hero-Ebene ist fixed Vollbild (100 %×100 svh), keine festen Attribute im Markup.

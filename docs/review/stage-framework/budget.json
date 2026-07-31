@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Desktop /",
+    "initialKB": 798,
+    "withPreloadKB": 798
+  },
+  {
+    "name": "Desktop /archiv/",
+    "initialKB": 1050,
+    "withPreloadKB": 1050
+  },
+  {
+    "name": "Mobil /",
+    "initialKB": 702,
+    "withPreloadKB": 702
+  },
+  {
+    "name": "Mobil /ratssaal/",
+    "initialKB": 667,
+    "withPreloadKB": 667
+  }
+]

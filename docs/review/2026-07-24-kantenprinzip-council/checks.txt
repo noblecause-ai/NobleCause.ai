@@ -1,0 +1,45 @@
+desktop-1440 (1440x900, height-fill): tafel=L21.3 R395.3 T263.5 B755.5 overflow=0 OK
+  pult[0] --x: 50; --s: 0.78; --i: 1: box L626.4 R813.6 T665 B945.8 (187.2x280.8) plate-x 44.2–55.8 baseline=914.1 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[1] --x: 26; --s: 1; --i: 0: box L399.5 R639.5 T598.7 B958.7 (240x360) plate-x 30–45 baseline=918 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[2] --x: 74; --s: 1; --i: 2: box L984 R1224 T598.7 B958.7 (240x360) plate-x 66.5–81.5 baseline=918 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+desktop-1200 (1200x700, height-fill): tafel=L21.3 R395.3 T263.5 B555.5 overflow=0 OK
+  pult[0] --x: 50; --s: 0.78; --i: 1: box L527.2 R672.8 T517.2 B735.6 (145.6x218.4) plate-x 44.2–55.8 baseline=710.9 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[1] --x: 26; --s: 1; --i: 0: box L399.5 R586.1 T465.6 B745.6 (186.7x280) plate-x 33.9–48.9 baseline=714 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[2] --x: 74; --s: 1; --i: 2: box L805.3 R992 T465.6 B745.6 (186.7x280) plate-x 66.5–81.5 baseline=714 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+ultrawide-1920 (1920x1080, width-fill): tafel=L21.3 R395.3 T263.5 B812.8 overflow=0 OK
+  pult[0] --x: 50; --s: 0.78; --i: 1: box L847.7 R1072.3 T798 B1134.9 (224.6x337) plate-x 44.2–55.8 baseline=1096.9 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[1] --x: 26; --s: 1; --i: 0: box L399.5 R687.5 T718.4 B1150.4 (288x432) plate-x 20.8–35.8 baseline=1101.6 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+  pult[2] --x: 74; --s: 1; --i: 2: box L1276.8 R1564.8 T718.4 B1150.4 (288x432) plate-x 66.5–81.5 baseline=1101.6 OK anschnitt OK tafelDeckung=0% OK opacity-ok=OK
+mobil-390 (390x844 mobile, height-fill): tafel=L17 R373 T881.4 B1430.7 overflow=0 OK
+  pult[0] --x: 50; --s: 0.78; --i: 1: box L120.4 R269.6 T656.6 B880.5 (149.2x223.8) plate-x 36.7–63.3 baseline=855.1 OK anschnitt OK tafelDeckung=0% — opacity-ok=OK
+  pult[1] --x: 26; --s: 1; --i: 0: box L-35.7 R155.6 T603.8 B890.8 (191.3x287) plate-x 9–43 baseline=858.4 OK anschnitt OK tafelDeckung=2.4% — opacity-ok=OK
+  pult[2] --x: 74; --s: 1; --i: 2: box L234.4 R425.7 T603.8 B890.8 (191.3x287) plate-x 57–91 baseline=858.4 OK anschnitt OK tafelDeckung=2.4% — opacity-ok=OK
+mobil-320 (320x740 mobile, height-fill): tafel=L17 R303 T777.4 B1402.2 overflow=0 OK
+  pult[0] --x: 50; --s: 0.78; --i: 1: box L94.6 R225.4 T575.8 B772 (130.8x196.2) plate-x 36.7–63.3 baseline=749.8 OK anschnitt OK tafelDeckung=0% — opacity-ok=OK
+  pult[1] --x: 26; --s: 1; --i: 0: box L-42.3 R125.5 T529.4 B781 (167.7x251.6) plate-x 9–43 baseline=752.6 OK anschnitt OK tafelDeckung=0.9% — opacity-ok=OK
+  pult[2] --x: 74; --s: 1; --i: 2: box L194.5 R362.3 T529.4 B781 (167.7x251.6) plate-x 57–91 baseline=752.6 OK anschnitt OK tafelDeckung=0.9% — opacity-ok=OK
+rueckzug: pult.t delta = [-538, -538, -538] OK (erwartet −538 = Scroll −700 + Retreat +162)
+reduced-motion: pulte=3 opacity=1 OK baselines=[914.1, 918, 918] vh=900
+no-js: pulte=3 opacity=1 OK baselines=[914.1, 918, 918] vh=900 scrollW=1440
+reflow 320 /: scrollW=320 <= vw=320 OK
+reflow 320 /ratssaal/: scrollW=320 <= vw=320 OK
+reflow 320 /archiv/: scrollW=320 <= vw=320 OK
+reflow 320 /en/: scrollW=320 <= vw=320 OK
+reflow 320 /en/council/: scrollW=320 <= vw=320 OK
+reflow 320 /en/archive/: scrollW=320 <= vw=320 OK
+reflow 390 /: scrollW=390 <= vw=390 OK
+reflow 390 /ratssaal/: scrollW=390 <= vw=390 OK
+reflow 390 /archiv/: scrollW=390 <= vw=390 OK
+reflow 390 /en/: scrollW=390 <= vw=390 OK
+reflow 390 /en/council/: scrollW=390 <= vw=390 OK
+reflow 390 /en/archive/: scrollW=390 <= vw=390 OK
+
+--- Budget (CDP, 1440x900, Cache deaktiviert) ---
+/ratssaal/ initial = 330 KB (Deckel 1200 KB) OK
+/ratssaal/ unique dekodiert = 5,46 MP Ruhezustand (naiv per <img> = 8,71 MP inkl. 3 Pult-Instanzen)
+  Treiber: hall-display 1,57 MP + hall-door-open 1,57 + lectern 1,57; Rest <= 0,31
+  Referenz Study (/): 6,80 MP unique (9,57 naiv) — Council liegt 1,3 MP UNTER dem abgenommenen Stand;
+  der 4-MP-Ruhedeckel ist raumübergreifend gerissen (Study setzte den Präzedenzfall) -> Bericht.
+/Lektion: vite preview (sirv) liefert nach einem Rebuild veraltete Assets aus — Preview nach JEDEM
+  Build neu starten, sonst misst die CDP-Suite den alten Stand (hier passiert, erkannt an identischen Werten).
++ preload-Link hall-display: media="(min-width: 1200px)" (spart 89 KB ungenutzten Fetch auf Mobil).
