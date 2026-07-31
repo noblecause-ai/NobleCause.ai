@@ -120,7 +120,12 @@
 		   wieder. Rekordbreite bleibt bei 1280 noch ~40 rem (bequem, gemessen). */
 		.rooms-shell :global(.room-section) {
 			width: min(70rem, calc(100% - 35rem));
-			margin-left: max(calc(50% - 35rem), 33rem);
+			/* 33rem = Tafel-Rechtskante (30rem + 1,25rem) + Spalt bei ≤1920. Oberhalb
+			   1920 wächst die Tafel mit (Board-font-size 0,885vw → Rechtskante
+			   31,25em = 27,66vw); die Spalte weicht mit dem 3. Term entsprechend aus.
+			   Unter 1920 dominiert 33rem bzw. die Ultrawide-Zentrierung (50%−35rem),
+			   also ändert sich dort nichts. */
+			margin-left: max(calc(50% - 35rem), 33rem, calc(27.66vw + 1.75rem));
 			margin-right: 1rem;
 		}
 	}

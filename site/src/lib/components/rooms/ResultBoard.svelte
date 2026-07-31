@@ -162,20 +162,36 @@
 	@media (min-width: 1200px) {
 		.result-board {
 			position: fixed;
-			top: 15.5rem;
-			left: 1.25rem;
 			z-index: 2;
-			width: 30rem;
 			margin: 0;
-			padding: 0.7rem 1.1rem 0.35rem;
+			/* EIN Stellknopf für die Skalierung: die Board-font-size. Unter/bei
+			   1920 px = 1rem (0,885vw = 17 px erst bei 1920 → darunter greift der
+			   max-Boden, NICHTS ändert sich, 1920 bleibt der Referenzpunkt auf der
+			   gemalten Wandtafel). Oberhalb wächst sie mit der Breite. ALLE Maße —
+			   Breite, Position, Schrift, Embleme, Abstände — sind in em, wachsen
+			   also GEMEINSAM (nie „breit und leer"). Die gemalte Tafel liegt als
+			   Plate-% und wächst mit der Breite mit → die Proportion bleibt. */
+			font-size: max(1rem, 0.885vw);
+			top: 15.5em;
+			left: 1.25em;
+			width: 30em;
+			padding: 0.7em 1.1em 0.35em;
+		}
+		h2 {
+			margin: 0 0 0.2em;
+			font-size: 0.95em;
+		}
+		.board-session {
+			margin: 0 0 0.55em;
+			font-size: 0.7em;
 		}
 		ol {
 			grid-template-columns: 1fr 1fr;
-			column-gap: 1.2rem;
+			column-gap: 1.2em;
 		}
 		li {
-			padding: 0.3rem 0;
-			column-gap: 0.6rem;
+			padding: 0.3em 0;
+			column-gap: 0.6em;
 		}
 		/* Trennlinie nur zwischen den beiden REIHEN (3./4. Eintrag), nicht
 		   zwischen den Spalten — sonst zöge sie eine Linie neben den Einträgen. */
@@ -186,18 +202,20 @@
 			border-top: 1px solid rgba(120, 132, 118, 0.25);
 		}
 		img {
-			width: 1.8rem;
-			height: 1.8rem;
+			width: 1.8em;
+			height: 1.8em;
 		}
 		.board-area {
-			font-size: 0.56rem;
+			font-size: 0.56em;
 		}
 		strong {
-			font-size: 0.84rem;
+			font-size: 0.84em;
 			line-height: 1.15;
 		}
 		.board-donate {
-			font-size: 0.8rem;
+			/* Tippziel-Boden 44 px bleibt; oberhalb 1920 wächst es mit (2,6em). */
+			min-height: max(44px, 2.6em);
+			font-size: 0.8em;
 		}
 	}
 
