@@ -10,11 +10,11 @@
 	// KANTENPRINZIP (docs/szene-kantenprinzip-fuer-kimi.md, 24.07.): bewegliche
 	// Elemente berühren/schneiden einen Viewport-Rand und verlassen die Szene
 	// über genau diese Kante (--side) — Scout links, Warden rechts. Ausnahme
-	// mit Begründung: auf ≥1200 px belegt die fixe Ergebnis-Tafel die linke
-	// Kante (L 21–395 px, T 264–B 556–813 px, CDP-Messung) — ein links
-	// verankerter Scout (Box ~300 px breit) läge zu ~95 % hinter ihr. Dort
-	// bleibt der Scout an der TAFELkante verankert (sein Rückzug gleitet
-	// hinter die Tafel wie hinter eine Wand); volle Kante hat er <1200 px.
+	// mit Begründung: auf ≥1200 px belegt die fixe Ergebnis-Tafel (2×2,
+	// 30 rem) die linke Kante (L 21–531 px, T 264, CDP-Messung) — ein links
+	// verankerter Scout (Box ~240–360 px breit) läge zu ~76 % hinter ihr. Dort
+	// bleibt der Scout an der TAFELkante verankert (Box-L 31,25 rem; sein
+	// Rückzug gleitet hinter die Tafel wie hinter eine Wand); volle Kante <1200.
 	// Der Scout ist seit 24.07. der SITZENDE am Schreibtisch (Nachtrag,
 	// ASSETS.md) — Fußlinie des Cutouts bei 82 % der Bildhöhe, darum steht
 	// die Schiene um 18 % der Bildhöhe tiefer als die Box-Unterkante.
@@ -641,9 +641,9 @@
 		   177,78 svh um die Mitte; Zonen in svh um 50 vw. KANTENPRINZIP:
 		   Warden an der RECHTEN Viewport-Kante (Box-R +2 svh Anschnitt);
 		   Scout-Ausnahme mit Begründung: die fixe Ergebnis-Tafel belegt
-		   hier die linke Kante (L 21–R 397 px), ein links verankerter
+		   hier die linke Kante (2×2, L 21–R 531 px), ein links verankerter
 		   Scout läge fast vollständig hinter ihr — darum steht seine Box
-		   mit Box-L = 23,5 rem exakt an der Tafelkante (sein Rückzug
+		   mit Box-L = 31,25 rem exakt an der Tafelkante (sein Rückzug
 		   gleitet hinter die Tafel wie hinter eine Wand). Sitzend: 45 svh
 		   (stehende Präsenz-Achse wie 52 svh beim Warden), Schiene um
 		   18 % der Höhe unter der Diele-Linie 18 svh.
@@ -656,7 +656,11 @@
 		.rail.scout {
 			height: 45svh;
 			bottom: 9.9svh;
-			left: calc(23.5rem + 18svh);
+			/* An der Kante der 30-rem-Ergebnis-Tafel (2×2): Box-L = 31,25 rem
+			   (= 1,25 rem + 30 rem Tafelbreite). +18 svh = halbe Cutout-Box. So
+			   steht der Scout vollständig rechts der breiteren Tafel; sein Rückzug
+			   gleitet nach links hinter die Tafel wie hinter eine Wand. */
+			left: calc(31.25rem + 18svh);
 		}
 		.rail.warden {
 			/* Diele 18svh (= Basis-bottom); Fußlinie 19 % über der Box-Unterkante
@@ -675,8 +679,8 @@
 		/* Bild füllt die Breite: Bildhöhe 56,25 vw ab top — Zonen in vw.
 		   Bodenlinie geklemmt, damit Ultrawide die Füße nicht unter die
 		   Faltkante zieht. Warden an der rechten Kante (Box-R +Anschnitt);
-		   Scout rechts der Tafelkante (~36 vw) — volle linke Kante läge
-		   auch hier hinter der fixen Tafel (Ausnahme s.o.). Schiene des
+		   Scout rechts der 30-rem-Tafelkante (31,25 rem + halbe Box) — volle
+		   linke Kante läge auch hier hinter der Tafel (Ausnahme s.o.). Schiene des
 		   sitzenden Scouts um 18 % seiner Höhe unter der Bodenlinie. */
 		.rail {
 			height: min(29.25vw, 56svh);
@@ -685,7 +689,10 @@
 		.rail.scout {
 			height: min(23.6vw, 45svh);
 			bottom: calc(max(2svh, 100svh - 46.13vw) - 0.18 * min(23.6vw, 45svh));
-			left: 36.5vw;
+			/* Box-L an der 30-rem-Tafelkante (31,25 rem) + halbe Cutout-Box
+			   (0,4·Höhe) — der Scout steht rechts der breiteren Tafel, auch im
+			   Breiten-Fall. */
+			left: calc(31.25rem + 0.4 * min(23.6vw, 45svh));
 		}
 		.rail.warden {
 			/* Diele = Bodenlinie max(2svh, 100svh−46.13vw) (= Basis-bottom);
@@ -707,4 +714,5 @@
 			transition: none;
 		}
 	}
+
 </style>

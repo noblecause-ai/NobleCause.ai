@@ -151,66 +151,53 @@
 		color: #f2d9a0;
 	}
 
-	/* Ab 1200 px steht die Tafel fix oben links — dort sitzt die gemalte Tafel
-	   bei gängigen Verhältnissen; die Textspalte weicht ihr aus (+layout.svelte). */
+	/* Ab 1200 px steht die Tafel fix oben links als 2×2-Raster: zwei Spalten,
+	   ZEILENWEISE gefüllt (Zukunft/Leid lindern oben, Große Gefahren/Übersehen
+	   unten — Quell-Reihenfolge = Lesereihenfolge). So stehen alle vier Einträge
+	   samt Spendenlink ohne Scrollgeste, auch bei 1280×720 (Steward-Entscheid:
+	   internes Scrollen entfällt). Die Textspalte weicht der breiteren Tafel aus
+	   (+layout.svelte, 33 rem). KEIN max-height/overflow und KEINE Unterkanten-
+	   Maske mehr — die Tafel überläuft nicht, also hätte die Maske nur die untere
+	   Spendenzeile angeschnitten. Mobil (<1200) bleibt einspaltig im Fluss. */
 	@media (min-width: 1200px) {
 		.result-board {
 			position: fixed;
 			top: 15.5rem;
 			left: 1.25rem;
 			z-index: 2;
-			width: 22rem;
+			width: 30rem;
 			margin: 0;
-			/* Der stabile Kopf (Masthead) steht seit dem Nachtrag 24.07. GANZ
-			   OBEN über die volle Breite — die Tafel beginnt UNTER dem
-			   Kopf-Streifen inkl. Raumteil. Bemessen am schlimmsten Fall:
-			   der EN-Council-Lead bricht auf zwei Zeilen, Raumteil-Ende
-			   ≈ 236 px (CDP-Messung 1200/1440) → top 15.5 rem = 248 px.
-			   Die Kappe hält die Tafel über der Prozess-Röhre am unteren
-			   Rand; bei kurzen Viewports scrollt sie intern, Inhalt bleibt
-			   voll erreichbar, No-JS = natives Scrollen. */
-			max-height: calc(100svh - 24rem);
-			overflow-y: auto;
-			/* Weg-A §5.1: ohne Rahmen fehlt die Kante, die den internen Scroll als
-			   Abschnitt lesbar macht. Statt einer Scrollleiste eine weiche Maske an
-			   der Unterkante — sonst wirkt abgeschnittener Text wie fehlender. Die
-			   Tafel overflowt bei den meisten Viewports (4 Empfehlungen + Sitzungs-
-			   zeile > Kappe), darum greift die Maske im GANZEN ≥1200-Block, nicht nur
-			   kurz. No-JS scrollt nativ (nur die Leiste ist aus). */
-			scrollbar-width: none;
-			mask-image: linear-gradient(to bottom, #000 calc(100% - 0.9rem), transparent);
-			-webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 0.9rem), transparent);
+			padding: 0.7rem 1.1rem 0.35rem;
 		}
-		.result-board::-webkit-scrollbar {
-			display: none;
-		}
-	}
-	/* Kurze Viewports: kompaktere Dichte, damit die Tafel nicht in die
-	   Hero-Plakette ragt. Tippzielhöhe der Links bleibt 44 px. */
-	@media (min-width: 1200px) and (max-height: 740px) {
-		.result-board {
-			padding: 0.7rem 1rem 0.2rem;
-		}
-		h2 {
-			margin-bottom: 0.15rem;
-			font-size: 0.82rem;
-		}
-		.board-session {
-			margin-bottom: 0.35rem;
-			font-size: 0.66rem;
+		ol {
+			grid-template-columns: 1fr 1fr;
+			column-gap: 1.2rem;
 		}
 		li {
-			padding: 0.35rem 0;
+			padding: 0.3rem 0;
+			column-gap: 0.6rem;
+		}
+		/* Trennlinie nur zwischen den beiden REIHEN (3./4. Eintrag), nicht
+		   zwischen den Spalten — sonst zöge sie eine Linie neben den Einträgen. */
+		li + li {
+			border-top: 0;
+		}
+		li:nth-child(n + 3) {
+			border-top: 1px solid rgba(120, 132, 118, 0.25);
 		}
 		img {
-			width: 2.1rem;
-			height: 2.1rem;
+			width: 1.8rem;
+			height: 1.8rem;
+		}
+		.board-area {
+			font-size: 0.56rem;
 		}
 		strong {
-			font-size: 0.92rem;
+			font-size: 0.84rem;
+			line-height: 1.15;
 		}
 		.board-donate {
-			font-size: 0.82rem;
+			font-size: 0.8rem;
 		}
 	}
 

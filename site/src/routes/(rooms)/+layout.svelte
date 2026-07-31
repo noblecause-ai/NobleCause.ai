@@ -115,11 +115,12 @@
 		padding: 2.6rem 1rem 0;
 	}
 	@media (min-width: 1200px) {
-		/* Die Textspalte weicht der fixen Ergebnis-Tafel (links, 22 rem +
-		   1,25 rem Abstand) aus; bei Ultrawide zentriert sie wieder. */
+		/* Die Textspalte weicht der fixen 2×2-Ergebnis-Tafel (links, 30 rem +
+		   1,25 rem Abstand) aus → Spalte ab 33 rem; bei Ultrawide zentriert sie
+		   wieder. Rekordbreite bleibt bei 1280 noch ~40 rem (bequem, gemessen). */
 		.rooms-shell :global(.room-section) {
-			width: min(70rem, calc(100% - 27rem));
-			margin-left: max(calc(50% - 35rem), 25.5rem);
+			width: min(70rem, calc(100% - 35rem));
+			margin-left: max(calc(50% - 35rem), 33rem);
 			margin-right: 1rem;
 		}
 	}
