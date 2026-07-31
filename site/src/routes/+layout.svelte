@@ -49,6 +49,8 @@
 		font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
 		line-height: 1.65;
 		font-size: 17px;
+		/* Kein helles Aufblitzen beim Tippen — global, für alle Links/Taps (Touch). */
+		-webkit-tap-highlight-color: transparent;
 	}
 	:global(*),
 	:global(*::before),
