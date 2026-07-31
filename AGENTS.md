@@ -51,6 +51,9 @@ Darstellung, Styles. Die Datenfundamente werden nur **gelesen**:
 - **Review läuft lokal** (statischer Server aus einem Render-Verzeichnis), **nicht** über
   einen Merge. Aus echten Daten rendern, nicht aus Sample-HTML.
 - Kein Netzzugriff nach außen ohne Nachfrage.
+- **Was zweimal verschoben wurde, wird beim dritten Mal sperrend.** Aufgeschobene
+  Nachweise/Pflichten dürfen nicht kippen. (Präzedenzfall: der 320-px-Reflow-Nachweis —
+  zweimal aufgeschoben, beim dritten Mal Freigabe-sperrend für die Slice-Replikation.)
 
 ## Datenvertrag
 Der Renderer PARST KEINE PROSA. Strukturierte Felder kommen aus `session.json`
