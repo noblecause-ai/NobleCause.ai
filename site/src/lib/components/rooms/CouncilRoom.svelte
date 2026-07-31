@@ -150,20 +150,31 @@
 		     steht ausschließlich das Zustandekommen. -->
 		<section class="room-section" aria-labelledby="count-title">
 			<h2 id="count-title">{t.council.countTitle}</h2>
-			<p class="count-intro">{t.council.countIntro}</p>
+			<p class="count-intro">{t.council.countIntro} {t.council.countAreaCue}</p>
 			<!-- Fokus-Auswahl als CSS-Radiogruppe: der Klick auf ein Emblem aktualisiert
 			     NUR den Trichter (Maschinenergebnis), kein Sprung — kein Fragment, kein
 			     Scroll. Jedes Radio liegt IN seinem Label und füllt es unsichtbar (bleibt
 			     im Blick → kein Fokus-Scroll). Reveal über .room-section:has(:checked).
 			     Vorgabe: erster Bereich (Zukunft). Kein JS; tastaturbedienbar. -->
-			<div class="count-jump" role="radiogroup" aria-label={t.council.jumpToArea}>
-				{#each countRows as { rec }, i (rec.pillar)}
-					<label class="count-jumplink">
-						<input class="cf-radio" type="radio" name="cf-focus" id="cf-{rec.pillar}" checked={i === 0} />
-						<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
-						{t.pillars[rec.pillar]?.label ?? rec.pillarName}
-					</label>
-				{/each}
+			<div class="count-select">
+				<div class="count-jump" role="radiogroup" aria-label={t.council.jumpToArea}>
+					{#each countRows as { rec }, i (rec.pillar)}
+						<label class="count-jumplink">
+							<input class="cf-radio" type="radio" name="cf-focus" id="cf-{rec.pillar}" checked={i === 0} />
+							<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
+							{t.pillars[rec.pillar]?.label ?? rec.pillarName}
+						</label>
+					{/each}
+				</div>
+				<!-- Sichtbare Anzeige des gewählten Bereichs — aktualisiert per CSS mit der
+				     Radiogruppe; die native Auswahl (checked) trägt die a11y-Ansage. -->
+				<span class="count-chosen"
+					>{t.council.chosenPrefix} <span class="count-chosen-name"
+						>{#each countRows as { rec } (rec.pillar)}<span data-b={rec.pillar}
+								>{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span
+							>{/each}</span
+					></span
+				>
 			</div>
 			<!-- 2b: der Zählstrang als senkrechter Trichter — drei Pulte → Trichter →
 			     Trommel, EIN Bereich im Fokus (Vorgabe Zukunft; Auswahl über die
@@ -378,19 +389,48 @@
 		opacity: 0;
 		cursor: pointer;
 	}
-	/* Gewähltes Emblem leuchtet; Tastatur-Fokus als Ring am Label. */
+	/* Gewähltes Emblem: deutlich als Auswahl lesbar — heller Text, goldene Pille
+	   als Grund, kräftiger Ring (2 px voll) + Glut. Der frühere 1-px-Ring las
+	   nicht als Auswahl. */
 	.count-jumplink:has(.cf-radio:checked) {
-		color: #f0d899;
+		color: #f6e6b8;
+		background: radial-gradient(ellipse 96% 100% at 30% 50%, rgba(213, 166, 87, 0.24), rgba(213, 166, 87, 0.06) 70%, rgba(0, 0, 0, 0) 100%);
 	}
 	.count-jumplink:has(.cf-radio:checked) img {
-		border-color: #e7c881;
+		border-color: #f2d27a;
 		box-shadow:
-			0 0 0 1px rgba(213, 166, 87, 0.5),
-			0 0 12px rgba(213, 166, 87, 0.3);
+			0 0 0 2px #e2b552,
+			0 0 16px rgba(226, 181, 82, 0.55);
 	}
 	.count-jumplink:has(.cf-radio:focus-visible) {
 		outline: 2px solid #d7aa55;
 		outline-offset: 3px;
+	}
+	/* Emblemreihe + sichtbare „gewählt: …"-Anzeige nebeneinander. */
+	.count-select {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.35rem 0.9rem;
+	}
+	.count-chosen {
+		color: #aeb6a6;
+		font: 600 0.62rem ui-sans-serif, system-ui;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.count-chosen .count-chosen-name {
+		color: #f0d899;
+	}
+	/* Nur der Name des gewählten Bereichs steht — per CSS mit der Radiogruppe. */
+	.count-chosen-name [data-b] {
+		display: none;
+	}
+	.count-select:has(#cf-A:checked) .count-chosen-name [data-b='A'],
+	.count-select:has(#cf-B:checked) .count-chosen-name [data-b='B'],
+	.count-select:has(#cf-C:checked) .count-chosen-name [data-b='C'],
+	.count-select:has(#cf-D:checked) .count-chosen-name [data-b='D'] {
+		display: inline;
 	}
 	/* ---- 2b: der senkrechte Zählstrang (Trichter) ---------------------------
 	   Drei Modell-Spalten → Haarlinien laufen nach unten auf einen Punkt zusammen

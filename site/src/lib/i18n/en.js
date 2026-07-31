@@ -243,6 +243,8 @@ export const en = {
 		countTitle: 'How the votes were counted',
 		countIntro: 'The program only counts matching mentions.',
 		jumpToArea: 'Choose an area for the counting machine',
+		countAreaCue: '— area selectable via the four emblems:',
+		chosenPrefix: 'chosen:',
 		changedMark: 'changed',
 		countSplit: 'split',
 		noConsensus: 'No agreement yet',

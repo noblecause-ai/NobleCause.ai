@@ -245,6 +245,8 @@ export const de = {
 		countTitle: 'Wie gezählt wurde',
 		countIntro: 'Das Programm zählt nur gleiche Nennungen.',
 		jumpToArea: 'Bereich für die Zählmaschine wählen',
+		countAreaCue: '— Bereich wählbar über die vier Embleme:',
+		chosenPrefix: 'gewählt:',
 		changedMark: 'geändert',
 		countSplit: 'getrennt',
 		noConsensus: 'Noch keine Einigkeit',
