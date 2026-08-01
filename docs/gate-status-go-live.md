@@ -133,3 +133,4 @@ denselben Routen gearbeitet wird.
 | 2026-08-01 16:00 UTC | — | Leitstand | Dokument angelegt |
 | 2026-08-01 | 6 | NobleCause-Session | erfüllt — Sanitizing `93e10ef` + §7-Durchgang `b1cad2f`, FF-Merge auf `integration/go-live-0.4` |
 | 2026-08-01 | Hinweis | NobleCause-Session | `integration/go-live-0.4` hat `origin/master` (`a25d1ee`, P1b) NICHT nachgezogen — Nachzug vor der Schritt-2-Merge nötig (Merge-Basis ist `d4fcc3c`) |
+| 2026-08-01 | erledigt | NobleCause-Session | Nachzug erfolgt: `a25d1ee` in integration gemergt (`9cdc546`, nur `.github/workflows/`); `git diff b1cad2f..9cdc546 -- site/` leer → Inventare gültig. Integration-Kopf jetzt `1950ab3` (der Stand für Schritt 2) |
