@@ -51,7 +51,7 @@
                       "organization": { "type": "string", "description": "canonical_name aus Registry" },
                       "title": { "type": ["string", "null"] },
                       "confidence": { "type": ["number", "null"] },
-                      "conditional": { "type": "boolean" },
+                      "conditional": { "type": ["boolean", "null"], "description": "null, wenn das Modell kein gültiges JSON-Boolean lieferte — das Rohvotum bleibt sichtbar; als ungültig markiert wird es vom Aggregator (recommendations[].votes_invalid + Zählstand), nicht am Rohvotum. Sonst würde ein einziges vertragswidriges Votum die ganze Sitzung am Schema-Tor scheitern lassen — die Umkehrung der Grundsatzregel." },
                       "reservation": { "type": ["string", "null"] }
                     } }
                 } } }

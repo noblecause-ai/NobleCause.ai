@@ -83,3 +83,15 @@ def test_gate_aborts_for_unknown_ref(repo):
     _make_sessions(repo, [("2026-07c", 3, "2026-07-07")])
     with pytest.raises(SystemExit):
         run_wart.assert_current_session("2026-99")
+
+
+def test_gate_aborts_on_duplicate_highest_number(repo):
+    # Codex-Randfall: zwei Sitzungen mit derselben HÖCHSTEN Nummer bestünden beide den
+    # max-Check — die Auswahl hinge wieder an iterdir(). Doppelte Nummern brechen ab.
+    _make_sessions(repo, [
+        ("2026-07", 1, "2026-07-07"),
+        ("2026-08", 3, "2026-07-07"),
+        ("2026-08b", 3, "2026-07-07"),
+    ])
+    with pytest.raises(SystemExit):
+        run_wart.assert_current_session("2026-08")  # Nummer 3 == max, aber doppelt vergeben

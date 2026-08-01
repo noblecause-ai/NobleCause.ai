@@ -126,6 +126,20 @@ def assert_current_session(session_id):
             numbers[d.name] = json.loads(f.read_text()).get("number", 0)
     if not numbers:
         sys.exit("Abbruch: keine session.json für das Aktualitäts-Gate gefunden.")
+    # Fix 3 (Codex): Sitzungsnummern MÜSSEN eindeutig sein. Eine doppelt vergebene
+    # Nummer ist immer ein Fehler — nicht nur, wenn sie die höchste betrifft: bei
+    # doppelter höchster Nummer bestünden beide den max-Check, und die Auswahl hinge
+    # wieder an iterdir(). Genau diese Kollision (gleiche Kennung) ist beim Journal
+    # real vorgekommen. Darum vor dem Max-Vergleich hart abbrechen.
+    by_number = {}
+    for sid, num in numbers.items():
+        by_number.setdefault(num, []).append(sid)
+    dupes = {num: sorted(sids) for num, sids in by_number.items() if len(sids) > 1}
+    if dupes:
+        sys.exit(
+            f"Abbruch (Aktualitäts-Gate): mehrfach vergebene Sitzungsnummer(n) {dupes} — "
+            f"Sitzungsnummern müssen eindeutig sein."
+        )
     max_number = max(numbers.values())
     chosen = numbers.get(session_id)
     if chosen is None:
