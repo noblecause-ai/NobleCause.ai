@@ -363,17 +363,60 @@ def aggregate_recommendations(final_votes, total_models=None):
                     **r, "_model": vote["label"], "_org_id": org_id,
                     "_conditional": cond, "_reservation": reservation,
                 })
+        # Zähler statt Sonderflag (Steward-Entscheid): votes_valid = verschiedene
+        # Modelle mit auswertbarem, aufgelöstem Votum in dieser Säule; votes_invalid =
+        # der Rest der teilnehmenden Modelle (unlesbar/ohne verwertbares Säulen-Votum).
+        # Damit sind alle vier Fälle unterscheidbar — Konsens · Dissens aus
+        # vollständigen Voten · unvollständig · gar nichts (votes_valid=0) — und die
+        # Tafel entscheidet selbst, ab wann sie welchen Zustand zeigt.
+        valid_models = sorted({c["_model"] for c in candidates})
+        votes_valid = len(valid_models)
+        votes_invalid = max(0, total - votes_valid)
+        # Doppelvotum-Warnung (Kimi P3): ein Modell mit mehreren Empfehlungen in
+        # derselben Säule ist vom Vertrag untersagt — als Warnung in den Rekord.
+        per_model = {}
+        for c in candidates:
+            per_model[c["_model"]] = per_model.get(c["_model"], 0) + 1
+        warnings = [
+            f"{m} hat in Säule {pillar} {n} Empfehlungen abgegeben (Vertrag: genau eine)."
+            for m, n in sorted(per_model.items()) if n > 1
+        ]
+
+        # Dritter Zustand: kein gültiges Votum. Der Bereich bleibt sichtbar, markiert —
+        # nie fehlt der Bereich, nie stille Leere. Wortlaut vom Steward.
         if not candidates:
+            rec = {
+                "pillar": pillar,
+                "has_consensus": False,
+                "votes_valid": 0,
+                "votes_invalid": votes_invalid,
+                "title": None,
+                "organization": None,
+                "donation_url": None,
+                "confidence": None,
+                "rationale_md": "Die Antworten zu diesem Bereich waren nicht auswertbar. "
+                "Die Rohdaten liegen im Protokoll.",
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
             continue
+
         groups = {}
         for c in candidates:
             groups.setdefault(c["_org_id"], []).append(c)
-        # Gewinner = Gruppe mit den meisten VERSCHIEDENEN Modellen.
-        best_id = max(groups, key=lambda k: len({c["_model"] for c in groups[k]}))
-        best = groups[best_id]
-        best_models = sorted({c["_model"] for c in best})
-        org = organizations.get(best_id)
-        if len(best_models) >= 2:
+        # Trägerzahl je Gruppe = VERSCHIEDENE Modelle. Gleichstand explizit erkennen,
+        # nicht still die zuerst eingefügte Gruppe wählen (Kimi P3).
+        support = {k: len({c["_model"] for c in v}) for k, v in groups.items()}
+        max_support = max(support.values())
+        leaders = [k for k, n in support.items() if n == max_support]
+        tie = max_support >= 2 and len(leaders) > 1
+
+        if max_support >= 2 and not tie:
+            best_id = leaders[0]
+            best = groups[best_id]
+            best_models = sorted({c["_model"] for c in best})
+            org = organizations.get(best_id)
             confs = [c.get("confidence") for c in best if c.get("confidence") is not None]
             # Konditionalität je Modell (ein Modell kann mehrfach votieren).
             by_model = {}
@@ -385,53 +428,72 @@ def aggregate_recommendations(final_votes, total_models=None):
             vote_details = [by_model[m] for m in best_models]
             conditional_count = sum(1 for v in vote_details if v["conditional"])
             cond_clause = f", davon {conditional_count} konditional," if conditional_count else ""
-            recs.append(
-                {
-                    "pillar": pillar,
-                    "has_consensus": True,
-                    "title": best[0].get("title"),
-                    "organization": org["canonical_name"],
-                    "organization_id": best_id,
-                    "donation_url": org.get("donation_url"),
-                    "confidence": round(sum(confs) / len(confs), 2) if confs else None,
-                    "convergence": {
-                        "count": len(best_models),
-                        "total": total,
-                        "conditional_count": conditional_count,
-                        "models": best_models,
-                        "votes": vote_details,
-                    },
-                    "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
-                    f"{total} Modellen{cond_clause} empfehlen diese Organisation "
-                    f"({', '.join(best_models)}). Begründungen in den Schlussvoten.",
-                }
+            # Bei unvollständigen Voten NICHT den Zählstand „X von Y" umdeuten — die
+            # Y-Frage (zählt ein unlesbares Modell mit?) gehört dem Wart. Nur ein
+            # nachprüfbarer Faktenzusatz, der auf die Rohdaten verweist.
+            invalid_clause = (
+                f" {votes_invalid} Modell(e) ohne auswertbares Votum (Rohdaten im Protokoll)."
+                if votes_invalid else ""
             )
+            rec = {
+                "pillar": pillar,
+                "has_consensus": True,
+                "votes_valid": votes_valid,
+                "votes_invalid": votes_invalid,
+                "title": best[0].get("title"),
+                "organization": org["canonical_name"],
+                "organization_id": best_id,
+                "donation_url": org.get("donation_url"),
+                "confidence": round(sum(confs) / len(confs), 2) if confs else None,
+                "convergence": {
+                    "count": len(best_models),
+                    "total": total,
+                    "conditional_count": conditional_count,
+                    "models": best_models,
+                    "votes": vote_details,
+                },
+                "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
+                f"{total} Modellen{cond_clause} empfehlen diese Organisation "
+                f"({', '.join(best_models)}).{invalid_clause} Begründungen in den Schlussvoten.",
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
         else:
-            recs.append(
-                {
-                    "pillar": pillar,
-                    "has_consensus": False,
-                    "title": "Kein Konsens — Einzelvoten",
-                    "organization": None,
-                    "donation_url": None,
-                    "confidence": None,
-                    "individual_votes": [
-                        {
-                            "title": c.get("title"),
-                            "organization": organizations.get(c["_org_id"])["canonical_name"],
-                            "organization_id": c["_org_id"],
-                            "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
-                            "confidence": c.get("confidence"),
-                            "model": c["_model"],
-                            "conditional": c["_conditional"],
-                            "reservation": c["_reservation"],
-                        }
-                        for c in candidates
-                    ],
-                    "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht "
-                    "auf eine Organisation.",
-                }
+            # Kein Konsens: Dissens aus gültigen Voten ODER Gleichstand (tie).
+            note = (
+                "Gleichstand: mehrere Organisationen mit gleicher Modellzahl — kein Konsens."
+                if tie
+                else "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
             )
+            rec = {
+                "pillar": pillar,
+                "has_consensus": False,
+                "votes_valid": votes_valid,
+                "votes_invalid": votes_invalid,
+                "tie": tie,
+                "title": "Kein Konsens — Einzelvoten",
+                "organization": None,
+                "donation_url": None,
+                "confidence": None,
+                "individual_votes": [
+                    {
+                        "title": c.get("title"),
+                        "organization": organizations.get(c["_org_id"])["canonical_name"],
+                        "organization_id": c["_org_id"],
+                        "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
+                        "confidence": c.get("confidence"),
+                        "model": c["_model"],
+                        "conditional": c["_conditional"],
+                        "reservation": c["_reservation"],
+                    }
+                    for c in candidates
+                ],
+                "rationale_md": note,
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
     return recs, unresolved
 
 
