@@ -88,6 +88,11 @@ jobs:
           if [ "$IN_LED_BY_WART" = "true" ]; then ARGS+=(--led-by-wart); fi
           python3 gremium/run_session.py "${ARGS[@]}" 2>&1 | tee run.log
 
+      - name: Schema-Tor (session.json vor dem Commit)
+        run: |
+          set -o pipefail
+          python3 gremium/schema_gate.py sessions 2>&1 | tee -a run.log
+
       - name: Commit Sitzung & schedule
         run: |
           git config user.name "noblecause-gremium"
