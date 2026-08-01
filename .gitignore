@@ -24,3 +24,7 @@ site/static/schedule.json
 docs/Bild *
 docs/ChatGPT Image *
 docs/screenshot-*
+
+# QA-Durchgang §7: Puppeteer-Skript + Beleg-Screenshots (Dev-Artefakt, nicht in den Baum)
+site/qa-durchgang.mjs
+site/qa-belege/
