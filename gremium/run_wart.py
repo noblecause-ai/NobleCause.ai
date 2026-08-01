@@ -52,30 +52,41 @@ def extract_json_block(text):
     return None
 
 
-def fallback_from_markdown(text):
-    """Strukturierte Felder aus dem Dossier-Text, falls der JSON-Zaun unvollständig ist."""
-    convene = bool(re.search(r"einberufen\.?\s*\*\*ja", text, re.I)) or bool(
-        re.search(r"\*\*Einberufen\*\*", text, re.I)
-    )
-    if re.search(r"\*\*Nicht einberufen\*\*|Nicht einberufen\.", text, re.I):
-        convene = False
-    delta_m = re.search(r"## 4\. Delta-Bewertung\s*\n\n(.*?)(?=\n## |\Z)", text, re.DOTALL)
-    convene_m = re.search(r"## 5\. Einberufungs-Entscheid\s*\n\n(.*?)(?=\n```|\Z)", text, re.DOTALL)
-    queries = re.findall(r"^\s*·\s+(.+)$", text, re.MULTILINE)
-    if not queries:
-        queries = re.findall(r'^\s*"([^"]+)"\s*,?\s*$', text, re.MULTILINE)
-    return {
-        "search_queries": queries[:20],
-        "findings": [],
-        "rejected_findings": [],
-        "delta_assessment": delta_m.group(1).strip() if delta_m else "",
-        "convene": convene,
-        "convene_rationale": convene_m.group(1).strip() if convene_m else "",
-    }
-
-
 def strip_json_block(text):
     return re.sub(r"```json\s*\{.*?\}\s*```\s*$", "", text, flags=re.DOTALL).strip()
+
+
+def parse_wart_answer(text):
+    """Zieht den strukturierten JSON-Block aus der Wart-Antwort und prüft ihn strikt
+    gegen den Vertrag. Verletzung → sys.exit (der Lauf scheitert laut, Rohartefakte
+    sind gesichert, es entsteht KEIN Journal-Eintrag).
+
+    Versiegelte Datennaht: die Maschine, die den Rekord erzeugt, parst KEINE Prosa —
+    kein Fallback aus dem Dossier-Text. Geprüft wird:
+    - JSON-Block vorhanden,
+    - delta_assessment vorhanden,
+    - convene ist ein echtes JSON-Boolean (kein String "false", keine Zahl, nicht
+      fehlend). KEIN Fallback auf „nicht einberufen": der Demut-Kanon regelt das
+      Urteil des Warts, nicht das Verhalten der Maschine bei unlesbarer Antwort —
+      und convene setzt einen Termin vor, eine Handlung, schwerer rückholbar als ein
+      Eintrag.
+    """
+    parsed = extract_json_block(text)
+    if not parsed:
+        sys.exit(
+            "Abbruch: kein strukturierter JSON-Block in der Wart-Antwort — vertragswidrig. "
+            "Rohartefakte gesichert, kein Journal-Eintrag."
+        )
+    if not parsed.get("delta_assessment"):
+        sys.exit("Abbruch: kein auswertbares Dossier (delta_assessment fehlt) — kein Journal-Eintrag.")
+    if not isinstance(parsed.get("convene"), bool):
+        raw = parsed.get("convene")
+        sys.exit(
+            f"Abbruch: convene ist kein JSON-Boolean (Wert {raw!r}, Typ "
+            f"{type(raw).__name__}) — vertragswidrig. Rohartefakte gesichert, kein "
+            f"Journal-Eintrag."
+        )
+    return parsed
 
 
 def latest_session():
@@ -335,20 +346,15 @@ def main():
         }.get(stop_reason, "unerwarteter Abbruch.")
         sys.exit(f"Abbruch: stop_reason={stop_reason} — {hint} Kein Parse-Versuch.")
 
-    print("\nSchritt 2 — JSON extrahieren")
-    parsed = extract_json_block(text)
-    if not parsed:
-        print("  Warnung: JSON unvollständig — Fallback aus Dossier-Text")
-        parsed = fallback_from_markdown(text)
-    if not parsed.get("delta_assessment"):
-        sys.exit("Abbruch: kein auswertbares Dossier in der Wart-Antwort.")
+    print("\nSchritt 2 — JSON extrahieren und Vertrag prüfen")
+    parsed = parse_wart_answer(text)
 
     search_queries = parsed.get("search_queries") or api_queries
     print("  Suchanfragen (Dossier):")
     for q in search_queries:
         print(f"    · {q}")
 
-    convene = bool(parsed.get("convene"))
+    convene = parsed["convene"]
     print(f"\nSchritt 3 — Einberufung: {'JA' if convene else 'NEIN'}")
     print(f"  Begründung: {parsed.get('convene_rationale', '—')}")
 
