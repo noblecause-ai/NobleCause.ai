@@ -43,9 +43,11 @@ def vote(label, *recs):
     return {"label": label, "parsed": {"recommendations": list(recs)}}
 
 
-def rec(pillar, org, conf=0.7):
+def rec(pillar, org, conf=0.7, conditional=False, reservation=None):
+    # conditional ist seit §5 Pflichtfeld; Default false.
     return {"pillar": pillar, "title": f"{org} intervention", "organization": org,
-            "donation_url": "https://model.example/x", "confidence": conf}
+            "donation_url": "https://model.example/x", "confidence": conf,
+            "conditional": conditional, "reservation": reservation}
 
 
 def pillar(recs, p):

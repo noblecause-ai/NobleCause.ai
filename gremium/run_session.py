@@ -154,12 +154,17 @@ def call_anthropic(model, system, user, max_tokens):
     import anthropic
 
     client = anthropic.Anthropic()
-    resp = client.messages.create(
+    # Streaming: bei hohem max_output_tokens (die reasoning-lastige Besetzung ab Sitzung 4
+    # braucht es, sonst schneidet die Antwort vor dem JSON-Block ab) verweigert das SDK
+    # den nicht-gestreamten Call (>10 min veranschlagt). Der Wart-Caller streamt aus
+    # demselben Grund. Ergebnis identisch — nur der Transportweg ist gestreamt.
+    with client.messages.stream(
         model=model,
         max_tokens=max_tokens,
         system=system,
         messages=[{"role": "user", "content": user}],
-    )
+    ) as stream:
+        resp = stream.get_final_message()
     text = "".join(b.text for b in resp.content if b.type == "text")
     usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens}
     return text, usage, resp.model_dump()
@@ -299,7 +304,9 @@ def structured_vote_recs(parsed):
         org_id = organizations.resolve(r.get("organization"))
         if pillar not in ("A", "B", "C", "D") or org_id is None:
             continue
-        cond, reservation = _conditional(r)
+        # Rohvotum je Modell (Anzeige): conditional strukturell; None, wenn das Modell
+        # kein gültiges Bool lieferte (der Aggregator schließt es separat als ungültig aus).
+        _valid, cond, reservation = read_conditional(r)
         out.append({
             "pillar": pillar,
             "organization_id": org_id,
@@ -312,19 +319,21 @@ def structured_vote_recs(parsed):
     return out
 
 
-# Publizierte, feste Markerliste: ein Votum ist konditional, wenn das Modell im
-# title selbst einen expliziten Vorbehalt deklariert. Kein Fuzzy, keine Semantik-
-# Inferenz — der Beleg ist der Titel wörtlich (reservation). Kanon Demut:
-# Unsicherheit wird beziffert, nie verschmolzen. (Robustere Zukunft = strukturiertes
-# Feld im Prompt → redaktionell, Empfehlung an den Steward.)
-_CONDITIONAL_MARKERS = re.compile(r"konditional|conditional|bedingt|vorbehalt|vertag", re.I)
+# §5: `conditional` ist Pflichtfeld im Votum-Vertrag und wird AUSSCHLIESSLICH aus dem
+# strukturierten Feld gelesen — nie aus dem Titel geraten. Die Regex entfällt ersatzlos:
+# die versiegelte Datennaht verbietet der rekord-erzeugenden Maschine, Prosa zu parsen.
+def read_conditional(rec):
+    """Gibt (valid, conditional, reservation).
 
-
-def _conditional(rec):
-    title = rec.get("title") or ""
-    if _CONDITIONAL_MARKERS.search(title):
-        return True, title
-    return False, None
+    valid=False, wenn `conditional` fehlt oder kein echtes JSON-Boolean ist — dann ist die
+    Empfehlung vertragswidrig. Kein Titel-Raten als Fallback (Vertragsbruch-Entscheid):
+    der Aufrufer behandelt sie als ungültig. `reservation` nur bei conditional=True.
+    """
+    cond = rec.get("conditional")
+    if not isinstance(cond, bool):
+        return False, None, None
+    reservation = rec.get("reservation") if cond else None
+    return True, cond, reservation
 
 
 def aggregate_recommendations(final_votes, total_models=None):
@@ -344,6 +353,7 @@ def aggregate_recommendations(final_votes, total_models=None):
     unresolved = []
     for pillar in ("A", "B", "C", "D"):
         candidates = []
+        contract_warnings = []
         for vote in final_votes:
             for r in _vote_recommendations(vote["parsed"]):
                 if r.get("pillar") != pillar:
@@ -358,7 +368,17 @@ def aggregate_recommendations(final_votes, total_models=None):
                         }
                     )
                     continue
-                cond, reservation = _conditional(r)
+                # §5 Vertragsdurchsetzung: conditional muss ein echtes JSON-Boolean sein.
+                # Fehlt es / falscher Typ → Empfehlung ungültig (kein Kandidat, zählt
+                # votes_invalid), Warnung in den Rekord, KEIN Titel-Raten.
+                valid, cond, reservation = read_conditional(r)
+                if not valid:
+                    contract_warnings.append(
+                        f"{vote['label']}: Säule {pillar} — Votum ohne gültiges "
+                        f"conditional-Feld (Wert {r.get('conditional')!r}); als ungültig "
+                        f"behandelt, kein Titel-Raten."
+                    )
+                    continue
                 candidates.append({
                     **r, "_model": vote["label"], "_org_id": org_id,
                     "_conditional": cond, "_reservation": reservation,
@@ -377,7 +397,7 @@ def aggregate_recommendations(final_votes, total_models=None):
         per_model = {}
         for c in candidates:
             per_model[c["_model"]] = per_model.get(c["_model"], 0) + 1
-        warnings = [
+        warnings = contract_warnings + [
             f"{m} hat in Säule {pillar} {n} Empfehlungen abgegeben (Vertrag: genau eine)."
             for m, n in sorted(per_model.items()) if n > 1
         ]

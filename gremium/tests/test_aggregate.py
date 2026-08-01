@@ -58,9 +58,12 @@ def vote(label, *recs, key="recommendations"):
     return {"label": label, "parsed": {key: list(recs)}}
 
 
-def rec(pillar, org, url="https://model-hallucinated.example/x", conf=0.7):
+def rec(pillar, org, url="https://model-hallucinated.example/x", conf=0.7,
+        conditional=False, reservation=None):
+    # conditional ist seit §5 Pflichtfeld im Votum-Vertrag; Default false + reservation null.
     return {"pillar": pillar, "title": f"{org} intervention", "organization": org,
-            "donation_url": url, "confidence": conf}
+            "donation_url": url, "confidence": conf,
+            "conditional": conditional, "reservation": reservation}
 
 
 def pillar(recs, p):
@@ -140,9 +143,10 @@ def test_german_keys_are_counted():
 
 
 def test_conditional_vote_counts_but_is_flagged():
+    # §5: conditional aus dem strukturierten Feld, nicht mehr aus dem Titel geraten.
     votes = [
-        vote("Opus", {"pillar": "A", "organization": "Helen Keller Intl",
-                      "title": "VAS — konditional, mit Vertagungsantrag", "confidence": 0.55}),
+        vote("Opus", rec("A", "Helen Keller Intl", conf=0.55, conditional=True,
+                         reservation="VAS — konditional, mit Vertagungsantrag")),
         vote("GPT", rec("A", "Helen Keller International (HKI)")),
         vote("Gemini", rec("A", "Helen Keller International (HKI)")),
     ]
