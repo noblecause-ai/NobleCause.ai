@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "journal.schema.json",
+  "title": "Wart-Journal-Eintrag (journal/<date>/entry.json)",
+  "description": "EIN Schema für alle Eintragstypen (Research, Vertretung, Einberufung, Bootstrap, Kommission). Gemeinsame Kopffelder sind Pflicht, alles Typspezifische optional, additionalProperties: true — der Bestand validiert unverändert. Abnahmetest ist der Bestand selbst: schlägt er fehl, ist das Schema falsch, nicht der Rekord.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version", "date", "session_ref", "convene", "convene_rationale",
+    "delta_assessment", "findings", "rejected_findings", "search_queries",
+    "content_md", "costs", "actions_run_url"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer" },
+    "date": { "type": "string" },
+    "session_ref": { "type": ["string", "null"], "description": "geltende Sitzung; null bei Einträgen ohne Sitzungsbezug (Kommission)" },
+    "convene": { "type": "boolean" },
+    "convene_rationale": { "type": "string" },
+    "delta_assessment": { "type": "string" },
+    "findings": { "type": "array" },
+    "rejected_findings": { "type": "array" },
+    "search_queries": { "type": "array" },
+    "content_md": { "type": "string" },
+    "costs": { "type": "object" },
+    "actions_run_url": { "type": ["string", "null"] },
+    "type": { "type": "string", "description": "Eintragstyp (optional; fehlt beim Research-Lauf)" },
+    "model": { "type": ["string", "null"] },
+    "model_label": { "type": "string" },
+    "deputation_note": { "type": "string" },
+    "commission_ref": { "type": "string" }
+  }
+}
