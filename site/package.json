@@ -9,7 +9,7 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"pretest": "npm run build",
-		"test": "node --test src/lib/server/homepage.test.js src/lib/orbit.test.js tests/homepage-build.test.js"
+		"test": "node --test src/lib/server/homepage.test.js src/lib/server/content.test.js src/lib/orbit.test.js tests/homepage-build.test.js"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^3.0.10",
