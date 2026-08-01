@@ -27,6 +27,17 @@
     "model": { "type": ["string", "null"] },
     "model_label": { "type": "string" },
     "deputation_note": { "type": "string" },
-    "commission_ref": { "type": "string" }
+    "commission_ref": { "type": "string" },
+    "correction_notice": {
+      "type": "object",
+      "description": "§7 — Korrekturhinweis nach dem Muster vom 14. Juli (kein Redigieren des Rekords, nur ein transparenter Vermerk). Wortlaut liefert der Wart, DE in `text`, EN in `text_en`.",
+      "required": ["date", "text"],
+      "properties": {
+        "date": { "type": "string" },
+        "text": { "type": "string" },
+        "text_en": { "type": "string" },
+        "commit": { "type": "string" }
+      }
+    }
   }
 }

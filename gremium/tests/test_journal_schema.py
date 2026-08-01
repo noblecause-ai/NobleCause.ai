@@ -68,6 +68,29 @@ def test_extra_field_is_allowed(tmp_path, monkeypatch):
     assert schema_gate.validate_tree("journal", "entry.json", "journal.schema.json", "J") == 0
 
 
+def test_correction_notice_de_en_validates(tmp_path, monkeypatch):
+    # §7-Struktur: ein Korrekturhinweis mit DE (text) und EN (text_en) validiert.
+    _tmp_repo(tmp_path)
+    e = _valid_entry()
+    e["correction_notice"] = {"date": "2026-08-02", "text": "DE", "text_en": "EN", "commit": "abc"}
+    d = tmp_path / "journal" / "2026-07-20"
+    d.mkdir(parents=True)
+    (d / "entry.json").write_text(json.dumps(e))
+    monkeypatch.setattr(schema_gate, "ROOT", tmp_path)
+    assert schema_gate.validate_tree("journal", "entry.json", "journal.schema.json", "J") == 0
+
+
+def test_correction_notice_without_text_is_caught(tmp_path, monkeypatch):
+    _tmp_repo(tmp_path)
+    e = _valid_entry()
+    e["correction_notice"] = {"date": "2026-08-02"}  # text fehlt
+    d = tmp_path / "journal" / "2026-07-20"
+    d.mkdir(parents=True)
+    (d / "entry.json").write_text(json.dumps(e))
+    monkeypatch.setattr(schema_gate, "ROOT", tmp_path)
+    assert schema_gate.validate_tree("journal", "entry.json", "journal.schema.json", "J") == 1
+
+
 def test_commission_entry_validates(tmp_path, monkeypatch):
     # Kommission: type gesetzt, session_ref null, kein model — muss durchgehen.
     _tmp_repo(tmp_path)
