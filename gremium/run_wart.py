@@ -87,11 +87,45 @@ def latest_session():
         f = d / "session.json"
         if f.exists():
             s = json.loads(f.read_text())
-            entries.append((s.get("date", ""), d.name, s))
+            entries.append((s.get("number", 0), s.get("date", ""), d.name, s))
     if not entries:
         sys.exit("Abbruch: keine session.json gefunden.")
-    entries.sort(key=lambda x: x[0], reverse=True)
-    return entries[0][1], entries[0][2]
+    # Sortierschlüssel (number, date) — identisch zu run_session.prior_session()
+    # und content.js. NICHT nach Datumsstring allein: alle Bestandssitzungen tragen
+    # dasselbe Datum (2026-07-07), die Reihenfolge der Gleichen hinge sonst von
+    # iterdir() (der Dateisystemreihenfolge des Runners) ab — genau so recherchierte
+    # der Wart am 20./27.07. gegen die überholte Sitzung 1.
+    entries.sort(key=lambda x: (x[0], x[1]), reverse=True)
+    return entries[0][2], entries[0][3]
+
+
+def assert_current_session(session_id):
+    """Hartes Aktualitäts-Gate: die Sitzung, auf die der Journal-Eintrag zeigen wird
+    (session_ref), MUSS die höchste Sitzungsnummer tragen. Unabhängig von
+    latest_session() neu hergeleitet — fängt auch künftige Ursachen derselben Wirkung
+    laut ab, statt eine überholte Sitzung still als „geprüft" zu publizieren. Der Wart
+    nennt dieses Gate ausdrücklich wichtiger als die Sortierung selbst."""
+    sessions_dir = ROOT / "sessions"
+    numbers = {}
+    for d in sessions_dir.iterdir():
+        if not d.is_dir():
+            continue
+        f = d / "session.json"
+        if f.exists():
+            numbers[d.name] = json.loads(f.read_text()).get("number", 0)
+    if not numbers:
+        sys.exit("Abbruch: keine session.json für das Aktualitäts-Gate gefunden.")
+    max_number = max(numbers.values())
+    chosen = numbers.get(session_id)
+    if chosen is None:
+        sys.exit(f"Abbruch (Aktualitäts-Gate): session_ref {session_id!r} hat keine session.json.")
+    if chosen != max_number:
+        current = sorted(n for n, num in numbers.items() if num == max_number)
+        sys.exit(
+            f"Abbruch (Aktualitäts-Gate): session_ref {session_id!r} (Nummer {chosen}) ist "
+            f"nicht die höchste Sitzung (Nummer {max_number}: {current}). Kein Journal-"
+            f"Eintrag — er würde eine überholte Sitzung als geprüft ausweisen."
+        )
 
 
 def summarize_recommendations(session):
@@ -258,6 +292,9 @@ def main():
         sys.exit("Abbruch: kein wart-Eintrag in config.json.")
 
     session_id, session = latest_session()
+    # Aktualitäts-Gate VOR Verzeichnis-Anlage und API-Call: eine falsche session_ref
+    # bricht laut ab, bevor Kosten entstehen oder ein Eintrag geschrieben wird.
+    assert_current_session(session_id)
     entry_date = args.date
     out_dir = ROOT / "journal" / entry_date
     if out_dir.exists():
