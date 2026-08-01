@@ -183,6 +183,14 @@
 		/* Kein helles Aufblitzen beim Tippen (iOS-Tap-Highlight); erbt an Label/Hit. */
 		-webkit-tap-highlight-color: transparent;
 	}
+	/* §7.5-Befund (Abschluss-Durchgang 2026-08-01, gemessen headless bei 1280 & 1440):
+	   dieser z-index:4-Hit überlappt bei scrollY ≈ 200 die rechte Ecke der
+	   Sitzungsarchiv-Karte (~17k px² bei 1280, ~25k px² bei 1440) — ein Klick dort
+	   öffnet das Protokoll statt des Archiv-Eintrags. Optisch ist nichts verdeckt (der
+	   Hit ist transparent), die Haupt-Tafel nie betroffen; der --retreat zieht das Pult
+	   danach frei. Steward-Entscheid 2026-08-01: BELASSEN als geringfügiger Randfall.
+	   Falls je behoben — --retreat FRÜHER greifen lassen (Pult vor scrollY 200 frei),
+	   NICHT den z-index für den Fluss erhöhen. */
 	.pult-hit {
 		position: absolute;
 		/* Möbelkörper ab Pultplatte abwärts — am AVIF gemessen (1026×1148). */
