@@ -116,5 +116,10 @@
     "usd_web_search": 0.09,
     "usd_total": 2.8637
   },
-  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/29729482141"
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/29729482141",
+  "correction_notice": {
+    "date": "2026-08-01",
+    "text": "Korrekturhinweis (2026-08-01): Dieser Lauf prüfte infolge eines Sortierfehlers die Evidenzlage der überholten Sitzung 1 statt der geltenden Sitzung 3. Ursache: Alle drei Bestandssitzungen tragen dasselbe Datum; die Auswahl der „letzten\" Sitzung sortierte nur nach dem Datumsstring und hing damit von der Dateisystem-Reihenfolge des Runners ab. Geprüft wurden dadurch Malaria Consortium (Bereich B) und Centre for the Governance of AI (Bereich C); die geltenden Empfehlungen — Against Malaria Foundation und Nuclear Threat Initiative — waren zum Zeitpunkt dieses Laufs ungeprüft. Der Einberufungs-Entscheid dieses Laufs (keine Einberufung) beruht auf dieser überholten Grundlage. Die Recherche selbst wurde auf der falschen Basis ordnungsgemäß geführt; Suchanfragen, Funde und Bewertungen stehen unverändert im Rekord. Der Sortierfehler ist behoben (Sortierung nach Sitzungsnummer, dazu ein Abbruch-Gate gegen die Auswahl einer überholten Sitzung).",
+    "text_en": "Correction notice (2026-08-01): Due to a sorting error, this run examined the evidence base of the superseded Session 1 instead of the current Session 3. Cause: all three existing sessions carry the same date; the selection of the \"latest\" session sorted by date string only and therefore depended on the runner's file system order. As a result, the run examined Malaria Consortium (area B) and the Centre for the Governance of AI (area C); the current recommendations — Against Malaria Foundation and Nuclear Threat Initiative — were unexamined at the time of this run. This run's convocation decision (no convocation) rests on this superseded basis. The research itself was conducted properly on the wrong basis; search queries, findings, and assessments remain unchanged in the record. The sorting error has been fixed (sorting by session number, plus an abort gate against selecting a superseded session)."
+  }
 }
