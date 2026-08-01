@@ -51,7 +51,7 @@
                       "organization": { "type": "string", "description": "canonical_name aus Registry" },
                       "title": { "type": ["string", "null"] },
                       "confidence": { "type": ["number", "null"] },
-                      "conditional": { "type": "boolean" },
+                      "conditional": { "type": ["boolean", "null"], "description": "null, wenn das Modell kein gültiges JSON-Boolean lieferte — das Rohvotum bleibt sichtbar; als ungültig markiert wird es vom Aggregator (recommendations[].votes_invalid + Zählstand), nicht am Rohvotum. Sonst würde ein einziges vertragswidriges Votum die ganze Sitzung am Schema-Tor scheitern lassen — die Umkehrung der Grundsatzregel." },
                       "reservation": { "type": ["string", "null"] }
                     } }
                 } } }
@@ -73,12 +73,16 @@
         "properties": {
           "pillar": { "enum": ["A", "B", "C", "D"] },
           "has_consensus": { "type": "boolean" },
-          "title": { "type": "string" },
+          "title": { "type": ["string", "null"], "description": "null im dritten Zustand (kein gültiges Votum)" },
           "organization": { "type": ["string", "null"], "description": "canonical_name aus Registry; null bei Dissens" },
           "organization_id": { "type": "string" },
           "donation_url": { "type": ["string", "null"], "description": "AUSSCHLIESSLICH aus Registry; null erlaubt" },
           "confidence": { "type": ["number", "null"] },
-          "rationale_md": { "type": "string" }
+          "rationale_md": { "type": "string" },
+          "votes_valid": { "type": "integer", "description": "verschiedene Modelle mit auswertbarem, aufgelöstem Säulen-Votum" },
+          "votes_invalid": { "type": "integer", "description": "teilnehmende Modelle ohne verwertbares Säulen-Votum (unlesbar/fehlend)" },
+          "tie": { "type": "boolean", "description": "Gleichstand: mehrere Organisationen mit gleicher Modellzahl (kein Konsens)" },
+          "warnings": { "type": "array", "items": { "type": "string" }, "description": "z. B. Mehrfach-Votum eines Modells in einer Säule" }
         },
         "allOf": [
           {
@@ -106,14 +110,21 @@
             }
           },
           {
-            "if": { "properties": { "has_consensus": { "const": false } } },
-            "then": {
-              "required": ["individual_votes"],
-              "properties": {
-                "individual_votes": {
-                  "type": "array",
-                  "items": { "type": "object",
-                    "required": ["title", "organization", "organization_id", "donation_url", "confidence", "model", "conditional", "reservation"] }
+            "if": {
+              "properties": { "has_consensus": { "const": false }, "votes_valid": { "const": 0 } },
+              "required": ["votes_valid"]
+            },
+            "then": { "description": "Dritter Zustand (kein gültiges Votum): kein individual_votes verlangt." },
+            "else": {
+              "if": { "properties": { "has_consensus": { "const": false } } },
+              "then": {
+                "required": ["individual_votes"],
+                "properties": {
+                  "individual_votes": {
+                    "type": "array",
+                    "items": { "type": "object",
+                      "required": ["title", "organization", "organization_id", "donation_url", "confidence", "model", "conditional", "reservation"] }
+                  }
                 }
               }
             }

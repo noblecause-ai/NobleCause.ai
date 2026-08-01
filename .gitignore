@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 venv/
 gremium/.fable-check/
+gremium/.probe-raw/
 
 # lokaler Review-Server + verwaiste Plate-Kopien (nicht committen)
 serve/

@@ -70,13 +70,31 @@ Beende deine Antwort mit genau einem JSON-Block in einem ```json-Zaun:
 {{
   "confidence": 0.0,
   "recommendations": [
-    {{"pillar": "A", "title": "…", "organization": "…", "donation_url": "…", "confidence": 0.0}}
+    {{"pillar": "A", "title": "…", "organization": "…", "donation_url": "…", "confidence": 0.0, "conditional": false, "reservation": null}}
   ]
 }}
 ```
 
 `confidence` ist deine Gesamtkonfidenz (0–1), je Empfehlung zusätzlich eine \
-eigene. `donation_url` ist der offizielle Spendenweg der Organisation."""
+eigene. `donation_url` ist der offizielle Spendenweg der Organisation.
+
+Deine Empfehlung kann unter einem Vorbehalt stehen — abhängig von noch ausstehender \
+Evidenz, mit Vertagungsantrag, oder nur bedingt gegenüber einer Alternative derselben \
+Säule. Ein solcher Vorbehalt gehört in den Rekord und wird dort gezählt. Bisher hat das \
+Verfahren ihn aus deinem Titel erschlossen; das war ungenau — schon „unbedingt empfohlen" \
+wurde als Vorbehalt gewertet. Darum fragt es ihn jetzt bei dir ab, statt ihn zu deuten. \
+Dein Wortlaut bleibt unverändert und ungekürzt im Protokoll; gezählt wird nur, was du \
+selbst als Vorbehalt kennzeichnest.
+
+`conditional` ist `true`, wenn deine Empfehlung unter Vorbehalt steht, und `false`, wenn \
+du sie vorbehaltlos abgibst. `reservation` ist bei `true` der Vorbehalt in einem Satz, bei \
+`false` `null`. Beispiel: \
+{{ … "conditional": true, "reservation": "Nur vorbehaltlich einer 2025/26-Wirksamkeitsprüfung; mit Vertagungsantrag." }} \
+oder {{ … "conditional": false, "reservation": null }}.
+
+Beide Felder gehören zum Votum. Fehlen sie, kann dein Votum für diese Säule nicht gezählt \
+werden — nicht als Sanktion, sondern weil das Verfahren nichts erraten darf, was du nicht \
+gesagt hast."""
 
 ROUND2 = """## Rückblick
 
@@ -103,7 +121,9 @@ abweichst, schreibe das explizit.
 
 Beende deine Antwort mit genau einem JSON-Block im selben Format wie in \
 Runde 1 (Gesamtkonfidenz + Empfehlungen je Säule mit `pillar`, `title`, \
-`organization`, `donation_url`, `confidence`)."""
+`organization`, `donation_url`, `confidence`, `conditional`, `reservation`). \
+`conditional` und `reservation` gehören auch hier zum Votum — ohne sie kann dein Votum \
+für die Säule nicht gezählt werden."""
 
 SUMMARY = """Du schreibst die Leserfassung eines veröffentlichten Gremium-Protokolls \
 für NobleCause.ai. Nüchtern, dokumentarisch, keine Superlative.

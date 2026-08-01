@@ -26,7 +26,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v5
         with:
-          node-version: 22
+          # Auf die nachgewiesene Build-Runtime gepinnt (Codex #1). Kimi hat 22.23.1
+          # und 25.9.0 empirisch als sauber bestätigt (rolldown-Bindings vorkompiliert,
+          # ABI-stabil) — der Deploy soll dennoch exakt die verifizierte Version bauen,
+          # damit der Freigabe-Nachweis und der einzige Produktions-Build dieselbe
+          # Runtime nutzen.
+          node-version: 20.20.2
           cache: npm
           cache-dependency-path: site/package-lock.json
 

@@ -154,12 +154,17 @@ def call_anthropic(model, system, user, max_tokens):
     import anthropic
 
     client = anthropic.Anthropic()
-    resp = client.messages.create(
+    # Streaming: bei hohem max_output_tokens (die reasoning-lastige Besetzung ab Sitzung 4
+    # braucht es, sonst schneidet die Antwort vor dem JSON-Block ab) verweigert das SDK
+    # den nicht-gestreamten Call (>10 min veranschlagt). Der Wart-Caller streamt aus
+    # demselben Grund. Ergebnis identisch — nur der Transportweg ist gestreamt.
+    with client.messages.stream(
         model=model,
         max_tokens=max_tokens,
         system=system,
         messages=[{"role": "user", "content": user}],
-    )
+    ) as stream:
+        resp = stream.get_final_message()
     text = "".join(b.text for b in resp.content if b.type == "text")
     usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens}
     return text, usage, resp.model_dump()
@@ -299,7 +304,9 @@ def structured_vote_recs(parsed):
         org_id = organizations.resolve(r.get("organization"))
         if pillar not in ("A", "B", "C", "D") or org_id is None:
             continue
-        cond, reservation = _conditional(r)
+        # Rohvotum je Modell (Anzeige): conditional strukturell; None, wenn das Modell
+        # kein gültiges Bool lieferte (der Aggregator schließt es separat als ungültig aus).
+        _valid, cond, reservation = read_conditional(r)
         out.append({
             "pillar": pillar,
             "organization_id": org_id,
@@ -312,19 +319,21 @@ def structured_vote_recs(parsed):
     return out
 
 
-# Publizierte, feste Markerliste: ein Votum ist konditional, wenn das Modell im
-# title selbst einen expliziten Vorbehalt deklariert. Kein Fuzzy, keine Semantik-
-# Inferenz — der Beleg ist der Titel wörtlich (reservation). Kanon Demut:
-# Unsicherheit wird beziffert, nie verschmolzen. (Robustere Zukunft = strukturiertes
-# Feld im Prompt → redaktionell, Empfehlung an den Steward.)
-_CONDITIONAL_MARKERS = re.compile(r"konditional|conditional|bedingt|vorbehalt|vertag", re.I)
+# §5: `conditional` ist Pflichtfeld im Votum-Vertrag und wird AUSSCHLIESSLICH aus dem
+# strukturierten Feld gelesen — nie aus dem Titel geraten. Die Regex entfällt ersatzlos:
+# die versiegelte Datennaht verbietet der rekord-erzeugenden Maschine, Prosa zu parsen.
+def read_conditional(rec):
+    """Gibt (valid, conditional, reservation).
 
-
-def _conditional(rec):
-    title = rec.get("title") or ""
-    if _CONDITIONAL_MARKERS.search(title):
-        return True, title
-    return False, None
+    valid=False, wenn `conditional` fehlt oder kein echtes JSON-Boolean ist — dann ist die
+    Empfehlung vertragswidrig. Kein Titel-Raten als Fallback (Vertragsbruch-Entscheid):
+    der Aufrufer behandelt sie als ungültig. `reservation` nur bei conditional=True.
+    """
+    cond = rec.get("conditional")
+    if not isinstance(cond, bool):
+        return False, None, None
+    reservation = rec.get("reservation") if cond else None
+    return True, cond, reservation
 
 
 def aggregate_recommendations(final_votes, total_models=None):
@@ -344,6 +353,7 @@ def aggregate_recommendations(final_votes, total_models=None):
     unresolved = []
     for pillar in ("A", "B", "C", "D"):
         candidates = []
+        contract_warnings = []
         for vote in final_votes:
             for r in _vote_recommendations(vote["parsed"]):
                 if r.get("pillar") != pillar:
@@ -358,22 +368,75 @@ def aggregate_recommendations(final_votes, total_models=None):
                         }
                     )
                     continue
-                cond, reservation = _conditional(r)
+                # §5 Vertragsdurchsetzung: conditional muss ein echtes JSON-Boolean sein.
+                # Fehlt es / falscher Typ → Empfehlung ungültig (kein Kandidat, zählt
+                # votes_invalid), Warnung in den Rekord, KEIN Titel-Raten.
+                valid, cond, reservation = read_conditional(r)
+                if not valid:
+                    contract_warnings.append(
+                        f"{vote['label']}: Säule {pillar} — Votum ohne gültiges "
+                        f"conditional-Feld (Wert {r.get('conditional')!r}); als ungültig "
+                        f"behandelt, kein Titel-Raten."
+                    )
+                    continue
                 candidates.append({
                     **r, "_model": vote["label"], "_org_id": org_id,
                     "_conditional": cond, "_reservation": reservation,
                 })
+        # Zähler statt Sonderflag (Steward-Entscheid): votes_valid = verschiedene
+        # Modelle mit auswertbarem, aufgelöstem Votum in dieser Säule; votes_invalid =
+        # der Rest der teilnehmenden Modelle (unlesbar/ohne verwertbares Säulen-Votum).
+        # Damit sind alle vier Fälle unterscheidbar — Konsens · Dissens aus
+        # vollständigen Voten · unvollständig · gar nichts (votes_valid=0) — und die
+        # Tafel entscheidet selbst, ab wann sie welchen Zustand zeigt.
+        valid_models = sorted({c["_model"] for c in candidates})
+        votes_valid = len(valid_models)
+        votes_invalid = max(0, total - votes_valid)
+        # Doppelvotum-Warnung (Kimi P3): ein Modell mit mehreren Empfehlungen in
+        # derselben Säule ist vom Vertrag untersagt — als Warnung in den Rekord.
+        per_model = {}
+        for c in candidates:
+            per_model[c["_model"]] = per_model.get(c["_model"], 0) + 1
+        warnings = contract_warnings + [
+            f"{m} hat in Säule {pillar} {n} Empfehlungen abgegeben (Vertrag: genau eine)."
+            for m, n in sorted(per_model.items()) if n > 1
+        ]
+
+        # Dritter Zustand: kein gültiges Votum. Der Bereich bleibt sichtbar, markiert —
+        # nie fehlt der Bereich, nie stille Leere. Wortlaut vom Steward.
         if not candidates:
+            rec = {
+                "pillar": pillar,
+                "has_consensus": False,
+                "votes_valid": 0,
+                "votes_invalid": votes_invalid,
+                "title": None,
+                "organization": None,
+                "donation_url": None,
+                "confidence": None,
+                "rationale_md": "Die Antworten zu diesem Bereich waren nicht auswertbar. "
+                "Die Rohdaten liegen im Protokoll.",
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
             continue
+
         groups = {}
         for c in candidates:
             groups.setdefault(c["_org_id"], []).append(c)
-        # Gewinner = Gruppe mit den meisten VERSCHIEDENEN Modellen.
-        best_id = max(groups, key=lambda k: len({c["_model"] for c in groups[k]}))
-        best = groups[best_id]
-        best_models = sorted({c["_model"] for c in best})
-        org = organizations.get(best_id)
-        if len(best_models) >= 2:
+        # Trägerzahl je Gruppe = VERSCHIEDENE Modelle. Gleichstand explizit erkennen,
+        # nicht still die zuerst eingefügte Gruppe wählen (Kimi P3).
+        support = {k: len({c["_model"] for c in v}) for k, v in groups.items()}
+        max_support = max(support.values())
+        leaders = [k for k, n in support.items() if n == max_support]
+        tie = max_support >= 2 and len(leaders) > 1
+
+        if max_support >= 2 and not tie:
+            best_id = leaders[0]
+            best = groups[best_id]
+            best_models = sorted({c["_model"] for c in best})
+            org = organizations.get(best_id)
             confs = [c.get("confidence") for c in best if c.get("confidence") is not None]
             # Konditionalität je Modell (ein Modell kann mehrfach votieren).
             by_model = {}
@@ -385,53 +448,72 @@ def aggregate_recommendations(final_votes, total_models=None):
             vote_details = [by_model[m] for m in best_models]
             conditional_count = sum(1 for v in vote_details if v["conditional"])
             cond_clause = f", davon {conditional_count} konditional," if conditional_count else ""
-            recs.append(
-                {
-                    "pillar": pillar,
-                    "has_consensus": True,
-                    "title": best[0].get("title"),
-                    "organization": org["canonical_name"],
-                    "organization_id": best_id,
-                    "donation_url": org.get("donation_url"),
-                    "confidence": round(sum(confs) / len(confs), 2) if confs else None,
-                    "convergence": {
-                        "count": len(best_models),
-                        "total": total,
-                        "conditional_count": conditional_count,
-                        "models": best_models,
-                        "votes": vote_details,
-                    },
-                    "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
-                    f"{total} Modellen{cond_clause} empfehlen diese Organisation "
-                    f"({', '.join(best_models)}). Begründungen in den Schlussvoten.",
-                }
+            # Bei unvollständigen Voten NICHT den Zählstand „X von Y" umdeuten — die
+            # Y-Frage (zählt ein unlesbares Modell mit?) gehört dem Wart. Nur ein
+            # nachprüfbarer Faktenzusatz, der auf die Rohdaten verweist.
+            invalid_clause = (
+                f" {votes_invalid} Modell(e) ohne auswertbares Votum (Rohdaten im Protokoll)."
+                if votes_invalid else ""
             )
+            rec = {
+                "pillar": pillar,
+                "has_consensus": True,
+                "votes_valid": votes_valid,
+                "votes_invalid": votes_invalid,
+                "title": best[0].get("title"),
+                "organization": org["canonical_name"],
+                "organization_id": best_id,
+                "donation_url": org.get("donation_url"),
+                "confidence": round(sum(confs) / len(confs), 2) if confs else None,
+                "convergence": {
+                    "count": len(best_models),
+                    "total": total,
+                    "conditional_count": conditional_count,
+                    "models": best_models,
+                    "votes": vote_details,
+                },
+                "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
+                f"{total} Modellen{cond_clause} empfehlen diese Organisation "
+                f"({', '.join(best_models)}).{invalid_clause} Begründungen in den Schlussvoten.",
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
         else:
-            recs.append(
-                {
-                    "pillar": pillar,
-                    "has_consensus": False,
-                    "title": "Kein Konsens — Einzelvoten",
-                    "organization": None,
-                    "donation_url": None,
-                    "confidence": None,
-                    "individual_votes": [
-                        {
-                            "title": c.get("title"),
-                            "organization": organizations.get(c["_org_id"])["canonical_name"],
-                            "organization_id": c["_org_id"],
-                            "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
-                            "confidence": c.get("confidence"),
-                            "model": c["_model"],
-                            "conditional": c["_conditional"],
-                            "reservation": c["_reservation"],
-                        }
-                        for c in candidates
-                    ],
-                    "rationale_md": "Die Schlussvoten konvergieren für diese Säule nicht "
-                    "auf eine Organisation.",
-                }
+            # Kein Konsens: Dissens aus gültigen Voten ODER Gleichstand (tie).
+            note = (
+                "Gleichstand: mehrere Organisationen mit gleicher Modellzahl — kein Konsens."
+                if tie
+                else "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
             )
+            rec = {
+                "pillar": pillar,
+                "has_consensus": False,
+                "votes_valid": votes_valid,
+                "votes_invalid": votes_invalid,
+                "tie": tie,
+                "title": "Kein Konsens — Einzelvoten",
+                "organization": None,
+                "donation_url": None,
+                "confidence": None,
+                "individual_votes": [
+                    {
+                        "title": c.get("title"),
+                        "organization": organizations.get(c["_org_id"])["canonical_name"],
+                        "organization_id": c["_org_id"],
+                        "donation_url": organizations.get(c["_org_id"]).get("donation_url"),
+                        "confidence": c.get("confidence"),
+                        "model": c["_model"],
+                        "conditional": c["_conditional"],
+                        "reservation": c["_reservation"],
+                    }
+                    for c in candidates
+                ],
+                "rationale_md": note,
+            }
+            if warnings:
+                rec["warnings"] = warnings
+            recs.append(rec)
     return recs, unresolved
 
 

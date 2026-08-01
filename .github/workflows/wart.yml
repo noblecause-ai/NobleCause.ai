@@ -37,6 +37,11 @@ jobs:
           set -o pipefail
           python3 gremium/run_wart.py 2>&1 | tee run.log
 
+      - name: Schema-Tor (Journal-Eintrag vor dem Commit)
+        run: |
+          set -o pipefail
+          python3 gremium/schema_gate.py journal 2>&1 | tee -a run.log
+
       - name: Commit Journal & schedule
         run: |
           git config user.name "noblecause-wart"
