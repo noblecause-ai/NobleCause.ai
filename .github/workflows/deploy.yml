@@ -14,6 +14,12 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 
+# Minimal, für den Fehler-Issue-Schritt (P1b). contents:read genügt — der Deploy
+# pusht nicht, er baut und rsynct nur; issues:write für die Fehlermeldung.
+permissions:
+  contents: read
+  issues: write
+
 jobs:
   deploy:
     name: Build & sync static site
@@ -38,19 +44,64 @@ jobs:
       - name: Build site
         working-directory: site
         run: |
-          npm ci
-          npm run build
+          # Build-Ausgabe in build.log (Repo-Wurzel) protokollieren, damit der
+          # Fehler-Issue-Schritt bei Fehlschlag den Grund zitieren kann — ohne Log
+          # sähe ein stiller Build-Fehler wie Erfolg aus (die alte Seite bleibt
+          # stehen). pipefail: ein Fehler in npm geht durch die tee-Pipe nicht verloren.
+          set -o pipefail
+          npm ci 2>&1 | tee "$GITHUB_WORKSPACE/build.log"
+          npm run build 2>&1 | tee -a "$GITHUB_WORKSPACE/build.log"
 
       - name: Setup SSH agent (dedicated deploy key)
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
-      - name: Add VPS host key
-        run: ssh-keyscan -H 185.143.100.222 >> ~/.ssh/known_hosts
+      - name: Pin VPS host key (verifiziertes Secret statt blindem Scan)
+        env:
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          # ssh-keyscan nimmt den Host-Key blind aus dem Netz — bei einem Projekt,
+          # dessen Produkt die Unverfälschbarkeit des Rekords ist, die falsche
+          # Vertrauensannahme (friert einen möglichen MITM ein, statt ihn
+          # auszuschliessen). Stattdessen die out-of-band an der Quelle verifizierte
+          # known_hosts-Zeile aus einem Repo-Secret. Preflight: ist das Secret leer,
+          # LAUT abbrechen, statt sich still anders zu verhalten.
+          if [ -z "$VPS_KNOWN_HOSTS" ]; then
+            echo "FEHLER: Secret VPS_KNOWN_HOSTS ist leer oder nicht gesetzt." >&2
+            echo "Setze es aus einer an der Quelle verifizierten known_hosts-Zeile (siehe P1b-Bericht, Abschnitt Afschin)." >&2
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_KNOWN_HOSTS" >> ~/.ssh/known_hosts
 
       - name: Deploy (rsync build output, NO --delete in v1)
         run: |
           rsync -avz site/build/ noblecause@185.143.100.222:/srv/noblecause/
-          # --delete intentionally off in v1 (never removes stray files).
-          # To tighten later: dry-run first with -avzn --delete, then enable.
+          # --delete bleibt AUS: das ist keine Nachlässigkeit, sondern Voraussetzung.
+          # Die Seite ist bereits live und wird ohne --delete abgelöst — dadurch
+          # überleben die Chunks der Vorgängerversion auf der Platte (24h-Karenz), und
+          # ein Rollback ist ein erneuter Deploy des vorherigen Commits statt einer
+          # Wiederherstellung aus Sicherung (Schnittstellenpapier §7). NICHT
+          # kommentarlos "aufräumen" oder auf --delete umstellen.
+
+      # Fehler-Melder (P1b): deploy.yml war der einzige Workflow ohne. Muster aus
+      # wart.yml übernommen. Nur bei failure() (echter Build-/Deploy-Fehler), NICHT
+      # bei cancelled() — ein manueller Abbruch oder ein durch die concurrency-Gruppe
+      # verdrängter Lauf ist eine Bedienhandlung, kein Defekt, und soll kein Issue erzeugen.
+      - name: Fehler als Issue melden
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABEL="ci-failure:deploy"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          gh label create "$LABEL" --color B60205 --description "Automatischer CI-Fehler" 2>/dev/null || true
+          TAIL=$(tail -c 3000 build.log 2>/dev/null || echo "(kein Log erfasst)")
+          BODY=$(printf '**Deploy fehlgeschlagen:** %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
+          NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "$BODY"
+          else
+            gh issue create --title "CI-Fehler: Deploy noblecause.ai" --label "$LABEL" --body "$BODY"
+          fi
