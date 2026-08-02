@@ -295,7 +295,7 @@ export const en = {
 		costsModel: 'Model',
 		costsAmount: 'Cost',
 		correctionTitle: 'Correction notice',
-		dissentTitle: 'No agreement yet',
+		dissentTitle: 'Dissent and reservations',
 		dissentFull: "The council's wording ▸",
 		protocolLink: 'Open the full protocol →',
 		protocolNote: 'The full protocol is published in German.',

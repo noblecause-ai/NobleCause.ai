@@ -297,7 +297,7 @@ export const de = {
 		costsModel: 'Modell',
 		costsAmount: 'Kosten',
 		correctionTitle: 'Korrekturhinweis',
-		dissentTitle: 'Noch keine Einigkeit',
+		dissentTitle: 'Dissens und Vorbehalte',
 		dissentFull: 'Wortlaut des Rates ▸',
 		protocolLink: 'Vollständiges Protokoll öffnen →',
 		protocolNote: null,

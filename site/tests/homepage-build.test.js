@@ -185,7 +185,7 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 		'Malaria Consortium',
 		'Centre for the Governance of AI',
 		'keine Einigung',
-		'Noch keine Einigkeit', // alltagssprachlicher Dissens-Zugang
+		'Dissens und Vorbehalte', // Archiv-Dissens-Überschrift (P5: benennt den Abschnitt, behauptet keinen Rekordstand)
 		'Wortlaut des Rates ▸', // aufklappbarer Dissens (gerendert, nicht roh)
 		'Korrekturhinweis',
 		'Kosten dieser Sitzung',
@@ -308,7 +308,7 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 		'Session 1 · 2026-07-07',
 		'Malaria Consortium', // Ergebnis-Chip (registry-aufgelöst)
 		'no agreement', // offener Bereich als Chip-Markierung
-		'No agreement yet',
+		'Dissent and reservations',
 		"The council's wording ▸",
 		'Correction notice',
 		'Cost of this session',
