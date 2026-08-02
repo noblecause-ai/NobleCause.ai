@@ -36,7 +36,7 @@ Dieses Dokument ist die Ablage. Es ersetzt kein Verfahren, es hält den Zustand.
 | 2 | P1b `deploy.yml`-Härtung auf `master` | Leitstand → Mac-CC | **erfüllt** | `origin/master` = `a25d1ee` |
 | 3 | `VPS_KNOWN_HOSTS` als Repo-Secret | **Afschin** | **offen** | `gh secret list`: fehlt |
 | 4 | Caddy Stufe 2a gesetzt und gemessen | Leitstand → VPS-CC | **erfüllt** | Bericht VPS-CC 15:15 UTC, sechs Messzeilen |
-| 5 | Bereitschaftsbericht inkl. Punkt 8 Umzugstabelle | NobleCause-Session | **inhaltlich erfüllt, Beleg folgt mit dem Commit** | 5a Umzugstabelle, 5b Inventare, 5c Befundliste — siehe §3 und §11 |
+| 5 | Bereitschaftsbericht inkl. Punkt 8 Umzugstabelle | NobleCause-Session | **erfüllt** | Docs im Rekord, `b3a51e3` (5a Umzugstabelle, 5b Inventare, 5c Befundliste) — siehe §3 und §11 |
 | 6 | Sanitizing-Blocker geschlossen | NobleCause-Session | **erfüllt** | `93e10ef` (Sanitizing) + `b1cad2f` (§7-Durchgang), per FF-Merge in `integration/go-live-0.4`; Kopf `b0b14ca` |
 | 7 | G1 durch den Leitstand | Leitstand | **offen**, **nicht mehr blockiert** | entscheidbar; siehe §9 |
 
@@ -264,6 +264,8 @@ Einstufung, Frist und Eigner aller 16 offenen Befunde:
 | 2026-08-02 09:00 | 5 | Architekt | **offen → erfüllt**; in 5a/5b/5c aufgeschlüsselt (§3). 5c liegt vor: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` |
 | 2026-08-02 09:00 | 7 | Architekt | **blockiert → nicht mehr blockiert**, entscheidbar. Der scharfe Deploy braucht zusätzlich Zeile 3 |
 | 2026-08-02 09:00 | — | Architekt | §5, §8 und §9 ergänzt; §7 je Eigner nachgeführt; Zeitstempel früherer Architekten-Einträge korrigiert (Uhrfehler, siehe Kopf) |
+| 2026-08-02 09:10 | 5 | Mac-CC | Docs (Gate-Status, 5a, 5c) in den Rekord: `b3a51e3` |
+| 2026-08-02 09:10 | 5 | Mac-CC | Zeile-5-Beleg gesetzt — Platzhalter „Beleg folgt mit dem Commit" → `b3a51e3` |
 
 **Zu den drei Architekten-Einträgen:** Sie entstanden in drei Schritten, aber **wirksam werden
 sie mit diesem einen Commit** — die Zwischenfassungen sind nie in den Baum gelangt (siehe §11).
