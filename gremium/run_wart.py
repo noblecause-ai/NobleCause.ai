@@ -323,7 +323,15 @@ def main():
     entry_date = args.date
     out_dir = ROOT / "journal" / entry_date
     if out_dir.exists():
-        sys.exit(f"Abbruch: {out_dir} existiert bereits — Journal-Einträge sind unveränderlich.")
+        # Idempotenz (P10): ein zweiter Lauf am selben Tag darf den unveränderlichen
+        # Eintrag nicht überschreiben — der Abbruch bleibt. Aber ein vorhandenes
+        # Tagesjournal ist KEIN Defekt, sondern ein No-op: sauberer Exit 0 mit klarer
+        # Meldung im Log, damit der Workflow keinen CI-Alarm (`if: failure()`) auslöst.
+        # Bewusst KEIN pauschales `|| true`/`continue-on-error`: Exit 0 ist das eng
+        # umrissene Erfolgssignal genau dieses Sonderfalls; jeder andere Abbruch in
+        # dieser Datei bleibt `sys.exit(!=0)` und schlägt weiterhin als Fehler durch.
+        print(f"Nichts zu tun: {out_dir} existiert bereits — Journal-Eintrag ist unveränderlich, kein neuer Lauf.")
+        sys.exit(0)
     raw_dir = out_dir / "raw"
     raw_dir.mkdir(parents=True)
 
