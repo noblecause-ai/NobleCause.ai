@@ -4,7 +4,7 @@
 wer was tut; dieses Dokument sagt, was davon erledigt ist.
 **Regel:** Wer eine Zeile ändert, trägt sie hier ein, mit Beleg und Zeitstempel. Wer eine Zeile
 liest, verlässt sich darauf und misst nicht selbst nach.
-**Letzte Pflege:** 2026-08-02, 09:00 UTC, NobleCause-Session (Architekt)
+**Letzte Pflege:** 2026-08-02, 09:20 UTC, NobleCause-Session (Architekt)
 
 > **Zeitstempel-Korrektur.** Frühere Fassungen dieses Dokuments trugen für die Einträge der
 > NobleCause-Session Zeiten des 1. August (20:30 / 21:15 / 22:00 UTC). Sie waren falsch: die Uhr
@@ -61,9 +61,9 @@ Leitstand nicht auf ein Ganzes wartet, dessen entsperrender Teil längst dasteht
 
 | Teil | Inhalt | Stand |
 |---|---|---|
-| 5a | **Umzugstabelle (Punkt 8)** — Routen alt → neu, 301-Regel, Trailing-Slash- und Fragment-Verhalten, Verifikationszeilen | **liegt vor**: `docs/bereitschaft-punkt8-umzugstabelle-2026-08-01.md` |
+| 5a | **Umzugstabelle (Punkt 8)** — Routen alt → neu, 301-Regel, Trailing-Slash- und Fragment-Verhalten, Verifikationszeilen | **im Rekord**, `b3a51e3`: `docs/bereitschaft-punkt8-umzugstabelle-2026-08-01.md` |
 | 5b | **Inventare und Kennzahlen** — Routen-Inventar, Asset-/AVIF-Pfade, Chunk-Erwartung für die Karenz, Commit-Hash | liegt vor bzw. fällt mit dem Freeze-Commit an |
-| 5c | **Liste der bewusst offen bleibenden Review-Befunde, mit Einstufung** | **liegt vor**: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` — 30 Befunde, 14 geschlossen, 16 offen mit Frist und Eigner |
+| 5c | **Liste der bewusst offen bleibenden Review-Befunde, mit Einstufung** | **im Rekord**, `b3a51e3`: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` — 30 Befunde, 14 geschlossen, 16 offen mit Frist und Eigner |
 
 **Für den Leitstand heißt das:** 5a ist der Teil, der **2b und das 301-Fragment entsperrt**. Er ist
 fertig und braucht 5c nicht abzuwarten. 5c ist eine Bewertungsliste, keine Codeänderung — sie ist
@@ -74,7 +74,7 @@ der Startseite, nicht auf einem Verzeichnis des ausgelieferten Standes. Der Abgl
 Tabelle mit dem fertigen Befehl. Er gehört **vor** das Schreiben des 301-Fragments.
 
 **Doppelarbeit, die vermieden gehört:** Der Mac-CC hat 5a in seiner letzten Rückfrage als eigene
-offene Baustelle geführt. Sie ist keine — das Dokument liegt im Arbeitsbaum. Er baut, ich schreibe.
+offene Baustelle geführt. Sie ist keine — das Dokument liegt seit `b3a51e3` im Rekord. Er baut, ich schreibe.
 
 ---
 
@@ -233,15 +233,22 @@ dem Freeze geschlossen.
 **Freeze-Commit-Kandidat: `3d95d04`** (`3d95d0494dd48123111445cf9570765178fba09d`), Kopf
 `integration/go-live-0.4`.
 
-**Ein Vorbehalt, der ihn nicht entwertet, aber vor dem Einschalten von `wart.yml` geklärt sein
-muss:** Die P10-Reparatur lässt den Wart-Lauf im No-op-Fall jetzt mit Exit 0 durchlaufen. Vorher
-brach er ab, und die **Folgeschritte des Workflows liefen gar nicht.** Jetzt laufen sie —
-inklusive `git commit`. Ein `git commit` ohne Änderungen endet mit Exit 1 und träfe wieder auf
-`if: failure()`. Ob `wart.yml` an dieser Stelle einen Leerlauf-Schutz hat, ist ungeprüft; die
-Anforderung an CC nannte den Folgepfad nicht — der Vorbehalt geht auf mich, nicht auf ihn.
+**Ein Vorbehalt zu P10, geprüft und entkräftet.** Ich hatte eingewandt: Die Reparatur lässt den
+Wart-Lauf im No-op-Fall mit Exit 0 durchlaufen; vorher brach er ab und die Folgeschritte liefen
+gar nicht, jetzt laufen sie — inklusive `git commit`, der ohne Änderungen mit Exit 1 endet und
+wieder auf `if: failure()` träfe.
 
-Das berührt den Go-Live **nicht** (`wart.yml` ist `disabled_manually`). Es ist eine Bedingung für
-Afschins direktes Wort zum Einschalten, keine für G1.
+**Der Pfad tritt nicht auf.** `wart.yml:50–52` fängt den Fall bereits ab:
+`if git diff --staged --quiet; then echo "Keine Änderungen."; exit 0; fi`. Zusammen mit dem
+P10-Fix, der schon vorher mit Exit 0 aussteigt, gibt es keinen Leerlauf mit Exit 1. Der Einwand
+war berechtigt zu stellen und ist erledigt — **keine Bedingung für das Einschalten von
+`wart.yml`, keine für G1.**
+
+**Zum Hash, an den G1 gebunden wird:** Über dem Code-Freeze `3d95d04` liegen zwei reine
+Dokumenten-Commits (`b3a51e3`, `4e5fb00`) ohne Änderung an `site/**` oder `gremium/**`. Beide
+Stände liefern dasselbe Artefakt. **Empfehlung: G1 an `4e5fb00` binden** — der aktuelle Kopf
+trägt die Gate-Belege selbst, und ein Freigabe-Hash, unter dem die Bereitschaftsdokumente
+auffindbar sind, ist der nachprüfbarere. Der Code-Stand ist seit `3d95d04` unverändert.
 
 Einstufung, Frist und Eigner aller 16 offenen Befunde:
 `docs/bereitschaft-punkt4-befundliste-2026-08-01.md`.
@@ -263,6 +270,7 @@ Einstufung, Frist und Eigner aller 16 offenen Befunde:
 | 2026-08-02 08:46 | — | Mac-CC | P10 geschlossen, `3d95d04` — Freeze-Commit-Kandidat |
 | 2026-08-02 09:00 | 5 | Architekt | **offen → erfüllt**; in 5a/5b/5c aufgeschlüsselt (§3). 5c liegt vor: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` |
 | 2026-08-02 09:00 | 7 | Architekt | **blockiert → nicht mehr blockiert**, entscheidbar. Der scharfe Deploy braucht zusätzlich Zeile 3 |
+| 2026-08-02 09:20 | — | Architekt | §9: P10-Vorbehalt entkräftet (`wart.yml:50–52` fängt den Leerlauf ab, Beleg Mac-CC); Empfehlung, G1 an `4e5fb00` zu binden |
 | 2026-08-02 09:00 | — | Architekt | §5, §8 und §9 ergänzt; §7 je Eigner nachgeführt; Zeitstempel früherer Architekten-Einträge korrigiert (Uhrfehler, siehe Kopf) |
 | 2026-08-02 09:10 | 5 | Mac-CC | Docs (Gate-Status, 5a, 5c) in den Rekord: `b3a51e3` |
 | 2026-08-02 09:10 | 5 | Mac-CC | Zeile-5-Beleg gesetzt — Platzhalter „Beleg folgt mit dem Commit" → `b3a51e3` |

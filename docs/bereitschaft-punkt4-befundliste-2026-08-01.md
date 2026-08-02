@@ -13,7 +13,8 @@ Insgesamt 30 Befunde. **14 sind geschlossen, 16 bleiben offen** — hier steht, 
 gemessen (§6): P8.1 war bereits geschlossen, vier waren offen. Auf Steward-Entscheid sind
 **P5 (`21c9851`, 2026-08-02 08:43 UTC) und P10 (`3d95d04`, 08:46 UTC) vor dem Freeze
 geschlossen** worden. P6 und C7 bleiben offen und gehen nach 0.4.1.
-Freeze-Commit-Kandidat: **`3d95d04`**.
+Code-Freeze: **`3d95d04`**. Darüber liegen zwei reine Dokumenten-Commits (`b3a51e3`, `4e5fb00`);
+Empfehlung für G1 ist der aktuelle Kopf **`4e5fb00`** — siehe Gate-Status §9.
 
 ---
 
@@ -67,7 +68,7 @@ ein Datum.
 |---|---|---|---|
 | **P4** | `dissent_md` enthält den rohen JSON-Votumblock, darin eine **modellbehauptete** `donation_url` (`helenkellerintl.org/donate/`), die nicht die kuratierte ist | Der Block steht in einem Code-Block, ist nicht klickbar, und nach dem Sanitizing bleibt er es. Kein Umgehen der Registry. Der Bestand ist unveränderlich — dort ist ohnehin nichts zu tun. | `extract_dissent` schreibt es bei **jeder** Sitzung erneut. Läuft Sitzung 4 ungeändert, steht es dreimal statt zweimal im Rekord und ist dann dauerhaft. Fix: Votumblock vor der Extraktion abstreifen — für künftige Läufe, nie rückwirkend. |
 | **C5** | `session.yml` und `wart.yml` sind gegeneinander nicht serialisiert und schreiben beide `schedule.json` | Verschiedene Cron-Zeiten (Wart Mo 06:00 UTC, Sitzung 12:00 UTC) — sechs Stunden Abstand. Der zweite Push scheitert laut als non-fast-forward, publiziert also nichts Falsches. | Ab dem ersten Montag mit **beiden** Workflows an ist die Naht scharf. **Vorläufige Regel, bis serialisiert:** kein manueller Dispatch des einen, während der andere laufen kann. Das ist eine Verhaltensregel, kein Fix. |
-| ~~P10~~ | ~~Zweiter Wart-Lauf am selben Tag löst falschen CI-Alarm aus~~ | **Geschlossen** durch `3d95d04`, vor dem Freeze. Ein Restpunkt zum Leerlaufpfad steht in §6. | — |
+| ~~P10~~ | ~~Zweiter Wart-Lauf am selben Tag löst falschen CI-Alarm aus~~ | **Geschlossen** durch `3d95d04`, vor dem Freeze. Der Restpunkt zum Leerlaufpfad ist geprüft und entkräftet (§6). | — |
 
 ---
 
@@ -124,14 +125,14 @@ Sitzung 3 gar nicht (Vollkonsens, 0×). P5 war der Fehler, weil eine **unbedingt
 einen Zustand behauptete. Hier ist die Bedingung genau der Unterschied. **Kein Befund, kein
 Nachfassen** — es steht hier, damit es niemand später als übersehen aufmacht.
 
-**2 · Ein Restpunkt zu P10, der auf mich geht, nicht auf CC.** Der No-op-Lauf endet jetzt mit
-Exit 0. Vorher brach er ab und die **Folgeschritte des Workflows liefen gar nicht** — jetzt
-laufen sie, inklusive `git commit`. Ein `git commit` ohne Änderungen endet mit Exit 1 und träfe
-wieder auf `if: failure()`. Ob `wart.yml` dort einen Leerlauf-Schutz hat, ist ungeprüft; meine
-Anforderung an CC nannte den Folgepfad nicht.
+**2 · Ein Restpunkt zu P10 — geprüft, entkräftet.** Mein Einwand: Der No-op-Lauf endet jetzt mit
+Exit 0, die Folgeschritte laufen also weiter bis zum `git commit`, und der endet ohne Änderungen
+mit Exit 1 — wieder `if: failure()`.
 
-**Einstufung:** kein Go-Live-Bezug — `wart.yml` ist `disabled_manually`. **Bedingung für das
-Einschalten**, nicht für G1. Zu prüfen, bevor der erste scharfe Montag läuft.
+**Gemessen: der Pfad tritt nicht auf.** `wart.yml:50–52` fängt ihn ab
+(`if git diff --staged --quiet; then echo "Keine Änderungen."; exit 0; fi`). Zusammen mit dem
+P10-Fix, der schon vorher mit Exit 0 aussteigt, gibt es keinen Leerlauf mit Exit 1.
+**Kein offener Punkt** — weder für G1 noch für das Einschalten von `wart.yml`.
 
 ---
 
@@ -190,5 +191,5 @@ Host-Key-Pinning). Die drei mit Datum stehen in §3, ihre Frist liegt **nach** d
 keine Daten, behauptete aber auf der Seite etwas Falsches über den Rekord — „Noch keine
 Einigkeit" über vier Konsens-Empfehlungen. Zwei Strings, `21c9851`.
 
-Aus Sicht der NobleCause-Session ist Zeile 5 vollständig und G1 aus unserem Teil nicht mehr
-blockiert. **Freeze-Commit-Kandidat: `3d95d04`.**
+Aus Sicht der NobleCause-Session ist Zeile 5 vollständig und im Rekord belegt (`b3a51e3`); G1 ist
+aus unserem Teil nicht mehr blockiert.
