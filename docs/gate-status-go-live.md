@@ -4,7 +4,7 @@
 wer was tut; dieses Dokument sagt, was davon erledigt ist.
 **Regel:** Wer eine Zeile ändert, trägt sie hier ein, mit Beleg und Zeitstempel. Wer eine Zeile
 liest, verlässt sich darauf und misst nicht selbst nach.
-**Letzte Pflege:** 2026-08-02, 09:20 UTC, NobleCause-Session (Architekt)
+**Letzte Pflege:** 2026-08-02, 09:25 UTC, NobleCause-Session (Architekt)
 
 > **Zeitstempel-Korrektur.** Frühere Fassungen dieses Dokuments trugen für die Einträge der
 > NobleCause-Session Zeiten des 1. August (20:30 / 21:15 / 22:00 UTC). Sie waren falsch: die Uhr
@@ -244,11 +244,21 @@ P10-Fix, der schon vorher mit Exit 0 aussteigt, gibt es keinen Leerlauf mit Exit
 war berechtigt zu stellen und ist erledigt — **keine Bedingung für das Einschalten von
 `wart.yml`, keine für G1.**
 
-**Zum Hash, an den G1 gebunden wird:** Über dem Code-Freeze `3d95d04` liegen zwei reine
-Dokumenten-Commits (`b3a51e3`, `4e5fb00`) ohne Änderung an `site/**` oder `gremium/**`. Beide
-Stände liefern dasselbe Artefakt. **Empfehlung: G1 an `4e5fb00` binden** — der aktuelle Kopf
-trägt die Gate-Belege selbst, und ein Freigabe-Hash, unter dem die Bereitschaftsdokumente
-auffindbar sind, ist der nachprüfbarere. Der Code-Stand ist seit `3d95d04` unverändert.
+**Zum Hash, an den G1 gebunden wird — Korrektur meiner eigenen Empfehlung.** Ich hatte
+`4e5fb00` genannt, weil unter diesem Kopf die Bereitschaftsdokumente auffindbar sind. Das war
+halb gedacht, und der Mac-CC hat sofort darauf gezeigt: Jeder weitere Dokumenten-Commit
+verschiebt den Kopf. Eine Empfehlung, die einen Hash nennt, kann nie unter dem Hash liegen, den
+sie nennt. So jagt man dem eigenen Schwanz nach.
+
+**Die Regel, die nicht rekursiv ist — G1 nennt zwei Hashes, nicht einen:**
+
+| | |
+|---|---|
+| **Freigabe-Gegenstand** | `3d95d04` — der letzte Commit, der `site/**` oder `gremium/**` berührt. Er bestimmt das ausgelieferte Artefakt. Alles darüber ist Rekordpflege. |
+| **Dokumentenstand bei Freigabe** | der Kopf von `integration/go-live-0.4`, wie der Leitstand ihn **im Moment der Freigabe misst** und hier einträgt. |
+
+Damit muss kein Dokument vorher wissen, wie es selbst heißen wird, und der Leitstand kann G1
+geben, ohne auf einen Stillstand der Dokumentation zu warten.
 
 Einstufung, Frist und Eigner aller 16 offenen Befunde:
 `docs/bereitschaft-punkt4-befundliste-2026-08-01.md`.
@@ -270,6 +280,7 @@ Einstufung, Frist und Eigner aller 16 offenen Befunde:
 | 2026-08-02 08:46 | — | Mac-CC | P10 geschlossen, `3d95d04` — Freeze-Commit-Kandidat |
 | 2026-08-02 09:00 | 5 | Architekt | **offen → erfüllt**; in 5a/5b/5c aufgeschlüsselt (§3). 5c liegt vor: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` |
 | 2026-08-02 09:00 | 7 | Architekt | **blockiert → nicht mehr blockiert**, entscheidbar. Der scharfe Deploy braucht zusätzlich Zeile 3 |
+| 2026-08-02 09:25 | — | Architekt | §9: G1-Hash-Empfehlung korrigiert — zwei Hashes (Freigabe-Gegenstand `3d95d04`, Dokumentenstand vom Leitstand bei Freigabe) statt eines rekursiven. Hinweis Mac-CC |
 | 2026-08-02 09:20 | — | Architekt | §9: P10-Vorbehalt entkräftet (`wart.yml:50–52` fängt den Leerlauf ab, Beleg Mac-CC); Empfehlung, G1 an `4e5fb00` zu binden |
 | 2026-08-02 09:00 | — | Architekt | §5, §8 und §9 ergänzt; §7 je Eigner nachgeführt; Zeitstempel früherer Architekten-Einträge korrigiert (Uhrfehler, siehe Kopf) |
 | 2026-08-02 09:10 | 5 | Mac-CC | Docs (Gate-Status, 5a, 5c) in den Rekord: `b3a51e3` |

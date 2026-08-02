@@ -13,8 +13,8 @@ Insgesamt 30 Befunde. **14 sind geschlossen, 16 bleiben offen** — hier steht, 
 gemessen (§6): P8.1 war bereits geschlossen, vier waren offen. Auf Steward-Entscheid sind
 **P5 (`21c9851`, 2026-08-02 08:43 UTC) und P10 (`3d95d04`, 08:46 UTC) vor dem Freeze
 geschlossen** worden. P6 und C7 bleiben offen und gehen nach 0.4.1.
-Code-Freeze: **`3d95d04`**. Darüber liegen zwei reine Dokumenten-Commits (`b3a51e3`, `4e5fb00`);
-Empfehlung für G1 ist der aktuelle Kopf **`4e5fb00`** — siehe Gate-Status §9.
+**Freigabe-Gegenstand ist `3d95d04`** — der letzte Commit mit Änderung an `site/**` oder
+`gremium/**`. Alles darüber ist Rekordpflege. Wie G1 daran gebunden wird, steht im Gate-Status §9.
 
 ---
 
