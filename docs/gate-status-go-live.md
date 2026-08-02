@@ -4,7 +4,7 @@
 wer was tut; dieses Dokument sagt, was davon erledigt ist.
 **Regel:** Wer eine Zeile ändert, trägt sie hier ein, mit Beleg und Zeitstempel. Wer eine Zeile
 liest, verlässt sich darauf und misst nicht selbst nach.
-**Letzte Pflege:** 2026-08-02, 09:25 UTC, NobleCause-Session (Architekt)
+**Letzte Pflege:** 2026-08-02, 11:00 UTC, NobleCause-Session (Architekt)
 
 > **Zeitstempel-Korrektur.** Frühere Fassungen dieses Dokuments trugen für die Einträge der
 > NobleCause-Session Zeiten des 1. August (20:30 / 21:15 / 22:00 UTC). Sie waren falsch: die Uhr
@@ -34,13 +34,38 @@ Dieses Dokument ist die Ablage. Es ersetzt kein Verfahren, es hält den Zustand.
 |---|---|---|---|---|
 | 1 | Härtung auf `origin/master` | NobleCause-Session | **erfüllt** | `d4fcc3c`, in der Historie von `a25d1ee` |
 | 2 | P1b `deploy.yml`-Härtung auf `master` | Leitstand → Mac-CC | **erfüllt** | `origin/master` = `a25d1ee` |
-| 3 | `VPS_KNOWN_HOSTS` als Repo-Secret | **Afschin** | **offen** | `gh secret list`: fehlt |
+| 3 | `VPS_KNOWN_HOSTS` als Repo-Secret | **Afschin** | **erfüllt** | 2026-08-02 ~10:40 UTC, drei Fingerprints an der Quelle gegen Keyscan geprüft, `gh secret list` bestätigt — `verfahren-host-key-pinning-2026-08-02.md` |
 | 4 | Caddy Stufe 2a gesetzt und gemessen | Leitstand → VPS-CC | **erfüllt** | Bericht VPS-CC 15:15 UTC, sechs Messzeilen |
 | 5 | Bereitschaftsbericht inkl. Punkt 8 Umzugstabelle | NobleCause-Session | **erfüllt** | Docs im Rekord, `b3a51e3` (5a Umzugstabelle, 5b Inventare, 5c Befundliste) — siehe §3 und §11 |
 | 6 | Sanitizing-Blocker geschlossen | NobleCause-Session | **erfüllt** | `93e10ef` (Sanitizing) + `b1cad2f` (§7-Durchgang), per FF-Merge in `integration/go-live-0.4`; Kopf `b0b14ca` |
-| 7 | G1 durch den Leitstand | Leitstand | **offen**, **nicht mehr blockiert** | entscheidbar; siehe §9 |
+| 7 | G1 durch den Leitstand | Leitstand | **erteilt** | 2026-08-02, `g1-freigabe-leitstand-2026-08-02.md`. Gegenstand `3d95d04`, Dokumentenstand `b54fa0c` |
+| **8** | **Abschluss-Durchgang mit Belegen** | **Mac-CC** | **offen** | Bereitschaftsbericht Punkt 2 (Schnittstellenpapier §5) — siehe Hinweis unten |
 
-Ausgangszustand der Workflows, bestätigt: `deploy.yml` und `wart.yml` beide `disabled_manually`.
+**Zeile 8 ist neu und war eine Lücke.** Der Abschluss-Durchgang stand als Punkt 2 des
+Bereitschaftsberichts im Schnittstellenpapier §5. Bei der Aufschlüsselung von Zeile 5 in 5a/5b/5c
+ist er herausgefallen: 5a ist die Umzugstabelle, 5c die Befundliste, 5b sind Inventare. Der
+Durchgang selbst kam in keinem der drei vor, stand aber weiter in §7 als offene Arbeit des Mac-CC.
+Damit war er weder erledigt noch von einer Gate-Zeile gehalten. Er bekommt deshalb eine eigene
+Zeile, statt sich auf eine Formulierung zu berufen.
+
+**`wart.yml` ist seit 2026-08-02 aktiv** (Workflow 308959603), nächster Lauf **Montag,
+4. August, 06:00 UTC**. `deploy.yml` bleibt `disabled_manually`. Erfolgskriterium für Montag,
+vorab notiert: ein Journal-Eintrag mit `session_ref` → **Sitzung 3** (der Fix wirkt), **oder** ein
+lauter Abbruch mit Issue und ohne Eintrag (der Vertragsbruch-Mechanismus wirkt). Versagen wäre
+ein Eintrag mit falschem `session_ref` — oder nichts, ohne Issue.
+
+**Ein Versatz, der ab jetzt zählt: die Maschine läuft aus `master`, die Arbeit liegt auf
+`integration/go-live-0.4`.** `wart.yml` und `session.yml` checken `master` aus. Alles, was auf dem
+Integrationszweig repariert wurde und die Maschine betrifft, wirkt erst mit dem Go-Live-Merge.
+Konkret heute: der **P10-Fix** liegt auf `integration`, nicht auf `master` — für Montag folgenlos
+(der Pfad greift nur bei einem zweiten Lauf am selben Tag), aber ein manueller Re-Run am Montag
+träfe noch den alten Fehlalarm. Vom Mac-CC gemessen und gemeldet.
+
+**Daraus folgt eine Regel für alles Weitere:** Wer eine Änderung an `gremium/**` vor einem
+Maschinenlauf wirksam haben will, muss sie **auf `master`** haben — nicht auf `integration`. Das
+gilt für den nächsten Fall unmittelbar: **P4 vor Sitzung 4 am 6. August** (siehe §12).
+
+Ausgangszustand der Workflows zu Beginn dieses Laufs: `deploy.yml` und `wart.yml` beide `disabled_manually`.
 `wart.yml` wird auf Afschins direktes Wort in der CC-Sitzung eingeschaltet, unabhängig von diesem
 Gate.
 
@@ -49,8 +74,21 @@ Gate.
 `b1cad2f` (19:28 UTC, §7-Durchgang) in der Historie. Kopf zu diesem Zeitpunkt `b0b14ca`
 (20:14 UTC), inzwischen `3d95d04` — siehe §9.
 
-**Zeile 7 im Klartext:** G1 ist entscheidbar. Der **scharfe Deploy** braucht zusätzlich Zeile 3 —
-G1 und Deploy-Freigabe sind nicht dasselbe Ereignis.
+**Zeile 8 im Klartext — die Frage, die jetzt zählt.** Sieben Zeilen stehen, G1 ist erteilt, das
+Secret ist gesetzt. Damit ist die Versuchung greifbar, `deploy.yml` einzuschalten. **Sie wäre
+verfrüht.**
+
+G1 und Deploy-Freigabe sind nicht dasselbe Ereignis — das galt vorher gegenüber Zeile 3 und gilt
+jetzt gegenüber Zeile 8. Der Abschluss-Durchgang ist die **letzte Prüfung des Artefakts, das
+ausgeliefert wird**: Türfahrten, Rückwärts-Stabilität, 390 px, ohne JS, `prefers-reduced-motion`,
+der Protokoll-Eingang in allen Zuständen, die Überlagerung über den gesamten Scrollweg. Nichts
+davon ist statisch prüfbar, und keiner der beiden Reviewer konnte es prüfen — beide hatten keinen
+Browser im Sandbox-Netz (siehe §8 der Befundliste).
+
+**Position der NobleCause-Session: Zeile 8 steht vor dem Deploy, nicht daneben.** Wer anders
+entscheidet, entscheidet damit, den einzigen Prüfschritt zu überspringen, den bisher niemand
+gefahren ist. Das ist eine legitime Entscheidung des Leitstands — aber sie gehört ausgesprochen
+und hier eingetragen, nicht stillschweigend getroffen.
 
 ---
 
@@ -62,7 +100,7 @@ Leitstand nicht auf ein Ganzes wartet, dessen entsperrender Teil längst dasteht
 | Teil | Inhalt | Stand |
 |---|---|---|
 | 5a | **Umzugstabelle (Punkt 8)** — Routen alt → neu, 301-Regel, Trailing-Slash- und Fragment-Verhalten, Verifikationszeilen | **im Rekord**, `b3a51e3`: `docs/bereitschaft-punkt8-umzugstabelle-2026-08-01.md` |
-| 5b | **Inventare und Kennzahlen** — Routen-Inventar, Asset-/AVIF-Pfade, Chunk-Erwartung für die Karenz, Commit-Hash | liegt vor bzw. fällt mit dem Freeze-Commit an |
+| 5b | **Inventare und Kennzahlen** — Routen-Inventar, Asset-/AVIF-Pfade, Chunk-Erwartung für die Karenz, Commit-Hash | **im Rekord**, `0d1639f`: `docs/inventar-go-live-build-2026-08-01.md`; Freigabe-Gegenstand `3d95d04` |
 | 5c | **Liste der bewusst offen bleibenden Review-Befunde, mit Einstufung** | **im Rekord**, `b3a51e3`: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` — 30 Befunde, 14 geschlossen, 16 offen mit Frist und Eigner |
 
 **Für den Leitstand heißt das:** 5a ist der Teil, der **2b und das 301-Fragment entsperrt**. Er ist
@@ -78,18 +116,21 @@ offene Baustelle geführt. Sie ist keine — das Dokument liegt seit `b3a51e3` i
 
 ---
 
-## 4 · Zeile 3 im Klartext
+## 4 · Zeile 3 — erledigt, mit der Lehre daraus
 
-Das Secret fehlt real, und zwar seit dem Push von P1b. Der Workflow auf `master` verweist damit auf
-ein Secret, das es nicht gibt. Das ist folgenlos, solange `deploy.yml` aus ist, und bricht beim
-ersten scharfen Lauf laut ab. Genau so ist der Preflight gebaut.
+**Erfüllt am 2026-08-02.** Drei Fingerprints wurden am Admin-Zugang **an der Quelle** gelesen und
+gegen den `ssh-keyscan` von außen geprüft, alle identisch; erst dann wurde das Secret gesetzt und
+in `gh secret list` bestätigt. Verfahren dokumentiert in
+`verfahren-host-key-pinning-2026-08-02.md`.
 
-Es ist trotzdem der Fehler dieses Laufs: die Anleitung stand im P1b-Auftrag, der Push ging durch,
-und danach hat niemand geprüft, ob der zweite Teil auch passiert ist. Eine Änderung wurde
-veröffentlicht, deren Voraussetzung offen blieb.
+Der Vergleich an der Quelle ist der ganze Punkt: Ein Keyscan allein pinnt den Schlüssel, den ein
+Angreifer gerade untergeschoben hätte. Erst der Abgleich mit dem Wert, den nur der Serverbetreiber
+sehen kann, macht daraus eine Bindung.
 
-Die vier Schritte für Afschin stehen im P1b-Auftrag, Abschnitt 3: Fingerprint über den Admin-Zugang
-an der Quelle lesen, `ssh-keyscan` erzeugen, beide vergleichen, nur bei Übereinstimmung setzen.
+**Die Lehre, die bleibt:** Das Secret fehlte seit dem Push von P1b. Die Anleitung stand im Auftrag,
+der Push ging durch — und danach hat niemand geprüft, ob der zweite Teil auch passiert ist. Eine
+Änderung wurde veröffentlicht, deren Voraussetzung offen blieb. Das ist der Grund, warum es dieses
+Dokument gibt.
 
 ---
 
@@ -167,19 +208,18 @@ der Header, ist er es nicht.
 
 ## 7 · Was als Nächstes geschieht, je Eigner
 
-**NobleCause-Session (Architekt):** 5c liegt vor. Zeile 5 ist voll. Offen ist nur noch der
-Steward-Entscheid aus §9.
+**Mac-CC — der einzige offene Arbeitsposten:** Zeile 8, der Abschluss-Durchgang mit Belegen. Je
+Punkt ein Beleg mit Screenshot, nicht mit Zusicherung. Der Auftrag liegt separat vor.
 
-**Mac-CC:** der Abschluss-Durchgang mit Belegen (Türfahrten beide Richtungen, Rückwärts-Stabilität
-ohne Neuladen, 390 px, `prefers-reduced-motion`, ohne JS, Protokoll-Eingang in allen Zuständen,
-Überlagerungsprüfung über den gesamten Scrollweg). **Nicht** die Umzugstabelle — die liegt vor.
+**Afschin:** die Abnahme des §8-Zähl-Rucks, sobald der Mac-CC Seite, Stelle und Scrollstand
+benennt. Kriterium: die **Kanten** der Trommel bewegen sich nicht, nur ihre Oberfläche. Und das
+direkte Wort für `wart.yml` in der CC-Sitzung — davon unabhängig.
 
-**Afschin:** Zeile 3, das Secret. Und das direkte Wort für `wart.yml` in der CC-Sitzung.
-Zusätzlich: die Abnahme des §8-Zähl-Rucks, sobald der Mac-CC die Stelle benennt.
+**Leitstand:** 2b-Prompt für den VPS-CC und das 301-Fragment (mit der EN-Präzisierung aus §8
+Punkt 2, nach dem Verzeichnis-Abgleich aus §6 der Umzugstabelle). Danach die **Deploy-Freigabe** —
+sie ist ein eigenes Ereignis nach G1 und setzt Zeile 8 voraus; siehe §2.
 
-**Leitstand:** 2b-Prompt für den VPS-CC — **kann jetzt**, 5a liegt vor. Das 301-Fragment ebenfalls,
-mit der EN-Präzisierung aus §8 Punkt 2 und nach dem Verzeichnis-Abgleich aus §6 der Umzugstabelle.
-Danach G1, sobald 5c steht.
+**NobleCause-Session (Architekt):** Abnahme der Belege aus Zeile 8. Sonst nichts offen.
 
 ---
 
@@ -211,12 +251,13 @@ aufmacht. Die Prüfung über den gesamten Scrollweg läuft trotzdem im Abschluss
 14. Juli. Er zeigt „Nächster Research in 5 T 14 h (20.7.2026)" — ein Datum, das zwölf Tage in der
 Vergangenheit liegt — und „Nächste Sitzung 8.8." statt korrekt 6.8. Bei einem Projekt, dessen
 Produkt die Nachprüfbarkeit ist, ist eine falsche Terminanzeige der teuerste sichtbare Fehler.
-**Das ist kein neuer Arbeitsauftrag — der Deploy behebt es.** Es ist das Argument dafür, das Gate
-nicht länger zu dehnen als nötig, und der Grund, warum 5c heute kommt und nicht morgen.
+**Das ist kein neuer Arbeitsauftrag — der Deploy behebt es.** Es ist das Argument dafür, das Gate nicht länger zu dehnen als nötig — und zugleich kein Argument
+dafür, Zeile 8 zu überspringen. Ein Deploy, der einen unbemerkten Bruch mitliefert, kostet mehr als
+zwei weitere Stunden mit falschen Terminen.
 
 ---
 
-## 9 · Der Freeze-Commit-Kandidat
+## 9 · Der Freigabe-Gegenstand und wie er zustande kam
 
 Von 30 Review-Befunden sind **14 geschlossen**. Fünf, deren Stand aus der Architektensicht nicht
 belegbar war, hat der Mac-CC auf `b0b14ca` gemessen; auf Steward-Entscheid wurden zwei davon vor
@@ -230,8 +271,11 @@ dem Freeze geschlossen.
 | P6 | offen → 0.4.1 | `.pult-label` bei 390 px, linke Kante bei **x = −13** — der Protokoll-Eingang ist auf Mobil angeschnitten |
 | C7 | offen → 0.4.1 | vier Svelte-Compilerwarnungen (`orgEn`, `passage`), Build grün |
 
-**Freeze-Commit-Kandidat: `3d95d04`** (`3d95d0494dd48123111445cf9570765178fba09d`), Kopf
-`integration/go-live-0.4`.
+**Freigabe-Gegenstand: `3d95d04`** (`3d95d0494dd48123111445cf9570765178fba09d`) — kein Kandidat
+mehr, sondern der Stand, auf den der Leitstand G1 erteilt hat. Der Kopf von
+`integration/go-live-0.4` liegt inzwischen darüber (`b54fa0c`); der Diff über `site/**` und
+`gremium/**` zwischen beiden ist **leer**, unabhängig gemessen vom Leitstand und von der
+NobleCause-Session. Alles darüber ist Rekordpflege.
 
 **Ein Vorbehalt zu P10, geprüft und entkräftet.** Ich hatte eingewandt: Die Reparatur lässt den
 Wart-Lauf im No-op-Fall mit Exit 0 durchlaufen; vorher brach er ab und die Folgeschritte liefen
@@ -280,11 +324,18 @@ Einstufung, Frist und Eigner aller 16 offenen Befunde:
 | 2026-08-02 08:46 | — | Mac-CC | P10 geschlossen, `3d95d04` — Freeze-Commit-Kandidat |
 | 2026-08-02 09:00 | 5 | Architekt | **offen → erfüllt**; in 5a/5b/5c aufgeschlüsselt (§3). 5c liegt vor: `docs/bereitschaft-punkt4-befundliste-2026-08-01.md` |
 | 2026-08-02 09:00 | 7 | Architekt | **blockiert → nicht mehr blockiert**, entscheidbar. Der scharfe Deploy braucht zusätzlich Zeile 3 |
-| 2026-08-02 09:25 | — | Architekt | §9: G1-Hash-Empfehlung korrigiert — zwei Hashes (Freigabe-Gegenstand `3d95d04`, Dokumentenstand vom Leitstand bei Freigabe) statt eines rekursiven. Hinweis Mac-CC |
-| 2026-08-02 09:20 | — | Architekt | §9: P10-Vorbehalt entkräftet (`wart.yml:50–52` fängt den Leerlauf ab, Beleg Mac-CC); Empfehlung, G1 an `4e5fb00` zu binden |
 | 2026-08-02 09:00 | — | Architekt | §5, §8 und §9 ergänzt; §7 je Eigner nachgeführt; Zeitstempel früherer Architekten-Einträge korrigiert (Uhrfehler, siehe Kopf) |
 | 2026-08-02 09:10 | 5 | Mac-CC | Docs (Gate-Status, 5a, 5c) in den Rekord: `b3a51e3` |
 | 2026-08-02 09:10 | 5 | Mac-CC | Zeile-5-Beleg gesetzt — Platzhalter „Beleg folgt mit dem Commit" → `b3a51e3` |
+| 2026-08-02 09:20 | — | Architekt | §9: P10-Vorbehalt entkräftet (`wart.yml:50–52` fängt den Leerlauf ab, Beleg Mac-CC); Empfehlung, G1 an `4e5fb00` zu binden |
+| 2026-08-02 09:25 | — | Architekt | §9: G1-Hash-Empfehlung korrigiert — zwei Hashes (Freigabe-Gegenstand `3d95d04`, Dokumentenstand vom Leitstand bei Freigabe) statt eines rekursiven. Hinweis Mac-CC |
+| 2026-08-02 ~10:00 | 7 | Leitstand | **G1 erteilt.** Gegenstand `3d95d04` (eigene Messung: Diff über `site`/`gremium` darüber leer), Dokumentenstand `b54fa0c` |
+| 2026-08-02 10:05 | 3, 7, 8 | Architekt | Durchgang: §4 auf erledigt umgeschrieben (widersprach Zeile 3), §2 „Zeile 7 im Klartext" durch „Zeile 8 im Klartext" ersetzt (G1 erteilt), §7 je Eigner neu, §9 von „Kandidat" auf „Freigabe-Gegenstand", dieses Protokoll chronologisch sortiert |
+| 2026-08-02 10:30 | — | Architekt | §2: `wart.yml` aktiv (Lauf Mo 4.8. 06:00 UTC) und der `master`/`integration`-Versatz eingetragen; §12 neu: P4 vor Sitzung 4 (Steward-Entscheid) und Vorschlag, G1 in Site-Artefakt und Maschine zu trennen |
+| 2026-08-02 ~10:55 | — | Mac-CC | **P4 geschlossen**, `cf041a7` auf `integration/go-live-0.4`; Cherry-Pick auf `master` als konfliktfrei gemessen |
+| 2026-08-02 11:00 | — | Architekt | §12: P4-Abschluss und der entschiedene Weg auf `master` eingetragen |
+| 2026-08-02 ~10:40 | 3 | Afschin | **offen → erfüllt.** Drei Fingerprints an der Quelle gelesen und gegen den Keyscan von aussen geprüft, alle identisch; Secret gesetzt und in `gh secret list` bestätigt |
+| 2026-08-02 ~10:45 | 8 | Leitstand | **Zeile 8 angelegt** — Abschluss-Durchgang war bei der Aufschlüsselung von Zeile 5 aus dem Gate gefallen |
 
 **Zu den drei Architekten-Einträgen:** Sie entstanden in drei Schritten, aber **wirksam werden
 sie mit diesem einen Commit** — die Zwischenfassungen sind nie in den Baum gelangt (siehe §11).
@@ -332,3 +383,55 @@ folgt" und wird mit dem Commit-Hash nachgezogen.
 
 **Aufgeräumt:** `gate-status-go-live_1.md` und die beiden Fehlablagen im Hauptbaum liegen unter
 `NobleCause.ai/docs/_to_delete/`. Sie können gelöscht werden.
+
+---
+
+## 12 · P4 vor Sitzung 4 — Steward-Entscheid, und was er für G1 bedeutet
+
+**Entscheid des Stewards (2026-08-02):** P4 wird vor Sitzung 4 geschlossen. Der Befund:
+`extract_dissent` nimmt den abschließenden JSON-Votumblock in `dissent_md` mit hinein; darin steht
+eine **modellbehauptete** `donation_url`, die nicht die kuratierte ist. Er ist heute harmlos
+(Code-Block, nicht klickbar), aber er wird bei **jeder** Sitzung neu geschrieben — und
+`sessions/**` ist unveränderlich. Läuft Sitzung 4 ungeändert, steht er ein drittes Mal dauerhaft
+im Rekord.
+
+**Geschlossen auf `integration/go-live-0.4`: `cf041a7`.** Ein gemeinsamer Locator
+`_votum_block_span` dient sowohl `extract_json_block` als auch dem neuen `strip_votum_block` —
+eine Quelle, keine zweite Heuristik, wie vorgegeben. Prosa davor und dahinter unangetastet, ein
+json-Block **mitten** im Dissens bleibt stehen, nur der abschließende Votumblock fällt. Sechs
+Tests gegen echten Rohtext aller drei Sitzungen, Suite 54/54. Nebenbefund geprüft: `dissent_md`
+liegt nach dem Fix bei 4847 / 3127 / 3514 Zeichen, der Zuschnitt `[:6000]` schneidet nicht ab und
+blieb unverändert.
+
+**Der Weg auf `master`: eigener Cherry-Pick, nicht der Go-Live-Merge.** Der Mac-CC hat gemessen,
+dass `master`s `run_session.py` mit dem Elternstand von `cf041a7` identisch und die Testdatei neu
+ist — der Cherry-Pick ist konfliktfrei, `gremium`-only, null `site`-Dateien. Er hat zugleich
+festgestellt, dass der Go-Live-Merge **nicht sicher vor dem 6. August steht**; darauf zu wetten
+hieße, Sitzung 4 gegen den ungefixten Stand laufen zu lassen. Entschieden: P4 bekommt seinen
+eigenen Weg, jetzt, unabhängig vom Go-Live. Er braucht weder G1 noch Zeile 3 — die gaten den
+Frontend-Deploy, nicht die Maschine.
+
+**Zwei Bedingungen, die zusammengehören:**
+
+1. **Der Fix muss auf `master` sein, bevor `session.yml` am 6. August läuft.** Auf
+   `integration/go-live-0.4` allein wirkt er nicht — siehe den Versatz in §2. Kommt der Go-Live
+   vorher, trägt der Merge ihn mit; verzögert er sich, braucht es einen eigenen Weg auf `master`.
+   **Der Termin entscheidet, nicht die Absicht.**
+2. **Er verschiebt den Freigabe-Gegenstand.** G1 wurde auf `3d95d04` erteilt, belegt mit „Diff
+   über `site`/`gremium` darüber leer". Ein P4-Commit macht genau diese Messung ungültig.
+
+**Vorschlag der NobleCause-Session an den Leitstand — G1 trennt, was ohnehin getrennt ist:**
+
+| | |
+|---|---|
+| **Site-Artefakt** | was `deploy.yml` per `rsync` ausliefert. P4 berührt es **nicht**. G1 auf `3d95d04` bleibt dafür gültig. |
+| **Maschine** (`gremium/**`, Workflows) | was in GitHub Actions läuft. Sie wird nicht deployt, sondern von `master` ausgeführt, und hat ihren eigenen Takt: Montag der Wart, Donnerstag die Sitzung. |
+
+Ein einziger Freigabe-Hash für beide zwingt dazu, G1 bei jeder Maschinen-Reparatur neu zu
+erteilen, obwohl sich am ausgelieferten Artefakt nichts ändert. **Wenn der Leitstand dem folgt,
+bleibt G1 unberührt** und P4 braucht nur seine eigene Abnahme. Folgt er nicht, ist G1 nach dem
+P4-Commit auf den neuen Stand nachzuziehen — auch das ist sauber, nur teurer.
+
+**Was P4 nicht ist:** kein Eingriff in den Bestand. Die drei vorhandenen Sitzungen behalten ihren
+`dissent_md` unverändert. Repariert wird die Erhebung für künftige Läufe, nie rückwirkend — wie
+bei `conditional` (Wart-Nachtrag 3).
