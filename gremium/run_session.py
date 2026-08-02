@@ -28,13 +28,26 @@ from envtools import load_env, require_keys  # noqa: E402
 
 # ---------------------------------------------------------------- utilities
 
-def extract_json_block(text):
+def _votum_block_span(text):
+    """(start, end) des abschließenden Votum-Codeblocks — die eine Stelle, die sowohl der
+    Votum-Parser (extract_json_block) liest als auch aus dissent_md abgestreift wird
+    (strip_votum_block). Fundort: rfind der letzten ```json-Fence bis zur schließenden
+    ```-Fence; (-1, -1), wenn keiner da ist. Eine Quelle, damit Parser und Abstreifen
+    dieselbe Grenze sehen und nicht auseinanderdriften (P4)."""
     start = text.rfind("```json")
+    if start == -1:
+        return -1, -1
+    end_fence = text.find("```", start + 7)
+    end = len(text) if end_fence == -1 else end_fence + 3
+    return start, end
+
+
+def extract_json_block(text):
+    start, end = _votum_block_span(text)
     if start != -1:
-        body = text[start + 7 :]
-        end_fence = body.find("```")
-        if end_fence != -1:
-            body = body[:end_fence]
+        body = text[start + 7 : end]
+        if body.endswith("```"):
+            body = body[:-3]
         body = body.strip()
         if not body.startswith("{"):
             brace = body.find("{")
@@ -58,6 +71,18 @@ def extract_json_block(text):
         return json.loads(matches[-1])
     except json.JSONDecodeError:
         return None
+
+
+def strip_votum_block(text):
+    """Entfernt genau den abschließenden Votum-JSON-Block — den, den extract_json_block
+    parst (gemeinsamer Fundort _votum_block_span). Prosa davor UND dahinter bleibt
+    unverändert; ein json-Block MITTEN im Dissens (nicht der abschließende) bleibt stehen,
+    weil der Fundort rfind ist. So kann in dissent_md nichts anderes stehen als der Parser
+    gesehen hat (P4)."""
+    start, end = _votum_block_span(text)
+    if start == -1:
+        return text
+    return text[:start] + text[end:]
 
 
 def strip_json_block(text):
@@ -520,7 +545,10 @@ def aggregate_recommendations(final_votes, total_models=None):
 def build_dissent(final_votes):
     parts = []
     for vote in final_votes:
-        section = extract_dissent(vote["text"])
+        # P4: den abschließenden Votum-Block am Fundort des Parsers entfernen, DANN den
+        # Dissens-Abschnitt lesen — so landet der Maschinenblock (mit modellbehaupteter
+        # donation_url) nicht in dissent_md, während der Dissens-Wortlaut vollständig bleibt.
+        section = extract_dissent(strip_votum_block(vote["text"]))
         if section:
             parts.append(f"**{vote['label']}:** {section}")
     if not parts:
