@@ -59,7 +59,7 @@ export const en = {
 			'One AI model each from different families reviews the same evidence and publicly recommends where a donation is likely to achieve the most.',
 		whySummary: 'Why so elaborate? ▸',
 		whyBody:
-			'A single model can be wrong or have a blind spot. That is why several independent models judge the same evidence separately, read each other, and a simple program only counts what they agree on — everything is published, including the disagreement. The more independent voices take part in the decision, the more robust the recommendation. The Scout runs weekly, the Council meets as needed — between the runs, no human decides.',
+			'A single model can be wrong or have a blind spot. That is why several independent models judge the same evidence separately, read each other, and a simple program only counts what they agree on — everything is published, including the disagreement. The more independent voices take part in the decision, the more robust the recommendation. The Scout runs weekly, the Council meets on a fixed rhythm — and sooner when the Warden judges the evidence holds enough that is new. Between the runs, no human decides.',
 		// Hinweis, wenn eine Organisationsbeschreibung nur auf Deutsch vorliegt.
 		langHint:
 			'Organisation description in German — an English translation is being prepared.',

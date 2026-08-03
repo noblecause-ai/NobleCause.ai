@@ -58,7 +58,7 @@ export const de = {
 		// Count-agnostisch („mehrere", „je mehr") — rahmt Wachstum als Gewinn.
 		whySummary: 'Warum so umständlich? ▸',
 		whyBody:
-			'Ein einzelnes Modell kann irren oder eine blinde Stelle haben. Deshalb urteilen mehrere unabhängige Modelle getrennt über dieselben Belege, lesen einander, und ein einfaches Programm zählt nur, worauf sie sich einigen — veröffentlicht wird alles, auch die Uneinigkeit. Je mehr unabhängige Stimmen mitentscheiden, desto belastbarer die Empfehlung. Der Scout läuft wöchentlich, der Council tagt anlassbezogen — zwischen den Läufen entscheidet kein Mensch.',
+			'Ein einzelnes Modell kann irren oder eine blinde Stelle haben. Deshalb urteilen mehrere unabhängige Modelle getrennt über dieselben Belege, lesen einander, und ein einfaches Programm zählt nur, worauf sie sich einigen — veröffentlicht wird alles, auch die Uneinigkeit. Je mehr unabhängige Stimmen mitentscheiden, desto belastbarer die Empfehlung. Der Scout läuft wöchentlich, der Council tagt nach festem Rhythmus — und früher, wenn der Wart aus den Belegen genug Neues sieht. Zwischen den Läufen entscheidet kein Mensch.',
 		// Hinweis, wenn eine Organisationsbeschreibung nur auf Deutsch vorliegt.
 		langHint: null,
 		switchLabel: 'English version',
