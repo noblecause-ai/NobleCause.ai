@@ -142,9 +142,22 @@
     "designation": { "type": "string" },
     "led_by": { "type": "object" },
     "wart_opening_md": { "type": "string" },
-    "wart_moderation_md": { "type": "string" }
+    "wart_moderation_md": { "type": "string" },
+    "wart_dossier_refusal": { "$ref": "#/$defs/wart_refusal" },
+    "wart_opening_refusal": { "$ref": "#/$defs/wart_refusal" },
+    "wart_moderation_refusal": { "$ref": "#/$defs/wart_refusal" }
   },
   "$defs": {
+    "wart_refusal": {
+      "type": "object",
+      "required": ["stop_reason", "at", "raw_artifact"],
+      "additionalProperties": false,
+      "properties": {
+        "stop_reason": { "type": ["string", "null"] },
+        "at": { "type": "string" },
+        "raw_artifact": { "type": "string" }
+      }
+    },
     "session_costs": {
       "type": "object",
       "required": ["currency", "total", "fx_rate_usd_eur", "by_model"],

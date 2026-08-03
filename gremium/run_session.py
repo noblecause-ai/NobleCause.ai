@@ -646,6 +646,28 @@ def call_wart_simple(wart_cfg, system, user, raw_dir, tag, max_tokens=None):
     return text, usage, raw
 
 
+def wart_step_result(text, raw, artifact):
+    """Ergebnis eines Fable-Zulieferer-Calls, gegen den stop_reason geprüft (B-Härtung, wie
+    run_wart.py). Nur end_turn ist eine vollständige, übernehmbare Antwort; jeder andere
+    stop_reason (refusal, max_tokens, pause_turn, …) heißt: Teiltext NICHT übernehmen — bei
+    einer Verweigerung stand sonst der 81-Byte-Anlauf ("Ich beginne mit der Recherche …") als
+    echtes Dossier im Rekord. KEIN Abbruch: die Sitzung läuft weiter (das Dossier ist
+    Zulieferer, nicht Sitzung; die drei Ratsvoten hängen weder an Fable noch an der Websuche).
+
+    Rückgabe: (text, None) bei end_turn, sonst (None, marker). Der Marker macht die ABWESENHEIT
+    begründet — sonst wäre "das Modell hat verweigert" nicht von "es wurde keins angefordert"
+    unterscheidbar (kein stilles None). Feld raw_artifact zeigt auf die gesicherte Rohantwort."""
+    stop = (raw or {}).get("stop_reason")
+    if stop == "end_turn":
+        return text, None
+    marker = {
+        "stop_reason": stop,
+        "at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+        "raw_artifact": f"raw/{artifact}",
+    }
+    return None, marker
+
+
 def check_fable_available(wart_cfg, raw_dir=None):
     print("Fable-Verfügbarkeits-Check …")
     check_dir = raw_dir or Path("/tmp")
@@ -781,6 +803,9 @@ def main():
     wart_opening_prompt = None
     wart_moderation_prompt = None
     moderation_section = ""
+    wart_opening_refusal = None
+    wart_dossier_refusal = None
+    wart_moderation_refusal = None
     wart_cfg = config.get("wart")
 
     usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
@@ -815,7 +840,7 @@ def main():
         )
         (raw_dir / "prompt-r0-opening.txt").write_text(wart_opening_prompt)
         print("Eröffnung — Wart (Fable)")
-        text, usage, _ = call_wart_simple(
+        text, usage, raw = call_wart_simple(
             wart_cfg,
             prompts.WART_LEAD_SYSTEM,
             wart_opening_prompt,
@@ -823,13 +848,20 @@ def main():
             "r0-opening",
             max_tokens=2048,
         )
-        wart_opening_md = text.strip()
-        (raw_dir / "r0-opening-content.md").write_text(wart_opening_md)
         accumulate_wart_usage(wart_usage, usage)
-        opening_section = (
-            "## Eröffnung durch den Wart\n\n"
-            f"{wart_opening_md}\n\n---"
-        )
+        opening_text, wart_opening_refusal = wart_step_result(text, raw, "r0-opening.json")
+        if opening_text is not None:
+            wart_opening_md = opening_text.strip()
+            (raw_dir / "r0-opening-content.md").write_text(wart_opening_md)
+            opening_section = (
+                "## Eröffnung durch den Wart\n\n"
+                f"{wart_opening_md}\n\n---"
+            )
+        else:
+            print(
+                f"  Verweigerung (stop_reason={wart_opening_refusal['stop_reason']}) — kein "
+                "Eröffnungswort übernommen; Sitzung läuft weiter."
+            )
         check_budget(interim_costs(), args.budget_cap, "nach Eröffnung")
 
     # -------- Runde 0 (Wart-Dossier)
@@ -856,24 +888,32 @@ def main():
             wart_cfg, prompts.WART_DOSSIER_SYSTEM, wart_dossier_prompt, raw_dir
         )
         (raw_dir / "r0-wart-content.md").write_text(text)
-        search_queries = extract_search_queries(text) or api_queries
-        content_md = strip_json_block(text)
         accumulate_wart_usage(wart_usage, usage)
         refresh_wart_cost()
-        wart_dossier = {
-            "model": wart_cfg["model"],
-            "label": wart_cfg.get("label", wart_cfg["model"]),
-            "content_md": content_md,
-            "search_queries": search_queries,
-            "costs": wart_cost_entry,
-        }
-        dossier_section = (
-            "## Wart-Dossier (Runde 0)\n\n"
-            "Der Wart (Fable, claude-fable-5) hat vor den Einzelvoten folgendes "
-            "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
-            "und Quellen.\n\n---\n\n"
-            f"{content_md}\n\n---"
-        )
+        dossier_text, wart_dossier_refusal = wart_step_result(text, raw, "r0-wart.json")
+        if dossier_text is not None:
+            search_queries = extract_search_queries(dossier_text) or api_queries
+            content_md = strip_json_block(dossier_text)
+            wart_dossier = {
+                "model": wart_cfg["model"],
+                "label": wart_cfg.get("label", wart_cfg["model"]),
+                "content_md": content_md,
+                "search_queries": search_queries,
+                "costs": wart_cost_entry,
+            }
+            dossier_section = (
+                "## Wart-Dossier (Runde 0)\n\n"
+                "Der Wart (Fable, claude-fable-5) hat vor den Einzelvoten folgendes "
+                "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
+                "und Quellen.\n\n---\n\n"
+                f"{content_md}\n\n---"
+            )
+        else:
+            # dossier_section bleibt "" — kein fiktives Dossier im Ratsprompt (Punkt 4).
+            print(
+                f"  Verweigerung (stop_reason={wart_dossier_refusal['stop_reason']}) — kein "
+                "Dossier übernommen; die drei Ratsvoten laufen ohne Dossier weiter."
+            )
         check_budget(interim_costs(), args.budget_cap, "nach Runde 0")
 
     round1_prompt = prompts.ROUND1.format(
@@ -908,7 +948,7 @@ def main():
         )
         (raw_dir / "prompt-moderation-wart.txt").write_text(wart_moderation_prompt)
         print("Moderation — Wart (Fable)")
-        text, usage, _ = call_wart_simple(
+        text, usage, raw = call_wart_simple(
             wart_cfg,
             prompts.WART_LEAD_SYSTEM,
             wart_moderation_prompt,
@@ -916,13 +956,21 @@ def main():
             "moderation-wart",
             max_tokens=4096,
         )
-        wart_moderation_md = text.strip()
-        (raw_dir / "moderation-wart-content.md").write_text(wart_moderation_md)
         accumulate_wart_usage(wart_usage, usage)
-        moderation_section = (
-            "## Moderationsnotiz des Warts\n\n"
-            f"{wart_moderation_md}\n\n---"
-        )
+        moderation_text, wart_moderation_refusal = wart_step_result(text, raw, "moderation-wart.json")
+        if moderation_text is not None:
+            wart_moderation_md = moderation_text.strip()
+            (raw_dir / "moderation-wart-content.md").write_text(wart_moderation_md)
+            moderation_section = (
+                "## Moderationsnotiz des Warts\n\n"
+                f"{wart_moderation_md}\n\n---"
+            )
+        else:
+            # moderation_section bleibt "" — keine fiktive Moderationsnotiz in Runde 2.
+            print(
+                f"  Verweigerung (stop_reason={wart_moderation_refusal['stop_reason']}) — keine "
+                "Moderationsnotiz übernommen; Runde 2 läuft ohne sie."
+            )
         check_budget(interim_costs(), args.budget_cap, "nach Moderation")
 
     # -------- Runde 2
@@ -1049,10 +1097,18 @@ def main():
             "model": wart_cfg["model"],
             "label": wart_cfg.get("label", wart_cfg["model"]),
         }
-        session["wart_opening_md"] = wart_opening_md
-        session["wart_moderation_md"] = wart_moderation_md
+        if wart_opening_md:
+            session["wart_opening_md"] = wart_opening_md
+        elif wart_opening_refusal:
+            session["wart_opening_refusal"] = wart_opening_refusal
+        if wart_moderation_md:
+            session["wart_moderation_md"] = wart_moderation_md
+        elif wart_moderation_refusal:
+            session["wart_moderation_refusal"] = wart_moderation_refusal
     if wart_dossier:
         session["wart_dossier"] = wart_dossier
+    elif wart_dossier_refusal:
+        session["wart_dossier_refusal"] = wart_dossier_refusal
 
     (out_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
     print(f"\nProtokoll geschrieben: {out_dir / 'session.json'}")
