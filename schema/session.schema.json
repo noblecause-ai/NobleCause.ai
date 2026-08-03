@@ -134,9 +134,19 @@
     },
     "costs": { "$ref": "#/$defs/session_costs" },
     "correction_notice": {
-      "type": "object", "description": "nur bei re-aggregierten Sitzungen (deterministisch, kein Redigieren)",
-      "required": ["date", "text"],
-      "properties": { "date": {"type": "string"}, "text": {"type": "string"}, "commit": {"type": "string"} }
+      "type": "array",
+      "description": "Nachträge zum Rekord: additive Hinweise (re-aggregierte Korrekturen ODER Einordnungen), kein Redigieren des Inhalts. Liste, damit mehrere Nachträge nebeneinander stehen.",
+      "items": {
+        "type": "object",
+        "required": ["date", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "date": {"type": "string"},
+          "text": {"type": "string"},
+          "text_en": {"type": "string", "description": "BEWUSST NICHT GERENDERT. Der publizierte Rekord (inkl. Korrekturhinweise) bleibt deutsch — Konvention en.js:5, ein Test erzwingt sie; EN-Seiten markieren ihn über recordNote. text_en hält den Wart-Wortlaut treu im Rekord, ohne ihn anzuzeigen. Nicht als 'vergessen' reparieren — das ist Absicht (P9-Lehre umgekehrt: ein Vertragsfeld, das absichtlich nicht erscheint)."},
+          "commit": {"type": "string"}
+        }
+      }
     },
     "wart_dossier": { "type": "object" },
     "designation": { "type": "string" },

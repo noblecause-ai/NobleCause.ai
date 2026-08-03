@@ -47,11 +47,13 @@
 	<div class="verbatim">{@html s.wart_opening_html}</div>
 {/if}
 
-{#if s.correction_html}
+{#if s.corrections?.length}
 	<aside class="correction" id="korrektur">
-		<p class="correction-label">Korrektur der Aggregation</p>
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
-		<div class="verbatim">{@html s.correction_html}</div>
+		<p class="correction-label">Nachträge zum Rekord</p>
+		{#each s.corrections as c (c.date)}
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+			<div class="verbatim">{@html c.html}</div>
+		{/each}
 	</aside>
 {/if}
 

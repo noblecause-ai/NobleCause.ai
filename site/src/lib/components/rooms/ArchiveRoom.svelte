@@ -164,16 +164,18 @@
 			</div>
 		</section>
 
-		{#if home.correctionHtml}
+		{#if home.corrections?.length}
 			<aside class="room-section" aria-labelledby="correction-title">
 				<h2 id="correction-title">{t.archive.correctionTitle}</h2>
 				{#if t.common.recordNote}
 					<small class="record-note">{t.common.recordNote}</small>
 				{/if}
-				<div class="room-panel correction" lang={recordLang}>
-					<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
-					{@html home.correctionHtml}
-				</div>
+				{#each home.corrections as c (c.date)}
+					<div class="room-panel correction" lang={recordLang}>
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+						{@html c.html}
+					</div>
+				{/each}
 			</aside>
 		{/if}
 

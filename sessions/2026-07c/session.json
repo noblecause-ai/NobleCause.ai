@@ -585,9 +585,16 @@
     }
   },
   "unresolved_votes": [],
-  "correction_notice": {
-    "date": "2026-07-14",
-    "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: 33e6f34b9697c1be3001c166b7820e17c9dfbe14.",
-    "commit": "33e6f34b9697c1be3001c166b7820e17c9dfbe14"
-  }
+  "correction_notice": [
+    {
+      "date": "2026-07-14",
+      "text": "Korrektur vom 14.07.2026: Die Aggregation dieser Sitzung war fehlerhaft. Organisationsnamen wurden per Zeichenkette verglichen, wodurch identische Organisationen als Dissens gewertet wurden; zusätzlich wurden die Voten eines Modells wegen abweichender Feldnamen nicht erfasst. Die Empfehlungen unten sind korrigiert. Kurzfassung und Dissens-Text stammen unverändert aus dem Originallauf und können der korrigierten Aggregation widersprechen. Diff: 33e6f34b9697c1be3001c166b7820e17c9dfbe14.",
+      "commit": "33e6f34b9697c1be3001c166b7820e17c9dfbe14"
+    },
+    {
+      "date": "2026-08-03",
+      "text": "**Einordnung (2026-08-03):** Das unter „Claude Opus“ protokollierte Votum bezeichnet sich im eigenen Text als Werk eines Modells der GPT-/OpenAI-Familie. Drei unabhängige Belege im selben Rekord (Rohantwort, API-Modellkennung, Sitzkonfiguration) weisen es einem Anthropic-Modell (`claude-opus-4-8`) zu; die Zuordnung erfolgt schlüsselbasiert aus der Konfiguration, nicht aus dem Modelltext. Der Text steht unverändert — dass ein Modell seine eigene Herkunft falsch einschätzt, ist eine Beobachtung über das Modell und bleibt als solche im Rekord. Diagnose: `docs/diagnose-familien-zuordnung-2026-08-03.md`.",
+      "text_en": "**Note (2026-08-03):** The vote recorded under \"Claude Opus\" describes itself in its own text as written by a model of the GPT/OpenAI family. Three independent sources in the same record (raw response, API model identifier, seat configuration) attribute it to an Anthropic model (`claude-opus-4-8`); attribution is key-based from the configuration, not derived from the model's text. The text stands unchanged — a model misjudging its own origin is an observation about the model and remains in the record as such. Diagnosis: `docs/diagnose-familien-zuordnung-2026-08-03.md`."
+    }
+  ]
 }

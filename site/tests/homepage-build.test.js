@@ -187,7 +187,7 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 		'keine Einigung',
 		'Dissens und Vorbehalte', // Archiv-Dissens-Überschrift (P5: benennt den Abschnitt, behauptet keinen Rekordstand)
 		'Wortlaut des Rates ▸', // aufklappbarer Dissens (gerendert, nicht roh)
-		'Korrekturhinweis',
+		'Nachträge zum Rekord', // neutrale Überschrift (behauptet keine Korrektur; hält Korrektur + Einordnung)
 		'Kosten dieser Sitzung',
 		'/sitzungen/2026-07c/' // Link zum vollständigen Protokoll
 	]);
@@ -310,7 +310,7 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 		'no agreement', // offener Bereich als Chip-Markierung
 		'Dissent and reservations',
 		"The council's wording ▸",
-		'Correction notice',
+		'Record addenda',
 		'Cost of this session',
 		'/sitzungen/2026-07c/',
 		'Original protocol in German.', // Rekord-Vermerk (Korrektur/Dissens)

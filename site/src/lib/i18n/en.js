@@ -294,7 +294,7 @@ export const en = {
 		costsLead: (total) => `Cost of this session: ${total}.`,
 		costsModel: 'Model',
 		costsAmount: 'Cost',
-		correctionTitle: 'Correction notice',
+		correctionTitle: 'Record addenda',
 		dissentTitle: 'Dissent and reservations',
 		dissentFull: "The council's wording ▸",
 		protocolLink: 'Open the full protocol →',

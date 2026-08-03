@@ -50,7 +50,10 @@ export function load() {
 		home: {
 			...home,
 			// dissent/correction werden als Markdown gerendert (Wortlaut unverändert).
-			correctionHtml: home.correction ? md(home.correction.text) : null,
+			// text_en wird BEWUSST NICHT gerendert: der Rekord (inkl. Korrekturhinweise)
+			// bleibt deutsch (Konvention en.js:5, Test erzwingt sie). text_en hält den
+			// Wart-Wortlaut treu im Rekord, ohne ihn anzuzeigen — nicht "reparieren".
+			corrections: (home.correction ?? []).map((c) => ({ date: c.date, html: md(c.text) })),
 			dissentHtml: md(home.dissent),
 			// Kuratierter Klartext-Kontext fürs Frage-Dossier — wörtlich
 			// durchgereicht, das Frontend paraphrasiert nichts.

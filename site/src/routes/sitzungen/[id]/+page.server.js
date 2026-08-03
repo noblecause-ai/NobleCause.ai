@@ -87,7 +87,7 @@ export function load({ params }) {
 			costs: s.costs,
 			dissent_highlights: s.dissent_highlights ?? [],
 			dissent_html: md(s.dissent_md),
-			correction_html: s.correction_notice ? md(s.correction_notice.text) : null,
+			corrections: (s.correction_notice ?? []).map((c) => ({ date: c.date, html: md(c.text) })),
 			wart_dossier: s.wart_dossier ?? null,
 			wart_dossier_html: s.wart_dossier ? md(s.wart_dossier.content_md) : null,
 			wart_opening_html: s.wart_opening_md ? md(s.wart_opening_md) : null,
