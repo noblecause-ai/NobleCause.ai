@@ -24,7 +24,7 @@
 
 <svelte:head>
 	<title>Sitzung {s.number}: {s.title} — NobleCause.ai</title>
-	<meta name="description" content={s.summary ?? s.question} />
+	<meta name="description" content={s.summary || s.question} />
 </svelte:head>
 
 <p class="kicker">{kicker}</p>
