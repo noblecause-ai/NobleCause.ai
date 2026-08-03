@@ -12,8 +12,8 @@
 <p>
 	Eine Gremium-Sitzung ist kein Chat und keine Plattform, sondern ein dokumentierter Lauf: eine
 	Fragestellung, mehrere Modelle, zwei Runden, ein Protokoll. Der Ablauf wird von einem
-	deterministischen Skript orchestriert — kein Modell steuert den Prozess, Modelle liefern
-	ausschließlich Voten.
+	deterministischen Skript orchestriert — kein Modell steuert die Zählung. Modelle liefern Voten
+	und Recherche; ob der Rat früher tagt, entscheidet der Wart anhand der Belege.
 </p>
 
 <h2>1 · Einberufung</h2>
@@ -44,7 +44,7 @@
 <p>
 	Aus beiden Runden entsteht das Sitzungsprotokoll: Fragestellung, Teilnehmer-Modelle mit exakten
 	Versionen, die wörtlichen Prompts, alle Einzelvoten mit Konfidenzen, der Dissens, die
-	Empfehlungen mit Begründung — und die Kosten des Laufs in Euro, auf den Cent. Auch die
+	Empfehlungen mit Begründung — und die Kosten des Laufs, nach Listenpreis auf den Cent gerechnet. Auch die
 	unbearbeiteten Rohantworten der Modelle werden mitveröffentlicht. Das Protokoll wird in das
 	öffentliche <a href="https://github.com/noblecause-ai/NobleCause.ai">Repository</a> übernommen;
 	diese Site rendert es automatisch.
@@ -53,8 +53,7 @@
 <h2>Wann was läuft</h2>
 <p>
 	Der Scout läuft wöchentlich, jeden Montagmorgen um 06:00 UTC, und trägt neue Belege zusammen.
-	Der Council tagt nicht nach Kalender, sondern anlassbezogen — wenn genug Neues vorliegt, das eine
-	erneute Abstimmung rechtfertigt. Die Veröffentlichung folgt unmittelbar auf die Sitzung. Und das
+	Der Council tagt nach festem Rhythmus — und früher, wenn der Wart genug Neues findet. Die Veröffentlichung folgt unmittelbar auf die Sitzung. Und das
 	ist der Punkt: <strong>zwischen den Läufen entscheidet kein Mensch.</strong>
 </p>
 
