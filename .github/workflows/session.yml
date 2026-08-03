@@ -31,6 +31,10 @@ on:
         description: 'Budgetdeckel in EUR'
         required: false
         default: '15'
+      dry_run:
+        description: 'Trockenlauf: alles echt (Prompts, Calls, Schema-Tor), aber KEIN Commit — Ergebnis als Artefakt'
+        type: boolean
+        default: false
   schedule:
     - cron: '0 12 * * *'
 
@@ -94,6 +98,10 @@ jobs:
           python3 gremium/schema_gate.py sessions 2>&1 | tee -a run.log
 
       - name: Commit Sitzung & schedule
+        # Trockenlauf überspringt NUR diesen Schritt — alles davor (run_session,
+        # Schema-Tor) lief echt. `if` ohne Status-Funktion wird implizit mit success()
+        # verundet: der Commit läuft nur bei scharfem Lauf UND grünem Schema-Tor.
+        if: ${{ !inputs.dry_run }}
         run: |
           git config user.name "noblecause-gremium"
           git config user.email "gremium@noblecause.ai"
@@ -104,6 +112,20 @@ jobs:
           fi
           git commit -m "session: Gremium-Sitzung $(date -u +%Y-%m-%d)"
           git push
+
+      - name: Trockenlauf — Ergebnis als Artefakt (statt Commit)
+        # Läuft nur im Trockenlauf und nur, wenn alles davor (inkl. Schema-Tor) grün war.
+        # Das Ergebnis, dessen Freigabe man vor dem scharfen Lauf sehen will.
+        if: ${{ inputs.dry_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: session-dryrun-${{ github.run_id }}
+          path: |
+            sessions/
+            schedule.json
+            run.log
+          retention-days: 30
+          if-no-files-found: warn
 
       - name: Rohantwort sichern (bei Fehlschlag)
         if: failure()
