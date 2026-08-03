@@ -145,7 +145,8 @@
     "wart_moderation_md": { "type": "string" },
     "wart_dossier_refusal": { "$ref": "#/$defs/wart_refusal" },
     "wart_opening_refusal": { "$ref": "#/$defs/wart_refusal" },
-    "wart_moderation_refusal": { "$ref": "#/$defs/wart_refusal" }
+    "wart_moderation_refusal": { "$ref": "#/$defs/wart_refusal" },
+    "summary_refusal": { "$ref": "#/$defs/wart_refusal" }
   },
   "$defs": {
     "wart_refusal": {

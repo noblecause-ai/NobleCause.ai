@@ -89,3 +89,54 @@ def test_refusal_marker_incomplete_is_rejected_by_contract():
     rec["wart_dossier_refusal"] = {"stop_reason": "refusal"}  # at + raw_artifact fehlen
     with pytest.raises(jsonschema.ValidationError):
         _validate(rec)
+
+
+# ---------- Kurzfassung: DEGRADIEREN, nicht abstürzen (Steward-Entscheid) ----------
+
+def _summary_args(tmp_path):
+    # summary_prompt gesetzt → Wart-Pfad (led_by_wart, der für Sitzung 4 relevante Fall).
+    return dict(
+        question="Testfrage",
+        final_votes=[{"label": "M", "text": "Ein Schlussvotum ohne JSON-Block."}],
+        recommendations=[{"pillar": "A", "has_consensus": True, "organization": "X",
+                          "convergence": {"count": 3, "total": 3}}],
+        dissent_md="kein Dissens",
+        summarizer={"model": "claude-fable-5", "max_output_tokens": 1024, "label": "Wart"},
+        raw_dir=tmp_path,
+        summary_prompt="{question} {final_votes} {aggregation} {dissent_md}",
+    )
+
+
+def test_summary_refusal_degrades_not_crash(tmp_path, monkeypatch):
+    monkeypatch.setattr(
+        run_session, "call_anthropic",
+        lambda *a, **k: ("Ich beginne...", {"input_tokens": 10, "output_tokens": 5}, {"stop_reason": "refusal"}),
+    )
+    summary, highlights, usage, refusal = run_session.generate_summary(**_summary_args(tmp_path))
+    assert summary == "", "bei Verweigerung wird degradiert (leere Kurzfassung), nicht abgebrochen"
+    assert highlights == []
+    assert refusal["stop_reason"] == "refusal"
+    assert refusal["raw_artifact"] == "raw/summary-wart.json"
+
+
+def test_summary_end_turn_is_parsed_normally(tmp_path, monkeypatch):
+    good = '```json\n{"summary": "kurze Fassung", "dissent_highlights": []}\n```'
+    monkeypatch.setattr(
+        run_session, "call_anthropic",
+        lambda *a, **k: (good, {"input_tokens": 10, "output_tokens": 5}, {"stop_reason": "end_turn"}),
+    )
+    summary, highlights, usage, refusal = run_session.generate_summary(**_summary_args(tmp_path))
+    assert summary == "kurze Fassung"
+    assert refusal is None
+
+
+def test_summary_refusal_record_passes_schema(tmp_path):
+    rec = _base_record()
+    rec["summary"] = ""  # leere Kurzfassung — required string, "" besteht das Tor
+    rec["summary_refusal"] = {
+        "stop_reason": "refusal",
+        "at": "2026-08-06T12:00:00+00:00",
+        "raw_artifact": "raw/summary-wart.json",
+    }
+    _validate(rec)
+    assert rec.get("recommendations") and rec.get("rounds")

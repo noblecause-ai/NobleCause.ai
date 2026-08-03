@@ -601,10 +601,17 @@ def generate_summary(
     (raw_dir / f"{tag}.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
     )
-    parsed = extract_json_block(text)
+    summary_text, refusal = wart_step_result(text, raw, f"{tag}.json")
+    if refusal is not None:
+        # Verweigerung: DEGRADIEREN, nicht abbrechen (Steward-Entscheid). Die Kurzfassung
+        # ist Darstellungsschicht — sie paraphrasiert, was ungekürzt darunter steht. Eine
+        # Sitzung ohne Kurzfassung ist unvollständig, aber wahr; eine abgestürzte Sitzung
+        # ist gar nichts. summary="" besteht das Tor (required, string).
+        return "", [], usage, refusal
+    parsed = extract_json_block(summary_text)
     if not parsed or "summary" not in parsed:
         raise RuntimeError("Summarizer lieferte kein gültiges JSON mit summary")
-    return parsed.get("summary", ""), parsed.get("dissent_highlights", []), usage
+    return parsed.get("summary", ""), parsed.get("dissent_highlights", []), usage, None
 
 
 def pillar_a_context(prior):
@@ -1018,7 +1025,7 @@ def main():
         summarizer = config["summarizer"]
         summary_prompt = None
     print(f"  {summarizer['label']} ({summarizer['model']}) …")
-    summary, dissent_highlights, sum_usage = generate_summary(
+    summary, dissent_highlights, sum_usage, summary_refusal = generate_summary(
         args.question,
         r2,
         recommendations,
@@ -1109,6 +1116,8 @@ def main():
         session["wart_dossier"] = wart_dossier
     elif wart_dossier_refusal:
         session["wart_dossier_refusal"] = wart_dossier_refusal
+    if summary_refusal:
+        session["summary_refusal"] = summary_refusal
 
     (out_dir / "session.json").write_text(json.dumps(session, indent=2, ensure_ascii=False))
     print(f"\nProtokoll geschrieben: {out_dir / 'session.json'}")
