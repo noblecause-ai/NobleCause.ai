@@ -1,0 +1,7 @@
+{
+  "_note": "Steward-eigene Vorbereitung der nächsten Sitzung. Der Dispatch liest diese Datei NICHT automatisch — question/title werden weiterhin ausdrücklich am workflow_dispatch übergeben (der Orchestrator erfindet nie eine Frage). Die Cron-Erinnerung zitiert eine hier hinterlegte Frage im Fällig-Issue. Leer lassen (question/title = \"\"), wenn nichts vorbereitet ist. Hinweis: dieses Repo ist öffentlich — eine hier eingetragene Frage ist vor der Sitzung sichtbar.",
+  "after_session": "2026-07c",
+  "title": "",
+  "question": "",
+  "rationale": ""
+}

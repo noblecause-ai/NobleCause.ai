@@ -182,5 +182,14 @@ jobs:
             echo "Erinnerung existiert bereits (#$NUM) — kein Spam."
             exit 0
           fi
-          BODY=$(printf 'Die nächste Gremium-Sitzung ist fällig (Termin: %s).\n\nBitte per **workflow_dispatch** auf „Gremium-Sitzung" mit Frage und Titel starten — die Fragestellung ist redaktionell und wird nicht automatisch erzeugt.' "$NEXT")
+          # next-session.json ist Komfort, kein Vertrag: fehlt sie, ist sie leer ODER
+          # kaputtes JSON (Steward editiert von Hand) -> {} -> Standardtext, KEIN Alarm.
+          # Ein Tippfehler in einer optionalen Datei darf kein CI-Fehler-Issue auslösen.
+          PREP=$(python3 -c 'import json
+          try: d = json.load(open("next-session.json"))
+          except Exception: d = {}
+          q = (d.get("question") or "").strip()
+          t = (d.get("title") or "").strip()
+          print(("\n\n---\n**Vorbereitete Frage** (aus next-session.json — weiterhin ausdrücklich am Dispatch zu übergeben, wird NICHT automatisch gelesen):\n- **Titel:** "+t+"\n- **Frage:** "+q) if q else "")')
+          BODY=$(printf 'Die nächste Gremium-Sitzung ist fällig (Termin: %s).\n\nBitte per **workflow_dispatch** auf „Gremium-Sitzung" mit Frage und Titel starten — die Fragestellung ist redaktionell und wird nicht automatisch erzeugt.%s' "$NEXT" "$PREP")
           gh issue create --title "Sitzung fällig ($NEXT)" --label "$LABEL" --body "$BODY"
