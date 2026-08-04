@@ -1,7 +1,7 @@
 {
   "_note": "Steward-eigene Vorbereitung der nächsten Sitzung. Der Dispatch liest diese Datei NICHT automatisch — question/title werden weiterhin ausdrücklich am workflow_dispatch übergeben (der Orchestrator erfindet nie eine Frage). Die Cron-Erinnerung zitiert eine hier hinterlegte Frage im Fällig-Issue. Leer lassen (question/title = \"\"), wenn nichts vorbereitet ist. Hinweis: dieses Repo ist öffentlich — eine hier eingetragene Frage ist vor der Sitzung sichtbar.",
   "after_session": "2026-07c",
-  "title": "",
-  "question": "",
-  "rationale": ""
+  "title": "Erste Bestandsprüfung: Halten die Empfehlungen aus Sitzung 3?",
+  "question": "Halten die vier Empfehlungen aus Sitzung 3 — Helen Keller International (Zukunft), Against Malaria Foundation (Leid lindern), Nuclear Threat Initiative (Große Gefahren), Lead Exposure Elimination Project (Übersehenes) — einer aktuellen Evidenzprüfung stand, und wo hat sich die Lage seit dem 7. Juli 2026 messbar geändert?",
+  "rationale": "Der wöchentliche Research konnte die Empfehlungen aus Sitzung 3 nicht prüfen — zweimal wegen eines Sortierfehlers, einmal wegen einer Modell-Verweigerung. Der Rat holt die Prüfung nach."
 }
