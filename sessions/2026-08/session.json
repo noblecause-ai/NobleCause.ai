@@ -282,59 +282,84 @@
     },
     {
       "pillar": "C",
-      "has_consensus": false,
-      "votes_valid": 0,
-      "votes_invalid": 3,
-      "title": null,
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "rationale_md": "Die Antworten zu diesem Bereich waren nicht auswertbar. Die Rohdaten liegen im Protokoll."
+      "has_consensus": true,
+      "votes_valid": 3,
+      "votes_invalid": 0,
+      "title": "Nukleare Risikoreduktion und Verifikationsarbeit nach dem Auslaufen von New START, ergaenzt um Biosicherheits-Governance (DNA-Synthese-Screening)",
+      "organization": "Nuclear Threat Initiative (NTI)",
+      "organization_id": "nuclear-threat-initiative",
+      "donation_url": "https://www.nti.org/donate/",
+      "confidence": 0.64,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 3,
+        "models": [
+          "Claude Opus",
+          "GPT",
+          "Gemini"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": true,
+            "reservation": "Revision gegenueber Runde 1 (dort conditional=false): Ich hatte die Vernachlaessigtheit des FELDES (30-60 Mio. USD p.a. weltweit, nach MacArthur-Rueckzug 2021 um ca. ein Drittel geschrumpft) faelschlich als Beleg fuer die Grenzwirkung bei der ORGANISATION verwendet. Bei einem NTI-Budget von 40-60 Mio. USD verschiebt 1 Mio. USD etwa 2 Prozent und kann Kernkosten substituieren. Bedingungen: (a) Zweckbindung an Nuklearverifikation/Track-II bzw. NTI | bio (IBBIS, Common Mechanism), (b) Nachweis einer aufnahmefaehigen Finanzierungsluecke 2026/27. Ohne Zweckbindung sinkt meine Konfidenz auf etwa 0,45. Kipptrigger: Tritt im Fenster ein verifizierbares New-START-Nachfolgeabkommen mit Vor-Ort-Inspektionen in Kraft, sinkt der Grenznutzen von Track-II-Verifikationsarbeit deutlich; bleibt die Luecke offen oder wird von Arsenal-Aufwuchs begleitet, steigt er stark. Fuer diese Saeule existiert keine CEA, sondern ein Modell; ich nenne bewusst keine Dollar-pro-DALY-Zahl."
+          },
+          {
+            "model": "GPT",
+            "conditional": true,
+            "reservation": "Hoher potenzieller Erwartungswert, aber schwache quantitative Attribution; Förderung nur für ein konkret zusätzliches Projekt mit überprüfbaren Zwischenzielen und bestätigter Finanzierungslücke."
+          },
+          {
+            "model": "Gemini",
+            "conditional": true,
+            "reservation": "Die Befürwortung von NTI erfolgt unter Offenlegung meiner GPT-Herkunft. Ein Vorbehalt besteht hinsichtlich der konkreten marginalen Mittelverwendung: Ein Steward muss prüfen, ob NTI eine ungedeckte Finanzierungslücke für das verbleibende Jahr 2026 aufweist, die durch zusätzliche Spenden direkt adressiert werden kann, da Advocacy-Arbeit stark pfadabhängig und schwer quantifizierbar ist."
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen, davon 3 konditional, empfehlen diese Organisation (Claude Opus, GPT, Gemini). Begründungen in den Schlussvoten."
     },
     {
       "pillar": "D",
-      "has_consensus": false,
-      "votes_valid": 0,
-      "votes_invalid": 3,
-      "title": null,
-      "organization": null,
-      "donation_url": null,
-      "confidence": null,
-      "rationale_md": "Die Antworten zu diesem Bereich waren nicht auswertbar. Die Rohdaten liegen im Protokoll."
+      "has_consensus": true,
+      "votes_valid": 3,
+      "votes_invalid": 0,
+      "title": "Regulierung und Durchsetzung von Bleifarbverboten sowie Expositionsmessung in Laendern mit niedrigem und mittlerem Einkommen",
+      "organization": "Lead Exposure Elimination Project (LEEP)",
+      "organization_id": "lead-exposure-elimination-project",
+      "donation_url": "https://leadelimination.org/donate/",
+      "confidence": 0.71,
+      "convergence": {
+        "count": 3,
+        "total": 3,
+        "conditional_count": 3,
+        "models": [
+          "Claude Opus",
+          "GPT",
+          "Gemini"
+        ],
+        "votes": [
+          {
+            "model": "Claude Opus",
+            "conditional": true,
+            "reservation": "Die Lastgroesse ist belastbar (Larsen & Sanchez-Triana, Lancet Planetary Health 2023: ca. 5,5 Mio. kardiovaskulaere Todesfaelle und ca. 765 Mio. verlorene IQ-Punkte fuer 2019, Wohlfahrtsverlust ca. 6 Bio. USD). Die tragende Praemisse ist jedoch die Vernachlaessigtheit, und die ist offen: Die Partnership for a Lead-Free Future (Start Sept. 2024, initial ca. 150 Mio. USD) haette das Feld entneglektiert, die USAID-Aufloesung 2025 haette Vernachlaessigtheit teilweise wiederhergestellt - gegenlaeufige, entscheidungsrelevante Szenarien. Trigger fuer den Steward: (a) Ist die Partnership operativ und ausfinanziert? (b) Nennt LEEP eine aufnahmefaehige Finanzierungsluecke fuer 2026/27? Erklaert LEEP sich als gedeckt, ist Pure Earth (Messkampagnen, Sanierung) die bessere Adresse derselben Saeule. Die zitierten Kosten pro DALY im einstelligen bis niedrig-zweistelligen Dollarbereich sind ein Advocacy-Kontrafaktual mit Unsicherheit von Faktor 10 in beide Richtungen, kein Messwert."
+          },
+          {
+            "model": "GPT",
+            "conditional": true,
+            "reservation": "LEEP muss eine aktuelle aufnahmefähige Finanzierungslücke sowie zusätzliche Länderarbeit nachweisen und Ergebnisse durch Marktcompliance-, Expositions- oder Blutbleimessungen überprüfen."
+          },
+          {
+            "model": "Gemini",
+            "conditional": true,
+            "reservation": "Ein Steward muss prüfen, ob die 2024 gestartete 'Partnership for a Lead-Free Future' (PLFF) LEEPs operative Lücken bereits vollständig geschlossen hat. Sollte LEEP keine ungedeckte Finanzierungslücke ('room for more funding') mehr aufweisen, soll die Spende an 'Pure Earth' zur direkten Sanierung kontaminierter Standorte umgeleitet werden."
+          }
+        ]
+      },
+      "rationale_md": "Konvergenz im Schlussvotum: 3 von 3 Modellen, davon 3 konditional, empfehlen diese Organisation (Claude Opus, GPT, Gemini). Begründungen in den Schlussvoten."
     }
   ],
-  "unresolved_votes": [
-    {
-      "pillar": "C",
-      "organization": "Nuclear Threat Initiative",
-      "model": "Claude Opus"
-    },
-    {
-      "pillar": "C",
-      "organization": "Nuclear Threat Initiative",
-      "model": "GPT"
-    },
-    {
-      "pillar": "C",
-      "organization": "Nuclear Threat Initiative",
-      "model": "Gemini"
-    },
-    {
-      "pillar": "D",
-      "organization": "Lead Exposure Elimination Project",
-      "model": "Claude Opus"
-    },
-    {
-      "pillar": "D",
-      "organization": "Lead Exposure Elimination Project",
-      "model": "GPT"
-    },
-    {
-      "pillar": "D",
-      "organization": "Lead Exposure Elimination Project",
-      "model": "Gemini"
-    }
-  ],
+  "unresolved_votes": [],
   "costs": {
     "currency": "EUR",
     "total": 2.7,
@@ -387,5 +412,12 @@
     "stop_reason": "refusal",
     "at": "2026-08-06T12:22:12+00:00",
     "raw_artifact": "raw/r0-wart.json"
-  }
+  },
+  "correction_notice": [
+    {
+      "date": "2026-08-06",
+      "text": "**Korrekturhinweis (2026-08-06):** Bei der Erstaggregation dieser Sitzung blieben sechs Voten (Bereiche C und D) unaufgelöst: Die Modelle schrieben die kanonischen Organisationsnamen ohne das Klammer-Akronym („Nuclear Threat Initiative\" statt „Nuclear Threat Initiative (NTI)\"), und die Alias-Tabelle der Registratur kannte diese Schreibweise nicht. Die Voten selbst waren gültig und eindeutig. Behoben durch zwei Alias-Einträge in der Registratur (Daten, keine Code-Änderung) und Neu-Aggregation aus den unveränderten Rohvoten; das Ergebnis — C: Nuclear Threat Initiative, D: Lead Exposure Elimination Project, jeweils 3 von 3 mit Vorbehalt — ist aus `raw/` nachrechenbar. Die Rohvoten stehen unverändert im Rekord.",
+      "text_en": "**Correction notice (2026-08-06):** In this session's initial aggregation, six votes (areas C and D) remained unresolved: the models wrote the canonical organization names without the parenthetical acronym (\"Nuclear Threat Initiative\" instead of \"Nuclear Threat Initiative (NTI)\"), and the registry's alias table did not know this spelling. The votes themselves were valid and unambiguous. Fixed by two alias entries in the registry (data, no code change) and re-aggregation from the unchanged raw votes; the result — C: Nuclear Threat Initiative, D: Lead Exposure Elimination Project, each 3 of 3 with reservation — can be recomputed from `raw/`. The raw votes remain unchanged in the record."
+    }
+  ]
 }
