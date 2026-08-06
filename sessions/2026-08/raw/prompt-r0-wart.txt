@@ -1,0 +1,21 @@
+## Fragestellung der Sitzung
+
+Halten die vier Empfehlungen aus Sitzung 3 — Helen Keller International (Zukunft), Against Malaria Foundation (Leid lindern), Nuclear Threat Initiative (Große Gefahren), Lead Exposure Elimination Project (Übersehenes) — einer aktuellen Evidenzprüfung stand, und wo hat sich die Lage seit dem 7. Juli 2026 messbar geändert?
+
+## Empfehlungen aus Sitzung 1 (2026-07c, 2026-07-07)
+
+- Säule A (Konsens): Vitamin-A-Supplementierung (VAS) — konditional, mit Vertagungsantrag zugunsten erneuter TaRL-Prüfung — Helen Keller International (Konfidenz 0.64)
+- Säule B (Konsens): Insektizidbehandelte Moskitonetze (LLINs) — Against Malaria Foundation (Konfidenz 0.86)
+- Säule C (Konsens): Pandemie-Vorsorge / Biosecurity (Familiendeklaration OpenAI/GPT; Enthaltung bei AI-nahen Orgs) — Nuclear Threat Initiative (NTI) (Konfidenz 0.62)
+- Säule D (Konsens): Eliminierung von Bleivergiftung via Farbregulierung — Lead Exposure Elimination Project (LEEP) (Konfidenz 0.71)
+
+## Deine Aufgabe (Runde 0 — Wart-Dossier)
+
+Recherchiere per Web-Suche für jede Empfehlung aus Sitzung 1:
+1. Aktuelle Funding-Lage (room for more funding) der genannten Organisationen.
+2. Neueste Wirksamkeitsdaten.
+3. Relevante Entwicklungen seit den Trainingsdaten der Gremium-Modelle.
+
+Strukturiere dein Dossier je Säule (A–D). Keine Empfehlung, nur Evidenz.
+
+Beende mit einem Abschnitt „## Suchanfragen" (wörtliche Liste) und optional verworfene Funde („geprüft, nicht relevant weil …").
