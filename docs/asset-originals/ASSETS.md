@@ -507,3 +507,29 @@ auf der Buchfläche + Staub ≤ 8 px), Montage auf dem Saal-Plate ohne sichtbare
 | `scenes/hall-door-open-display.avif` | 1672 × 941 | 76.964 | `council-plate-quer-offen.png`, AVIF q55 (WebP: 94.976 B) |
 | `scenes/hall-portrait-display.avif` | 1024 × 1536 | 61.777 | `council-plate-hoch-geschlossen.png`, AVIF q55 (WebP: 79.734 B) |
 | `scenes/hall-portrait-800.avif` | 800 × 1200 | 34.894 | `council-plate-hoch-geschlossen.png` via sips, AVIF q55 (WebP: 43.118 B) |
+
+## Commission-2-Medaillons (07.08.2026)
+
+Nachbestellung für die neue Besetzung aus
+`commissions/2026-08-07/commission.json`; Einbau gemäß
+`docs/cc-auftrag-phase-a-medaillons-und-deploy-2026-08-07.md`. Erzeugt in der
+ImageGen-Task `019fdda5-e4f2-7a63-b139-2e9a40a3023f` mit drei gleichartigen
+Läufen je Modell; archiviert werden nur die drei ausgewählten, unveränderten
+C2PA-Originale.
+
+| Original (`provenance/medallions-commission-2/`) | Auswahl | Maße | Bytes | SHA-256 |
+|---|---|---:|---:|---|
+| `claude-opus-5.png` | Claude v2 | 1254 × 1254 | 2.748.264 | `0bd361ce287ae68b09b678dca028bbd9cc0d108ed760231ecbd2fb708a49f2cf` |
+| `gpt-5.6-sol.png` | Sol v1 | 1254 × 1254 | 2.841.974 | `217407f3bd0a646faf75c1acabb6c17f9348b15612574893ea456020e0eb0718` |
+| `gemini-3.5-flash.png` | Gemini v3 | 1254 × 1254 | 2.539.042 | `1f8015050c48769c73fdc9668362fd07a115d9e3759f240a1dbdf96864effb96` |
+
+Ableitung: C2PA-Original → motivneutrale Normalisierung der Außenfläche auf
+exakt `#FF00FF` → Freistellung und AVIF-Encoding. Die normalisierten
+Arbeitsmaster bleiben außerhalb des Repos; das erneute PNG-Speichern entfernte
+ihre Credentials. Bezugswerte der reproduzierten Kette:
+
+| Modell | Arbeitsmaster SHA-256 | Deploy-AVIF SHA-256 | `-lo` SHA-256 |
+|---|---|---|---|
+| Claude | `562927b8869a2527435b5872757bbd61126638895dc48f6b03210bf137d6200d` | `ae9c2b30db9d4923a4a6dfd04aef015bd9fa6905c80e47f58dcc6d854aa40079` | `0a2883c5fedd4f2b5f32889367a3d4a8be965cfdbff6b621ae56fa2ffaa4f34e` |
+| Sol | `12fd84c4f16683fa65e8846e9a4caf10c3a6d46c31c035072e41d9989c64becd` | `95546ee07cbce136774de2c530a562331ea8017276e785d3c7c861fc2794c37d` | `d58d044ee3e24503186f3bbd36b3b49676cda1f4e0ecaee15032729dade67137` |
+| Gemini | `6ad5b490cb91258d866a6380da1138b222355dc28cd75cb12a2ef88fce69ea44` | `2d370932fa8e75b2614c58771a2cd75b88c25c728f52b3752b200f2a0e16a916` | `8f55df19605091e64104cc65e987d1f5d664cc513b467311dedf253fa4098168` |

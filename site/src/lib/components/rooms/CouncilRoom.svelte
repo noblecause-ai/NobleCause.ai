@@ -491,6 +491,10 @@
 	}
 	.cf-votes {
 		margin-top: 0.15rem;
+		/* Grid-Item in .cf-col: an die Spaltenbreite binden, nicht an den Inhalt
+		   (justify-items:center würde sonst zur Inhaltsbreite wachsen). */
+		min-width: 0;
+		max-width: 100%;
 	}
 	/* Votum als Vignette, kein Kasten. Nur der Fokus-Bereich ist sichtbar. */
 	.cf-vote {
@@ -500,6 +504,16 @@
 		font-size: 0.95rem;
 		line-height: 1.35;
 		background: radial-gradient(ellipse 92% 100% at 50% 45%, rgba(3, 6, 7, 0.72), rgba(3, 6, 7, 0) 82%);
+		/* Lange, untrennbare Organisationsnamen (z. B. „International", „Nuclear
+		   Threat Initiative (NTI)") brechen INNERHALB der eigenen Drittelspalte,
+		   statt in die Nachbarn zu malen. Greift nur, wenn der Name sonst
+		   überliefe — passt er in die Spalte (Desktop-Regelfall), ändert sich
+		   nichts. */
+		min-width: 0;
+		max-width: 100%;
+		box-sizing: border-box;
+		overflow-wrap: anywhere;
+		hyphens: auto;
 	}
 	.cf-vote del {
 		display: block;

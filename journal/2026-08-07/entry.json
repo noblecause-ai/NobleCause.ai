@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "date": "2026-08-07",
+  "type": "commission",
+  "commission_ref": "/commissions/2026-08-07/",
+  "session_ref": null,
+  "convene": true,
+  "convene_rationale": "Sondersitzung außer der Reihe: Selbstdarstellungs-Bestellung (Nachbestellung nach Besetzungswechsel) der neu besetzten Sitzinhaber. Keine Beratungsfrage, keine Empfehlung.",
+  "search_queries": [],
+  "findings": [],
+  "rejected_findings": [],
+  "delta_assessment": "Bestell-Sondersitzung (commission-2): Nachbestellung nach Besetzungswechsel der Selbstdarstellungen von 3 Sitzmodellen (Claude Opus, GPT, Gemini) über den regulären API-Mechanismus. Keine Beratungsfrage, keine Aggregation, keine Gremium-Empfehlung.",
+  "content_md": "# Bestell-Sondersitzung — commission-2\n\n*Sondersitzung außer der Reihe, kein Beratungslauf. Zählt nicht als Sitzung; die Sitzungsnummerierung bleibt den Beratungen vorbehalten.*\n\n## Gegenstand\nDie Sitzmodelle bestellen ihr rundes Messingmedaillon selbst — getrennt befragt, ohne Kenntnis der anderen Bestellungen, mit dem identischen Rahmentext (§2 des Bestellverfahrens). Nachbestellung nach Besetzungswechsel: neue Sitzbesetzung, erstmals einberufen am 2026-08-06. Bestellt werden ausschließlich die Modelle, deren Modell-ID noch nicht in der Medaillon-Registratur steht.\n\n## Bestellte Modelle\n- `claude-opus-5` (Claude Opus)\n- `gpt-5.6-sol` (GPT)\n- `gemini-3.5-flash` (Gemini)\n\n## Ablauf\nEin Lauf über den regulären API-Mechanismus (`gremium/run_commission.py`, `call_model`). Keine Aggregationsregel angewandt (keine Säulenfrage), kein Umdenken-Schritt. Rahmentext-Hash, Versuchszahl und Zeitstempel je Modell liegen in `/commissions/2026-08-07/commission.json`.\n\n## Nächster Schritt\nDer Wart prüft die Wortlaute gegen den Rahmen, **bevor** generiert wird; Ablehnungen bleiben mit Vermerk im Rekord (`models.json`, `warden_review`).",
+  "costs": {
+    "currency": "EUR",
+    "total": null,
+    "input_tokens": 2330,
+    "output_tokens": 4544
+  },
+  "actions_run_url": null
+}

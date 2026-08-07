@@ -31,9 +31,72 @@ const requireAll = (html, page, required) => {
 	}
 };
 
+// --- Datenvertrag: datenabhängige Erwartungen aus der AKTUELLEN Sitzung ableiten,
+// nicht auf eine bestimmte Sitzung hart kodieren. Quelle der Wahrheit ist dieselbe
+// deterministische Nummernwahl wie in content.js (getLatestSession) plus die
+// Registry und der über schedule.last_journal aufgelöste Research-Lauf. So bleibt
+// die Datei bei einem legitimen nächsten Sitzungsrekord grün. Stabile UI-/
+// Sicherheitsverträge bleiben separat hart geprüft. */
+const ROOT = path.resolve(SITE, '..');
+const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
+
+const currentData = () => {
+	const dir = path.join(ROOT, 'sessions');
+	const sessions = fs
+		.readdirSync(dir, { withFileTypes: true })
+		.filter((e) => e.isDirectory())
+		.map((e) => readJson(path.join(dir, e.name, 'session.json')))
+		.sort((a, b) => (b.number ?? 0) - (a.number ?? 0) || (a.date < b.date ? 1 : -1));
+	const session = sessions[0];
+	const registry = readJson(path.join(ROOT, 'organizations.json'));
+	const orgById = new Map((registry.organizations ?? []).map((o) => [o.id, o]));
+	const FAMILY = { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' };
+	const nameOf = (rec) => orgById.get(rec.organization_id)?.canonical_name ?? rec.organization;
+	const consensus = (session.recommendations ?? []).filter((r) => r.has_consensus);
+	const round = (k) => (session.rounds ?? []).find((r) => r.kind === k);
+	const initial = new Map((round('initial_vote')?.votes ?? []).map((v) => [v.model, v]));
+	const final = new Map((round('final_vote')?.votes ?? []).map((v) => [v.model, v]));
+	const revisions = [];
+	for (const p of session.participants ?? []) {
+		const iv = initial.get(p.model);
+		const fv = final.get(p.model);
+		for (const pillar of ['A', 'B', 'C', 'D']) {
+			const a = (iv?.recommendations ?? []).find((x) => x.pillar === pillar);
+			const b = (fv?.recommendations ?? []).find((x) => x.pillar === pillar);
+			if (a && b && a.organization_id !== b.organization_id) {
+				revisions.push({ model: p.label, fromName: nameOf(a), toName: nameOf(b) });
+			}
+		}
+	}
+	const schedule = readJson(path.join(ROOT, 'schedule.json'));
+	const lastId = (schedule.last_journal ?? '').replace(/^\/?journal\//, '').replace(/\/$/, '');
+	const lastResearch = lastId ? readJson(path.join(ROOT, 'journal', lastId, 'entry.json')) : null;
+	return {
+		session,
+		nameOf,
+		orgById,
+		FAMILY,
+		consensus,
+		revisions,
+		lastResearch,
+		plain: session.plain ?? null,
+		dossier: session.wart_dossier ?? null,
+		participants: session.participants ?? []
+	};
+};
+const DATA = currentData();
+// Zählstände der Konsens-Bereiche als „N von M" (DE) bzw. „N of M" (EN).
+const tally = (of) => [...new Set(DATA.consensus.map((r) => `${r.convergence.count} ${of} ${r.convergence.total}`))];
+// Organisationsnamen + direkte Spendenlinks der Konsens-Empfehlungen (Registry).
+const consensusOrgNames = DATA.consensus.map((r) => DATA.nameOf(r));
+const consensusDonations = [
+	...new Set(DATA.consensus.map((r) => DATA.orgById.get(r.organization_id)?.donation_url).filter(Boolean))
+];
+
 test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege', (context) => {
 	const html = readBuilt(PAGES.study);
 	if (html === null) return context.skip('zuerst npm run build ausführen');
+	// Stabiler, sitzungsunabhängiger Kopf + Mechanismus (harte UI-Verträge).
 	requireAll(html, 'The Study', [
 		'Wo hilft meine Spende am meisten?', // h1 / Leitfrage
 		'Jede Sitzung beginnt hier — mit einer Frage und den Belegen dazu.', // Raum-Lead
@@ -41,7 +104,6 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		'Warum so umständlich? ▸', // Verfahrens-Ausklapp im stabilen Kopf
 		'Ein einzelnes Modell kann irren oder eine blinde Stelle haben.',
 		// Prozess-Röhre: alle sechs kanonischen Schritte mit Name + Klartext-Satz
-		// AN der Kugel (die FlowRail „So läuft es" ist entfallen)
 		'Die Frage',
 		'Die Belege',
 		'Drei Antworten',
@@ -50,39 +112,59 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		'Veröffentlichen',
 		'Eine Frage pro Sitzung — vier Bereiche, je eine Empfehlung.',
 		'Der Späher sammelt Studien, Kosten-Wirksamkeit und Finanzierungslücken.',
-		'Drei Modelle antworten getrennt — jedes Votum öffentlich.', // Zahlwort aus der Datenlage
+		'Drei Modelle antworten getrennt — jedes Votum öffentlich.',
 		'Ein einfaches Programm zählt nur die Nennungen.',
 		'Der Wart veröffentlicht alles — Empfehlungen, Uneinigkeit, Kosten.',
-		// Klartext-Antwort (§3.3): die publizierte plain-Schicht trägt jede Zeile —
-		// wortgleich aus den Daten (Bereich, Org und Warum stecken im Feld,
-		// das Frontend setzt nichts zusammen).
-		'Die Empfehlungen dieser Sitzung',
-		'Zukunft → Helen Keller International, weil ihre Wirkung besser belegt ist',
-		'Leid lindern → Against Malaria Foundation, weil imprägnierte Moskitonetze',
-		'Helen Keller International',
-		'Against Malaria Foundation',
-		'Nuclear Threat Initiative',
-		'Lead Exposure Elimination Project',
-		'giving.helenkellerintl.org', // Spendenlink in der Klartext-Zeile (Registry)
-		// Dossiers (§3.4): Klartext-Frage sichtbar (plain.question), Wortlaut an der Kennzeichnung
+		'Die Empfehlungen dieser Sitzung', // answerTitle
+		// Dossiers (§3.4): Kennzeichnungs-Ausklapp + Wortlaut-Beleg (stabil).
 		'Dossiers',
-		'Die Frage dieser Sitzung',
-		'Bereich Zukunft: Ist Kindergesundheit (Helen Keller) oder Bildung (Pratham/TaRL) besser belegt?', // plain.question, wortgleich
+		'Die Frage dieser Sitzung', // questionTitle (questionText liegt immer vor)
 		'Die Frage im Wortlaut ▸',
 		'<blockquote',
-		'Suchanfragen des Spähers ▸',
-		'Helen Keller International vitamin A supplementation', // Suchanfrage, wörtlich
-		'#wart-dossier', // Dossier-Verweis
 		'/ratssaal/', // Tür zu The Council
 		'/archiv/', // Tür zu The Archive
-		// Das Board trägt die Antwort — pragerendert, ohne JS im HTML.
-		'Die Antwort der letzten Sitzung',
-		'3 von 3',
-		// Tür-Hotspot im Raumbild — pragerenderter Link, trägt ohne JS.
-		// (Klasse trägt im Build den Svelte-Scope-Hash: class="door-hotspot svelte-…")
+		'Die Antwort der letzten Sitzung', // Board
 		'door-hotspot',
 		'aria-label="Durch die große Tür: The Council"'
 	]);
+	// Datenabhängig aus der aktuellen Sitzung: Konsens-Organisationen (Registry),
+	// ihre Zählstände und mindestens ein direkter Spendenlink.
+	for (const name of consensusOrgNames) {
+		assert.ok(html.includes(name), `The Study fehlt Konsens-Org: ${name}`);
+	}
+	for (const t of tally('von')) {
+		assert.ok(html.includes(t), `The Study fehlt Zählstand: ${t}`);
+	}
+	assert.ok(
+		consensusDonations.length === 0 || consensusDonations.some((url) => html.includes(url)),
+		'The Study fehlt ein registry-aufgelöster Spendenlink'
+	);
+	// Klartext-Schicht (§3.3): liegt session.plain vor, tragen die Zeilen die
+	// publizierte Fassung WORTGLEICH und der Vermerk entfällt; sonst steht der
+	// publizierende Fallback „Klartext folgt" mit unverändertem Rekordinhalt.
+	if (DATA.plain?.recommendations) {
+		assert.ok(!html.includes('Klartext folgt'), 'Vermerk trotz publizierter Klartext-Schicht sichtbar');
+		for (const line of Object.values(DATA.plain.recommendations)) {
+			assert.ok(html.includes(line), `The Study fehlt Klartext-Zeile: ${line}`);
+		}
+	} else {
+		assert.ok(html.includes('Klartext folgt'), 'Klartext-Fallback fehlt trotz fehlender plain-Schicht');
+	}
+	// Frage-Kontext: plain.question, sonst der kuratierte Protokoll-Kontext (summary).
+	const questionText = DATA.plain?.question ?? DATA.session.summary ?? '';
+	assert.ok(
+		questionText.length === 0 || html.includes(questionText.slice(0, 48)),
+		'The Study fehlt Frage-Kontext (plain.question bzw. summary)'
+	);
+	// Research-Ausklapp NUR, wenn die aktuelle Sitzung ein Dossier mit Suchanfragen
+	// bereitstellt. Bei wart_dossier_refusal keine erfundenen Scout-Suchanfragen.
+	if (DATA.dossier?.search_queries?.length) {
+		assert.ok(html.includes('Suchanfragen des Spähers ▸'), 'Scout-Suchanfragen-Ausklapp fehlt');
+		assert.ok(html.includes(DATA.dossier.search_queries[0]), 'erste Scout-Suchanfrage fehlt');
+		assert.ok(html.includes('#wart-dossier'), 'Dossier-Verweis fehlt');
+	} else {
+		assert.ok(!html.includes('Suchanfragen des Spähers'), 'Scout-Suchanfragen trotz fehlendem Dossier');
+	}
 	// Dynamischer Raumteil: EIN Wort + Raum-Lead (Titelbereich-Neuordnung).
 	assert.ok(html.includes('room-word'), 'Raumwort-Element fehlt');
 	assert.match(html, />Study<\/p>/, 'Raumwort „Study" fehlt');
@@ -99,8 +181,8 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		!html.includes('Je ein KI-Modell der Familien Anthropic'),
 		'Familiennamen-Hardcode im Fließtext — der Pitch trägt bewusst keine Namen'
 	);
-	// Klartext-Schicht ist publiziert: kein Vermerk, keine Doppelung, kein Fallback.
-	assert.ok(!html.includes('Klartext folgt'), 'Vermerk trotz publizierter Klartext-Schicht noch sichtbar');
+	// Keine Doppel-Komposition der Klartext-Zeile (das „Klartext folgt" gegen die
+	// plain-Schicht prüft bereits der datenabhängige Zweig oben).
 	assert.ok(
 		!html.includes('International, Zukunft →'),
 		'Bereichs-Label gedoppelt — die plain-Zeile darf nicht erneut zusammengesetzt werden'
@@ -119,35 +201,49 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 test('The Council (/ratssaal/) trägt Zählwerk, Voten, Revisionen in der Marke, Spendenlinks', (context) => {
 	const html = readBuilt(PAGES.council);
 	if (html === null) return context.skip('zuerst npm run build ausführen');
+	// Stabiler Kopf + Zähl-Block-Gerüst (sitzungsunabhängig).
 	requireAll(html, 'The Council', [
-		// Stabiler Kopf — auf allen drei Raum-Seiten identisch (Titelbereich-Neuordnung)
 		'Wo hilft meine Spende am meisten?', // h1 — die Leitfrage überall
 		'Je ein KI-Modell verschiedener Familien prüft dieselben Belege', // Pitch
 		'Warum so umständlich? ▸', // inline-Ausklapp im Kopf
 		'Getrennt abgestimmt, dann öffentlich gezählt. Was mehrfach genannt wird, wird Empfehlung.', // Raum-Lead
 		'Drei Antworten', // Röhren-Kugel (Name)
-		// „Wie gezählt wurde" — ein Block statt drei (§4.2)
-		'Wie gezählt wurde',
+		'Wie gezählt wurde', // §4.2 ein Block statt drei
 		'Das Programm zählt nur gleiche Nennungen.',
-		'Helen Keller International', // Nennung in den Marken
-		'Against Malaria Foundation',
-		'Nuclear Threat Initiative',
-		'Lead Exposure Elimination Project',
-		'3 von 3', // Zählung Konsens (aus convergence)
-		'2 von 3', // Zählung 2-von-3 (aus convergence)
-		// Modell-Marken generisch aus modelTracks
-		'Claude Opus',
-		'Gemini Pro',
-		// Revisionen leben in der Marke: Erstvotum durchgestrichen
-		// (Svelte-Scope-Hash am <del>: nur Inhalt + Tag-Ende vergleichen)
-		'>TaRL Africa</del>',
-		'Vorbehalt ▸', // Vorbehalt-Ausklapp in der Zeile
 		'Alle Voten im Wortlaut ▸', // volle Matrix am Blockende
 		'Erst ', // Erstvotum (ModelPulpits)
 		'Schluss ', // Schlussvotum
-		'NobleCause nimmt kein Geld an.', // Geldfluss-Hinweis
-		'giving.helenkellerintl.org' // direkter Spendenlink (Tafel, Registry)
+		'NobleCause nimmt kein Geld an.' // Geldfluss-Hinweis
 	]);
+	// Datenabhängig: Konsens-Orgs, Zählstände, Modell-Marken (labels), Spendenlink.
+	for (const name of consensusOrgNames) {
+		assert.ok(html.includes(name), `The Council fehlt Konsens-Org: ${name}`);
+	}
+	for (const t of tally('von')) {
+		assert.ok(html.includes(t), `The Council fehlt Zählstand: ${t}`);
+	}
+	for (const p of DATA.participants) {
+		assert.ok(html.includes(p.label), `The Council fehlt Modell-Marke: ${p.label}`);
+	}
+	assert.ok(
+		consensusDonations.length === 0 || consensusDonations.some((url) => html.includes(url)),
+		'The Council fehlt ein registry-aufgelöster Spendenlink'
+	);
+	// Revisionen leben in der Marke (Erstvotum durchgestrichen): NUR wenn die
+	// aktuelle Sitzung eine Organisationsänderung zwischen Erst- und Schlussvotum
+	// trägt. Gibt es keine, darf auch kein <del>-Erstvotum erscheinen.
+	if (DATA.revisions.length) {
+		assert.ok(html.includes('Vorbehalt ▸') || html.includes('changedMark'), 'Council: Revisionsmarke fehlt');
+		for (const rev of DATA.revisions) {
+			assert.ok(html.includes(`>${rev.fromName}</del>`), `Council fehlt Revision-Erstvotum: ${rev.fromName}`);
+		}
+	} else {
+		assert.ok(!/<del>[^<]/.test(html.split('all-votes')[0] ?? html), 'Council: <del>-Revision ohne Datenbasis');
+	}
+	// Vorbehalt-Ausklapp: nur wenn ein Konsens-Bereich bedingte Voten trägt.
+	if (DATA.consensus.some((r) => (r.convergence?.conditional_count ?? 0) > 0)) {
+		assert.ok(html.includes('Vorbehalt ▸'), 'Council: Vorbehalt-Ausklapp fehlt trotz bedingter Voten');
+	}
 	// Raumwort + entfallener alter Kopf.
 	assert.match(html, />Council<\/p>/, 'Raumwort „Council" fehlt');
 	assert.ok(!html.includes('Wie drei Modelle entscheiden'), 'alter dynamischer h1 noch sichtbar');
@@ -199,6 +295,7 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit Vermerk', (context) => {
 	const html = readBuilt(PAGES.studyEn);
 	if (html === null) return context.skip('zuerst npm run build ausführen');
+	// Stable English chrome + process (session-independent).
 	requireAll(html, 'The Study (EN)', [
 		'Where does my donation help the most?',
 		'Every session begins here — with a question and the evidence for it.', // room lead
@@ -206,54 +303,56 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		'Why so elaborate? ▸', // process toggle in the plaque
 		'A single model can be wrong or have a blind spot.',
 		'Three AI models review the same evidence', // head description
-		// The process tube: all six canonical steps, plain-language sentences
-		// on the beads (the "How it works" rail is gone)
-		'The question',
-		'The evidence',
-		'Three answers',
-		'Second thoughts',
-		'The count',
-		'Publication',
+		'The question', 'The evidence', 'Three answers', 'Second thoughts', 'The count', 'Publication',
 		'The Scout gathers studies, cost-effectiveness and funding gaps.',
-		'Three models answer separately — every vote public.', // number word from the data
+		'Three models answer separately — every vote public.',
 		'The Warden publishes everything — recommendations, disagreement, costs.',
-		// Plain-language answer (§3.3): the published German plain layer shows with a
-		// language marker (plainEnDe fallback) — never machine-translated.
 		"This session's recommendations",
-		'Zukunft → Helen Keller International, weil ihre Wirkung besser belegt ist',
-		'Helen Keller International',
-		'Against Malaria Foundation',
-		'Nuclear Threat Initiative',
-		'Lead Exposure Elimination Project',
-		'giving.helenkellerintl.org',
-		// Dossiers (§3.4)
 		'Dossiers',
 		"This session's question",
-		'Bereich Zukunft: Ist Kindergesundheit (Helen Keller) oder Bildung (Pratham/TaRL) besser belegt?', // plain.question (German, marked)
 		'The question verbatim ▸',
 		'<blockquote',
-		"The Scout's search queries ▸",
 		'/en/council/', // Tür zu The Council (EN)
 		'/en/archive/', // Tür zu The Archive (EN)
 		'Original protocol in German.', // Rekord-Vermerk bei der aktuellen Frage
 		'lang="de"', // Rekordtext maschinell als deutsch markiert
-		// Das Board trägt die Antwort — pragerendert, ohne JS im HTML.
-		"The last session's answer",
-		'3 of 3',
-		// Tür-Hotspot im Raumbild — pragerenderter Link, trägt ohne JS.
-		// (Klasse trägt im Build den Svelte-Scope-Hash: class="door-hotspot svelte-…")
+		"The last session's answer", // Board
 		'door-hotspot',
 		'aria-label="Through the grand door: The Council"'
 	]);
-	// Die publizierte Frage steht unverändert (deutsch) im EN-Dokument.
+	// Data-derived: consensus orgs, tallies (EN word), donation link.
+	for (const name of consensusOrgNames) {
+		assert.ok(html.includes(name), `The Study (EN) fehlt Konsens-Org: ${name}`);
+	}
+	for (const t of tally('of')) {
+		assert.ok(html.includes(t), `The Study (EN) fehlt Zählstand: ${t}`);
+	}
 	assert.ok(
-		html.includes('Auflösung des Säule-A-Dissens'),
-		'deutsche Rekordfrage fehlt im EN-Raum'
+		consensusDonations.length === 0 || consensusDonations.some((url) => html.includes(url)),
+		'The Study (EN) fehlt ein registry-aufgelöster Spendenlink'
 	);
+	// Die publizierte Frage steht unverändert (deutsch) im EN-Dokument — der
+	// tatsächliche Wortlaut der aktuellen Sitzung, nicht ein fester String.
 	assert.ok(
-		!html.includes('Plain-language version pending'),
-		'pending note still visible although the plain layer is published'
+		html.includes(DATA.session.question.slice(0, 48)),
+		'deutsche Rekordfrage der aktuellen Sitzung fehlt im EN-Raum'
 	);
+	// Klartext-Schicht: liegt session.plain vor, kein pending-Vermerk und die
+	// (deutschen, markierten) plain-Zeilen; sonst der publizierende Fallback.
+	if (DATA.plain?.recommendations) {
+		assert.ok(!html.includes('Plain-language version pending'), 'pending note despite published plain layer');
+		for (const line of Object.values(DATA.plain.recommendations)) {
+			assert.ok(html.includes(line), `The Study (EN) fehlt Klartext-Zeile: ${line}`);
+		}
+	} else {
+		assert.ok(html.includes('Plain-language version pending'), 'EN plain fallback missing');
+	}
+	// Research-Ausklapp nur bei vorhandenem Dossier mit Suchanfragen.
+	if (DATA.dossier?.search_queries?.length) {
+		assert.ok(html.includes("The Scout's search queries ▸"), "Scout's search queries toggle missing");
+	} else {
+		assert.ok(!html.includes("The Scout's search queries"), 'Scout search queries without dossier data');
+	}
 	assert.match(html, />Study<\/p>/, 'room word "Study" missing (EN)');
 	assert.ok(!html.includes('How it works'), 'removed process rail still visible');
 	assert.ok(!html.includes('The Scout and The Warden'), 'Doppelblock Akteure noch sichtbar');
@@ -264,30 +363,40 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 test('The Council (/en/council/) zeigt englische Chrome, deutsche Vorbehalte mit Vermerk', (context) => {
 	const html = readBuilt(PAGES.councilEn);
 	if (html === null) return context.skip('zuerst npm run build ausführen');
+	// Stable head + block scaffold (session-independent).
 	requireAll(html, 'The Council (EN)', [
-		// Stable head — identical on all three room pages (title reorder)
 		'Where does my donation help the most?', // h1 — the core question everywhere
 		'One AI model each from different families reviews the same evidence', // pitch
 		'Why so elaborate? ▸', // inline toggle in the head
 		'Voted separately, then counted publicly.', // room lead
 		'Three answers', // tube bead (name)
-		// "How the votes were counted" — one block instead of three (§4.2)
-		'How the votes were counted',
+		'How the votes were counted', // §4.2 one block
 		'The program only counts matching mentions.',
-		'Helen Keller International',
-		'Against Malaria Foundation',
-		'Nuclear Threat Initiative',
-		'Lead Exposure Elimination Project',
-		'3 of 3', // Zählung Konsens (Trennwort aus der Locale)
-		'2 of 3',
-		'>TaRL Africa</del>', // revision inside the mark (Svelte scope hash on <del>)
-		'Reservation ▸', // reservation toggle in the row
 		'All votes, verbatim ▸', // full matrix at the end of the block
-		'Original protocol in German.', // Rekord-Vermerk beim Vorbehalt
+		'Original protocol in German.', // Rekord-Vermerk (Vorbehalte bleiben deutsch)
 		'First ', // Erstvotum
 		'Final ', // Schlussvotum
 		'NobleCause does not handle money' // Geldfluss-Hinweis
 	]);
+	// Data-derived from the current session: consensus orgs + tallies (EN word) +
+	// model marks; revisions/reservations only when the data actually carries them.
+	for (const name of consensusOrgNames) {
+		assert.ok(html.includes(name), `The Council (EN) fehlt Konsens-Org: ${name}`);
+	}
+	for (const t of tally('of')) {
+		assert.ok(html.includes(t), `The Council (EN) fehlt Zählstand: ${t}`);
+	}
+	for (const p of DATA.participants) {
+		assert.ok(html.includes(p.label), `The Council (EN) fehlt Modell-Marke: ${p.label}`);
+	}
+	if (DATA.revisions.length) {
+		for (const rev of DATA.revisions) {
+			assert.ok(html.includes(`>${rev.fromName}</del>`), `Council (EN) fehlt Revision: ${rev.fromName}`);
+		}
+	}
+	if (DATA.consensus.some((r) => (r.convergence?.conditional_count ?? 0) > 0)) {
+		assert.ok(html.includes('Reservation ▸'), 'Council (EN): reservation toggle missing');
+	}
 	assert.match(html, />Council<\/p>/, 'room word "Council" missing (EN)');
 	assert.ok(!html.includes('How three models decide'), 'old dynamic h1 still visible');
 	// Organisationsbeschreibungen (und ihr orgEn-Fallback) haben im entrümpelten
@@ -553,7 +662,13 @@ test('Bühne: zweite Ebene — Akteure und Wolkenzug stehen im pragerenderten HT
 	// Bereichs-Emblemreihe trägt die vier Bereiche (alt=label, nicht dekorativ).
 	// Gloss ist entfallen.
 	assert.ok(studyHtml.includes('The Scout'), 'study: Scout-Name fehlt (DE)');
-	assert.ok(studyHtml.includes('Aktuell: claude-fable-5'), 'study: Sitz (Modell aus Daten) fehlt (DE)');
+	// Scout-Sitz aus den Daten (lastResearch.model). Zwischen „Aktuell:" und dem
+	// Modell steht Template-Whitespace — Präfix und Modell-ID getrennt geprüft.
+	assert.ok(studyHtml.includes('Aktuell:'), 'study: Scout-Sitz-Präfix „Aktuell:" fehlt');
+	assert.ok(
+		Boolean(DATA.lastResearch?.model) && studyHtml.includes(DATA.lastResearch.model),
+		'study: Scout-Sitz-Modell (lastResearch.model) fehlt'
+	);
 	assert.ok(
 		studyHtml.includes('sucht die wirksamsten Organisationen'),
 		'study: Scout-Satz fehlt (DE)'
@@ -563,7 +678,12 @@ test('Bühne: zweite Ebene — Akteure und Wolkenzug stehen im pragerenderten HT
 	// Warden-Entscheid + „letzte Prüfung" aus den Daten — zugleich Beleg, dass der
 	// versöhnte Rekord hereingezogen ist: die Wart-Recherche journal/2026-07-27
 	// (27. Juli 2026) ist der jüngste Lauf, neuer als master allein (20. Juli).
-	assert.ok(studyHtml.includes('27. Juli 2026'), 'study: lastResearch-Datum (Rekord-Zug) fehlt');
+	// lastResearch-Datum als Beleg des Rekord-Zugs: das ISO-Datum steht im
+	// datetime-Attribut (die formatierte Anzeige ist locale-abhängig).
+	assert.ok(
+		Boolean(DATA.lastResearch?.date) && studyHtml.includes(`datetime="${DATA.lastResearch.date}"`),
+		'study: lastResearch-Datum (datetime-Attribut) fehlt'
+	);
 	assert.ok(studyEnHtml.includes('The Scout'), 'studyEn: Scout-Name fehlt (EN)');
 	assert.ok(
 		studyEnHtml.includes('seeks the most effective organisations'),
@@ -606,7 +726,7 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 		assert.ok(html.includes('/media/actors/lectern.avif'), `${room}: Lesepult-Cutout fehlt`);
 		assert.equal(
 			(html.match(/class="rail pult/g) ?? []).length,
-			3,
+			DATA.participants.length,
 			`${room}: erwartet ein Pult je Teilnehmer (modelTracks)`
 		);
 		assert.ok(
@@ -614,12 +734,10 @@ test('Bühne: zweite Ebene Council — N Lesepulte stehen im pragerenderten HTML
 			`${room}: Pult-Figur trägt tabindex (nicht-interaktiv = kein Tab-Stopp)`
 		);
 	}
-	// Beschriftung aus den Daten (label + Anzeigename der Familie), Rolle aus i18n.
-	for (const alt of [
-		'Claude Opus (Anthropic): antwortet getrennt',
-		'GPT (OpenAI): antwortet getrennt',
-		'Gemini Pro (Google): antwortet getrennt'
-	]) {
+	// Beschriftung aus den Daten (participant.label + Anzeigename der Familie),
+	// Rolle aus i18n — kein historischer Label-Hardcode (z. B. „Gemini Pro").
+	for (const p of DATA.participants) {
+		const alt = `${p.label} (${DATA.FAMILY[p.family]}): antwortet getrennt`;
 		assert.ok(councilHtml.includes(alt), `council: Pult-Beschriftung fehlt: ${alt}`);
 	}
 	assert.ok(

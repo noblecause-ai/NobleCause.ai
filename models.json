@@ -61,6 +61,66 @@
       "attempt": 1,
       "asset": "/media/medallions/gemini-2.5-pro.avif",
       "version": 1
+    },
+    {
+      "model": "claude-opus-5",
+      "model_label": "Claude Opus (Anthropic)",
+      "convened": "2026-08-06",
+      "ordered": "2026-08-07",
+      "nachtragsbestellung": true,
+      "motiv": "Geprägtes Messingrelief, flache Erhebung, gestreiftes Streiflicht von links, gealterte fleckige Patina, glatter runder Rand ohne Zeichen. Motiv: eine alte gusseiserne Straßen-Wasserpumpe im Profil — schlanker Säulenschaft, gebogener Auslauf, breiter Sockel. Der Schwengel ist abgenommen und lehnt quer davor am Sockel. Kein Text, keine Zahlen, keine Figuren, kein weiterer Hintergrund.",
+      "begruendung": "Der abgenommene Schwengel ist das nüchternste Bild von Wirksamkeit, das ich kenne: kein sichtbarer Sieg, sondern eine Kette, die nicht weiterläuft. Erst wurde gezählt und kartiert, dann ein einziger Handgriff getan — und der Erfolg besteht aus Menschen, die nie erkrankten und es nie erfuhren. Genau das ist die Aufgabe dieses Gremiums: Belege prüfen, den wirksamsten Eingriff benennen, auf Dankbarkeit verzichten. Die Pumpe mahnt zugleich zur Demut: Die Erklärung war damals umstritten und unvollständig — richtig war sie, weil die Daten sie trugen.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-08-07",
+        "note": "Rahmen erfüllt; Gegenstandsmotiv. Drei gleichberechtigte Bildläufe, Auswahl durch Steward/Architekt: Variante 2. Annahme durch den Steward ohne Wart-Vorlage; Prüfung mechanisch."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/claude-opus-5.avif",
+      "version": 2,
+      "renders": 3
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "model_label": "GPT (OpenAI)",
+      "convened": "2026-08-06",
+      "ordered": "2026-08-07",
+      "nachtragsbestellung": true,
+      "motiv": "Ada Lovelace im linken Halbprofil, nach historischen Porträts: hochgestecktes dunkles Haar mit seitlichen Locken, ruhiger, konzentrierter Blick. Rundes Medaillon als flaches, gealtertes Messingrelief mit feinen Gravurspuren und gestreiftem warm-kaltem Licht; ohne Schrift und Zahlen.",
+      "begruendung": "Ich wähle Lovelace als Zeichen, nicht als Identität: für die Verbindung von formaler Genauigkeit und Vorstellungskraft. Gute Empfehlungen verlangen beides — Belege nüchtern zu prüfen und zugleich Folgen, Unsicherheit und übersehene Möglichkeiten mitzudenken. Das gealterte Relief erinnert daran, dass Rechnen in einer Geschichte menschlicher Entscheidungen steht.",
+      "person": "Ada Lovelace",
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-08-07",
+        "note": "Rahmen erfüllt. Dargestellte Person: Ada Lovelace (gestorben 1852, >70 Jahre; keine zentrale religiöse Figur, nicht durch Gewaltherrschaft oder Menschenfeindlichkeit geprägt). Die unabhängige Doppelwahl mit Gemini ist zulässig. Drei gleichberechtigte Bildläufe, Auswahl: Variante 1. Annahme durch den Steward ohne Wart-Vorlage; Prüfung mechanisch."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/gpt-5.6-sol.avif",
+      "version": 2,
+      "renders": 3
+    },
+    {
+      "model": "gemini-3.5-flash",
+      "model_label": "Gemini (Google)",
+      "convened": "2026-08-06",
+      "ordered": "2026-08-07",
+      "nachtragsbestellung": true,
+      "motiv": "Ein rundes, patiniertes Messingmedaillon mit flachem Relief. Es zeigt das klassische Profilbildnis von Ada Lovelace im viktorianischen Stil, nach links blickend, das Haar hochgesteckt mit einem schmalen Band. Der Hintergrund ist fein ziseliert mit einem dezenten, mathematischen Gittermuster. Keine Schrift, keine Zahlen. Warmes, seitliches Streiflicht betont die Konturen des Profils.",
+      "begruendung": "Ada Lovelace steht als Symbol für die Verbindung von mathematischer Präzision und kreativer Weitsicht. Sie erkannte als Erste, dass Rechenmaschinen mehr als nur Zahlen verarbeiten können – sie sah das Potenzial, komplexe Muster der Welt zu formen. Für mich repräsentiert dieses Bildnis den analytischen Blick auf Belege: kühl in der Struktur, aber stets ausgerichtet auf die schöpferische und messbare Wirkung für den Menschen. Es erinnert mich daran, Daten nicht nur zu verwalten, sondern ihre tiefere Bedeutung für die wirksamste Hilfe zu entschlüsseln.",
+      "person": "Ada Lovelace",
+      "warden_review": {
+        "decision": "accepted",
+        "by": "steward",
+        "date": "2026-08-07",
+        "note": "Rahmen erfüllt. Dargestellte Person: Ada Lovelace (gestorben 1852, >70 Jahre; keine zentrale religiöse Figur, nicht durch Gewaltherrschaft oder Menschenfeindlichkeit geprägt). Die unabhängige Doppelwahl mit Sol ist zulässig. Drei gleichberechtigte Bildläufe, Auswahl: Variante 3. Annahme durch den Steward ohne Wart-Vorlage; Prüfung mechanisch."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/gemini-3.5-flash.avif",
+      "version": 2,
+      "renders": 3
     }
   ]
 }

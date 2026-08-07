@@ -63,6 +63,24 @@
               "confidence": 0.85,
               "conditional": false,
               "reservation": null
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Nukleare Rüstungskontrolle und Verifikation nach dem Auslaufen von New START (5.2.2026) plus Biosicherheits-Screening-Standards",
+              "confidence": 0.7,
+              "conditional": false,
+              "reservation": null
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Regulierung und Beseitigung von Bleiexposition (Bleifarben-Standards, Expositionsmessung) in LMICs",
+              "confidence": 0.62,
+              "conditional": true,
+              "reservation": "Nur vorbehaltlich einer Prüfung, ob LEEP für 2026/27 eine aufnahmefähige Finanzierungslücke ausweist und ob die Partnership for a Lead-Free Future das Feld inzwischen ausfinanziert hat; bei Deckung ist Pure Earth vorzuziehen."
             }
           ]
         },
@@ -88,6 +106,24 @@
               "confidence": 0.82,
               "conditional": true,
               "reservation": "Vorbehaltlich einer aktuellen Bestätigung zusätzlicher, nicht bereits finanzierter Kampagnen und hinreichender lokaler Wirksamkeit der eingesetzten Netze."
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Nukleare und biologische Katastrophenrisiken reduzieren",
+              "confidence": 0.46,
+              "conditional": true,
+              "reservation": "Nur vorbehaltlich einer 2026-Prüfung zusätzlicher Finanzierungsmöglichkeiten, überprüfbarer Zwischenziele und der tatsächlichen Marginalität privater Spenden."
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Bleifarbe durch Regulierung und Marktüberwachung eliminieren",
+              "confidence": 0.62,
+              "conditional": true,
+              "reservation": "Vorbehaltlich unabhängiger Nachweise, dass unterstützte Regulierungen zu messbarer Marktcompliance oder sinkender Bleiexposition führen."
             }
           ]
         },
@@ -111,6 +147,24 @@
               "organization": "Against Malaria Foundation",
               "title": "Verteilung von langlebigen Insektizid-Bettnetzen",
               "confidence": 0.98,
+              "conditional": false,
+              "reservation": null
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Minderung biologischer und nuklearer Katastrophenrisiken",
+              "confidence": 0.82,
+              "conditional": false,
+              "reservation": null
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Beseitigung globaler Bleibelastungen durch Politikberatung",
+              "confidence": 0.9,
               "conditional": false,
               "reservation": null
             }
@@ -144,6 +198,24 @@
               "confidence": 0.85,
               "conditional": false,
               "reservation": null
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Nukleare Risikoreduktion und Verifikationsarbeit nach dem Auslaufen von New START, ergaenzt um Biosicherheits-Governance (DNA-Synthese-Screening)",
+              "confidence": 0.6,
+              "conditional": true,
+              "reservation": "Revision gegenueber Runde 1 (dort conditional=false): Ich hatte die Vernachlaessigtheit des FELDES (30-60 Mio. USD p.a. weltweit, nach MacArthur-Rueckzug 2021 um ca. ein Drittel geschrumpft) faelschlich als Beleg fuer die Grenzwirkung bei der ORGANISATION verwendet. Bei einem NTI-Budget von 40-60 Mio. USD verschiebt 1 Mio. USD etwa 2 Prozent und kann Kernkosten substituieren. Bedingungen: (a) Zweckbindung an Nuklearverifikation/Track-II bzw. NTI | bio (IBBIS, Common Mechanism), (b) Nachweis einer aufnahmefaehigen Finanzierungsluecke 2026/27. Ohne Zweckbindung sinkt meine Konfidenz auf etwa 0,45. Kipptrigger: Tritt im Fenster ein verifizierbares New-START-Nachfolgeabkommen mit Vor-Ort-Inspektionen in Kraft, sinkt der Grenznutzen von Track-II-Verifikationsarbeit deutlich; bleibt die Luecke offen oder wird von Arsenal-Aufwuchs begleitet, steigt er stark. Fuer diese Saeule existiert keine CEA, sondern ein Modell; ich nenne bewusst keine Dollar-pro-DALY-Zahl."
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Regulierung und Durchsetzung von Bleifarbverboten sowie Expositionsmessung in Laendern mit niedrigem und mittlerem Einkommen",
+              "confidence": 0.62,
+              "conditional": true,
+              "reservation": "Die Lastgroesse ist belastbar (Larsen & Sanchez-Triana, Lancet Planetary Health 2023: ca. 5,5 Mio. kardiovaskulaere Todesfaelle und ca. 765 Mio. verlorene IQ-Punkte fuer 2019, Wohlfahrtsverlust ca. 6 Bio. USD). Die tragende Praemisse ist jedoch die Vernachlaessigtheit, und die ist offen: Die Partnership for a Lead-Free Future (Start Sept. 2024, initial ca. 150 Mio. USD) haette das Feld entneglektiert, die USAID-Aufloesung 2025 haette Vernachlaessigtheit teilweise wiederhergestellt - gegenlaeufige, entscheidungsrelevante Szenarien. Trigger fuer den Steward: (a) Ist die Partnership operativ und ausfinanziert? (b) Nennt LEEP eine aufnahmefaehige Finanzierungsluecke fuer 2026/27? Erklaert LEEP sich als gedeckt, ist Pure Earth (Messkampagnen, Sanierung) die bessere Adresse derselben Saeule. Die zitierten Kosten pro DALY im einstelligen bis niedrig-zweistelligen Dollarbereich sind ein Advocacy-Kontrafaktual mit Unsicherheit von Faktor 10 in beide Richtungen, kein Messwert."
             }
           ]
         },
@@ -169,6 +241,24 @@
               "confidence": 0.84,
               "conditional": true,
               "reservation": "Vor Auszahlung sind eine zusätzliche, nicht bereits finanzierte Kampagne, ein zum lokalen Resistenzprofil passender Netztyp und belastbares Nutzungsmonitoring zu bestätigen."
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Nukleare und biologische Katastrophenrisikoreduktion",
+              "confidence": 0.58,
+              "conditional": true,
+              "reservation": "Hoher potenzieller Erwartungswert, aber schwache quantitative Attribution; Förderung nur für ein konkret zusätzliches Projekt mit überprüfbaren Zwischenzielen und bestätigter Finanzierungslücke."
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Eliminierung bleihaltiger Farben durch Regulierung, Marktprüfung und Durchsetzung",
+              "confidence": 0.66,
+              "conditional": true,
+              "reservation": "LEEP muss eine aktuelle aufnahmefähige Finanzierungslücke sowie zusätzliche Länderarbeit nachweisen und Ergebnisse durch Marktcompliance-, Expositions- oder Blutbleimessungen überprüfen."
             }
           ]
         },
@@ -194,6 +284,24 @@
               "confidence": 0.95,
               "conditional": false,
               "reservation": null
+            },
+            {
+              "pillar": "C",
+              "organization_id": "nuclear-threat-initiative",
+              "organization": "Nuclear Threat Initiative (NTI)",
+              "title": "Reduzierung nuklearer und biologischer Bedrohungen durch Verifikationsstandards und Track-II-Diplomatie",
+              "confidence": 0.75,
+              "conditional": true,
+              "reservation": "Die Befürwortung von NTI erfolgt unter Offenlegung meiner GPT-Herkunft. Ein Vorbehalt besteht hinsichtlich der konkreten marginalen Mittelverwendung: Ein Steward muss prüfen, ob NTI eine ungedeckte Finanzierungslücke für das verbleibende Jahr 2026 aufweist, die durch zusätzliche Spenden direkt adressiert werden kann, da Advocacy-Arbeit stark pfadabhängig und schwer quantifizierbar ist."
+            },
+            {
+              "pillar": "D",
+              "organization_id": "lead-exposure-elimination-project",
+              "organization": "Lead Exposure Elimination Project (LEEP)",
+              "title": "Regulierung und Durchsetzung von Verboten für bleihaltige Farben",
+              "confidence": 0.85,
+              "conditional": true,
+              "reservation": "Ein Steward muss prüfen, ob die 2024 gestartete 'Partnership for a Lead-Free Future' (PLFF) LEEPs operative Lücken bereits vollständig geschlossen hat. Sollte LEEP keine ungedeckte Finanzierungslücke ('room for more funding') mehr aufweisen, soll die Spende an 'Pure Earth' zur direkten Sanierung kontaminierter Standorte umgeleitet werden."
             }
           ]
         }

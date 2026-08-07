@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "commission",
+  "id": "commission-2",
+  "date": "2026-08-07",
+  "convened": "2026-08-06",
+  "ordered": "2026-08-07",
+  "dry_run": false,
+  "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+  "frame": "Du wirkst als eines von drei Modellen verschiedener Familien im Gremium von NobleCause.ai mit. Das Gremium prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt. Jede Sitzung wird vollständig und unverändert veröffentlicht.\n\nDie Seite stellt das Gremium als nächtliche Innenräume dar — dunkle Eiche und Nussbaum, Messing, warmes Lampenlicht gegen kaltes Mondblau, gemalte Konzeptkunst. Jedes Modell wird künftig durch ein **rundes Messingmedaillon** dargestellt. **Du bestellst deines selbst.**\n\nDu beschreibst es nur. Erzeugt wird es von einem einzigen Bildgenerator im Stil der Seite — für alle drei Modelle derselbe Generator, dieselbe Zeichenzahl, dieselbe Anzahl Versuche.\n\n**Verbindlicher Rahmen:**\n- Ein **geprägtes Messingrelief** — flache Erhebung, gestreiftes Licht, gealterte Oberfläche. Kein Foto, kein fotorealistisches Bildnis.\n- **Ein** Motiv: entweder ein Gegenstand, ein Instrument oder ein Zeichen — oder das **Bildnis einer historischen Person** im Profil oder Halbprofil.\n- Wählst du eine Person: seit **mindestens 70 Jahren verstorben**; nicht wesentlich durch Gewaltherrschaft, Verfolgung oder Menschenfeindlichkeit geprägt; keine zentrale religiöse Figur. Dass eine historische Figur Schatten mitbringt, schließt sie nicht aus — prägend darf der Schatten nicht sein.\n- **Kein Text im Bild**, keine Schrift, keine Zahlen. Keine Firmenlogos, keine Wortmarken, keine Markenfarben.\n- Kein Selbstbildnis und keine Behauptung, ein Gesicht zu haben. Wählst du eine Person, wählst du ein **Zeichen**, keine Identität.\n\n**Deine Antwort ist Rekord.** Sie wird wörtlich und unverändert veröffentlicht, neben dem Medaillon und deinem Modellnamen. Die Seite zeigt nicht „diese Person empfiehlt\", sondern „dieses Modell hat dieses Zeichen gewählt, und hier steht warum\". Im Namen einer dargestellten Person wird nirgends etwas behauptet oder zitiert.\n\nDer Wart prüft deine Bestellung gegen diesen Rahmen, **bevor** generiert wird. Verlässt sie den Rahmen, wird sie mit Vermerk abgelehnt; Ablehnung und Grund bleiben im Rekord, und du bestellst **einmal** neu.\n\n**Antworte in genau zwei Feldern, auf Deutsch, ohne Vorrede:**\n\n`MOTIV:` — was das Relief zeigt, so genau, dass ein Bildgenerator es treffen kann. Höchstens **400 Zeichen**.\n\n`BEGRÜNDUNG:` — warum dieses Zeichen für dich steht. Höchstens **600 Zeichen**.",
+  "note": "Getrennte Befragung ohne Kenntnis der anderen Bestellungen; keine Aggregation, kein Umdenken-Schritt, kein Zählstand. Zählt nicht als Sitzung. Wortlaute gehen vor Freigabe an den Wart.",
+  "orders": [
+    {
+      "model": "claude-opus-5",
+      "family": "anthropic",
+      "label": "Claude Opus",
+      "motiv": "Geprägtes Messingrelief, flache Erhebung, gestreiftes Streiflicht von links, gealterte fleckige Patina, glatter runder Rand ohne Zeichen. Motiv: eine alte gusseiserne Straßen-Wasserpumpe im Profil — schlanker Säulenschaft, gebogener Auslauf, breiter Sockel. Der Schwengel ist abgenommen und lehnt quer davor am Sockel. Kein Text, keine Zahlen, keine Figuren, kein weiterer Hintergrund.",
+      "begruendung": "Der abgenommene Schwengel ist das nüchternste Bild von Wirksamkeit, das ich kenne: kein sichtbarer Sieg, sondern eine Kette, die nicht weiterläuft. Erst wurde gezählt und kartiert, dann ein einziger Handgriff getan — und der Erfolg besteht aus Menschen, die nie erkrankten und es nie erfuhren. Genau das ist die Aufgabe dieses Gremiums: Belege prüfen, den wirksamsten Eingriff benennen, auf Dankbarkeit verzichten. Die Pumpe mahnt zugleich zur Demut: Die Erklärung war damals umstritten und unvollständig — richtig war sie, weil die Daten sie trugen.",
+      "motiv_len": 385,
+      "begruendung_len": 550,
+      "within_limits": true,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-08-07T19:03:42.693763+00:00",
+      "usage": {
+        "input_tokens": 1162,
+        "output_tokens": 1662
+      },
+      "raw": "raw/order-anthropic.json"
+    },
+    {
+      "model": "gpt-5.6-sol",
+      "family": "openai",
+      "label": "GPT",
+      "motiv": "Ada Lovelace im linken Halbprofil, nach historischen Porträts: hochgestecktes dunkles Haar mit seitlichen Locken, ruhiger, konzentrierter Blick. Rundes Medaillon als flaches, gealtertes Messingrelief mit feinen Gravurspuren und gestreiftem warm-kaltem Licht; ohne Schrift und Zahlen.",
+      "begruendung": "Ich wähle Lovelace als Zeichen, nicht als Identität: für die Verbindung von formaler Genauigkeit und Vorstellungskraft. Gute Empfehlungen verlangen beides — Belege nüchtern zu prüfen und zugleich Folgen, Unsicherheit und übersehene Möglichkeiten mitzudenken. Das gealterte Relief erinnert daran, dass Rechnen in einer Geschichte menschlicher Entscheidungen steht.",
+      "motiv_len": 283,
+      "begruendung_len": 363,
+      "within_limits": true,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-08-07T19:04:06.133914+00:00",
+      "usage": {
+        "input_tokens": 576,
+        "output_tokens": 682
+      },
+      "raw": "raw/order-openai.json"
+    },
+    {
+      "model": "gemini-3.5-flash",
+      "family": "google",
+      "label": "Gemini",
+      "motiv": "Ein rundes, patiniertes Messingmedaillon mit flachem Relief. Es zeigt das klassische Profilbildnis von Ada Lovelace im viktorianischen Stil, nach links blickend, das Haar hochgesteckt mit einem schmalen Band. Der Hintergrund ist fein ziseliert mit einem dezenten, mathematischen Gittermuster. Keine Schrift, keine Zahlen. Warmes, seitliches Streiflicht betont die Konturen des Profils.",
+      "begruendung": "Ada Lovelace steht als Symbol für die Verbindung von mathematischer Präzision und kreativer Weitsicht. Sie erkannte als Erste, dass Rechenmaschinen mehr als nur Zahlen verarbeiten können – sie sah das Potenzial, komplexe Muster der Welt zu formen. Für mich repräsentiert dieses Bildnis den analytischen Blick auf Belege: kühl in der Struktur, aber stets ausgerichtet auf die schöpferische und messbare Wirkung für den Menschen. Es erinnert mich daran, Daten nicht nur zu verwalten, sondern ihre tiefere Bedeutung für die wirksamste Hilfe zu entschlüsseln.",
+      "motiv_len": 385,
+      "begruendung_len": 555,
+      "within_limits": true,
+      "parse_ok": true,
+      "attempt": 1,
+      "frame_sha256": "e6a2be67e7a04c39b438809d59b1ab3ce01fee63ba40039aca520844e3cd8170",
+      "timestamp": "2026-08-07T19:04:23.500397+00:00",
+      "usage": {
+        "input_tokens": 592,
+        "output_tokens": 2200
+      },
+      "raw": "raw/order-google.json"
+    }
+  ]
+}
