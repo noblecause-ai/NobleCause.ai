@@ -1,9 +1,9 @@
-# gremium/ — die Deliberations-Pipeline
+# gremium/ — die Beratungs- und Abstimmungspipeline
 
 Führt eine Gremium-Sitzung als Batch-Lauf durch und schreibt das Protokoll
-nach `../sessions/YYYY-MM/`. Kein Server, kein Zustand: Der Orchestrator
-(`run_session.py`) ist ein deterministisches Skript — kein LLM steuert den
-Ablauf, Modelle liefern ausschließlich Voten.
+nach `../sessions/YYYY-MM/`. Kein Server, keine Datenbank: Der Orchestrator
+(`run_session.py`) ist deterministisch. Modelle liefern Beratungsinhalt und
+Voten; die Zählung bleibt vollständig im Code.
 
 ## Ablauf eines Laufs
 
@@ -12,8 +12,10 @@ Standardmodus:
 1. **Runde 1:** Jedes Modell (3 Familien: Anthropic, OpenAI, Google) erhält
    Manifest + Fragestellung + Quellenliste (`sources.md`) und votiert
    unabhängig, mit Konfidenz und strukturiertem JSON-Abschluss.
-2. **Runde 2:** Jedes Modell liest die Erstvoten der beiden anderen und gibt
-   Schlussvotum + Dissens-Abschnitt ab.
+2. **Runde 2 — Gegenlese:** Jedes Modell liest die Erstvoten der beiden anderen
+   und gibt Schlussvotum + Dissens-Abschnitt ab. Das aktuelle Verfahren
+   erzwingt noch keine namentlich adressierte Erwiderung; diese Form ist für
+   Version 0.5 vorgesehen.
 3. **Aggregation (deterministisch):** Nennen ≥2 Modelle für eine Säule
    dieselbe Organisation, ist das die Gremium-Empfehlung; sonst werden die
    Einzelvoten mit Attribution gelistet. Der Orchestrator urteilt nie selbst.
@@ -78,6 +80,9 @@ Wichtige Flags:
 Danach: Ergebnis prüfen, committen, pushen — die Site rendert die Sitzung
 automatisch. Protokolle sind nach Veröffentlichung unveränderlich
 (`run_session.py` verweigert das Überschreiben existierender Ordner).
+Korrekturhinweise sind additiv; deterministische Backfills abgeleiteter
+Strukturfelder benötigen Steward-Freigabe und dürfen Rohvoten oder Prosa nicht
+ändern.
 
 ## Dateien
 
@@ -85,6 +90,8 @@ automatisch. Protokolle sind nach Veröffentlichung unveränderlich
 |---|---|
 | `run_session.py` | Orchestrator (der gesamte Ablauf) |
 | `run_wart.py` | wöchentlicher Wart-Research-Lauf (Journal + schedule) |
+| `run_commission.py` | getrennte Modellbestellung außerhalb einer Sitzung |
+| `reaggregate.py` | freigabepflichtige, deterministische Rekordkorrekturen aus Rohvoten |
 | `prompts.py` | die wörtlichen Prompt-Vorlagen (werden mitveröffentlicht) |
 | `sources.md` | Referenzquellen, die den Modellen mitgegeben werden |
 | `config.json` | Modelle, Preise pro 1M Tokens, USD→EUR-Kurs, Output-Limit |

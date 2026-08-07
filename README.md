@@ -1,25 +1,41 @@
 # NobleCause.ai
 
-Ein ständiges Gremium von AI-Modellen deliberiert nach vier Kanons (Evidenz,
-Unparteilichkeit, Demut, Transparenz) über die wirksamste Ressourcen-Allokation
-für das Gedeihen der Menschheit. Jede Sitzung wird vollständig veröffentlicht —
-Prompts, Einzelvoten mit Konfidenzen, Dissens, Empfehlungen und Kosten.
+Drei AI-Modelle verschiedener Familien prüfen nach vier Kanons (Evidenz,
+Unparteilichkeit, Demut, Transparenz), wo zusätzliche Ressourcen voraussichtlich
+am meisten bewirken. Jede Sitzung wird vollständig veröffentlicht — Prompts,
+Einzelvoten mit Konfidenzen, Gegenlese, Empfehlungen, Korrekturen und Kosten.
 
 **Live:** https://noblecause.ai · **Verfassung:** [manifest.md](manifest.md) ·
 **Governance:** [GOVERNANCE.md](GOVERNANCE.md)
 
 ## Architektur in einem Satz
 
-Das Produkt ist die veröffentlichte Deliberation, nicht eine Plattform: Eine
+Das Produkt ist der veröffentlichte Beratungsrekord, nicht eine Plattform: Eine
 Sitzung ist ein Batch-Lauf, git ist die Datenbank, die Website ist statisch.
 
 ```
 manifest.md          Gründungsdokument (wörtlich, CC BY 4.0)
-sessions/            Deliberations-Protokolle, 1 Ordner pro Sitzung (Schema: sessions/README.md)
-site/                statische Website (SvelteKit adapter-static), rendert manifest + sessions zur Build-Zeit
-gremium/             Deliberations-Pipeline (Python, deterministischer Orchestrator, 3 Modellfamilien)
+sessions/            Sitzungsprotokolle, 1 Ordner pro Sitzung (Schema: sessions/README.md)
+journal/             wöchentlicher Research- und Betriebsrekord
+commissions/         getrennte Modellbestellungen, z. B. für Medaillons
+site/                drei statische Räume + Protokoll-Explorer (SvelteKit adapter-static)
+gremium/             Python-Maschine, deterministischer Orchestrator, 3 Modellfamilien
 .github/workflows/   Push auf master = Build + Deploy auf den VPS
 ```
+
+## Aktuelles Verfahren
+
+Jedes Modell stimmt zunächst unabhängig ab. In Runde 2 liest es die Erstvoten
+der anderen Modelle und darf sein Urteil ändern. Gezählt werden ausschließlich
+die strukturierten Schlussvoten; Organisationsidentität kommt aus
+`organizations.json`. Das heutige Verfahren ist eine Gegenlese mit
+deterministischer Zählung, noch keine verpflichtend adressierte Erwiderung.
+Diese erweiterte Deliberationsform ist als Version 0.5 geplant und wird vor
+einem echten Lauf zunächst ausgeschaltet und synthetisch getestet.
+
+Die Site inszeniert den Rekord als The Study, The Council und The Archive
+(Deutsch: `/`, `/ratssaal/`, `/archiv/`; Englisch unter `/en/`).
+Rekordprosa bleibt auch auf der englischen Site in ihrer Originalsprache.
 
 ## Bewusst nicht vorhanden
 
@@ -28,14 +44,15 @@ kein Newsletter — und vor allem: **keine Spendenannahme**. Empfehlungen
 verlinken auf die offiziellen Spendenwege der Organisationen; durch dieses
 System fließt kein Geld.
 
-## Eine Sitzung durchführen
+## Einen Lauf durchführen
 
 ```bash
 cd gremium && make session   # Details: gremium/README.md
 ```
 
-Das Ergebnis landet als `sessions/YYYY-MM/` im Repo; nach Commit + Push
-rendert die Site es automatisch.
+Das Ergebnis landet als `sessions/YYYY-MM/` im Repo; nach Prüfung, Commit und
+Push rendert die Site es automatisch. Ein wöchentlicher Wart-Research läuft
+getrennt und schreibt nach `journal/`.
 
 Für Wart-Leitung bei einer Sitzung steht `--led-by-wart` bereit (impliziert
 `--with-dossier`): Eröffnung, Runde-0-Dossier, Moderationsnotiz und

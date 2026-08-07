@@ -1,62 +1,81 @@
-# AGENTS.md — Regeln für Agenten in diesem Repo
+# AGENTS.md — Arbeitsregeln für NobleCause.ai
 
-Dieses Dokument gilt für **jeden** Agenten (Codex, Claude Code, …), der in diesem
-Repository arbeitet. Es wird von Codex automatisch gelesen.
+Dieses Dokument gilt für alle Agenten, die in diesem Repository arbeiten.
 
-## Aktueller Vorgang: Immersive-Homepage-Neubau
-Gearbeitet wird auf **`feat/immersive-homepage`** (Basis: `sol/nachbesserung`, #12 — trägt
-Datenvertrag, Plates, Schema, `organizations.json` mit `beschreibung` und beide Sitzungen,
-**ohne** das verworfene Kartenstapel-Design aus #14/#15).
+## Aktueller Auftrag
 
-Diese Arbeit ist **Präsentation** — nur wie die vorhandenen Daten dargestellt werden.
+Der produktive Stand liegt auf `master`. Die drei statischen Räume und die
+Rekordmaschine sind live; aktuell folgen Betriebsfestigkeit 0.4.1 und danach die
+Deliberationsform 0.5 hinter einem standardmäßig ausgeschalteten Schalter.
 
-## Experiment: `feat/council-rooms` (Kimi, Wegwerf)
-Isolierter Versuch, die UI-Architektur der Startseite von „ein langer Scroll über acht
-Szenen" auf **drei diskrete Räume** (Vorzimmer → Ratssaal → Archiv) umzubauen. **Nur die
-Präsentation** wird ersetzt; die **verifizierte Datenschicht** (`site/src/lib/server/
-content.js` + `homepage.js` — liest `recommendations`/`convergence`, **aggregiert nie neu**)
-und die **Embleme** werden geerbt, nicht angefasst. Der genaue Auftrag steht in
-**`docs/council-rooms-brief.md`** (bitte zuerst lesen). Es gelten dieselbe harte Grenze und
-dieselben Sauberkeits-Regeln wie unten. Wegwerf: scheitert der Versuch, wird der Branch
-gelöscht; `master` und `feat/immersive-homepage` bleiben unberührt.
-Die Räume sind zweisprachig: Deutsch (Default) unter `/`, `/ratssaal/`, `/archiv/`,
-Englisch unter `/en/`, `/en/council/`, `/en/archive/` — der publizierte Rekord
-(Sitzungsprosa, Dissens, Korrekturen, Voten) bleibt in beiden Sprachen deutsch und
-wird nie maschinenübersetzt (EN: Vermerk + `lang="de"`).
+Arbeitsbaum für Builds, Tests und Commits:
+`~/Projects/nc-sanitize`. `~/Projects/NobleCause.ai` ist der kanonische
+Hauptbaum. Beide teilen dasselbe Git-Repository. Andere Projekte unter
+`~/Projects` gehören nicht zu NobleCause.ai und werden nicht angefasst.
 
-## HARTE GRENZE — diese Pfade werden NICHT angefasst
-Ändere, lösche oder verschiebe **nichts** unter:
-- `sessions/**` (publizierte Sitzungstexte)
-- `journal/**`
-- `schedule.json`
-- `gremium/**` (Aggregation, Backend, Läufe)
-- `schema/**` (Datenvertrag — nur lesen)
-- `prompts.py` / `**/prompts.py`
+## Rollen
 
-Wenn eine Aufgabe eine Änderung dort zu verlangen scheint: **sofort stoppen und melden**,
-nicht umgehen. Ein `pre-commit`-Hook blockt Commits, die diese Pfade berühren.
+- **Steward:** menschliche Letztinstanz; genehmigt Rekordkorrekturen, echte
+  API-Läufe, Commit und Push.
+- **Wart:** entscheidet über Rekordsemantik und öffentliche Verfahrenstexte.
+- **Architekt:** priorisiert, entwirft, implementiert kleine klar begrenzte
+  Änderungen und nimmt Baupakete ab.
+- **CC:** führt größere oder unabhängig zu prüfende Baupakete aus.
 
-Erlaubt ist ausschließlich die **Präsentationsebene**: neue/rendernde Dateien für die
-Startseite (z. B. unter `sol-build/`, `site/`, statische Assets), Build-/Render-Skripte der
-Darstellung, Styles. Die Datenfundamente werden nur **gelesen**:
-`schema/session.schema.json`, `organizations.json`, `sessions/2026-07c` (Konsens),
-`sessions/2026-07` (Nicht-Konsens), Plates `sol-build/site/static/{ratssaal,vorraum}.png`.
+Kleine deterministische Änderungen brauchen keine eigene Übergabekette. Bei
+unerwartetem Zustand wird gestoppt und berichtet, nicht geraten.
 
-## Sauberkeits-Regeln
-- **NIE Push auf `master`. NIE Merge ohne ausdrückliche Freigabe.** Bis zum Merge auf
-  master ist nichts live; Deploy passiert erst beim Merge.
-- Im Feature-Branch darf frei committet werden (lokal ruhig unsauber). **Bevor** irgendetwas
-  zu GitHub/master geht, werden die Commits zu **sauberen Einheiten gesquasht** — die
-  Historie wird nicht beschmutzt.
-- **Review läuft lokal** (statischer Server aus einem Render-Verzeichnis), **nicht** über
-  einen Merge. Aus echten Daten rendern, nicht aus Sample-HTML.
-- Kein Netzzugriff nach außen ohne Nachfrage.
-- **Was zweimal verschoben wurde, wird beim dritten Mal sperrend.** Aufgeschobene
-  Nachweise/Pflichten dürfen nicht kippen. (Präzedenzfall: der 320-px-Reflow-Nachweis —
-  zweimal aufgeschoben, beim dritten Mal Freigabe-sperrend für die Slice-Replikation.)
+## Rekordgrenzen
 
-## Datenvertrag
-Der Renderer PARST KEINE PROSA. Strukturierte Felder kommen aus `session.json`
-(`recommendations`, `rounds[].votes[].recommendations[]`) und `organizations.json`
-(`beschreibung`, `donation_url`); Abweichungen sind in `sol-build/data-contract.md`
-dokumentiert. Kein erfundenes „Warum", keine LLM-Aggregation in der Darstellung.
+- `sessions/**`, `journal/**` und `commissions/**` sind veröffentlichte
+  Rekorde. Rohantworten und publizierte Prosa werden nie umgeschrieben.
+- Additive Korrekturhinweise oder deterministische Backfills abgeleiteter
+  Strukturfelder benötigen einen belegten Präzedenzfall und Steward-Freigabe.
+- `models.json` ist eine additive Registratur. Bestehende Einträge bleiben
+  objektgleich; neue Epochen werden angehängt.
+- Organisationsidentität kommt ausschließlich aus `organizations.json`.
+  Kein Fuzzy-Matching und keine Identität aus freier Prosa.
+- `next-session.json` ist Steward-Vorbereitung und keine automatische
+  Dispatch-Eingabe. Frage und Titel werden beim echten Lauf ausdrücklich
+  übergeben.
+- `schedule.json` ist maschinengeschrieben. Schreibwege müssen unbekannte
+  Felder erhalten.
+
+## Technische Grenzen
+
+- Die Site unter `site/` rendert vorhandene strukturierte Daten und aggregiert
+  niemals selbst.
+- Rekordtext bleibt in der Originalsprache. Die englische Site übersetzt keine
+  Sitzungsprosa, Voten oder Korrekturhinweise maschinell.
+- Fehlende Zulieferungen dürfen keinen stillen Ersatzinhalt erzeugen.
+  Technische Fehler bleiben laut; explizite Modell-Verweigerungen werden als
+  solche geführt.
+- Prompts und Schemas werden nur im ausdrücklich freigegebenen Slice geändert.
+- Neue Mechanismen werden nur gebaut, wenn vorhandene Infrastruktur die
+  Anforderung nicht trägt.
+
+## Abnahme
+
+Im aktiven Arbeitsbaum:
+
+```bash
+gremium/.venv/bin/python -m pytest -p no:cacheprovider gremium/tests
+gremium/.venv/bin/python gremium/schema_gate.py all
+npm --prefix site test
+npm --prefix site run build
+git diff --check
+```
+
+Tests und Sichtprüfung werden proportional zum Risiko gewählt. API-Calls,
+Rekordschreiben und Deploys werden nicht als bloße Tests ausgeführt.
+
+## Git und Auslieferung
+
+- Fremde oder unerklärte Änderungen bleiben unangetastet.
+- Kein History-Rewrite und kein Force-Push.
+- Commit nur nach Steward-Freigabe; Push nach `master` nur nach ausdrücklicher
+  Freigabe und FF-only.
+- Ein Push nach `master` löst den Produktions-Deploy aus.
+- Temporäre Aufträge, Reviews und Chat-Übergaben werden nicht automatisch
+  versioniert. Ins Repo gehören kanonische Entscheide, notwendige Provenienz
+  und dauerhafte Betriebsdokumentation.
