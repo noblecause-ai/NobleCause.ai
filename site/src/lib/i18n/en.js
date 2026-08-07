@@ -188,6 +188,9 @@ export const en = {
 		researchSummary: "The Scout's search queries ▸",
 		researchNote: "The Scout's search queries, verbatim:",
 		dossierLink: 'Open the dossier →',
+		dossierRefusalTitle: 'Warden dossier not produced',
+		dossierRefusalText:
+			'The Warden declined to produce the dossier. No substitute dossier was generated; the raw response remains in the session record.',
 		readProtocol: 'Read in full →',
 		head: {
 			title: 'NobleCause — Where does my donation help the most?',

@@ -189,6 +189,9 @@ export const de = {
 		researchSummary: 'Suchanfragen des Spähers ▸',
 		researchNote: 'Suchanfragen des Spähers, wörtlich:',
 		dossierLink: 'Dossier öffnen →',
+		dossierRefusalTitle: 'Wart-Dossier nicht erstellt',
+		dossierRefusalText:
+			'Der Wart hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier erzeugt; die Rohantwort bleibt im Sitzungsrekord.',
 		readProtocol: 'Vollständig lesen →',
 		head: {
 			title: 'NobleCause — Wo hilft meine Spende am meisten?',

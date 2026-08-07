@@ -81,6 +81,7 @@ const currentData = () => {
 		lastResearch,
 		plain: session.plain ?? null,
 		dossier: session.wart_dossier ?? null,
+		dossierRefusal: session.wart_dossier_refusal ?? null,
 		participants: session.participants ?? []
 	};
 };
@@ -165,6 +166,13 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	} else {
 		assert.ok(!html.includes('Suchanfragen des Spähers'), 'Scout-Suchanfragen trotz fehlendem Dossier');
 	}
+	if (DATA.dossierRefusal) {
+		requireAll(html, 'The Study Dossier-Verweigerung', [
+			'Wart-Dossier nicht erstellt',
+			'Es wurde kein Ersatzdossier erzeugt',
+			'#wart-dossier-refusal'
+		]);
+	}
 	// Dynamischer Raumteil: EIN Wort + Raum-Lead (Titelbereich-Neuordnung).
 	assert.ok(html.includes('room-word'), 'Raumwort-Element fehlt');
 	assert.match(html, />Study<\/p>/, 'Raumwort „Study" fehlt');
@@ -196,6 +204,21 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		html.indexOf('Die Antwort der letzten Sitzung') < html.indexOf('Die Empfehlungen dieser Sitzung'),
 		'Antwort-Board steht nicht mehr vor der Lese-Fassung'
 	);
+});
+
+test('Aktuelle Sitzungsseite kennzeichnet eine Wart-Dossier-Verweigerung', (context) => {
+	const html = readBuilt(`sitzungen/${DATA.session.id}/index.html`);
+	if (html === null) return context.skip('zuerst npm run build ausführen');
+	if (DATA.dossierRefusal) {
+		requireAll(html, 'Sitzungsseite Dossier-Verweigerung', [
+			'id="wart-dossier-refusal"',
+			'Wart-Dossier nicht erstellt',
+			'Es wurde kein Ersatzdossier',
+			DATA.dossierRefusal.raw_artifact
+		]);
+	} else {
+		assert.ok(!html.includes('id="wart-dossier-refusal"'), 'Verweigerungsmarke ohne Rekordfeld');
+	}
 });
 
 test('The Council (/ratssaal/) trägt Zählwerk, Voten, Revisionen in der Marke, Spendenlinks', (context) => {
@@ -352,6 +375,13 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		assert.ok(html.includes("The Scout's search queries ▸"), "Scout's search queries toggle missing");
 	} else {
 		assert.ok(!html.includes("The Scout's search queries"), 'Scout search queries without dossier data');
+	}
+	if (DATA.dossierRefusal) {
+		requireAll(html, 'The Study EN dossier refusal', [
+			'Warden dossier not produced',
+			'No substitute dossier was generated',
+			'#wart-dossier-refusal'
+		]);
 	}
 	assert.match(html, />Study<\/p>/, 'room word "Study" missing (EN)');
 	assert.ok(!html.includes('How it works'), 'removed process rail still visible');

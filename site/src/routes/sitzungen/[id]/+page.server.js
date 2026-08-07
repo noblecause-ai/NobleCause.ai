@@ -90,6 +90,7 @@ export function load({ params }) {
 			corrections: (s.correction_notice ?? []).map((c) => ({ date: c.date, html: md(c.text) })),
 			wart_dossier: s.wart_dossier ?? null,
 			wart_dossier_html: s.wart_dossier ? md(s.wart_dossier.content_md) : null,
+			wart_dossier_refusal: s.wart_dossier_refusal ?? null,
 			wart_opening_html: s.wart_opening_md ? md(s.wart_opening_md) : null,
 			wart_moderation_html: s.wart_moderation_md ? md(s.wart_moderation_md) : null,
 			// Wortlaut je Runde/Modell — ungekürzt (Konzept §5).

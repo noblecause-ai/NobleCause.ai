@@ -190,6 +190,7 @@ export function buildHomepageViewModel({ session, sessions, registry }) {
 			})),
 		costs: session.costs,
 		wartDossier: session.wart_dossier ?? null,
+		wartDossierRefusal: session.wart_dossier_refusal ?? null,
 		archive: sessions.map((item) => ({
 			...item,
 			nonConsensusPillars: (item.recommendations ?? [])

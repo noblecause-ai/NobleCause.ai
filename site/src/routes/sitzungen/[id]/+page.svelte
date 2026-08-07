@@ -163,7 +163,7 @@
 	{/if}
 {/if}
 
-{#if s.wart_dossier || s.wart_moderation_html}
+{#if s.wart_dossier || s.wart_dossier_refusal || s.wart_moderation_html}
 	<h2>Der Wart</h2>
 	{#if s.wart_dossier}
 		<details id="wart-dossier">
@@ -177,6 +177,16 @@
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
 			<div class="verbatim">{@html s.wart_dossier_html}</div>
 		</details>
+	{/if}
+	{#if s.wart_dossier_refusal}
+		<aside class="correction" id="wart-dossier-refusal">
+			<p class="correction-label">Wart-Dossier nicht erstellt</p>
+			<p>
+				Der Wart hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier
+				erzeugt; die Rohantwort bleibt unter
+				<code>{s.wart_dossier_refusal.raw_artifact}</code> im Sitzungsrekord.
+			</p>
+		</aside>
 	{/if}
 	{#if s.wart_moderation_html}
 		<details>

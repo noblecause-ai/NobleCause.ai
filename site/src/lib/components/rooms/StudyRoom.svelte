@@ -234,6 +234,13 @@
 					<a href="/sitzungen/{home.currentSession.id}/#wart-dossier">{t.study.dossierLink}</a>
 				</details>
 			{/if}
+			{#if home.wartDossierRefusal}
+				<aside class="dossier-refusal" aria-labelledby="dossier-refusal-title">
+					<h3 id="dossier-refusal-title">{t.study.dossierRefusalTitle}</h3>
+					<p>{t.study.dossierRefusalText}</p>
+					<a href="/sitzungen/{home.currentSession.id}/#wart-dossier-refusal">{t.study.readProtocol}</a>
+				</aside>
+			{/if}
 		</section>
 
 		<section class="room-section" aria-labelledby="doors-title">
@@ -470,5 +477,21 @@
 		display: inline-flex;
 		align-items: center;
 		min-height: 44px;
+	}
+	.dossier-refusal {
+		margin-top: 0.4rem;
+		padding: 0.8rem 1rem;
+		border-left: 3px solid #8bb7ca;
+		background: rgba(63, 96, 110, 0.12);
+	}
+	.dossier-refusal h3 {
+		margin: 0 0 0.3rem;
+		color: #a9cad7;
+		font-size: 0.95rem;
+	}
+	.dossier-refusal p {
+		margin: 0 0 0.35rem;
+		color: #c7bca7;
+		font-size: 0.88rem;
 	}
 </style>
