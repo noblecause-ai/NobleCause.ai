@@ -12,6 +12,7 @@ concurrency:
 permissions:
   contents: write
   issues: write
+  actions: write
 
 jobs:
   wart:
@@ -43,16 +44,28 @@ jobs:
           python3 gremium/schema_gate.py journal 2>&1 | tee -a run.log
 
       - name: Commit Journal & schedule
+        id: commit
         run: |
           git config user.name "noblecause-wart"
           git config user.email "wart@noblecause.ai"
           git add journal/ schedule.json
           if git diff --staged --quiet; then
             echo "Keine Änderungen zum Committen."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git commit -m "journal: Wart-Eintrag $(date -u +%Y-%m-%d)"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Ein Push mit GITHUB_TOKEN löst absichtlich keinen weiteren push-Workflow
+      # aus. Daher den vorhandenen Deploy nach einem echten Rekord-Commit explizit
+      # dispatchen; kein zweiter Build-/Deploy-Pfad und kein langlebiger PAT.
+      - name: Deploy auslösen
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref master
 
       - name: Rohantwort sichern (bei Fehlschlag)
         if: failure()

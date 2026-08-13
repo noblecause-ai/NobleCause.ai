@@ -50,6 +50,10 @@ jobs:
   session:
     name: Sitzung ausführen
     if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+      issues: write
+      actions: write
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -98,6 +102,7 @@ jobs:
           python3 gremium/schema_gate.py sessions 2>&1 | tee -a run.log
 
       - name: Commit Sitzung & schedule
+        id: commit
         # Trockenlauf überspringt NUR diesen Schritt — alles davor (run_session,
         # Schema-Tor) lief echt. `if` ohne Status-Funktion wird implizit mit success()
         # verundet: der Commit läuft nur bei scharfem Lauf UND grünem Schema-Tor.
@@ -108,10 +113,20 @@ jobs:
           git add sessions/ schedule.json
           if git diff --staged --quiet; then
             echo "Keine Änderungen zum Committen."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           git commit -m "session: Gremium-Sitzung $(date -u +%Y-%m-%d)"
           git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Wie beim Wart: der GITHUB_TOKEN-Push erzeugt kein push-Event für
+      # deploy.yml. Nur nach einem scharfen Lauf mit echtem Commit dispatchen.
+      - name: Deploy auslösen
+        if: ${{ !inputs.dry_run && steps.commit.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref master
 
       - name: Trockenlauf — Ergebnis als Artefakt (statt Commit)
         # Läuft nur im Trockenlauf und nur, wenn alles davor (inkl. Schema-Tor) grün war.
