@@ -1,0 +1,48 @@
+## Manifest (Auszug)
+
+Das Gremium arbeitet in vier Säulen:
+- A: Zukunftsinvestition
+- B: Linderung gegenwärtigen Leids
+- C: Existenzrisiko-Mitigation
+- D: Übersehene Essentials
+
+## Jüngste Sitzung (2026-08, 2026-08-06)
+
+**Frage:** Halten die vier Empfehlungen aus Sitzung 3 — Helen Keller International (Zukunft), Against Malaria Foundation (Leid lindern), Nuclear Threat Initiative (Große Gefahren), Lead Exposure Elimination Project (Übersehenes) — einer aktuellen Evidenzprüfung stand, und wo hat sich die Lage seit dem 7. Juli 2026 messbar geändert?
+
+**Empfehlungen und Einzelvoten:**
+
+- Säule A (Konsens): Vitamin-A-Supplementierung für Kinder von 6-59 Monaten in Regionen mit hoher Vitamin-A-Defizienz — Helen Keller International (Konfidenz 0.69)
+- Säule B (Konsens): Verteilung langlebiger insektizidbehandelter Moskitonetze, einschliesslich Dual-Wirkstoff-Netzen in Resistenzgebieten — Against Malaria Foundation (Konfidenz 0.88)
+- Säule C (Konsens): Nukleare Risikoreduktion und Verifikationsarbeit nach dem Auslaufen von New START, ergaenzt um Biosicherheits-Governance (DNA-Synthese-Screening) — Nuclear Threat Initiative (NTI) (Konfidenz 0.64)
+- Säule D (Konsens): Regulierung und Durchsetzung von Bleifarbverboten sowie Expositionsmessung in Laendern mit niedrigem und mittlerem Einkommen — Lead Exposure Elimination Project (LEEP) (Konfidenz 0.71)
+
+## Deine Aufgabe (Wart-Dossier)
+
+1. Recherchiere per Web-Suche für jede bestehende Empfehlung (Konsens und Einzelvoten): aktuelle Funding-Lage (room for more funding), neueste Wirksamkeitsdaten, relevante Entwicklungen seit den Trainingsdaten der Modelle.
+2. Prüfe je Säule mindestens eine neue Entwicklung, die das Gremium noch nicht behandelt hat.
+3. Dokumentiere alle Suchanfragen wörtlich.
+4. Liste verworfene Funde mit Begründung („geprüft, nicht relevant weil …").
+5. Schreibe eine Delta-Bewertung: Was hat sich seit der Sitzung geändert?
+6. **Einberufungs-Entscheid:** Soll das Gremium vor der regulären Monatssitzung einberufen werden? Kriterien (mindestens eines muss zutreffen):
+   - neue Evidenz widerspricht einer bestehenden Empfehlung substantiell;
+   - wesentliche Funding-Lücke wurde geschlossen oder neu geöffnet;
+   - neues, von den Säulen erfasstes Risiko oder eine Chance von Rang.
+   Demut-Kanon: Im Zweifel **NICHT** einberufen — die Monatssitzung kommt ohnehin.
+
+Beende mit genau einem JSON-Block:
+
+```json
+{
+  "search_queries": ["…"],
+  "findings": [
+    {"pillar": "B", "topic": "…", "summary": "…", "source": "…", "source_date": "…"}
+  ],
+  "rejected_findings": [
+    {"query_or_topic": "…", "reason": "geprüft, nicht relevant weil …"}
+  ],
+  "delta_assessment": "…",
+  "convene": false,
+  "convene_rationale": "…"
+}
+```
