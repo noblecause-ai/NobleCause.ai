@@ -85,6 +85,11 @@ jobs:
           # Wiederherstellung aus Sicherung (Schnittstellenpapier §7). NICHT
           # kommentarlos "aufräumen" oder auf --delete umstellen.
 
+      - name: Behobenen Deploy-Alarm schließen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/resolve-ci-failure.sh "ci-failure:deploy" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
       # Fehler-Melder (P1b): deploy.yml war der einzige Workflow ohne. Muster aus
       # wart.yml übernommen. Nur bei failure() (echter Build-/Deploy-Fehler), NICHT
       # bei cancelled() — ein manueller Abbruch oder ein durch die concurrency-Gruppe

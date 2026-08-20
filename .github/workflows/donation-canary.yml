@@ -33,6 +33,11 @@ jobs:
           set -o pipefail
           python3 gremium/donation_canary.py 2>&1 | tee run.log
 
+      - name: Behobenen Spendenlink-Alarm schließen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/resolve-ci-failure.sh "ci-failure:donations" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
       - name: Fehler als Issue melden
         if: failure()
         env:
