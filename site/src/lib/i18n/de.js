@@ -28,9 +28,8 @@ export const de = {
 		brand: 'NobleCause.ai',
 		siteNav: [
 			{ href: '/manifest/', label: 'Manifest' },
-			{ href: '/idee/', label: 'Wie eine Sitzung funktioniert' },
-			{ href: '/sitzungen/', label: 'Sitzungen' },
-			{ href: '/journal/', label: 'Journal des Warts' }
+			{ href: '/ratssaal/', label: 'The Council' },
+			{ href: '/archiv/', label: 'The Archive' }
 		],
 		moneyFlow: 'NobleCause nimmt kein Geld an. Spendenlinks führen direkt zu den Organisationen.',
 		doorsTitle: 'Türen',
@@ -120,6 +119,8 @@ export const de = {
 		lastCheck: (dateStr) => `Letzte Prüfung: ${dateStr}.`,
 		manifestLead: 'Die Bereiche und Kanons:',
 		manifestLink: 'Das Manifest ▸',
+		manifestFrameLabel: 'Gründungsdokument öffnen',
+		manifestFramePlaque: 'Das Manifest · Version 1.0',
 		// §3.3: die Lese-Fassung der Tafel — gleiche Embleme und Reihenfolge
 		// (visueller Reim), begründet die Tafel, wiederholt sie nicht.
 		answerTitle: 'Die Empfehlungen dieser Sitzung',

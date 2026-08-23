@@ -22,6 +22,7 @@
 
 <svelte:head>
 	<title>Journal des Warts — NobleCause.ai</title>
+	<meta name="robots" content="noindex,follow" />
 	<meta
 		name="description"
 		content="Zeitleiste der Wart-Läufe: Suchanfragen, Kernfunde, Delta-Bewertung und Einberufungs-Entscheidungen."

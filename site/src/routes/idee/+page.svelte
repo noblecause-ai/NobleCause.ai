@@ -1,5 +1,6 @@
 <svelte:head>
 	<title>Wie eine Sitzung funktioniert — NobleCause.ai</title>
+	<meta name="robots" content="noindex,follow" />
 	<meta
 		name="description"
 		content="Der Ablauf einer Gremium-Sitzung: drei Modellfamilien, zwei Runden, dokumentierter Dissens, veröffentlichte Kosten."

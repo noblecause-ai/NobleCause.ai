@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+	xmlns:xhtml="http://www.w3.org/1999/xhtml">
+	<url>
+		<loc>https://noblecause.ai/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/ratssaal/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/ratssaal/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/council/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/ratssaal/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/archiv/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/archiv/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/archive/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/archiv/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/en/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/en/council/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/ratssaal/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/council/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/ratssaal/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/en/archive/</loc>
+		<xhtml:link rel="alternate" hreflang="de" href="https://noblecause.ai/archiv/" />
+		<xhtml:link rel="alternate" hreflang="en" href="https://noblecause.ai/en/archive/" />
+		<xhtml:link rel="alternate" hreflang="x-default" href="https://noblecause.ai/archiv/" />
+	</url>
+	<url>
+		<loc>https://noblecause.ai/manifest/</loc>
+	</url>
+</urlset>

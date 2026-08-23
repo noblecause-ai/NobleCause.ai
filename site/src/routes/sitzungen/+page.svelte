@@ -12,6 +12,7 @@
 
 <svelte:head>
 	<title>Sitzungen — NobleCause.ai</title>
+	<meta name="robots" content="noindex,follow" />
 	<meta name="description" content="Alle veröffentlichten Deliberations-Protokolle des NobleCause-Gremiums." />
 </svelte:head>
 

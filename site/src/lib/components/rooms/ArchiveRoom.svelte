@@ -52,6 +52,7 @@
 <svelte:head>
 	<title>{t.archive.head.title}</title>
 	<meta name="description" content={t.archive.head.description} />
+	<link rel="canonical" href="https://noblecause.ai{roomPaths.archive[lang]}" />
 	<link rel="alternate" hreflang="de" href="https://noblecause.ai{roomPaths.archive.de}" />
 	<link rel="alternate" hreflang="en" href="https://noblecause.ai{roomPaths.archive.en}" />
 	<link rel="alternate" hreflang="x-default" href="https://noblecause.ai{roomPaths.archive.de}" />

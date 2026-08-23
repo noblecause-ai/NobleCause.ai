@@ -73,6 +73,7 @@
 <svelte:head>
 	<title>{t.council.head.title}</title>
 	<meta name="description" content={t.council.head.description} />
+	<link rel="canonical" href="https://noblecause.ai{roomPaths.council[lang]}" />
 	<link rel="preload" as="image" href="/media/scenes/hall-display.avif" media="(min-width: 1200px)" />
 	<link rel="alternate" hreflang="de" href="https://noblecause.ai{roomPaths.council.de}" />
 	<link rel="alternate" hreflang="en" href="https://noblecause.ai{roomPaths.council.en}" />

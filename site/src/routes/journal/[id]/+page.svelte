@@ -17,6 +17,7 @@
 
 <svelte:head>
 	<title>Journal {fmtDate(e.date)} — NobleCause.ai</title>
+	<meta name="robots" content="noindex,follow" />
 	<meta name="description" content={(e.delta_assessment ?? e.convene_rationale ?? 'Wart-Dossier')?.slice(0, 160)} />
 </svelte:head>
 

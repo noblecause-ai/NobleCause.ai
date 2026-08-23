@@ -54,6 +54,7 @@
 <svelte:head>
 	<title>{t.study.head.title}</title>
 	<meta name="description" content={t.study.head.description(participantCount)} />
+	<link rel="canonical" href="https://noblecause.ai{roomPaths.study[lang]}" />
 	<link rel="alternate" hreflang="de" href="https://noblecause.ai{roomPaths.study.de}" />
 	<link rel="alternate" hreflang="en" href="https://noblecause.ai{roomPaths.study.en}" />
 	<link rel="alternate" hreflang="x-default" href="https://noblecause.ai{roomPaths.study.de}" />
@@ -74,6 +75,25 @@
 		roomLead={t.study.lead}
 	>
 		{#snippet overlay()}
+			<!-- Das freie Wandfeld links wird zum Gründungsdokument. Der Rahmen
+			     besteht aus HTML/CSS auf der vorhandenen Szene: kein zweites Plate,
+			     kein Bildasset. Mobil bleibt der Textlink unter der Prozessröhre der
+			     auffindbare Weg, weil das Hochformat die linke Wand abschneidet. -->
+			<a
+				class="manifest-frame"
+				href="/manifest/"
+				aria-label={t.study.manifestFrameLabel}
+				title={t.study.manifestFrameLabel}
+			>
+				<span class="manifest-sheet" aria-hidden="true">
+					<span class="manifest-house">NOBLECAUSE.AI</span>
+					<span class="manifest-title">MANIFEST</span>
+					<span class="manifest-rule"></span>
+					<span class="manifest-lines"></span>
+					<span class="manifest-seal">I</span>
+				</span>
+				<span class="manifest-plaque" aria-hidden="true">{t.study.manifestFramePlaque}</span>
+			</a>
 			{#if councilDoor}
 				<!-- Die Tür IM Raumbild: atmosphärischer Hotspot auf der gemalten
 				     Doppeltür. Echter Link — trägt ohne JS und per Tastatur; die
@@ -299,6 +319,138 @@
 	.door-hotspot:focus-visible {
 		outline: 2px solid #d7aa55;
 		outline-offset: 2px;
+	}
+
+	/* ---- Manifest an der linken Wand --------------------------------------
+	   Dokumentfläche im Study-Plate: x ≈ 11–26 %, y ≈ 22–53 %. Dieselbe
+	   Cover-Rechnung wie beim Tür-Hotspot hält den CSS-Rahmen auf dem gemalten
+	   Wandfeld. Unter 1200 px ist die Hochformat-Szene aktiv und schneidet die
+	   Wand ab; dort bleibt der gewöhnliche Manifest-Link unter der Röhre. */
+	.manifest-frame {
+		display: none;
+	}
+	@media (min-width: 1200px) {
+		.manifest-frame {
+			display: flex;
+			position: absolute;
+			z-index: 1;
+			align-items: center;
+			justify-content: center;
+			/* Keine Prozent-Paddings: bei absolut positionierten Elementen beziehen
+			   sie sich auf den Viewport-Containing-Block und würden das Blatt auf
+			   wenige Pixel zusammendrücken. */
+			width: clamp(7rem, 10vw, 9rem);
+			height: clamp(3.5rem, 4.7vw, 4.25rem);
+			top: clamp(10.6rem, 21svh, 10.8rem);
+			padding: 0.35rem;
+			border: 0.28rem solid #493617;
+			border-radius: 0.15rem;
+			background:
+				linear-gradient(135deg, rgba(236, 198, 113, 0.16), transparent 24%),
+				linear-gradient(315deg, rgba(0, 0, 0, 0.55), transparent 35%),
+				#19150e;
+			box-shadow:
+				0 0 0 1px rgba(207, 159, 70, 0.68),
+				0 0 0 0.5rem rgba(10, 8, 5, 0.78),
+				0.8rem 1.2rem 2rem rgba(0, 0, 0, 0.62),
+				inset 0 0 1.3rem rgba(0, 0, 0, 0.72);
+			color: #2b2114;
+			text-decoration: none;
+			pointer-events: auto;
+			transform: perspective(50rem) rotateY(1.5deg) rotateZ(-0.35deg);
+			transition:
+				filter 0.25s ease,
+				box-shadow 0.25s ease;
+		}
+		.manifest-frame:hover,
+		.manifest-frame:focus-visible {
+			filter: brightness(1.13);
+			box-shadow:
+				0 0 0 1px rgba(231, 197, 123, 0.9),
+				0 0 0 0.5rem rgba(10, 8, 5, 0.82),
+				0 0 2.1rem rgba(215, 170, 85, 0.28),
+				0.8rem 1.2rem 2rem rgba(0, 0, 0, 0.68),
+				inset 0 0 1.3rem rgba(0, 0, 0, 0.72);
+		}
+		.manifest-frame:focus-visible {
+			outline: 2px solid #efd28c;
+			outline-offset: 0.7rem;
+		}
+		.manifest-sheet {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			height: 100%;
+			padding: 9% 8%;
+			background:
+				radial-gradient(circle at 25% 18%, rgba(255, 255, 255, 0.48), transparent 28%),
+				linear-gradient(110deg, rgba(94, 63, 22, 0.08), transparent 30% 72%, rgba(82, 54, 17, 0.11)),
+				#dfd0ad;
+			border: 1px solid rgba(239, 218, 167, 0.72);
+			box-shadow: inset 0 0 1rem rgba(65, 41, 12, 0.2);
+			overflow: hidden;
+		}
+		.manifest-house,
+		.manifest-title,
+		.manifest-plaque {
+			font-family: ui-sans-serif, system-ui, sans-serif;
+		}
+		.manifest-house {
+			font-size: clamp(0.28rem, 0.36vw, 0.48rem);
+			font-weight: 700;
+			letter-spacing: 0.2em;
+		}
+		.manifest-title {
+			margin-top: 6%;
+			font-size: clamp(0.52rem, 0.72vw, 0.96rem);
+			font-weight: 700;
+			letter-spacing: 0.12em;
+		}
+		.manifest-rule {
+			width: 72%;
+			margin-top: 8%;
+			border-top: 1px solid rgba(66, 45, 19, 0.62);
+		}
+		.manifest-lines {
+			width: 86%;
+			height: 22%;
+			margin-top: 8%;
+			background: repeating-linear-gradient(
+				to bottom,
+				rgba(58, 42, 23, 0.52) 0 1px,
+				transparent 1px 14%
+			);
+			opacity: 0.55;
+		}
+		.manifest-seal {
+			display: grid;
+			place-items: center;
+			width: 18%;
+			aspect-ratio: 1;
+			margin-top: 6%;
+			border: 1px solid #7b5522;
+			border-radius: 50%;
+			color: #684818;
+			font-size: clamp(0.4rem, 0.6vw, 0.8rem);
+		}
+		.manifest-plaque {
+			display: none;
+		}
+	}
+	/* Bild füllt die Höhe: x = 12 % des zentrierten 16:9-Plates. Vertikal
+	   bleibt das Dokument bewusst oberhalb der fixen Ergebnis-Tafel. */
+	@media (min-width: 1200px) and (max-aspect-ratio: 16/9) {
+		.manifest-frame {
+			left: max(1.5rem, calc(50vw - 67.56svh));
+		}
+	}
+	/* Bild füllt die Breite: x = 12 % des Plates. */
+	@media (min-width: 1200px) and (min-aspect-ratio: 16/9) {
+		.manifest-frame {
+			left: 12vw;
+		}
 	}
 
 	/* ---- Klartext-Antwort (§3.3) --------------------------------------------

@@ -30,9 +30,8 @@ export const en = {
 		brand: 'NobleCause.ai',
 		siteNav: [
 			{ href: '/manifest/', label: 'Manifest' },
-			{ href: '/idee/', label: 'How a session works' },
-			{ href: '/sitzungen/', label: 'Sessions' },
-			{ href: '/journal/', label: "The Warden's journal" }
+			{ href: '/en/council/', label: 'The Council' },
+			{ href: '/en/archive/', label: 'The Archive' }
 		],
 		moneyFlow:
 			'NobleCause does not handle money. Donation links lead directly to the organisations.',
@@ -118,6 +117,8 @@ export const en = {
 		lastCheck: (dateStr) => `Last check: ${dateStr}.`,
 		manifestLead: 'The domains and canons:',
 		manifestLink: 'The Manifesto ▸',
+		manifestFrameLabel: 'Open the founding document',
+		manifestFramePlaque: 'The Manifesto · Version 1.0',
 		// §3.3: the reading version of the board — same emblems and order
 		// (visual rhyme); it explains the board, it does not repeat it.
 		answerTitle: "This session's recommendations",

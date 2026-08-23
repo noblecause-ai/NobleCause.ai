@@ -7,9 +7,8 @@
 		<a class="brand" href="/">NobleCause.ai</a>
 		<nav>
 			<a href="/manifest/">Manifest</a>
-			<a href="/idee/">Wie eine Sitzung funktioniert</a>
-			<a href="/sitzungen/">Sitzungen</a>
-			<a href="/journal/">Journal des Warts</a>
+			<a href="/ratssaal/">The Council</a>
+			<a href="/archiv/">The Archive</a>
 		</nav>
 	</header>
 

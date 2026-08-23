@@ -505,6 +505,14 @@ test('Sprachumschalter verlinkt die Schwester-Route in allen sechs Räumen', (co
 });
 
 test('html lang und hreflang sind sprachrichtig gesetzt', (context) => {
+	const canonicals = {
+		study: 'https://noblecause.ai/',
+		council: 'https://noblecause.ai/ratssaal/',
+		archive: 'https://noblecause.ai/archiv/',
+		studyEn: 'https://noblecause.ai/en/',
+		councilEn: 'https://noblecause.ai/en/council/',
+		archiveEn: 'https://noblecause.ai/en/archive/'
+	};
 	for (const [room, rel] of Object.entries(PAGES)) {
 		const html = readBuilt(rel);
 		if (html === null) return context.skip('zuerst npm run build ausführen');
@@ -517,6 +525,80 @@ test('html lang und hreflang sind sprachrichtig gesetzt', (context) => {
 		for (const code of ['de', 'en', 'x-default']) {
 			assert.ok(html.includes(`hreflang="${code}"`), `${room}: hreflang ${code} fehlt`);
 		}
+		assert.ok(
+			html.includes(`rel="canonical" href="${canonicals[room]}"`),
+			`${room}: self-canonical fehlt oder ist falsch`
+		);
+	}
+});
+
+test('Manifest gehört sichtbar zu The Study und bleibt eine einzige Inhaltsquelle', (context) => {
+	const study = readBuilt(PAGES.study);
+	const studyEn = readBuilt(PAGES.studyEn);
+	const manifest = readBuilt('manifest/index.html');
+	if (study === null || studyEn === null || manifest === null) {
+		return context.skip('zuerst npm run build ausführen');
+	}
+	for (const [html, label] of [
+		[study, 'Gründungsdokument öffnen'],
+		[studyEn, 'Open the founding document']
+	]) {
+		assert.ok(html.includes('manifest-frame'), 'Study: gerahmtes Manifest fehlt');
+		assert.ok(html.includes(`aria-label="${label}"`), `Study: zugängliche Beschriftung ${label} fehlt`);
+		assert.ok(html.includes('href="/manifest/"'), 'Study: Rahmen verlinkt nicht auf /manifest/');
+	}
+	assert.ok(manifest.includes('rooms-shell'), 'Manifest nutzt nicht den gemeinsamen Raumrahmen');
+	assert.ok(manifest.includes('Zurück in The Study'), 'Manifest: Rückweg in The Study fehlt');
+	assert.ok(manifest.includes('Deutsche Lesefassung'), 'Manifest: deutsche Lesefassung fehlt');
+	assert.ok(manifest.includes('Authoritative original · verbatim'), 'Manifest: Originalstatus fehlt');
+	assert.ok(
+		manifest.includes('The Manifest of NobleCause.ai - Version 1.0'),
+		'Manifest: Titel aus manifest.md fehlt'
+	);
+	assert.ok(
+		manifest.includes('rel="canonical" href="https://noblecause.ai/manifest/"'),
+		'Manifest: self-canonical fehlt'
+	);
+	assert.equal((manifest.match(/<h1[\s>]/g) ?? []).length, 1, 'Manifest: erwartet genau ein Seiten-h1');
+});
+
+test('Suchindex zeigt Räume und Manifest, Rekorddokumente bleiben öffentlich aber noindex', (context) => {
+	const sitemap = readBuilt('sitemap.xml');
+	const robots = readBuilt('robots.txt');
+	if (sitemap === null || robots === null) return context.skip('zuerst npm run build ausführen');
+	assert.ok(robots.includes('Allow: /'), 'robots.txt darf die noindex-Seiten nicht vom Crawl sperren');
+	assert.ok(
+		robots.includes('Sitemap: https://noblecause.ai/sitemap.xml'),
+		'robots.txt: Sitemap-Verweis fehlt'
+	);
+	const expected = [
+		'https://noblecause.ai/',
+		'https://noblecause.ai/ratssaal/',
+		'https://noblecause.ai/archiv/',
+		'https://noblecause.ai/en/',
+		'https://noblecause.ai/en/council/',
+		'https://noblecause.ai/en/archive/',
+		'https://noblecause.ai/manifest/'
+	];
+	for (const url of expected) assert.ok(sitemap.includes(`<loc>${url}</loc>`), `Sitemap fehlt: ${url}`);
+	assert.equal((sitemap.match(/<loc>/g) ?? []).length, expected.length, 'Sitemap enthält unerwartete URLs');
+	for (const excluded of ['/idee/', '/sitzungen/', '/sessions/', '/journal/']) {
+		assert.ok(!sitemap.includes(`<loc>https://noblecause.ai${excluded}`), `Sitemap enthält ${excluded}`);
+	}
+	const noindexPages = [
+		'idee/index.html',
+		'sitzungen/index.html',
+		`sitzungen/${DATA.session.id}/index.html`,
+		'journal/index.html'
+	];
+	const journalRoot = path.join(SITE, 'build', 'journal');
+	const journalDetail = fs
+		.readdirSync(journalRoot, { withFileTypes: true })
+		.find((entry) => entry.isDirectory() && fs.existsSync(path.join(journalRoot, entry.name, 'index.html')));
+	if (journalDetail) noindexPages.push(`journal/${journalDetail.name}/index.html`);
+	for (const rel of noindexPages) {
+		const html = readBuilt(rel);
+		assert.ok(html?.includes('name="robots" content="noindex,follow"'), `${rel}: noindex,follow fehlt`);
 	}
 });
 
