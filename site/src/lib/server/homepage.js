@@ -39,13 +39,14 @@ function resolveVote(vote, registry) {
 	};
 }
 
-export function buildModelTracks(session, registry) {
+export function buildModelTracks(session, registry, models = new Map()) {
 	const initial = session.rounds.find((round) => round.kind === 'initial_vote');
 	const final = session.rounds.find((round) => round.kind === 'final_vote');
 	const initialByModel = new Map((initial?.votes ?? []).map((vote) => [vote.model, vote]));
 	const finalByModel = new Map((final?.votes ?? []).map((vote) => [vote.model, vote]));
 
 	return session.participants.map((participant) => {
+		const model = models.get(participant.model) ?? null;
 		const initialVote = initialByModel.get(participant.model);
 		const finalVote = finalByModel.get(participant.model);
 		const initialRecommendations = (initialVote?.recommendations ?? []).map((vote) =>
@@ -67,6 +68,10 @@ export function buildModelTracks(session, registry) {
 		});
 		return {
 			...participant,
+			// P13: Der Modellname ist der Inhalt, das Medaillon nur ein optionaler
+			// Zulieferer. Fehlt ein akzeptiertes Asset, rendert die Szene eine
+			// neutrale CSS-Münze statt einen aus der Modell-ID geratenen 404-Pfad.
+			medallion: model?.asset ? model.asset.replace(/\.avif$/, '-lo.avif') : null,
 			initialContent: initialVote?.content_md ?? null,
 			finalContent: finalVote?.content_md ?? null,
 			rows
@@ -141,12 +146,12 @@ export function buildSessionSummaries(sessions, registry) {
 	}));
 }
 
-export function buildHomepageViewModel({ session, sessions, registry }) {
+export function buildHomepageViewModel({ session, sessions, registry, models = new Map() }) {
 	if ((session.unresolved_votes ?? []).length) {
 		throw new Error(`Sitzung ${session.id} enthält unaufgelöste Stimmen`);
 	}
 	const organizations = registryMap(registry);
-	const modelTracks = buildModelTracks(session, organizations);
+	const modelTracks = buildModelTracks(session, organizations, models);
 	// Klartext-Schicht (§1 des Raum-Content): laienverständliche Übersetzung als
 	// eigenes, vom Wart freigegebenes Datenfeld. Liegt noch in KEINER Sitzung
 	// vor — bis dahin sind die Felder null und die Räume zeigen die

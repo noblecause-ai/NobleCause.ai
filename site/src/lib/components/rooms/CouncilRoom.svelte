@@ -187,7 +187,7 @@
 				<div class="cf-columns">
 					{#each tracks as track (track.model)}
 						<div class="cf-col">
-							<img class="cf-med" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" loading="lazy" />
+							{#if track.medallion}<img class="cf-med" src={track.medallion} alt="" width="256" height="256" loading="lazy" />{:else}<span class="cf-med cf-med-empty" aria-hidden="true"></span>{/if}
 							<span class="cf-model">{track.label}</span>
 							<span class="cf-votes">
 								{#each track.rows as row (row.pillar)}
@@ -483,6 +483,10 @@
 		height: 3.2rem;
 		border-radius: 50%;
 		filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.75));
+	}
+	.cf-med-empty {
+		border: 1px solid rgba(219, 178, 96, 0.65);
+		background: radial-gradient(circle at 35% 30%, #d9b56c, #725027 58%, #261a0f 100%);
 	}
 	.cf-model {
 		color: #d5a657;

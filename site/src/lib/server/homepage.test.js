@@ -60,3 +60,15 @@ test('Runden ohne votes werden toleriert, unresolved votes schlagen fehl', () =>
 	clean.unresolved_votes = [{ pillar: 'A', organization: 'X', model: 'Y' }];
 	assert.throws(() => buildHomepageViewModel({ session: clean, sessions, registry }), /unaufgelöste/);
 });
+
+test('Medaillonpfad kommt nur aus der Registratur; fehlendes Asset bleibt neutral', () => {
+	const current = session('2026-07c');
+	const [first, second] = current.participants;
+	const models = new Map([[first.model, { asset: `/media/medallions/${first.model}.avif` }]]);
+	const home = buildHomepageViewModel({ session: current, sessions, registry, models });
+	assert.equal(
+		home.modelTracks.find((track) => track.model === first.model).medallion,
+		`/media/medallions/${first.model}-lo.avif`
+	);
+	assert.equal(home.modelTracks.find((track) => track.model === second.model).medallion, null);
+});

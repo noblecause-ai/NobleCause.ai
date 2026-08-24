@@ -154,7 +154,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each home.costs.by_model as row (row.model)}
+						{#each home.costs.by_model as row (`${row.model}:${row.label ?? ''}`)}
 							<tr>
 								<td>{row.label}</td>
 								<td>{money(row.eur, home.costs.currency)}</td>

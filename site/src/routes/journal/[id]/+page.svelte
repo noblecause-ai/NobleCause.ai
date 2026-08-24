@@ -12,16 +12,16 @@
 		return m ? `${+m[3]}. ${MONTHS[+m[2] - 1]} ${m[1]}` : (iso ?? '');
 	}
 	const isCommission = $derived(e.type === 'commission');
-	const heading = $derived(isCommission ? 'Bestellung der Selbstdarstellungen' : `Wart-Dossier vom ${fmtDate(e.date)}`);
+	const heading = $derived(isCommission ? 'Bestellung der Selbstdarstellungen' : `Scout-Dossier vom ${fmtDate(e.date)}`);
 </script>
 
 <svelte:head>
 	<title>Journal {fmtDate(e.date)} — NobleCause.ai</title>
 	<meta name="robots" content="noindex,follow" />
-	<meta name="description" content={(e.delta_assessment ?? e.convene_rationale ?? 'Wart-Dossier')?.slice(0, 160)} />
+	<meta name="description" content={(e.delta_assessment ?? e.convene_rationale ?? 'Scout-Dossier')?.slice(0, 160)} />
 </svelte:head>
 
-<p class="kicker">Journal des Warts · {fmtDate(e.date)}{#if isCommission} · Kommission{/if}</p>
+<p class="kicker">Research-Journal · {fmtDate(e.date)}{#if isCommission} · Kommission{/if}</p>
 <h1>{heading}</h1>
 
 <p class="meta">
@@ -38,7 +38,7 @@
 	</p>
 {/if}
 
-<h2>Einberufungs-Entscheid</h2>
+<h2>Einberufungs-Entscheid des Warts</h2>
 <p>
 	<strong class="verdict" class:yes={e.convene}>{e.convene ? 'Einberufen' : 'Nicht einberufen'}</strong>
 	{#if e.convene_rationale}— {e.convene_rationale}{/if}

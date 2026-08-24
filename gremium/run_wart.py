@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Wöchentlicher Research-Lauf des Warts (Fable + Web-Suche).
+"""Wöchentlicher Research-Lauf: Scout recherchiert, Wart entscheidet.
 
 Liest die jüngste session.json, recherchiert die Evidenzlage, schreibt
 journal/YYYY-MM-DD/entry.json und aktualisiert schedule.json am Repo-Root.
@@ -56,36 +56,37 @@ def strip_json_block(text):
     return re.sub(r"```json\s*\{.*?\}\s*```\s*$", "", text, flags=re.DOTALL).strip()
 
 
-def parse_wart_answer(text):
-    """Zieht den strukturierten JSON-Block aus der Wart-Antwort und prüft ihn strikt
-    gegen den Vertrag. Verletzung → sys.exit (der Lauf scheitert laut, Rohartefakte
-    sind gesichert, es entsteht KEIN Journal-Eintrag).
-
-    Versiegelte Datennaht: die Maschine, die den Rekord erzeugt, parst KEINE Prosa —
-    kein Fallback aus dem Dossier-Text. Geprüft wird:
-    - JSON-Block vorhanden,
-    - delta_assessment vorhanden,
-    - convene ist ein echtes JSON-Boolean (kein String "false", keine Zahl, nicht
-      fehlend). KEIN Fallback auf „nicht einberufen": der Demut-Kanon regelt das
-      Urteil des Warts, nicht das Verhalten der Maschine bei unlesbarer Antwort —
-      und convene setzt einen Termin vor, eine Handlung, schwerer rückholbar als ein
-      Eintrag.
-    """
+def parse_scout_answer(text):
+    """Strikter Datenvertrag des Recherche-Zulieferers, ohne Governance-Entscheid."""
     parsed = extract_json_block(text)
     if not parsed:
         sys.exit(
-            "Abbruch: kein strukturierter JSON-Block in der Wart-Antwort — vertragswidrig. "
+            "Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — "
             "Rohartefakte gesichert, kein Journal-Eintrag."
         )
     if not parsed.get("delta_assessment"):
-        sys.exit("Abbruch: kein auswertbares Dossier (delta_assessment fehlt) — kein Journal-Eintrag.")
+        sys.exit("Abbruch: Scout-Dossier ohne delta_assessment — kein Journal-Eintrag.")
+    for field in ("search_queries", "findings", "rejected_findings"):
+        if not isinstance(parsed.get(field), list):
+            sys.exit(f"Abbruch: Scout-Feld {field} ist keine Liste — kein Journal-Eintrag.")
+    if "convene" in parsed or "convene_rationale" in parsed:
+        sys.exit("Abbruch: Scout hat eine Governance-Entscheidung abgegeben — Rollenbruch.")
+    return parsed
+
+
+def parse_wart_decision(text):
+    """Der Wart entscheidet nur über die Einberufung; Prosa wird nie geraten."""
+    parsed = extract_json_block(text)
+    if not parsed:
+        sys.exit("Abbruch: kein strukturierter JSON-Block im Wart-Entscheid.")
     if not isinstance(parsed.get("convene"), bool):
         raw = parsed.get("convene")
         sys.exit(
-            f"Abbruch: convene ist kein JSON-Boolean (Wert {raw!r}, Typ "
-            f"{type(raw).__name__}) — vertragswidrig. Rohartefakte gesichert, kein "
-            f"Journal-Eintrag."
+            f"Abbruch: Wart-Feld convene ist kein JSON-Boolean (Wert {raw!r}, "
+            f"Typ {type(raw).__name__})."
         )
+    if not isinstance(parsed.get("convene_rationale"), str) or not parsed["convene_rationale"].strip():
+        sys.exit("Abbruch: Wart-Entscheid ohne convene_rationale.")
     return parsed
 
 
@@ -215,12 +216,12 @@ def actions_run_url():
     return None
 
 
-def call_wart(wart_cfg, system, user, raw_dir):
+def call_scout(scout_cfg, system, user, raw_dir):
     import anthropic
 
     client = anthropic.Anthropic()
-    max_uses = wart_cfg.get("max_web_search_uses", 15)
-    print(f"  Modell: {wart_cfg['model']}")
+    max_uses = scout_cfg.get("max_web_search_uses", 15)
+    print(f"  Modell: {scout_cfg['model']}")
     print(f"  Web-Suche: max. {max_uses} Anfragen")
     print("  Starte API-Call …")
 
@@ -228,8 +229,8 @@ def call_wart(wart_cfg, system, user, raw_dir):
     # Web-Suche) veranschlagt das SDK >10 min und verweigert den nicht-
     # gestreamten Call. get_final_message() akkumuliert die volle Antwort.
     with client.messages.stream(
-        model=wart_cfg["model"],
-        max_tokens=wart_cfg.get("max_output_tokens", 8192),
+        model=scout_cfg["model"],
+        max_tokens=scout_cfg.get("max_output_tokens", 8192),
         system=system,
         messages=[{"role": "user", "content": user}],
         tools=[
@@ -243,7 +244,7 @@ def call_wart(wart_cfg, system, user, raw_dir):
     ) as stream:
         resp = stream.get_final_message()
     raw = resp.model_dump()
-    (raw_dir / "wart-response.json").write_text(
+    (raw_dir / "scout-response.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
     )
 
@@ -265,26 +266,63 @@ def call_wart(wart_cfg, system, user, raw_dir):
     return text, usage, raw, api_queries
 
 
-def compute_wart_costs(usage, wart_cfg, fx):
+def call_wart_decision(wart_cfg, system, user, raw_dir):
+    import anthropic
+
+    client = anthropic.Anthropic()
+    print(f"  Modell: {wart_cfg['model']}")
+    with client.messages.stream(
+        model=wart_cfg["model"],
+        max_tokens=min(wart_cfg.get("max_output_tokens", 2048), 2048),
+        system=system,
+        messages=[{"role": "user", "content": user}],
+    ) as stream:
+        resp = stream.get_final_message()
+    raw = resp.model_dump()
+    (raw_dir / "wart-decision-response.json").write_text(
+        json.dumps(raw, indent=2, ensure_ascii=False, default=str)
+    )
+    if raw.get("stop_reason") != "end_turn":
+        sys.exit(
+            f"Abbruch: Wart-Entscheid stop_reason={raw.get('stop_reason')} — "
+            "keine Einberufung wird geraten."
+        )
+    text = "".join(b.text for b in resp.content if b.type == "text")
+    usage = {"input_tokens": resp.usage.input_tokens, "output_tokens": resp.usage.output_tokens}
+    return text, usage, raw
+
+
+def compute_role_costs(usage, cfg, fx):
     token_usd = (
-        usage["input_tokens"] / 1e6 * wart_cfg["usd_per_1m_input"]
-        + usage["output_tokens"] / 1e6 * wart_cfg["usd_per_1m_output"]
+        usage["input_tokens"] / 1e6 * cfg["usd_per_1m_input"]
+        + usage["output_tokens"] / 1e6 * cfg["usd_per_1m_output"]
     )
     search_usd = (
-        usage.get("web_search_requests", 0) / 1000 * wart_cfg.get("usd_per_1k_web_searches", 10.0)
+        usage.get("web_search_requests", 0) / 1000 * cfg.get("usd_per_1k_web_searches", 10.0)
     )
     total_usd = token_usd + search_usd
     return {
         "currency": "EUR",
         "total": round(total_usd * fx, 4),
         "fx_rate_usd_eur": fx,
-        "model": wart_cfg["model"],
+        "model": cfg["model"],
         "input_tokens": usage["input_tokens"],
         "output_tokens": usage["output_tokens"],
         "web_search_requests": usage.get("web_search_requests", 0),
         "usd_tokens": round(token_usd, 4),
         "usd_web_search": round(search_usd, 4),
         "usd_total": round(total_usd, 4),
+    }
+
+
+def compute_run_costs(scout_usage, scout_cfg, wart_usage, wart_cfg, fx):
+    scout = compute_role_costs(scout_usage, scout_cfg, fx)
+    wart = compute_role_costs(wart_usage, wart_cfg, fx)
+    return {
+        "currency": "EUR",
+        "total": round(scout["total"] + wart["total"], 4),
+        "fx_rate_usd_eur": fx,
+        "components": {"scout": scout, "wart": wart},
     }
 
 
@@ -312,9 +350,12 @@ def main():
     require_keys("ANTHROPIC_API_KEY")
 
     config = json.loads((HERE / "config.json").read_text())
+    scout_cfg = config.get("scout")
     wart_cfg = config.get("wart")
-    if not wart_cfg:
-        sys.exit("Abbruch: kein wart-Eintrag in config.json.")
+    if not scout_cfg or not wart_cfg:
+        sys.exit("Abbruch: scout und wart müssen getrennt in config.json konfiguriert sein.")
+    if scout_cfg["model"] == wart_cfg["model"]:
+        sys.exit("Abbruch: Scout und Wart dürfen nicht dasselbe Modell sein.")
 
     session_id, session = latest_session()
     # Aktualitäts-Gate VOR Verzeichnis-Anlage und API-Call: eine falsche session_ref
@@ -339,7 +380,7 @@ def main():
     print(f"Datum: {entry_date}")
     print(f"Jüngste Sitzung: {session_id} ({session.get('date')})")
 
-    user = prompts.WART_USER.format(
+    user = prompts.SCOUT_USER.format(
         session_id=session_id,
         session_date=session.get("date"),
         question=session.get("question"),
@@ -347,11 +388,11 @@ def main():
     )
     (raw_dir / "prompt-user.txt").write_text(user)
 
-    print("\nSchritt 1 — Web-Recherche (Fable)")
-    text, usage, raw, api_queries = call_wart(
-        wart_cfg, prompts.WART_SYSTEM, user, raw_dir
+    print("\nSchritt 1 — Web-Recherche (Scout)")
+    text, scout_usage, raw, api_queries = call_scout(
+        scout_cfg, prompts.SCOUT_SYSTEM, user, raw_dir
     )
-    (raw_dir / "wart-content.md").write_text(text)
+    (raw_dir / "scout-content.md").write_text(text)
 
     # Nur end_turn ist eine vollständige Antwort. Jeder andere stop_reason
     # (refusal, max_tokens, pause_turn, …) heißt: unvollständig/abnormal → laut
@@ -363,37 +404,53 @@ def main():
         hint = {
             "refusal": "Modell hat die Ausgabe verweigert (Content/Safety) — "
             "Thema/Prompt redaktionell prüfen.",
-            "max_tokens": "Antwort abgeschnitten — max_output_tokens (config.json wart) erhöhen.",
+            "max_tokens": "Antwort abgeschnitten — max_output_tokens (config.json scout) erhöhen.",
             "pause_turn": "Turn pausiert (Server-Tool) — unerwartet nach Streaming.",
         }.get(stop_reason, "unerwarteter Abbruch.")
         sys.exit(f"Abbruch: stop_reason={stop_reason} — {hint} Kein Parse-Versuch.")
 
-    print("\nSchritt 2 — JSON extrahieren und Vertrag prüfen")
-    parsed = parse_wart_answer(text)
+    print("\nSchritt 2 — Scout-Dossier prüfen")
+    parsed = parse_scout_answer(text)
 
     search_queries = parsed.get("search_queries") or api_queries
     print("  Suchanfragen (Dossier):")
     for q in search_queries:
         print(f"    · {q}")
 
-    convene = parsed["convene"]
-    print(f"\nSchritt 3 — Einberufung: {'JA' if convene else 'NEIN'}")
-    print(f"  Begründung: {parsed.get('convene_rationale', '—')}")
+    decision_user = prompts.WART_DECISION_USER.format(
+        session_id=session_id,
+        session_date=session.get("date"),
+        scout_dossier=text,
+    )
+    (raw_dir / "prompt-wart-decision.txt").write_text(decision_user)
+    print("\nSchritt 3 — Einberufungs-Entscheid (Wart)")
+    decision_text, wart_usage, _ = call_wart_decision(
+        wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir
+    )
+    (raw_dir / "wart-decision-content.md").write_text(decision_text)
+    decision = parse_wart_decision(decision_text)
+    convene = decision["convene"]
+    print(f"  Einberufung: {'JA' if convene else 'NEIN'}")
+    print(f"  Begründung: {decision['convene_rationale']}")
 
     run_url = actions_run_url()
-    costs = compute_wart_costs(usage, wart_cfg, config["fx_rate_usd_eur"])
+    costs = compute_run_costs(
+        scout_usage, scout_cfg, wart_usage, wart_cfg, config["fx_rate_usd_eur"]
+    )
 
     entry = {
         "schema_version": 1,
         "date": entry_date,
         "session_ref": session_id,
-        "model": wart_cfg["model"],
+        "model": scout_cfg["model"],
+        "model_label": scout_cfg.get("model_label", scout_cfg.get("label", scout_cfg["model"])),
+        "decision_model": wart_cfg["model"],
         "search_queries": search_queries,
         "findings": parsed.get("findings", []),
         "rejected_findings": parsed.get("rejected_findings", []),
         "delta_assessment": parsed.get("delta_assessment", ""),
         "convene": convene,
-        "convene_rationale": parsed.get("convene_rationale", ""),
+        "convene_rationale": decision["convene_rationale"],
         "content_md": strip_json_block(text),
         "costs": costs,
         "actions_run_url": run_url,

@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   wart:
-    name: Der Wart recherchiert
+    name: Scout recherchiert, Wart entscheidet
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r gremium/requirements.txt
 
-      - name: Wart-Lauf (Fable + Web-Suche)
+      - name: Scout-Recherche und Wart-Entscheid
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |

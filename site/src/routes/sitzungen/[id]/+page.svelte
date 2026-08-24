@@ -165,10 +165,10 @@
 {/if}
 
 {#if s.wart_dossier || s.wart_dossier_refusal || s.wart_moderation_html}
-	<h2>Der Wart</h2>
+	<h2>Scout und Wart</h2>
 	{#if s.wart_dossier}
 		<details id="wart-dossier">
-			<summary>Wart-Dossier (Runde 0, Web-Recherche)</summary>
+			<summary>Scout-Dossier (Runde 0, Web-Recherche)</summary>
 			{#if s.wart_dossier.search_queries?.length}
 				<p class="kicker">Suchanfragen</p>
 				<ul class="queries">
@@ -181,9 +181,9 @@
 	{/if}
 	{#if s.wart_dossier_refusal}
 		<aside class="correction" id="wart-dossier-refusal">
-			<p class="correction-label">Wart-Dossier nicht erstellt</p>
+			<p class="correction-label">Scout-Dossier nicht erstellt</p>
 			<p>
-				Der Wart hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier
+				Der Scout hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier
 				erzeugt; die Rohantwort bleibt unter
 				<code>{s.wart_dossier_refusal.raw_artifact}</code> im Sitzungsrekord.
 			</p>
@@ -202,7 +202,7 @@
 <p class="costs-total">{s.costs.total.toFixed(2)} € an API-Aufrufen</p>
 {#if s.costs.by_model?.length}
 	<ul class="costs">
-		{#each s.costs.by_model as m (m.model)}
+		{#each s.costs.by_model as m (`${m.model}:${m.label ?? ''}`)}
 			<li>
 				<span class="cost-model">{modelName(m.model, m.label)}</span>
 				<span class="cost-eur">{m.eur != null ? `${m.eur.toFixed(2)} €` : '—'}</span>

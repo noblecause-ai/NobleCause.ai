@@ -21,20 +21,20 @@
 </script>
 
 <svelte:head>
-	<title>Journal des Warts — NobleCause.ai</title>
+	<title>Research-Journal — NobleCause.ai</title>
 	<meta name="robots" content="noindex,follow" />
 	<meta
 		name="description"
-		content="Zeitleiste der Wart-Läufe: Suchanfragen, Kernfunde, Delta-Bewertung und Einberufungs-Entscheidungen."
+		content="Zeitleiste der Scout-Recherchen und der Einberufungs-Entscheidungen des Warts."
 	/>
 </svelte:head>
 
-<p class="kicker">Wart · Wöchentliche Evidenzprüfung</p>
-<h1>Journal des Warts</h1>
+<p class="kicker">Scout + Wart · Wöchentliche Evidenzprüfung</p>
+<h1>Research-Journal</h1>
 <p class="lead">
-	Der Wart (Fable, <code>claude-fable-5</code>) prüft wöchentlich per Web-Recherche die Evidenzlage
-	zu den jüngsten Empfehlungen. Jeder Lauf dokumentiert Suchanfragen, Kernfunde mit Quellen,
-	verworfene Funde und den Einberufungs-Entscheid — vollständig veröffentlicht. Die Bestell-Kommission
+	Der Scout (<code>claude-opus-5</code>) recherchiert die Evidenzlage zu den jüngsten Empfehlungen;
+	der Wart (<code>claude-fable-5</code>) entscheidet anschließend anhand dieses Dossiers über eine
+	vorzeitige Einberufung. Jeder Lauf dokumentiert beide Rollen getrennt. Die Bestell-Kommission
 	steht hier als eigener Typ, nicht als Sitzung gezählt.
 </p>
 

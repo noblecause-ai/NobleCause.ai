@@ -74,8 +74,13 @@ export const de = {
 		// Dateiname); unbekannte Modelle fallen auf das Kurz-Label zurück.
 		modelNames: {
 			'claude-opus-4-8': 'Claude Opus 4.8',
+			'claude-opus-5': 'Claude Opus 5',
+			'claude-fable-5': 'Claude Fable 5',
 			'gpt-5.2': 'GPT-5.2',
-			'gemini-2.5-pro': 'Gemini 2.5 Pro'
+			'gpt-5.6-sol': 'GPT-5.6 Sol',
+			'gemini-2.5-pro': 'Gemini 2.5 Pro',
+			'gemini-3.5-flash': 'Gemini 3.5 Flash',
+			'gemini-3.7-flash': 'Gemini 3.7 Flash'
 		}
 	},
 
@@ -190,9 +195,9 @@ export const de = {
 		researchSummary: 'Suchanfragen des Spähers ▸',
 		researchNote: 'Suchanfragen des Spähers, wörtlich:',
 		dossierLink: 'Dossier öffnen →',
-		dossierRefusalTitle: 'Wart-Dossier nicht erstellt',
+		dossierRefusalTitle: 'Scout-Dossier nicht erstellt',
 		dossierRefusalText:
-			'Der Wart hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier erzeugt; die Rohantwort bleibt im Sitzungsrekord.',
+			'Der Scout hat die Ausgabe des Dossiers verweigert. Es wurde kein Ersatzdossier erzeugt; die Rohantwort bleibt im Sitzungsrekord.',
 		readProtocol: 'Vollständig lesen →',
 		head: {
 			title: 'NobleCause — Wo hilft meine Spende am meisten?',

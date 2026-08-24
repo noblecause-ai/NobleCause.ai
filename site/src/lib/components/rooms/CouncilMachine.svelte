@@ -153,7 +153,7 @@
 	<div class="cm-orbit cm-orbit-rear" aria-hidden="true">
 		{#each medallions as { track, theta0 }, i (track.model)}
 			<div class="cm-medallion" bind:this={rearEls[i]} style={restVars(theta0, 'rear')}>
-				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
+				{#if track.medallion}<img class="cm-med-img" src={track.medallion} alt="" width="256" height="256" decoding="async" />{:else}<span class="cm-med-img cm-med-empty" aria-hidden="true"></span>{/if}
 				<span class="cm-med-plaque">
 					<strong class="cm-med-name">{familyName(track)}</strong>
 					<span class="cm-med-model">{modelName(track)}</span>
@@ -182,7 +182,7 @@
 	<div class="cm-orbit cm-orbit-front" aria-hidden="true">
 		{#each medallions as { track, theta0 }, i (track.model)}
 			<div class="cm-medallion" bind:this={frontEls[i]} style={restVars(theta0, 'front')}>
-				<img class="cm-med-img" src="/media/medallions/{track.model}-lo.avif" alt="" width="256" height="256" decoding="async" />
+				{#if track.medallion}<img class="cm-med-img" src={track.medallion} alt="" width="256" height="256" decoding="async" />{:else}<span class="cm-med-img cm-med-empty" aria-hidden="true"></span>{/if}
 				<span class="cm-med-plaque">
 					<strong class="cm-med-name">{familyName(track)}</strong>
 					<span class="cm-med-model">{modelName(track)}</span>
@@ -408,6 +408,11 @@
 		display: block;
 		width: 100%;
 		height: 100%;
+	}
+	.cm-med-empty {
+		border: 1px solid rgba(219, 178, 96, 0.65);
+		border-radius: 50%;
+		background: radial-gradient(circle at 35% 30%, #d9b56c, #725027 58%, #261a0f 100%);
 	}
 	/* Plakette unter dem Bildnis (Pult-Grammatik, von den Pulten übernommen): der
 	   Modellname steht IMMER (Schutz gegen „Nightingale empfiehlt"), Family + Rolle

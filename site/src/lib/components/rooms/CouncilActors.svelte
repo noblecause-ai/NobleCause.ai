@@ -95,15 +95,11 @@
 					     alt="" — der Name steht als Text daneben; das Bildnis ist
 					     Zierde, keine zweite Textquelle (keine SR-Doppelung). -->
 					<span class="head">
-						<img
-							class="medallion"
-							src="/media/medallions/{track.model}-lo.avif"
-							alt=""
-							width="256"
-							height="256"
-							loading="lazy"
-							decoding="async"
-						/>
+						{#if track.medallion}
+							<img class="medallion" src={track.medallion} alt="" width="256" height="256" loading="lazy" decoding="async" />
+						{:else}
+							<span class="medallion medallion-empty" aria-hidden="true"></span>
+						{/if}
 						<strong>{track.label}</strong>
 					</span>
 					<span class="gloss">{familyName(track)}</span>
@@ -314,6 +310,11 @@
 		flex: none;
 		/* Alpha ist bereits kreisrund; ein Hauch Schatten hebt es vom Grund. */
 		filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.7));
+	}
+	.medallion-empty {
+		border: 1px solid rgba(219, 178, 96, 0.65);
+		border-radius: 50%;
+		background: radial-gradient(circle at 35% 30%, #d9b56c, #725027 58%, #261a0f 100%);
 	}
 	.pult-figure figcaption strong {
 		display: block;

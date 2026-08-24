@@ -195,19 +195,19 @@ def call_anthropic(model, system, user, max_tokens):
     return text, usage, resp.model_dump()
 
 
-def call_wart_dossier(wart_cfg, system, user, raw_dir):
+def call_scout_dossier(scout_cfg, system, user, raw_dir):
     import anthropic
 
     client = anthropic.Anthropic()
-    max_uses = wart_cfg.get("max_web_search_uses", 15)
-    print(f"  Modell: {wart_cfg['model']}")
+    max_uses = scout_cfg.get("max_web_search_uses", 15)
+    print(f"  Modell: {scout_cfg['model']}")
     print(f"  Web-Suche: max. {max_uses} Anfragen")
 
     # Streaming Pflicht bei hohem max_output_tokens (langes Dossier + Web-Suche);
     # das SDK verweigert sonst den nicht-gestreamten Call (>10 min veranschlagt).
     with client.messages.stream(
-        model=wart_cfg["model"],
-        max_tokens=wart_cfg.get("max_output_tokens", 8192),
+        model=scout_cfg["model"],
+        max_tokens=scout_cfg.get("max_output_tokens", 8192),
         system=system,
         messages=[{"role": "user", "content": user}],
         tools=[
@@ -724,7 +724,7 @@ def compute_wart_cost(usage, wart_cfg, fx):
     }
 
 
-def compute_costs(usage_by_model, model_specs, fx, wart_cost=None):
+def compute_costs(usage_by_model, model_specs, fx, role_costs=None):
     by_model = []
     for spec in model_specs:
         u = usage_by_model.get(spec["model"], {"input_tokens": 0, "output_tokens": 0})
@@ -742,8 +742,8 @@ def compute_costs(usage_by_model, model_specs, fx, wart_cost=None):
                 "eur": round(usd * fx, 4),
             }
         )
-    if wart_cost:
-        by_model.append(wart_cost)
+    if role_costs:
+        by_model.extend(role_costs if isinstance(role_costs, list) else [role_costs])
     total_eur = round(sum(c["eur"] for c in by_model), 2)
     return {"currency": "EUR", "total": total_eur, "fx_rate_usd_eur": fx, "by_model": by_model}
 
@@ -813,21 +813,31 @@ def main():
     wart_opening_refusal = None
     wart_dossier_refusal = None
     wart_moderation_refusal = None
+    scout_cfg = config.get("scout")
     wart_cfg = config.get("wart")
+    if not scout_cfg or not wart_cfg:
+        sys.exit("Abbruch: scout und wart müssen getrennt in config.json konfiguriert sein.")
+    if scout_cfg["model"] == wart_cfg["model"]:
+        sys.exit("Abbruch: Scout und Wart dürfen nicht dasselbe Modell sein.")
 
     usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
+    scout_usage = empty_wart_usage()
     wart_usage = empty_wart_usage()
+    scout_cost_entry = None
     wart_cost_entry = None
 
-    def refresh_wart_cost():
-        nonlocal wart_cost_entry
+    def refresh_role_costs():
+        nonlocal scout_cost_entry, wart_cost_entry
+        if scout_usage["input_tokens"] or scout_usage["output_tokens"] or scout_usage["web_search_requests"]:
+            scout_cost_entry = compute_wart_cost(scout_usage, scout_cfg, fx)
         if wart_usage["input_tokens"] or wart_usage["output_tokens"] or wart_usage["web_search_requests"]:
             wart_cost_entry = compute_wart_cost(wart_usage, wart_cfg, fx)
 
     def interim_costs(summarizer=None):
-        refresh_wart_cost()
+        refresh_role_costs()
         specs = config["models"] + ([summarizer] if summarizer else [config["summarizer"]])
-        return compute_costs(usage_by_model, specs, fx, wart_cost_entry)
+        role_costs = [cost for cost in (scout_cost_entry, wart_cost_entry) if cost]
+        return compute_costs(usage_by_model, specs, fx, role_costs)
 
     def record_usage(spec, usage):
         u = usage_by_model[spec["model"]]
@@ -846,7 +856,7 @@ def main():
             pillar_a_context=pa_ctx,
         )
         (raw_dir / "prompt-r0-opening.txt").write_text(wart_opening_prompt)
-        print("Eröffnung — Wart (Fable)")
+        print(f"Eröffnung — Wart ({wart_cfg['model']})")
         text, usage, raw = call_wart_simple(
             wart_cfg,
             prompts.WART_LEAD_SYSTEM,
@@ -871,46 +881,46 @@ def main():
             )
         check_budget(interim_costs(), args.budget_cap, "nach Eröffnung")
 
-    # -------- Runde 0 (Wart-Dossier)
+    # -------- Runde 0 (Scout-Dossier; historische Rekordfelder heißen wart_dossier)
     if args.with_dossier:
         if not prior:
             sys.exit("Abbruch: keine Vorgänger-Sitzung für Dossier gefunden.")
         if args.led_by_wart:
-            wart_dossier_prompt = prompts.WART_FOUNDING_DOSSIER_USER.format(
+            wart_dossier_prompt = prompts.SCOUT_FOUNDING_DOSSIER_USER.format(
                 question=args.question,
                 prior_session_id=prior_id,
                 prior_session_date=prior.get("date"),
                 pillar_a_context=pillar_a_context(prior),
             )
         else:
-            wart_dossier_prompt = prompts.WART_DOSSIER_USER.format(
+            wart_dossier_prompt = prompts.SCOUT_DOSSIER_USER.format(
                 question=args.question,
                 prior_session_id=prior_id,
                 prior_session_date=prior.get("date"),
                 prior_recommendations=summarize_recommendations(prior),
             )
         (raw_dir / "prompt-r0-wart.txt").write_text(wart_dossier_prompt)
-        print("Runde 0 — Wart-Dossier (Fable + Web-Suche)")
-        text, usage, raw, api_queries = call_wart_dossier(
-            wart_cfg, prompts.WART_DOSSIER_SYSTEM, wart_dossier_prompt, raw_dir
+        print(f"Runde 0 — Scout-Dossier ({scout_cfg['model']} + Web-Suche)")
+        text, usage, raw, api_queries = call_scout_dossier(
+            scout_cfg, prompts.SCOUT_DOSSIER_SYSTEM, wart_dossier_prompt, raw_dir
         )
         (raw_dir / "r0-wart-content.md").write_text(text)
-        accumulate_wart_usage(wart_usage, usage)
-        refresh_wart_cost()
+        accumulate_wart_usage(scout_usage, usage)
+        refresh_role_costs()
         dossier_text, wart_dossier_refusal = wart_step_result(text, raw, "r0-wart.json")
         if dossier_text is not None:
             search_queries = extract_search_queries(dossier_text) or api_queries
             content_md = strip_json_block(dossier_text)
             wart_dossier = {
-                "model": wart_cfg["model"],
-                "label": wart_cfg.get("label", wart_cfg["model"]),
+                "model": scout_cfg["model"],
+                "label": scout_cfg.get("label", scout_cfg["model"]),
                 "content_md": content_md,
                 "search_queries": search_queries,
-                "costs": wart_cost_entry,
+                "costs": scout_cost_entry,
             }
             dossier_section = (
-                "## Wart-Dossier (Runde 0)\n\n"
-                "Der Wart (Fable, claude-fable-5) hat vor den Einzelvoten folgendes "
+                "## Scout-Dossier (Runde 0)\n\n"
+                f"Der Scout ({scout_cfg['model']}) hat vor den Einzelvoten folgendes "
                 "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
                 "und Quellen.\n\n---\n\n"
                 f"{content_md}\n\n---"
@@ -954,7 +964,7 @@ def main():
             initial_votes=initial_votes_text,
         )
         (raw_dir / "prompt-moderation-wart.txt").write_text(wart_moderation_prompt)
-        print("Moderation — Wart (Fable)")
+        print(f"Moderation — Wart ({wart_cfg['model']})")
         text, usage, raw = call_wart_simple(
             wart_cfg,
             prompts.WART_LEAD_SYSTEM,
@@ -1036,14 +1046,15 @@ def main():
     )
     if args.led_by_wart:
         accumulate_wart_usage(wart_usage, sum_usage)
-        refresh_wart_cost()
+        refresh_role_costs()
     else:
         usage_by_model.setdefault(summarizer["model"], {"input_tokens": 0, "output_tokens": 0})
         usage_by_model[summarizer["model"]]["input_tokens"] += sum_usage["input_tokens"]
         usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
 
     all_specs = config["models"] + ([] if args.led_by_wart else [summarizer])
-    costs = compute_costs(usage_by_model, all_specs, fx, wart_cost_entry)
+    role_costs = [cost for cost in (scout_cost_entry, wart_cost_entry) if cost]
+    costs = compute_costs(usage_by_model, all_specs, fx, role_costs)
     check_budget(costs, args.budget_cap, "gesamt")
 
     def votes_of(round_votes):

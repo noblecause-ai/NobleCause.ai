@@ -28,7 +28,7 @@ Standardmodus:
 Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
 
 1. **Eröffnung durch den Wart (Fable):** eigener Call ohne Tools.
-2. **Runde 0 — Wart-Dossier:** Fable mit Web-Suche liefert Evidenz-Dossier.
+2. **Runde 0 — Scout-Dossier:** Opus mit Web-Suche liefert das Evidenz-Dossier.
 3. **Runde 1:** Council votiert unabhängig.
 4. **Moderation durch den Wart:** Fable schreibt Moderationsnotiz zur Gegenlese
    (wird in Runde-2-Prompt injiziert).
@@ -71,7 +71,7 @@ python3 run_session.py \
 ```
 
 Wichtige Flags:
-- `--with-dossier`: aktiviert Runde 0 (Wart-Dossier mit Web-Suche).
+- `--with-dossier`: aktiviert Runde 0 (Scout-Dossier mit Web-Suche).
 - `--led-by-wart`: aktiviert Eröffnung + Moderation + Wart-Summary und setzt
   automatisch `--with-dossier`.
 - `--budget-cap`: Budgetdeckel in EUR (Default `15.0`), Zwischenkosten werden
@@ -89,20 +89,21 @@ Strukturfelder benötigen Steward-Freigabe und dürfen Rohvoten oder Prosa nicht
 | Datei | Zweck |
 |---|---|
 | `run_session.py` | Orchestrator (der gesamte Ablauf) |
-| `run_wart.py` | wöchentlicher Wart-Research-Lauf (Journal + schedule) |
+| `run_wart.py` | Wochenlauf: Scout-Recherche, Wart-Entscheid, Journal + schedule |
 | `run_commission.py` | getrennte Modellbestellung außerhalb einer Sitzung |
 | `reaggregate.py` | freigabepflichtige, deterministische Rekordkorrekturen aus Rohvoten |
 | `prompts.py` | die wörtlichen Prompt-Vorlagen (werden mitveröffentlicht) |
 | `sources.md` | Referenzquellen, die den Modellen mitgegeben werden |
-| `config.json` | Modelle, Preise pro 1M Tokens, USD→EUR-Kurs, Output-Limit |
+| `config.json` | getrennte Ämter, stärkstes produktionsreifes Ratsmodell je Familie, Preise, USD→EUR-Kurs |
 
 ## Kadenz
 
 - **Sitzungen:** manuell (`make session` oder `run_session.py`), Ziel:
   monatlich bzw. ad hoc bei Bedarf.
-- **Wart-Research:** wöchentlicher Cron ist aktiv über
+- **Scout/Wart:** wöchentlicher Cron ist aktiv über
   `.github/workflows/wart.yml` (Mo, 06:00 UTC), ruft `run_wart.py` auf und
-  committed Journal + `schedule.json`.
+  lässt erst den Scout recherchieren, dann den Wart entscheiden und committed
+  Journal + `schedule.json`.
 
 ## Secrets & CI
 

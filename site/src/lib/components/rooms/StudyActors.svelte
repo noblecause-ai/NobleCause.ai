@@ -26,8 +26,8 @@
 	import { formatDate } from '$lib/format.js';
 	// Sitzinhaber & Warden-Entscheid aus den Daten (wörtlich durchgereicht):
 	// Scout-Sitz = Modell des letzten Research-Laufs, Warden-Sitz = session.led_by.
-	// Beide sind aktuell dieselbe Instanz (claude-fable-5) — zwei Ämter, ein Sitz,
-	// offen gezeigt. Eine Vertretung (deputationNote) wird angezeigt, nicht geglättet.
+	// Die Ämter sind getrennt: Scout-Sitz aus dem Research-Rekord, Warden-Sitz aus
+	// der Sitzung. Eine Vertretung (deputationNote) wird angezeigt, nicht geglättet.
 	let { t, lastResearch = null, ledBy = null } = $props();
 	const pillars = ['A', 'B', 'C', 'D'];
 </script>

@@ -2,6 +2,7 @@ import {
 	getAllSessions,
 	getJournalEntry,
 	getLatestSession,
+	getModelsRegistry,
 	getOrganizations,
 	getSchedule,
 	md
@@ -17,7 +18,8 @@ export function load() {
 	const home = buildHomepageViewModel({
 		session,
 		sessions: getAllSessions(),
-		registry
+		registry,
+		models: getModelsRegistry()
 	});
 	// Zeitschicht-Leser: der LETZTE RESEARCH-Lauf trägt den Scout-Sitz und die
 	// „letzte Prüfung". Autoritativer Zeiger ist schedule.last_journal — nicht das

@@ -168,7 +168,7 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	}
 	if (DATA.dossierRefusal) {
 		requireAll(html, 'The Study Dossier-Verweigerung', [
-			'Wart-Dossier nicht erstellt',
+			'Scout-Dossier nicht erstellt',
 			'Es wurde kein Ersatzdossier erzeugt',
 			'#wart-dossier-refusal'
 		]);
@@ -206,13 +206,13 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	);
 });
 
-test('Aktuelle Sitzungsseite kennzeichnet eine Wart-Dossier-Verweigerung', (context) => {
+test('Aktuelle Sitzungsseite kennzeichnet eine Scout-Dossier-Verweigerung', (context) => {
 	const html = readBuilt(`sitzungen/${DATA.session.id}/index.html`);
 	if (html === null) return context.skip('zuerst npm run build ausführen');
 	if (DATA.dossierRefusal) {
 		requireAll(html, 'Sitzungsseite Dossier-Verweigerung', [
 			'id="wart-dossier-refusal"',
-			'Wart-Dossier nicht erstellt',
+			'Scout-Dossier nicht erstellt',
 			'Es wurde kein Ersatzdossier',
 			DATA.dossierRefusal.raw_artifact
 		]);
@@ -378,7 +378,7 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 	}
 	if (DATA.dossierRefusal) {
 		requireAll(html, 'The Study EN dossier refusal', [
-			'Warden dossier not produced',
+			'Scout dossier not produced',
 			'No substitute dossier was generated',
 			'#wart-dossier-refusal'
 		]);

@@ -20,7 +20,7 @@ on:
         required: false
         default: ''
       with_dossier:
-        description: 'Runde 0 — Wart-Dossier mit Web-Suche'
+        description: 'Runde 0 — Scout-Dossier mit Web-Suche'
         type: boolean
         default: false
       led_by_wart:

@@ -75,8 +75,13 @@ export const en = {
 		// unknown models fall back to the short label.
 		modelNames: {
 			'claude-opus-4-8': 'Claude Opus 4.8',
+			'claude-opus-5': 'Claude Opus 5',
+			'claude-fable-5': 'Claude Fable 5',
 			'gpt-5.2': 'GPT-5.2',
-			'gemini-2.5-pro': 'Gemini 2.5 Pro'
+			'gpt-5.6-sol': 'GPT-5.6 Sol',
+			'gemini-2.5-pro': 'Gemini 2.5 Pro',
+			'gemini-3.5-flash': 'Gemini 3.5 Flash',
+			'gemini-3.7-flash': 'Gemini 3.7 Flash'
 		}
 	},
 
@@ -189,9 +194,9 @@ export const en = {
 		researchSummary: "The Scout's search queries ▸",
 		researchNote: "The Scout's search queries, verbatim:",
 		dossierLink: 'Open the dossier →',
-		dossierRefusalTitle: 'Warden dossier not produced',
+		dossierRefusalTitle: 'Scout dossier not produced',
 		dossierRefusalText:
-			'The Warden declined to produce the dossier. No substitute dossier was generated; the raw response remains in the session record.',
+			'The Scout declined to produce the dossier. No substitute dossier was generated; the raw response remains in the session record.',
 		readProtocol: 'Read in full →',
 		head: {
 			title: 'NobleCause — Where does my donation help the most?',
