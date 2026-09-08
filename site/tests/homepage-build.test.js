@@ -100,8 +100,8 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	// Stabiler, sitzungsunabhängiger Kopf + Mechanismus (harte UI-Verträge).
 	requireAll(html, 'The Study', [
 		'Wo hilft meine Spende am meisten?', // h1 / Leitfrage
-		'Jede Sitzung beginnt hier — mit einer Frage und den Belegen dazu.', // Raum-Lead
-		'Je ein KI-Modell verschiedener Familien prüft dieselben Belege', // Pitch (ohne Familiennamen/Zahl)
+		'Hier beginnt jede Prüfung: mit einer klaren Frage und denselben Belegen für alle Modelle.', // Raum-Lead
+		'NobleCause.ai lässt mehrere KI-Modelle dieselbe Spendenfrage prüfen', // Pitch (ohne Familiennamen/Zahl)
 		'Warum so umständlich? ▸', // Verfahrens-Ausklapp im stabilen Kopf
 		'Ein einzelnes Modell kann irren oder eine blinde Stelle haben.',
 		// Prozess-Röhre: alle sechs kanonischen Schritte mit Name + Klartext-Satz
@@ -141,16 +141,22 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		'The Study fehlt ein registry-aufgelöster Spendenlink'
 	);
 	// Klartext-Schicht (§3.3): liegt session.plain vor, tragen die Zeilen die
-	// publizierte Fassung WORTGLEICH und der Vermerk entfällt; sonst steht der
-	// publizierende Fallback „Klartext folgt" mit unverändertem Rekordinhalt.
+	// publizierte Fassung WORTGLEICH; sonst steht unverändert der Rekordinhalt.
+	// Interne Publikationszustände werden Besuchern in keinem Fall angezeigt.
+	assert.ok(!html.includes('Klartext folgt'), 'interner Klartext-Status wird öffentlich angezeigt');
 	if (DATA.plain?.recommendations) {
-		assert.ok(!html.includes('Klartext folgt'), 'Vermerk trotz publizierter Klartext-Schicht sichtbar');
 		for (const line of Object.values(DATA.plain.recommendations)) {
 			assert.ok(html.includes(line), `The Study fehlt Klartext-Zeile: ${line}`);
 		}
-	} else {
-		assert.ok(html.includes('Klartext folgt'), 'Klartext-Fallback fehlt trotz fehlender plain-Schicht');
 	}
+	assert.ok(
+		html.includes('NobleCause.ai lässt mehrere KI-Modelle dieselbe Spendenfrage prüfen'),
+		'The Study erklärt nicht unmittelbar, was NobleCause tut'
+	);
+	assert.ok(
+		html.includes('NobleCause nimmt kein Geld an'),
+		'The Study zieht den Geldfluss-Hinweis nicht in den Einstieg'
+	);
 	// Frage-Kontext: plain.question, sonst der kuratierte Protokoll-Kontext (summary).
 	const questionText = DATA.plain?.question ?? DATA.session.summary ?? '';
 	assert.ok(
@@ -189,8 +195,8 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		!html.includes('Je ein KI-Modell der Familien Anthropic'),
 		'Familiennamen-Hardcode im Fließtext — der Pitch trägt bewusst keine Namen'
 	);
-	// Keine Doppel-Komposition der Klartext-Zeile (das „Klartext folgt" gegen die
-	// plain-Schicht prüft bereits der datenabhängige Zweig oben).
+	// Keine Doppel-Komposition der Klartext-Zeile (die Auswahl zwischen
+	// Rekord- und plain-Schicht prüft bereits der datenabhängige Zweig oben).
 	assert.ok(
 		!html.includes('International, Zukunft →'),
 		'Bereichs-Label gedoppelt — die plain-Zeile darf nicht erneut zusammengesetzt werden'
@@ -321,8 +327,8 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 	// Stable English chrome + process (session-independent).
 	requireAll(html, 'The Study (EN)', [
 		'Where does my donation help the most?',
-		'Every session begins here — with a question and the evidence for it.', // room lead
-		'One AI model each from different families reviews the same evidence', // pitch (no names/count)
+		'Every review begins here: with a clear question and the same evidence for every model.', // room lead
+		'NobleCause.ai asks several AI models to examine the same donation question', // pitch (no names/count)
 		'Why so elaborate? ▸', // process toggle in the plaque
 		'A single model can be wrong or have a blind spot.',
 		'Three AI models review the same evidence', // head description
@@ -360,16 +366,25 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		html.includes(DATA.session.question.slice(0, 48)),
 		'deutsche Rekordfrage der aktuellen Sitzung fehlt im EN-Raum'
 	);
-	// Klartext-Schicht: liegt session.plain vor, kein pending-Vermerk und die
-	// (deutschen, markierten) plain-Zeilen; sonst der publizierende Fallback.
+	// Klartext-Schicht: liegt session.plain vor, erscheinen die (deutschen,
+	// markierten) plain-Zeilen. Interne Publikationszustände bleiben unsichtbar.
+	assert.ok(
+		!html.includes('Plain-language version pending'),
+		'internal plain-language status is publicly visible'
+	);
 	if (DATA.plain?.recommendations) {
-		assert.ok(!html.includes('Plain-language version pending'), 'pending note despite published plain layer');
 		for (const line of Object.values(DATA.plain.recommendations)) {
 			assert.ok(html.includes(line), `The Study (EN) fehlt Klartext-Zeile: ${line}`);
 		}
-	} else {
-		assert.ok(html.includes('Plain-language version pending'), 'EN plain fallback missing');
 	}
+	assert.ok(
+		html.includes('NobleCause.ai asks several AI models to examine the same donation question'),
+		'The Study (EN) does not explain what NobleCause does'
+	);
+	assert.ok(
+		html.includes('NobleCause does not handle money'),
+		'The Study (EN) does not move the money-flow statement into the introduction'
+	);
 	// Research-Ausklapp nur bei vorhandenem Dossier mit Suchanfragen.
 	if (DATA.dossier?.search_queries?.length) {
 		assert.ok(html.includes("The Scout's search queries ▸"), "Scout's search queries toggle missing");

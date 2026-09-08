@@ -45,9 +45,6 @@ export const en = {
 		// Ausklapps zum Rats-Wortlaut, kein separater Disclaimer. Die Frage trägt
 		// eine eigene Variante (study.questionKlartextNote).
 		klartextNote: "Simplified version, approved by the Warden · The council's wording ▸",
-		// Fehlt die Freigabe des Klartexts, erscheint die Rekord-Schicht mit
-		// diesem Vermerk — Verständlichkeit darf die Publikation nie verhindern.
-		klartextPending: "Plain-language version pending — the council's wording is shown until approval.",
 		// Stable head on ALL three room pages (title reorder): the core question
 		// as h1, below it the process sentence (pitch) in the same font/color —
 		// "Why so elaborate?" is the inline continuation of the same sentence.
@@ -110,7 +107,9 @@ export const en = {
 		// Dynamic room part below the stable head (title reorder): ONE word
 		// (English proper name, no "The"/gloss) + room lead.
 		roomWord: 'Study',
-		lead: 'Every session begins here — with a question and the evidence for it.',
+		introPitch:
+			'NobleCause.ai asks several AI models to examine the same donation question and publishes their answers in full. A fixed program counts only their closing votes. NobleCause does not handle money; donation links lead directly to the organisations.',
+		lead: 'Every review begins here: with a clear question and the same evidence for every model.',
 		boardTitle: "The last session's answer",
 		// Data line under the board title: the number MUST be present — all three
 		// sessions carry the same date, a date alone would be ambiguous.
@@ -186,7 +185,7 @@ export const en = {
 		dossiersTitle: 'Dossiers',
 		// §3.4: The dossier block opens with this session's question in plain
 		// language (plain.question from the data; fallback: the curated protocol
-		// context session.summary + "plain text pending"). The verbatim question
+		// context session.summary). The verbatim question
 		// hangs on the designation summary (one level, rule 2.1).
 		questionTitle: "This session's question",
 		questionKlartextNote:

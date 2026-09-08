@@ -33,8 +33,8 @@
 	// markiert. Das Frontend paraphrasiert nie — es liest das Feld nur.
 	let plain = $derived(lang === 'en' ? home?.plainEn : home?.plain);
 	let plainIsDe = $derived(lang === 'en' && home?.plainEnDe);
-	// Klartext der Frage: plain.question, sonst der kuratierte Protokoll-Kontext
-	// (session.summary) mit dem Vermerk „Klartext folgt" (§1-Fallback).
+	// Klartext der Frage: plain.question, sonst ohne Prozesshinweis der
+	// kuratierte Protokoll-Kontext (session.summary).
 	let questionText = $derived(plain?.question ?? home?.questionSummary ?? null);
 	// Die große Tür im Plate führt in den Council — Daten wie bei der Tür-Karte.
 	let councilDoor = $derived(t.study.doors.find((door) => door.label === 'The Council'));
@@ -68,7 +68,7 @@
 		passage={DOOR_PASSAGES.study}
 		bgPos="center top"
 		title={t.common.heroTitle}
-		pitch={t.common.heroPitch}
+		pitch={t.study.introPitch}
 		whySummary={t.common.whySummary}
 		whyBody={t.common.whyBody}
 		roomWord={t.study.roomWord}
@@ -147,13 +147,10 @@
 		     (sie enthält bereits Bereich, Organisation und Warum — das
 		     Frontend setzt sie nie selbst zusammen) und der Rats-Wortlaut
 		     rückt hinter die Kennzeichnungs-Summary; bis dahin steht die
-		     Rekord-Schicht sichtbar da (Vermerk „Klartext folgt") —
+		     Rekord-Schicht ohne zusätzlichen Prozesshinweis sichtbar da —
 		     nie paraphrasiert. -->
 		<section class="room-section" aria-labelledby="answer-title">
 			<h2 id="answer-title">{t.study.answerTitle}</h2>
-			{#if !plain?.recommendations}
-				<small class="record-note pending">{t.common.klartextPending}</small>
-			{/if}
 			<ol class="answer-lines">
 				{#each home.recommendations as rec (rec.pillar)}
 					{@const why = plain?.recommendations?.[rec.pillar] ?? null}
@@ -224,9 +221,6 @@
 				<div class="question-context">
 					<h3>{t.study.questionTitle}</h3>
 					<p lang={plain?.question ? (plainIsDe ? 'de' : undefined) : recordLang}>{questionText}</p>
-					{#if !plain?.question}
-						<small class="record-note pending">{t.common.klartextPending}</small>
-					{/if}
 					{#if t.common.recordNote && (plainIsDe || !plain?.question)}
 						<small class="record-note">{t.common.recordNote}</small>
 					{/if}
@@ -544,10 +538,6 @@
 	.answer-votes a {
 		color: #e6b45c;
 	}
-	.pending {
-		margin: 0 0 0.7rem;
-	}
-
 	/* ---- Frage-Kontext ------------------------------------------------------
 	   Sichtbarer Klartext-Einstieg ins Dossier (kuratierter Protokolltext aus
 	   den Daten); der wörtliche Wortlaut folgt als Zitat-Beleg hinter Ausklapp. */

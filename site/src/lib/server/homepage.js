@@ -154,9 +154,9 @@ export function buildHomepageViewModel({ session, sessions, registry, models = n
 	const modelTracks = buildModelTracks(session, organizations, models);
 	// Klartext-Schicht (§1 des Raum-Content): laienverständliche Übersetzung als
 	// eigenes, vom Wart freigegebenes Datenfeld. Liegt noch in KEINER Sitzung
-	// vor — bis dahin sind die Felder null und die Räume zeigen die
-	// Rekord-Schicht mit dem Vermerk „Klartext folgt" (Publikation wird nie
-	// verzögert). EN fällt auf DE zurück (plainEnDe markiert das), bis
+	// vor — bis dahin sind die Felder null und die Räume zeigen ohne
+	// zusätzlichen Prozesshinweis die Rekord-Schicht. EN fällt auf DE zurück
+	// (plainEnDe markiert das), bis
 	// plain_en im selben Freigabe-Verfahren nachkommt. Das Frontend
 	// paraphrasiert nie — es liest das Feld nur, wenn es existiert.
 	const plain = session.plain ?? null;

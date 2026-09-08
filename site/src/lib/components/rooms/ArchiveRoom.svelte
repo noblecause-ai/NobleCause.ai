@@ -196,9 +196,6 @@
 					{/if}
 				</div>
 			{:else}
-				{#if home.dissentOpen.length}
-					<small class="record-note pending">{t.common.klartextPending}</small>
-				{/if}
 				{#if home.dissentHighlights.length}
 					<blockquote class="room-panel dissent-highlights" lang={recordLang}>
 						<ul>
@@ -385,9 +382,6 @@
 	}
 	.dissent-plain strong {
 		color: #c9ab6e;
-	}
-	.pending {
-		margin: 0 0 0.7rem;
 	}
 	.dissent-full summary {
 		cursor: pointer;

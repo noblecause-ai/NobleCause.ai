@@ -43,9 +43,6 @@ export const de = {
 		// Ausklapps zum Rats-Wortlaut, kein separater Disclaimer. Die Frage trägt
 		// eine eigene Variante (study.questionKlartextNote).
 		klartextNote: 'Vereinfachte Fassung, verantwortet vom Wart · Wortlaut des Rates ▸',
-		// Fehlt die Freigabe des Klartexts, erscheint die Rekord-Schicht mit
-		// diesem Vermerk — Verständlichkeit darf die Publikation nie verhindern.
-		klartextPending: 'Klartext folgt — bis zur Freigabe steht hier der Wortlaut des Rates.',
 		// Stabiler Kopf auf ALLEN drei Raum-Seiten (Titelbereich-Neuordnung):
 		// die Leitfrage als h1, darunter der Verfahrenssatz (Pitch) in derselben
 		// Schrift/Farbe — „Warum so umständlich?" ist die inline-Fortsetzung
@@ -112,7 +109,9 @@ export const de = {
 		// Dynamischer Raumteil unter dem stabilen Kopf (Titelbereich-Neuordnung):
 		// EIN Wort (englischer Eigenname, ohne „The"/Gloss) + Raum-Lead.
 		roomWord: 'Study',
-		lead: 'Jede Sitzung beginnt hier — mit einer Frage und den Belegen dazu.',
+		introPitch:
+			'NobleCause.ai lässt mehrere KI-Modelle dieselbe Spendenfrage prüfen und veröffentlicht ihre Antworten vollständig. Ein festes Programm zählt nur ihre Schlussvoten. NobleCause nimmt kein Geld an; Spendenlinks führen direkt zu den Organisationen.',
+		lead: 'Hier beginnt jede Prüfung: mit einer klaren Frage und denselben Belegen für alle Modelle.',
 		boardTitle: 'Die Antwort der letzten Sitzung',
 		// Datenzeile unter dem Tafeltitel: Nummer MUSS mit — alle drei Sitzungen
 		// tragen dasselbe Datum, ein Datum allein wäre mehrdeutig.
@@ -188,7 +187,7 @@ export const de = {
 		dossiersTitle: 'Dossiers',
 		// §3.4: Der Dossier-Block öffnet mit der Frage dieser Sitzung in Klartext
 		// (plain.question aus den Daten; Fallback: der kuratierte Protokoll-
-		// Kontext session.summary + „Klartext folgt"). Der Wortlaut hängt an der
+		// Kontext session.summary). Der Wortlaut hängt an der
 		// Kennzeichnungs-Summary (eine Tiefe, Regel 2.1).
 		questionTitle: 'Die Frage dieser Sitzung',
 		questionKlartextNote: 'Vereinfachte Fassung, verantwortet vom Wart · Die Frage im Wortlaut ▸',
