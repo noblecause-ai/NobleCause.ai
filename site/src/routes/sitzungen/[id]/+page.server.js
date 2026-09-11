@@ -93,10 +93,15 @@ export function load({ params }) {
 			wart_dossier_refusal: s.wart_dossier_refusal ?? null,
 			wart_opening_html: s.wart_opening_md ? md(s.wart_opening_md) : null,
 			wart_moderation_html: s.wart_moderation_md ? md(s.wart_moderation_md) : null,
+			deliberation_version: s.deliberation_version ?? null,
 			// Wortlaut je Runde/Modell — ungekürzt (Konzept §5).
 			rounds: s.rounds.map((r) => ({
 				...r,
-				votes: (r.votes ?? []).map((v) => ({ ...v, content_html: md(v.content_md) }))
+				votes: (r.votes ?? []).map((v) => ({ ...v, content_html: md(v.content_md) })),
+				exchanges: (r.exchanges ?? []).map((e) => ({
+					...e,
+					content_html: e.content_md ? md(e.content_md) : null
+				}))
 			}))
 		},
 		participants,

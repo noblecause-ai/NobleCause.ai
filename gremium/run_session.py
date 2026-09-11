@@ -24,6 +24,7 @@ ROOT = HERE.parent
 import prompts  # noqa: E402
 import organizations  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
+from process_config import configured_scouts, feature_enabled  # noqa: E402
 
 
 # ---------------------------------------------------------------- utilities
@@ -87,6 +88,49 @@ def strip_votum_block(text):
 
 def strip_json_block(text):
     return re.sub(r"```json\s*\{.*?\}\s*```\s*$", "", text, flags=re.DOTALL).strip()
+
+
+def parse_addressed_challenge(text, author_model, participant_models):
+    """Strikter 0.5-Vertrag; Beratungsprosa wird nie zur Struktur geparst."""
+    parsed = extract_json_block(text)
+    if not isinstance(parsed, dict):
+        raise ValueError("kein strukturierter JSON-Block")
+    target = parsed.get("target_model_id")
+    allowed = set(participant_models) - {author_model}
+    if target not in allowed:
+        raise ValueError(f"target_model_id {target!r} ist keine fremde Teilnehmer-ID")
+    stance = parsed.get("stance")
+    if stance not in {"support", "dispute", "refine"}:
+        raise ValueError("stance muss support, dispute oder refine sein")
+    for field in ("claim", "challenge", "why_decisive"):
+        if not isinstance(parsed.get(field), str) or not parsed[field].strip():
+            raise ValueError(f"{field} fehlt oder ist leer")
+    evidence_question = parsed.get("evidence_question")
+    if evidence_question is not None and not isinstance(evidence_question, str):
+        raise ValueError("evidence_question muss String oder null sein")
+    return {
+        "target_model_id": target,
+        "stance": stance,
+        "claim": parsed["claim"].strip(),
+        "challenge": parsed["challenge"].strip(),
+        "why_decisive": parsed["why_decisive"].strip(),
+        "evidence_question": evidence_question.strip() if isinstance(evidence_question, str) else None,
+    }
+
+
+def challenges_for_model(exchanges, model):
+    addressed = [e for e in exchanges if e.get("status") == "valid" and e.get("target_model_id") == model]
+    if not addressed:
+        return "Keine gültige Erwiderung wurde an deine Modell-ID gerichtet."
+    return "\n\n".join(
+        f"### Erwiderung von {e['model']}\n\n"
+        f"Haltung: {e['stance']}\n\n"
+        f"Behauptung: {e['claim']}\n\n"
+        f"Erwiderung: {e['challenge']}\n\n"
+        f"Entscheidungsrelevanz: {e['why_decisive']}\n\n"
+        f"Belegfrage: {e['evidence_question'] or 'keine'}"
+        for e in addressed
+    )
 
 
 def extract_dissent(text):
@@ -196,6 +240,11 @@ def call_anthropic(model, system, user, max_tokens):
 
 
 def call_scout_dossier(scout_cfg, system, user, raw_dir):
+    if scout_cfg.get("family") != "anthropic":
+        raise RuntimeError(
+            f"Kein freigegebener Web-Suche-Adapter für Scout-Familie "
+            f"{scout_cfg.get('family')!r}. Provider erst nach Messung und Steward-Entscheid anbinden."
+        )
     import anthropic
 
     client = anthropic.Anthropic()
@@ -782,6 +831,19 @@ def main():
     load_env(HERE, ROOT)
     require_keys("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY")
     config = json.loads((HERE / "config.json").read_text())
+    wart_cfg = config.get("wart")
+    try:
+        scouts = configured_scouts(config)
+    except ValueError as exc:
+        sys.exit(f"Abbruch: {exc}")
+    if args.with_dossier:
+        unsupported = sorted({s["family"] for s in scouts if s["family"] != "anthropic"})
+        if unsupported:
+            sys.exit(
+                "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "
+                f"{unsupported}. Kein Verzeichnis angelegt, kein API-Call."
+            )
+    deliberation_05 = feature_enabled(config, "deliberation_0_5")
     manifest = (ROOT / "manifest.md").read_text()
     sources = (HERE / "sources.md").read_text()
 
@@ -813,30 +875,28 @@ def main():
     wart_opening_refusal = None
     wart_dossier_refusal = None
     wart_moderation_refusal = None
-    scout_cfg = config.get("scout")
-    wart_cfg = config.get("wart")
-    if not scout_cfg or not wart_cfg:
-        sys.exit("Abbruch: scout und wart müssen getrennt in config.json konfiguriert sein.")
-    if scout_cfg["model"] == wart_cfg["model"]:
-        sys.exit("Abbruch: Scout und Wart dürfen nicht dasselbe Modell sein.")
+    scout_cfg = scouts[0]
 
     usage_by_model = {m["model"]: {"input_tokens": 0, "output_tokens": 0} for m in config["models"]}
-    scout_usage = empty_wart_usage()
+    scout_usages = {s["model"]: empty_wart_usage() for s in scouts}
     wart_usage = empty_wart_usage()
-    scout_cost_entry = None
+    scout_cost_entries = []
     wart_cost_entry = None
 
     def refresh_role_costs():
-        nonlocal scout_cost_entry, wart_cost_entry
-        if scout_usage["input_tokens"] or scout_usage["output_tokens"] or scout_usage["web_search_requests"]:
-            scout_cost_entry = compute_wart_cost(scout_usage, scout_cfg, fx)
+        nonlocal scout_cost_entries, wart_cost_entry
+        scout_cost_entries = [
+            compute_wart_cost(scout_usages[s["model"]], s, fx)
+            for s in scouts
+            if any(scout_usages[s["model"]].values())
+        ]
         if wart_usage["input_tokens"] or wart_usage["output_tokens"] or wart_usage["web_search_requests"]:
             wart_cost_entry = compute_wart_cost(wart_usage, wart_cfg, fx)
 
     def interim_costs(summarizer=None):
         refresh_role_costs()
         specs = config["models"] + ([summarizer] if summarizer else [config["summarizer"]])
-        role_costs = [cost for cost in (scout_cost_entry, wart_cost_entry) if cost]
+        role_costs = scout_cost_entries + ([wart_cost_entry] if wart_cost_entry else [])
         return compute_costs(usage_by_model, specs, fx, role_costs)
 
     def record_usage(spec, usage):
@@ -900,37 +960,106 @@ def main():
                 prior_recommendations=summarize_recommendations(prior),
             )
         (raw_dir / "prompt-r0-wart.txt").write_text(wart_dossier_prompt)
-        print(f"Runde 0 — Scout-Dossier ({scout_cfg['model']} + Web-Suche)")
-        text, usage, raw, api_queries = call_scout_dossier(
-            scout_cfg, prompts.SCOUT_DOSSIER_SYSTEM, wart_dossier_prompt, raw_dir
-        )
-        (raw_dir / "r0-wart-content.md").write_text(text)
-        accumulate_wart_usage(scout_usage, usage)
+        print(f"Runde 0 — {len(scouts)} Scout-Dossier{'s' if len(scouts) != 1 else ''} (+ Web-Suche)")
+        valid_dossiers = []
+        dossier_failures = []
+        for index, active_scout in enumerate(scouts, start=1):
+            scout_dir = raw_dir if len(scouts) == 1 else raw_dir / f"scout-{index}"
+            scout_dir.mkdir(parents=True, exist_ok=True)
+            print(f"  Scout {index}: {active_scout['model']}")
+            try:
+                text, usage, raw, api_queries = call_scout_dossier(
+                    active_scout,
+                    prompts.SCOUT_DOSSIER_SYSTEM,
+                    wart_dossier_prompt,
+                    scout_dir,
+                )
+                (scout_dir / "r0-wart-content.md").write_text(text)
+                accumulate_wart_usage(scout_usages[active_scout["model"]], usage)
+                artifact = (
+                    "r0-wart.json" if len(scouts) == 1 else f"scout-{index}/r0-wart.json"
+                )
+                dossier_text, refusal = wart_step_result(text, raw, artifact)
+                if dossier_text is None:
+                    dossier_failures.append({**refusal, "model": active_scout["model"]})
+                    print(
+                        f"    Verweigerung (stop_reason={refusal['stop_reason']}) — "
+                        "kein Inhalt übernommen."
+                    )
+                    continue
+                content_md = strip_json_block(dossier_text)
+                valid_dossiers.append(
+                    {
+                        "model": active_scout["model"],
+                        "label": active_scout.get("label", active_scout["model"]),
+                        "content_md": content_md,
+                        "search_queries": extract_search_queries(dossier_text) or api_queries,
+                    }
+                )
+            except Exception as exc:  # noqa: BLE001
+                if len(scouts) == 1:
+                    raise
+                dossier_failures.append(
+                    {
+                        "stop_reason": "caller_error",
+                        "at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
+                        "raw_artifact": f"raw/scout-{index}/",
+                        "model": active_scout["model"],
+                        "reason": str(exc),
+                    }
+                )
         refresh_role_costs()
-        dossier_text, wart_dossier_refusal = wart_step_result(text, raw, "r0-wart.json")
-        if dossier_text is not None:
-            search_queries = extract_search_queries(dossier_text) or api_queries
-            content_md = strip_json_block(dossier_text)
-            wart_dossier = {
-                "model": scout_cfg["model"],
-                "label": scout_cfg.get("label", scout_cfg["model"]),
-                "content_md": content_md,
-                "search_queries": search_queries,
-                "costs": scout_cost_entry,
-            }
-            dossier_section = (
-                "## Scout-Dossier (Runde 0)\n\n"
-                f"Der Scout ({scout_cfg['model']}) hat vor den Einzelvoten folgendes "
-                "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
-                "und Quellen.\n\n---\n\n"
-                f"{content_md}\n\n---"
-            )
+        costs_by_model = {c["model"]: c for c in scout_cost_entries}
+        for dossier in valid_dossiers:
+            dossier["costs"] = costs_by_model.get(dossier["model"])
+
+        if valid_dossiers:
+            if len(scouts) == 1:
+                wart_dossier = valid_dossiers[0]
+            else:
+                all_queries = []
+                for dossier in valid_dossiers:
+                    for query in dossier["search_queries"]:
+                        if query not in all_queries:
+                            all_queries.append(query)
+                combined = "\n\n---\n\n".join(
+                    f"## {d['label']} ({d['model']})\n\n{d['content_md']}"
+                    for d in valid_dossiers
+                )
+                wart_dossier = {
+                    "model": valid_dossiers[0]["model"],
+                    "label": f"Scout-Dossiers ({len(valid_dossiers)} von {len(scouts)})",
+                    "content_md": combined,
+                    "search_queries": all_queries,
+                    "scouts": valid_dossiers,
+                    "failures": dossier_failures,
+                }
+            if len(scouts) == 1:
+                # Default-off-Vertrag: Der bestehende Ein-Scout-Prompt bleibt
+                # wortgleich, solange two_scouts nicht aktiviert ist.
+                dossier_section = (
+                    "## Scout-Dossier (Runde 0)\n\n"
+                    f"Der Scout ({scout_cfg['model']}) hat vor den Einzelvoten folgendes "
+                    "Evidenz-Dossier geliefert. Es enthält keine Empfehlung — nur Fakten "
+                    "und Quellen.\n\n---\n\n"
+                    f"{wart_dossier['content_md']}\n\n---"
+                )
+            else:
+                dossier_count_text = (
+                    "Ein unabhängiges Scout-Dossier wurde"
+                    if len(valid_dossiers) == 1
+                    else f"{len(valid_dossiers)} unabhängige Scout-Dossiers wurden"
+                )
+                dossier_section = (
+                    "## Scout-Dossier (Runde 0)\n\n"
+                    f"{dossier_count_text} vor den Einzelvoten geliefert. Die Dossiers enthalten "
+                    "keine Empfehlung — nur Fakten und Quellen.\n\n---\n\n"
+                    f"{wart_dossier['content_md']}\n\n---"
+                )
         else:
-            # dossier_section bleibt "" — kein fiktives Dossier im Ratsprompt (Punkt 4).
-            print(
-                f"  Verweigerung (stop_reason={wart_dossier_refusal['stop_reason']}) — kein "
-                "Dossier übernommen; die drei Ratsvoten laufen ohne Dossier weiter."
-            )
+            # dossier_section bleibt "" — kein fiktives Dossier im Ratsprompt.
+            wart_dossier_refusal = dossier_failures[0] if dossier_failures else None
+            print("  Kein Scout-Dossier übernommen; die Ratsvoten laufen ohne Dossier weiter.")
         check_budget(interim_costs(), args.budget_cap, "nach Runde 0")
 
     round1_prompt = prompts.ROUND1.format(
@@ -990,8 +1119,69 @@ def main():
             )
         check_budget(interim_costs(), args.budget_cap, "nach Moderation")
 
+    # -------- Adressierte Erwiderung (0.5, standardmäßig AUS)
+    exchanges = []
+    if deliberation_05:
+        print("Erwiderung — adressierte, überprüfbare Position")
+        participant_models = [m["model"] for m in config["models"]]
+        for spec, own in zip(config["models"], r1):
+            others = "\n\n".join(
+                f"### Erstvotum {v['label']} · Modell-ID `{v['model']}`\n\n"
+                f"{strip_json_block(v['text'])}"
+                for v in r1
+                if v["model"] != spec["model"]
+            )
+            target_ids = [m for m in participant_models if m != spec["model"]]
+            challenge_prompt = prompts.ADDRESSED_CHALLENGE.format(
+                own_vote=strip_json_block(own["text"]),
+                other_votes=others,
+                target_model_ids=", ".join(f"`{m}`" for m in target_ids),
+            )
+            (raw_dir / f"prompt-challenge-{spec['family']}.txt").write_text(challenge_prompt)
+            print(f"  {spec['label']} ({spec['model']}) …")
+            try:
+                text, usage = call_model(
+                    spec, system, challenge_prompt, max_tokens, raw_dir, "challenge"
+                )
+                record_usage(spec, usage)
+                content_md = strip_json_block(text)
+                try:
+                    structured = parse_addressed_challenge(
+                        text, spec["model"], participant_models
+                    )
+                    exchanges.append(
+                        {
+                            "model": spec["model"],
+                            "status": "valid",
+                            "content_md": content_md,
+                            **structured,
+                        }
+                    )
+                except ValueError as exc:
+                    exchanges.append(
+                        {
+                            "model": spec["model"],
+                            "status": "invalid",
+                            "content_md": content_md,
+                            "target_model_id": None,
+                            "failure": str(exc),
+                            "raw_artifact": f"raw/challenge-{spec['family']}.json",
+                        }
+                    )
+            except Exception as exc:  # noqa: BLE001
+                exchanges.append(
+                    {
+                        "model": spec["model"],
+                        "status": "unavailable",
+                        "content_md": "",
+                        "target_model_id": None,
+                        "failure": str(exc),
+                    }
+                )
+        check_budget(interim_costs(), args.budget_cap, "nach adressierter Erwiderung")
+
     # -------- Runde 2
-    print("Runde 2 — Gegenlese und Schlussvoten")
+    print("Runde 2 — Antwort und Schlussvoten" if deliberation_05 else "Runde 2 — Gegenlese und Schlussvoten")
     r2 = []
     for spec, own in zip(config["models"], r1):
         others = "\n\n".join(
@@ -999,11 +1189,20 @@ def main():
             for v in r1
             if v["model"] != spec["model"]
         )
-        round2_prompt = prompts.ROUND2.format(
-            own_vote=strip_json_block(own["text"]),
-            other_votes=others,
-            moderation_section=moderation_section,
-        )
+        if deliberation_05:
+            round2_prompt = prompts.ROUND2_05.format(
+                own_vote=strip_json_block(own["text"]),
+                other_votes=others,
+                addressed_challenges=challenges_for_model(exchanges, spec["model"]),
+                moderation_section=moderation_section,
+            )
+            (raw_dir / f"prompt-r2-{spec['family']}.txt").write_text(round2_prompt)
+        else:
+            round2_prompt = prompts.ROUND2.format(
+                own_vote=strip_json_block(own["text"]),
+                other_votes=others,
+                moderation_section=moderation_section,
+            )
         print(f"  {spec['label']} ({spec['model']}) …")
         text, usage = call_model(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
         record_usage(spec, usage)
@@ -1053,7 +1252,7 @@ def main():
         usage_by_model[summarizer["model"]]["output_tokens"] += sum_usage["output_tokens"]
 
     all_specs = config["models"] + ([] if args.led_by_wart else [summarizer])
-    role_costs = [cost for cost in (scout_cost_entry, wart_cost_entry) if cost]
+    role_costs = scout_cost_entries + ([wart_cost_entry] if wart_cost_entry else [])
     costs = compute_costs(usage_by_model, all_specs, fx, role_costs)
     check_budget(costs, args.budget_cap, "gesamt")
 
@@ -1075,14 +1274,18 @@ def main():
         rounds.append({"round": 0, "kind": "wart_dossier", "wart": wart_dossier})
     if wart_moderation_md:
         rounds.append({"round": 1.5, "kind": "wart_moderation", "content_md": wart_moderation_md})
-    rounds.extend(
-        [
-            {"round": 1, "kind": "initial_vote", "votes": votes_of(r1)},
-            {"round": 2, "kind": "final_vote", "votes": votes_of(r2)},
-        ]
-    )
+    rounds.append({"round": 1, "kind": "initial_vote", "votes": votes_of(r1)})
+    if deliberation_05:
+        rounds.append({"round": 1.75, "kind": "addressed_challenge", "exchanges": exchanges})
+    rounds.append({"round": 2, "kind": "final_vote", "votes": votes_of(r2)})
 
-    prompts_dict = {"system": system, "round1": round1_prompt, "round2": prompts.ROUND2}
+    prompts_dict = {
+        "system": system,
+        "round1": round1_prompt,
+        "round2": prompts.ROUND2_05 if deliberation_05 else prompts.ROUND2,
+    }
+    if deliberation_05:
+        prompts_dict["addressed_challenge"] = prompts.ADDRESSED_CHALLENGE
     if wart_dossier_prompt:
         prompts_dict["wart_dossier"] = wart_dossier_prompt
     if wart_opening_prompt:
@@ -1109,6 +1312,8 @@ def main():
         "unresolved_votes": unresolved,
         "costs": costs,
     }
+    if deliberation_05:
+        session["deliberation_version"] = "0.5"
     if args.led_by_wart:
         session["designation"] = "Gründungssitzung"
         session["led_by"] = {

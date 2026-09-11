@@ -145,7 +145,8 @@ export const de = {
 					'entscheidet anhand der Belege, ob der Council tagt, leitet dann die Sitzung und veröffentlicht alles.',
 				lastPrefix: 'Zuletzt:',
 				convened: 'einberufen',
-				notConvened: 'nicht einberufen'
+				notConvened: 'nicht einberufen',
+				refused: 'Recherche verweigert — kein Entscheid'
 			}
 		},
 		// Die Ablauf-Leiste: alle sechs kanonischen Schritte als gerichteter Prozess.

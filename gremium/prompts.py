@@ -125,6 +125,74 @@ Runde 1 (Gesamtkonfidenz + Empfehlungen je Säule mit `pillar`, `title`, \
 `conditional` und `reservation` gehören auch hier zum Votum — ohne sie kann dein Votum \
 für die Säule nicht gezählt werden."""
 
+ADDRESSED_CHALLENGE = """## Dein unabhängiges Erstvotum
+
+{own_vote}
+
+## Fremde Erstvoten
+
+{other_votes}
+
+## Deine Aufgabe (adressierte Erwiderung)
+
+Wähle genau eine entscheidungsrelevante, überprüfbare Position aus einem
+fremden Erstvotum. Gehe darauf stützend, widersprechend oder präzisierend ein
+und kennzeichne diese Haltung als `support`, `dispute` oder `refine`. Adressiere
+das betreffende Modell über seine exakte ID. Eine Enthaltung ist nicht
+vorgesehen: Begründete Zustimmung ist eine gültige Erwiderung. Gib hier noch
+kein Schlussvotum ab.
+
+Beende die Antwort mit genau einem JSON-Block:
+
+```json
+{{
+  "target_model_id": "…",
+  "stance": "support | dispute | refine",
+  "claim": "…",
+  "challenge": "…",
+  "why_decisive": "…",
+  "evidence_question": null
+}}
+```
+
+`target_model_id` muss eine dieser fremden Modell-IDs sein: {target_model_ids}.
+`stance` ist exakt `support`, `dispute` oder `refine`. `claim`, `challenge` und
+`why_decisive` sind nichtleere Strings. `evidence_question` ist eine konkrete
+Belegfrage oder `null`."""
+
+ROUND2_05 = """## Rückblick
+
+In Runde 1 hast du folgendes Votum abgegeben:
+
+---
+{own_vote}
+---
+
+## Die Erstvoten der anderen Gremium-Mitglieder
+
+{other_votes}
+
+## An dich gerichtete Erwiderungen
+
+{addressed_challenges}
+
+{moderation_section}
+
+## Deine Aufgabe (Antwort und Schlussvotum)
+
+1. Beantworte jede gültige, an deine Modell-ID gerichtete Erwiderung einzeln.
+   Benenne das erwidernde Modell und sage ausdrücklich, was du übernimmst,
+   verwirfst oder enger fasst und warum.
+2. Prüfe danach die übrigen Argumente: Wo sind sie stärker als deine, wo schwächer?
+3. Gib dein Schlussvotum ab: je Säule eine Empfehlung. Du darfst deine Position
+   revidieren oder halten — begründe beides ausdrücklich.
+4. Schreibe einen Abschnitt `## Dissens`. Wenn du nicht abweichst, sage das explizit.
+
+Beende deine Antwort mit genau einem JSON-Block im selben Format wie in Runde 1
+(Gesamtkonfidenz + Empfehlungen je Säule mit `pillar`, `title`, `organization`,
+`donation_url`, `confidence`, `conditional`, `reservation`). Nur dieses
+strukturierte Schlussvotum wird gezählt; die Beratungsprosa berührt den Zähler nie."""
+
 SUMMARY = """Du schreibst die Leserfassung eines veröffentlichten Gremium-Protokolls \
 für NobleCause.ai. Nüchtern, dokumentarisch, keine Superlative.
 

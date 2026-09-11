@@ -20,6 +20,14 @@
 		tracks.find((t) => t.model === model)?.rows.find((r) => r.pillar === pillar) ?? null;
 	const voteHtml = (model, kind) =>
 		s.rounds.find((r) => r.kind === kind)?.votes?.find((v) => v.model === model)?.content_html ?? null;
+	const exchangeFor = (model) =>
+		s.rounds.find((r) => r.kind === 'addressed_challenge')?.exchanges?.find((e) => e.model === model) ?? null;
+	const participantName = (model) => {
+		const participant = participants.find((p) => p.model === model);
+		return participant ? modelName(participant.model, participant.label) : model;
+	};
+	const stanceName = (stance) =>
+		({ support: 'stützend', dispute: 'widersprechend', refine: 'präzisierend' })[stance] ?? stance;
 </script>
 
 <svelte:head>
@@ -137,9 +145,36 @@
 					<div class="verbatim">{@html voteHtml(pt.model, 'initial_vote')}</div>
 				</details>
 			{/if}
+			{#if exchangeFor(pt.model)}
+				{@const exchange = exchangeFor(pt.model)}
+				<details class="addressed-exchange">
+					<summary>
+						Adressierte Erwiderung{#if exchange.target_model_id}
+							an {participantName(exchange.target_model_id)}
+						{/if}
+					</summary>
+					{#if exchange.status === 'valid'}
+						<dl class="exchange-fields">
+							<div><dt>Haltung</dt><dd>{stanceName(exchange.stance)}</dd></div>
+							<div><dt>Behauptung</dt><dd>{exchange.claim}</dd></div>
+							<div><dt>Erwiderung</dt><dd>{exchange.challenge}</dd></div>
+							<div><dt>Warum entscheidend</dt><dd>{exchange.why_decisive}</dd></div>
+							{#if exchange.evidence_question}
+								<div><dt>Belegfrage</dt><dd>{exchange.evidence_question}</dd></div>
+							{/if}
+						</dl>
+					{:else}
+						<p class="muted small">Keine gültige strukturierte Erwiderung: {exchange.failure}</p>
+					{/if}
+					{#if exchange.content_html}
+						<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
+						<div class="verbatim">{@html exchange.content_html}</div>
+					{/if}
+				</details>
+			{/if}
 			{#if voteHtml(pt.model, 'final_vote')}
 				<details>
-					<summary>Schlussvotum (nach Gegenlese)</summary>
+					<summary>{s.deliberation_version === '0.5' ? 'Antwort und Schlussvotum' : 'Schlussvotum (nach Gegenlese)'}</summary>
 					<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
 					<div class="verbatim">{@html voteHtml(pt.model, 'final_vote')}</div>
 				</details>
@@ -173,6 +208,14 @@
 				<p class="kicker">Suchanfragen</p>
 				<ul class="queries">
 					{#each s.wart_dossier.search_queries as q (q)}<li><code>{q}</code></li>{/each}
+				</ul>
+			{/if}
+			{#if s.wart_dossier.failures?.length}
+				<p class="correction-label">Ausgefallene Scout-Zulieferung</p>
+				<ul class="queries">
+					{#each s.wart_dossier.failures as failure}
+						<li><code>{failure.model}</code>: {failure.reason ?? failure.stop_reason}</li>
+					{/each}
 				</ul>
 			{/if}
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -- trusted build-time content -->
@@ -234,6 +277,21 @@
 		font: 600 0.7rem ui-sans-serif, system-ui, sans-serif;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+	.exchange-fields {
+		margin: 0.8rem 0 1rem;
+	}
+	.exchange-fields div {
+		margin: 0 0 0.75rem;
+	}
+	.exchange-fields dt {
+		color: #c9ab6e;
+		font: 600 0.72rem ui-sans-serif, system-ui, sans-serif;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+	.exchange-fields dd {
+		margin: 0.15rem 0 0;
 	}
 
 	/* ---- Marke: Kopfzeile (Medaillon | Name) + Votum + Vorbehalt ------------- */

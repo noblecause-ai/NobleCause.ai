@@ -11,13 +11,16 @@
 	// ebenso kenntlich.
 	function kind(e) {
 		if (e.type === 'commission') return { slug: 'commission', label: 'Kommission' };
+		if (e.kind === 'refusal') return { slug: 'refusal', label: 'Verweigerung' };
 		if (e.model === null && e.convene) return { slug: 'steward', label: 'Einberufung' };
 		if (e.deputation) return { slug: 'deputation', label: 'Vertretung' };
 		return { slug: 'research', label: 'Recherche' };
 	}
 	const title = (e) =>
-		e.model_label ??
-		(e.type === 'commission' ? 'Selbstdarstellungen bestellt' : 'Einberufung durch den Steward');
+		e.kind === 'refusal'
+			? e.model_label ?? 'Scout-Verweigerung'
+			: e.model_label ??
+				(e.type === 'commission' ? 'Selbstdarstellungen bestellt' : 'Einberufung durch den Steward');
 </script>
 
 <svelte:head>
@@ -51,7 +54,9 @@
 					<time class="entry-date" datetime={e.date}>{fmtDate(e.date)}</time>
 				</a>
 				<p class="entry-meta">
-					{#if e.convene}
+					{#if e.kind === 'refusal'}
+						kein Einberufungsentscheid
+					{:else if e.convene}
 						<span class="convene-yes">Einberufung empfohlen</span>
 					{:else}
 						keine Einberufung
@@ -62,6 +67,8 @@
 				</p>
 				{#if e.convene_rationale}
 					<p class="entry-rationale">{e.convene_rationale}</p>
+				{:else if e.refusal_note}
+					<p class="entry-rationale">{e.refusal_note}</p>
 				{/if}
 			</li>
 		{/each}
@@ -103,6 +110,10 @@
 	.type-commission {
 		border-color: rgba(139, 183, 202, 0.6);
 		color: #8bb7ca;
+	}
+	.type-refusal {
+		border-color: rgba(202, 126, 105, 0.65);
+		color: #df9b87;
 	}
 	.type-steward {
 		border-color: rgba(215, 170, 85, 0.6);

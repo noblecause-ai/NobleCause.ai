@@ -13,6 +13,14 @@
 		"council": "strongest_production_model_per_family",
 		"preview_models_allowed": false
 	},
+	"features": {
+		"two_scouts": {
+			"enabled": false
+		},
+		"deliberation_0_5": {
+			"enabled": false
+		}
+	},
 	"scout": {
 		"family": "anthropic",
 		"model": "claude-opus-5",

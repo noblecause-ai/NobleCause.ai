@@ -33,9 +33,42 @@
         "required": ["round", "kind"],
         "properties": {
           "round": { "type": "number" },
-          "kind": { "enum": ["wart_opening", "wart_dossier", "wart_moderation", "initial_vote", "final_vote"] },
+          "kind": { "enum": ["wart_opening", "wart_dossier", "wart_moderation", "initial_vote", "addressed_challenge", "final_vote"] },
           "content_md": { "type": "string" },
           "wart": { "type": "object" },
+          "exchanges": {
+            "type": "array",
+            "description": "Deliberation 0.5: je Ratsmodell eine verpflichtende adressierte Erwiderung oder ein sichtbarer Ausfall. Nur strukturierte Schlussvoten werden aggregiert.",
+            "items": {
+              "type": "object",
+              "required": ["model", "status", "content_md", "target_model_id"],
+              "properties": {
+                "model": { "type": "string" },
+                "status": { "enum": ["valid", "invalid", "unavailable"] },
+                "content_md": { "type": "string" },
+                "target_model_id": { "type": ["string", "null"] },
+                "stance": { "enum": ["support", "dispute", "refine"] },
+                "claim": { "type": ["string", "null"] },
+                "challenge": { "type": ["string", "null"] },
+                "why_decisive": { "type": ["string", "null"] },
+                "evidence_question": { "type": ["string", "null"] },
+                "failure": { "type": "string" },
+                "raw_artifact": { "type": "string" }
+              },
+              "allOf": [{
+                "if": { "properties": { "status": { "const": "valid" } }, "required": ["status"] },
+                "then": {
+                  "required": ["stance", "claim", "challenge", "why_decisive"],
+                  "properties": {
+                    "target_model_id": { "type": "string" },
+                    "claim": { "type": "string" },
+                    "challenge": { "type": "string" },
+                    "why_decisive": { "type": "string" }
+                  }
+                }
+              }]
+            }
+          },
           "votes": {
             "type": "array",
             "items": { "type": "object", "required": ["model", "content_md"],
@@ -149,6 +182,7 @@
       }
     },
     "wart_dossier": { "type": "object" },
+    "deliberation_version": { "type": "string", "enum": ["0.5"] },
     "designation": { "type": "string" },
     "led_by": { "type": "object" },
     "wart_opening_md": { "type": "string" },

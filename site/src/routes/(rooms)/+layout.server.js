@@ -29,12 +29,12 @@ export function load() {
 	const schedule = getSchedule();
 	const lastId = schedule?.last_journal?.replace(/^\/?journal\//, '').replace(/\/$/, '') || null;
 	const last = lastId ? getJournalEntry(lastId) : null;
-	// Auflage (Steward): der aufgelöste Eintrag MUSS ein Research-Lauf sein.
-	// Strukturelles Signal ist search_queries — KEIN Parsen von convene_rationale-
-	// Prosa (Datenvertrag). Ist es kein Research-Lauf, ist schedule.last_journal
-	// falsch gesetzt → LAUT scheitern (Build bricht), NICHT stillschweigend auf ein
-	// anderes Journal zurückfallen. Ein Datenproblem gehört gemeldet, nicht geglättet.
-	if (last && !(last.search_queries?.length > 0)) {
+	// Auflage (Steward): der aufgelöste Eintrag MUSS ein Research-Lauf oder dessen
+	// expliziter Refusal-Rekord sein. Strukturelles Signal ist search_queries bzw.
+	// kind=refusal — KEIN Parsen von Prosa (Datenvertrag). Andernfalls ist
+	// schedule.last_journal falsch gesetzt → LAUT scheitern (Build bricht), NICHT
+	// stillschweigend auf ein anderes Journal zurückfallen.
+	if (last && last.kind !== 'refusal' && !(last.search_queries?.length > 0)) {
 		throw new Error(
 			`lastResearch: journal/${lastId} hat keine search_queries — kein Research-Lauf. schedule.last_journal prüfen.`
 		);
@@ -66,7 +66,8 @@ export function load() {
 				date: last.date,
 				model: last.model ?? null,
 				deputationNote: last.deputation_note ?? null,
-				convene: last.convene ?? false
+				convene: last.convene ?? null,
+				refusal: last.kind === 'refusal'
 			},
 			schedule: { nextSession: schedule?.next_session ?? null }
 		}

@@ -128,7 +128,9 @@
 				<!-- Warden-Entscheid aus den Daten (convene/date des letzten Laufs). -->
 				{#if lastResearch?.date}<span class="last"
 						>{t.study.actors.warden.lastPrefix}
-						{lastResearch.convene
+						{lastResearch.refusal
+							? t.study.actors.warden.refused
+							: lastResearch.convene
 							? t.study.actors.warden.convened
 							: t.study.actors.warden.notConvened} ·
 						<time datetime={lastResearch.date}>{formatDate(lastResearch.date, t.lang)}</time></span

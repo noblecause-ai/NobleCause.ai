@@ -161,8 +161,11 @@ export function listJournalEntries() {
 			return {
 				id: e.name,
 				date: j.date ?? e.name,
-				convene: j.convene ?? false,
+				convene: j.convene ?? null,
 				convene_rationale: j.convene_rationale ?? null,
+				kind: j.kind ?? null,
+				refusal: j.refusal === true,
+				refusal_note: j.refusal_note ?? null,
 				session_ref: j.session_ref ?? null,
 				model: j.model ?? null,
 				model_label: j.model_label ?? null,

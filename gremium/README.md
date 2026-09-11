@@ -35,6 +35,33 @@ Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
 5. **Runde 2:** Council liefert Schlussvoten.
 6. **Kurzfassung durch den Wart:** Summary/Dissens-Highlights via Fable.
 
+## Vorbereitete Verfahrensschalter (standardmäßig aus)
+
+`config.json` enthält zwei Schalter unter `features`. Beide stehen auf
+`enabled: false`; ihr Vorhandensein ändert daher weder Wochenlauf noch Sitzung.
+
+- **`two_scouts`:** Verlangt bei Aktivierung genau zwei Einträge in
+  `config.scouts`, aus zwei verschiedenen Familien; mindestens eine Familie
+  muss außerhalb des Rates liegen und kein Scout darf zugleich Wart sein.
+  Beide erhalten denselben Auftrag. Beide Wortlaute, Ausfälle und ein exakter
+  (nicht semantisch geratener) Divergenzausweis werden veröffentlicht. Ein
+  gültiges Dossier kann den Ausfall des anderen Scouts auffangen; fallen beide
+  aus, bricht der Wochenlauf ab. Der zweite Anbieter und sein Websuche-Adapter
+  sind bewusst noch **nicht** gewählt oder eingebaut.
+- **`deliberation_0_5`:** Fügt nach den unabhängigen Erstvoten eine adressierte
+  Erwiderung ein. Jedes Modell muss genau eine überprüfbare Behauptung eines
+  anderen, durch Modell-ID benannten Teilnehmers stützen, bestreiten oder
+  präzisieren. Die Haltung wird als `support | dispute | refine` geführt. Nur
+  strukturierte Felder werden an das Zielmodell weitergegeben; ungültige oder
+  ausgefallene Erwiderungen bleiben sichtbar, verhindern aber nicht die
+  Schlussvoten. Für die Empfehlung zählt weiterhin ausschließlich die
+  deterministische Aggregation der strukturierten Schlussvoten.
+
+Vor der ersten echten Aktivierung sind Steward-Freigabe, synthetische Abnahme,
+eine veröffentlichte DE/EN-Verfahrenserklärung und ein ausdrücklich genehmigter
+Kostenrahmen erforderlich. Alte Sitzungs- und Journalrekorde werden dadurch
+nicht verändert.
+
 ## Benutzung
 
 ```bash

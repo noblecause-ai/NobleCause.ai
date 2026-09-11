@@ -21,6 +21,7 @@ ROOT = HERE.parent
 
 import prompts  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
+from process_config import configured_scouts, scout_divergence  # noqa: E402
 
 
 def extract_json_block(text):
@@ -217,6 +218,11 @@ def actions_run_url():
 
 
 def call_scout(scout_cfg, system, user, raw_dir):
+    if scout_cfg.get("family") != "anthropic":
+        raise RuntimeError(
+            f"Kein freigegebener Web-Suche-Adapter für Scout-Familie "
+            f"{scout_cfg.get('family')!r}. Provider erst nach Messung und Steward-Entscheid anbinden."
+        )
     import anthropic
 
     client = anthropic.Anthropic()
@@ -264,6 +270,94 @@ def call_scout(scout_cfg, system, user, raw_dir):
         f"Suchen: {usage['web_search_requests']}"
     )
     return text, usage, raw, api_queries
+
+
+def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
+    """Führt dieselbe Marschroute unabhängig aus und hält Ausfälle sichtbar.
+
+    Technische Fehler des Einzel-Scouts bleiben streng. Eine explizite
+    Verweigerung wird dagegen auch beim Einzel-Scout als publizierbares Ereignis
+    zurückgegeben. Bei zwei Scouts darf genau ein Ausfall durch den zweiten
+    Bericht aufgefangen werden. Verweigern beide, entscheidet ``main`` ohne
+    Wart-Call über den Refusal-Rekord. Es wird niemals ein fehlender Bericht
+    geraten oder aus dem anderen ergänzt.
+    """
+    caller = caller or call_scout
+    reports = []
+    failures = []
+    for index, scout_cfg in enumerate(scouts, start=1):
+        scout_raw_dir = raw_dir if len(scouts) == 1 else raw_dir / f"scout-{index}"
+        scout_raw_dir.mkdir(parents=True, exist_ok=True)
+        usage = None
+        api_queries = []
+        stop_reason = None
+        try:
+            text, usage, raw, api_queries = caller(
+                scout_cfg, system, user, scout_raw_dir
+            )
+            stop_reason = raw.get("stop_reason")
+            if stop_reason != "end_turn":
+                raise RuntimeError(f"stop_reason={stop_reason}")
+            try:
+                parsed = parse_scout_answer(text)
+            except SystemExit as exc:
+                raise RuntimeError(str(exc)) from exc
+            reports.append(
+                {
+                    "index": index,
+                    "config": scout_cfg,
+                    "text": text,
+                    "content_md": strip_json_block(text),
+                    "parsed": parsed,
+                    "usage": usage,
+                    "api_queries": api_queries,
+                }
+            )
+        except Exception as exc:  # noqa: BLE001
+            if len(scouts) == 1 and stop_reason != "refusal":
+                raise
+            failures.append(
+                {
+                    "index": index,
+                    "model": scout_cfg.get("model"),
+                    "family": scout_cfg.get("family"),
+                    "reason": str(exc),
+                    "stop_reason": stop_reason,
+                    "raw_artifact_dir": str(scout_raw_dir.relative_to(ROOT)),
+                    "search_queries": api_queries,
+                    "usage": usage,
+                }
+            )
+    if not reports:
+        if not failures or any(f.get("stop_reason") != "refusal" for f in failures):
+            raise RuntimeError(
+                "Alle Scouts sind technisch ausgefallen — kein publizierbarer Refusal-Rekord."
+            )
+        return [], failures, None
+    divergence = scout_divergence([r["parsed"] for r in reports]) if len(reports) == 2 else None
+    return reports, failures, divergence
+
+
+def combined_scout_dossier(reports, failures, divergence):
+    sections = []
+    for report in reports:
+        cfg = report["config"]
+        sections.append(
+            f"## Scout {report['index']}: {cfg.get('label', cfg['model'])} "
+            f"({cfg['model']})\n\n{report['text']}"
+        )
+    for failure in failures:
+        sections.append(
+            f"## Scout {failure['index']}: ausgefallen\n\n"
+            f"Modell: {failure['model']} · Grund: {failure['reason']} · "
+            f"Rohpfad: {failure['raw_artifact_dir']}"
+        )
+    if divergence:
+        sections.append(
+            "## Maschineller Divergenz-Ausweis\n\n"
+            + json.dumps(divergence, indent=2, ensure_ascii=False)
+        )
+    return "\n\n---\n\n".join(sections)
 
 
 def call_wart_decision(wart_cfg, system, user, raw_dir):
@@ -341,6 +435,100 @@ def write_schedule(entry_date, session_date, convene, journal_path):
     print(f"schedule.json aktualisiert (nächster Research: {schedule['next_research']})")
 
 
+def write_refusal_schedule(entry_date):
+    """Schreibt nur den Research-Takt fort; Sitzungsplan und Fremdfelder bleiben erhalten."""
+    schedule_file = ROOT / "schedule.json"
+    schedule = json.loads(schedule_file.read_text()) if schedule_file.exists() else {}
+    now = datetime.datetime.now(datetime.timezone.utc)
+    next_research = next_monday_0600_utc(now)
+    schedule["next_research"] = next_research.replace(
+        tzinfo=datetime.timezone.utc
+    ).isoformat().replace("+00:00", "Z")
+    schedule["last_journal"] = f"/journal/{entry_date}/"
+    schedule_file.write_text(json.dumps(schedule, indent=2, ensure_ascii=False) + "\n")
+    print(
+        "schedule.json nach Refusal aktualisiert "
+        f"(nächster Research: {schedule['next_research']}; next_session unverändert)"
+    )
+
+
+def write_scout_refusal_entry(out_dir, entry_date, session_id, scouts, failures, config):
+    """Publiziert ausschließlich explizite Refusals, niemals technische Ausfälle."""
+    if not failures or any(f.get("stop_reason") != "refusal" for f in failures):
+        raise ValueError("Refusal-Eintrag verlangt ausschließlich stop_reason=refusal")
+
+    queries = []
+    for failure in failures:
+        for query in failure.get("search_queries") or []:
+            if query not in queries:
+                queries.append(query)
+    usage_by_model = {
+        failure["model"]: failure["usage"]
+        for failure in failures
+        if failure.get("usage") is not None
+    }
+    scout_costs = [
+        compute_role_costs(usage_by_model[scout["model"]], scout, config["fx_rate_usd_eur"])
+        for scout in scouts
+        if scout["model"] in usage_by_model
+    ]
+    labels = [
+        scout.get("model_label", scout.get("label", scout["model"])) for scout in scouts
+    ]
+    models = [scout["model"] for scout in scouts]
+    subject_de = "Das Modell" if len(models) == 1 else "Alle konfigurierten Scouts"
+    verb_de = "hat" if len(models) == 1 else "haben"
+    subject_en = "The model" if len(models) == 1 else "All configured Scouts"
+    verb_en = "has" if len(models) == 1 else "have"
+    names = ", ".join(f"`{model}`" for model in models)
+    note_de = (
+        f"{subject_de} {names} {verb_de} die Ausgabe verweigert (`stop_reason: refusal`). "
+        "Es liegt kein Dossier und kein Einberufungsentscheid vor; beides wird nicht "
+        "ersatzweise erzeugt. Suchanfragen und Rohantworten bleiben unverändert im Rekord."
+    )
+    note_en = (
+        f"{subject_en} {names} {verb_en} declined to produce output (`stop_reason: refusal`). "
+        "No dossier and no convocation decision exist; neither is generated as a substitute. "
+        "Search queries and raw responses remain unchanged in the record."
+    )
+    costs = {
+        "currency": "EUR",
+        "total": round(sum(cost["total"] for cost in scout_costs), 4),
+        "fx_rate_usd_eur": config["fx_rate_usd_eur"],
+        "components": {"scouts": scout_costs},
+    }
+    entry = {
+        "schema_version": 2,
+        "kind": "refusal",
+        "date": entry_date,
+        "session_ref": session_id,
+        "model": scouts[0]["model"] if len(scouts) == 1 else None,
+        "model_label": labels[0] if len(labels) == 1 else "Zwei Scouts",
+        "search_queries": queries,
+        "content_md": "",
+        "refusal": True,
+        "refusal_note": note_de,
+        "refusal_note_en": note_en,
+        "refusals": [
+            {
+                "family": failure["family"],
+                "model": failure["model"],
+                "stop_reason": failure["stop_reason"],
+                "raw_artifact_dir": failure["raw_artifact_dir"],
+                "search_queries": failure.get("search_queries") or [],
+            }
+            for failure in failures
+        ],
+        "costs": costs,
+        "actions_run_url": actions_run_url(),
+    }
+    (out_dir / "entry.json").write_text(
+        json.dumps(entry, indent=2, ensure_ascii=False) + "\n"
+    )
+    write_refusal_schedule(entry_date)
+    return entry
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=datetime.date.today().isoformat())
@@ -350,12 +538,17 @@ def main():
     require_keys("ANTHROPIC_API_KEY")
 
     config = json.loads((HERE / "config.json").read_text())
-    scout_cfg = config.get("scout")
     wart_cfg = config.get("wart")
-    if not scout_cfg or not wart_cfg:
-        sys.exit("Abbruch: scout und wart müssen getrennt in config.json konfiguriert sein.")
-    if scout_cfg["model"] == wart_cfg["model"]:
-        sys.exit("Abbruch: Scout und Wart dürfen nicht dasselbe Modell sein.")
+    try:
+        scouts = configured_scouts(config)
+    except ValueError as exc:
+        sys.exit(f"Abbruch: {exc}")
+    unsupported = sorted({s["family"] for s in scouts if s["family"] != "anthropic"})
+    if unsupported:
+        sys.exit(
+            "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "
+            f"{unsupported}. Kein Verzeichnis angelegt, kein API-Call."
+        )
 
     session_id, session = latest_session()
     # Aktualitäts-Gate VOR Verzeichnis-Anlage und API-Call: eine falsche session_ref
@@ -388,31 +581,49 @@ def main():
     )
     (raw_dir / "prompt-user.txt").write_text(user)
 
-    print("\nSchritt 1 — Web-Recherche (Scout)")
-    text, scout_usage, raw, api_queries = call_scout(
-        scout_cfg, prompts.SCOUT_SYSTEM, user, raw_dir
-    )
-    (raw_dir / "scout-content.md").write_text(text)
+    print(f"\nSchritt 1 — Web-Recherche ({len(scouts)} Scout{'s' if len(scouts) != 1 else ''})")
+    try:
+        scout_reports, scout_failures, divergence = collect_scout_reports(
+            scouts, prompts.SCOUT_SYSTEM, user, raw_dir
+        )
+    except RuntimeError as exc:
+        sys.exit(f"Abbruch: {exc}")
+    if not scout_reports:
+        entry = write_scout_refusal_entry(
+            out_dir, entry_date, session_id, scouts, scout_failures, config
+        )
+        print(f"\nRefusal-Journal geschrieben: {out_dir / 'entry.json'}")
+        print(f"Kosten des Laufs: {entry['costs']['total']} €")
+        print("Kein Wart-Call und kein Einberufungsentscheid.")
+        return
+    if len(scouts) == 1:
+        # Default-off-Vertrag: Warden-Prompt, Rohtext und veröffentlichtes
+        # content_md bleiben exakt in derselben Form wie vor der Erweiterung.
+        dossier_for_wart = scout_reports[0]["text"]
+        public_dossier = scout_reports[0]["content_md"]
+    else:
+        dossier_for_wart = combined_scout_dossier(
+            scout_reports, scout_failures, divergence
+        )
+        public_dossier = dossier_for_wart
+    (raw_dir / "scout-content.md").write_text(dossier_for_wart)
 
-    # Nur end_turn ist eine vollständige Antwort. Jeder andere stop_reason
-    # (refusal, max_tokens, pause_turn, …) heißt: unvollständig/abnormal → laut
-    # abbrechen mit dem echten Grund, NICHT in den ratenden Parser laufen (der
-    # sonst leere/geratene Inhalte publiziert). Rohantwort ist bereits gesichert.
-    stop_reason = raw.get("stop_reason")
-    print(f"  stop_reason: {stop_reason}")
-    if stop_reason != "end_turn":
-        hint = {
-            "refusal": "Modell hat die Ausgabe verweigert (Content/Safety) — "
-            "Thema/Prompt redaktionell prüfen.",
-            "max_tokens": "Antwort abgeschnitten — max_output_tokens (config.json scout) erhöhen.",
-            "pause_turn": "Turn pausiert (Server-Tool) — unerwartet nach Streaming.",
-        }.get(stop_reason, "unerwarteter Abbruch.")
-        sys.exit(f"Abbruch: stop_reason={stop_reason} — {hint} Kein Parse-Versuch.")
-
-    print("\nSchritt 2 — Scout-Dossier prüfen")
-    parsed = parse_scout_answer(text)
-
-    search_queries = parsed.get("search_queries") or api_queries
+    print("\nSchritt 2 — Scout-Dossiers prüfen")
+    search_queries = []
+    findings = []
+    rejected_findings = []
+    delta_parts = []
+    for report in scout_reports:
+        parsed = report["parsed"]
+        for query in parsed.get("search_queries") or report["api_queries"]:
+            if query not in search_queries:
+                search_queries.append(query)
+        findings.extend(parsed.get("findings", []))
+        rejected_findings.extend(parsed.get("rejected_findings", []))
+        delta_parts.append(
+            f"Scout {report['index']} ({report['config']['model']}): "
+            f"{parsed.get('delta_assessment', '')}"
+        )
     print("  Suchanfragen (Dossier):")
     for q in search_queries:
         print(f"    · {q}")
@@ -420,7 +631,7 @@ def main():
     decision_user = prompts.WART_DECISION_USER.format(
         session_id=session_id,
         session_date=session.get("date"),
-        scout_dossier=text,
+        scout_dossier=dossier_for_wart,
     )
     (raw_dir / "prompt-wart-decision.txt").write_text(decision_user)
     print("\nSchritt 3 — Einberufungs-Entscheid (Wart)")
@@ -434,27 +645,79 @@ def main():
     print(f"  Begründung: {decision['convene_rationale']}")
 
     run_url = actions_run_url()
-    costs = compute_run_costs(
-        scout_usage, scout_cfg, wart_usage, wart_cfg, config["fx_rate_usd_eur"]
+    scout_usage_by_model = {
+        report["config"]["model"]: report["usage"] for report in scout_reports
+    }
+    scout_usage_by_model.update(
+        {
+            failure["model"]: failure["usage"]
+            for failure in scout_failures
+            if failure.get("usage")
+        }
     )
+    scout_costs = [
+        compute_role_costs(
+            scout_usage_by_model[scout["model"]], scout, config["fx_rate_usd_eur"]
+        )
+        for scout in scouts
+        if scout["model"] in scout_usage_by_model
+    ]
+    wart_cost = compute_role_costs(wart_usage, wart_cfg, config["fx_rate_usd_eur"])
+    costs = {
+        "currency": "EUR",
+        "total": round(sum(c["total"] for c in scout_costs) + wart_cost["total"], 4),
+        "fx_rate_usd_eur": config["fx_rate_usd_eur"],
+        "components": (
+            {"scout": scout_costs[0], "wart": wart_cost}
+            if len(scouts) == 1
+            else {"scouts": scout_costs, "wart": wart_cost}
+        ),
+    }
+
+    primary_scout = scout_reports[0]["config"]
 
     entry = {
         "schema_version": 1,
         "date": entry_date,
         "session_ref": session_id,
-        "model": scout_cfg["model"],
-        "model_label": scout_cfg.get("model_label", scout_cfg.get("label", scout_cfg["model"])),
+        "model": primary_scout["model"],
+        "model_label": primary_scout.get(
+            "model_label", primary_scout.get("label", primary_scout["model"])
+        ),
         "decision_model": wart_cfg["model"],
         "search_queries": search_queries,
-        "findings": parsed.get("findings", []),
-        "rejected_findings": parsed.get("rejected_findings", []),
-        "delta_assessment": parsed.get("delta_assessment", ""),
+        "findings": findings,
+        "rejected_findings": rejected_findings,
+        "delta_assessment": (
+            scout_reports[0]["parsed"].get("delta_assessment", "")
+            if len(scouts) == 1
+            else "\n\n".join(delta_parts)
+        ),
         "convene": convene,
         "convene_rationale": decision["convene_rationale"],
-        "content_md": strip_json_block(text),
+        "content_md": public_dossier,
         "costs": costs,
         "actions_run_url": run_url,
     }
+    if len(scouts) == 2:
+        entry["scouts"] = [
+            {
+                "family": r["config"]["family"],
+                "model": r["config"]["model"],
+                "label": r["config"].get("label", r["config"]["model"]),
+                "content_md": r["content_md"],
+                "search_queries": r["parsed"].get("search_queries") or r["api_queries"],
+                "findings": r["parsed"].get("findings", []),
+                "rejected_findings": r["parsed"].get("rejected_findings", []),
+                "delta_assessment": r["parsed"].get("delta_assessment", ""),
+            }
+            for r in scout_reports
+        ]
+        entry["scout_failures"] = [
+            {key: value for key, value in failure.items() if key != "usage"}
+            for failure in scout_failures
+        ]
+        entry["scout_divergence"] = divergence
     (out_dir / "entry.json").write_text(json.dumps(entry, indent=2, ensure_ascii=False))
     print(f"\nJournal geschrieben: {out_dir / 'entry.json'}")
     print(f"Kosten des Laufs: {costs['total']} €")

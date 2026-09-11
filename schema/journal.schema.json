@@ -6,10 +6,46 @@
   "type": "object",
   "additionalProperties": true,
   "required": [
-    "schema_version", "date", "session_ref", "convene", "convene_rationale",
-    "delta_assessment", "findings", "rejected_findings", "search_queries",
-    "content_md", "costs", "actions_run_url"
+    "schema_version", "date", "session_ref", "search_queries", "content_md",
+    "costs", "actions_run_url"
   ],
+  "allOf": [{
+    "if": {
+      "properties": { "kind": { "const": "refusal" } },
+      "required": ["kind"]
+    },
+    "then": {
+      "required": ["kind", "refusal", "refusal_note", "refusals"],
+      "properties": {
+        "schema_version": { "const": 2 },
+        "refusal": { "const": true },
+        "refusals": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["family", "model", "stop_reason", "raw_artifact_dir", "search_queries"],
+            "properties": {
+              "family": { "type": "string" },
+              "model": { "type": "string" },
+              "stop_reason": { "const": "refusal" },
+              "raw_artifact_dir": { "type": "string" },
+              "search_queries": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      },
+      "not": {
+        "anyOf": [
+          { "required": ["convene"] },
+          { "required": ["convene_rationale"] }
+        ]
+      }
+    },
+    "else": {
+      "required": ["convene", "convene_rationale", "delta_assessment", "findings", "rejected_findings"]
+    }
+  }],
   "properties": {
     "schema_version": { "type": "integer" },
     "date": { "type": "string" },
@@ -23,6 +59,11 @@
     "content_md": { "type": "string" },
     "costs": { "type": "object" },
     "actions_run_url": { "type": ["string", "null"] },
+    "kind": { "enum": ["research", "refusal"] },
+    "refusal": { "type": "boolean" },
+    "refusal_note": { "type": "string" },
+    "refusal_note_en": { "type": "string" },
+    "refusals": { "type": "array" },
     "type": { "type": "string", "description": "Eintragstyp (optional; fehlt beim Research-Lauf)" },
     "model": { "type": ["string", "null"] },
     "model_label": { "type": "string" },

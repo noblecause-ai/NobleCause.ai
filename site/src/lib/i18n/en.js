@@ -143,7 +143,8 @@ export const en = {
 					'decides, from the evidence, whether the Council meets, then chairs the session and publishes everything.',
 				lastPrefix: 'Last:',
 				convened: 'convened',
-				notConvened: 'not convened'
+				notConvened: 'not convened',
+				refused: 'research refused — no decision'
 			}
 		},
 		// The process rail: all six canonical steps as a directed flow.
