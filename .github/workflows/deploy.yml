@@ -53,7 +53,7 @@ jobs:
           npm run build 2>&1 | tee -a "$GITHUB_WORKSPACE/build.log"
 
       - name: Setup SSH agent (dedicated deploy key)
-        uses: webfactory/ssh-agent@v0.9.0
+        uses: webfactory/ssh-agent@v0.10.0
         with:
           ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
