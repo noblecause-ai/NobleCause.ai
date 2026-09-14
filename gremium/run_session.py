@@ -139,17 +139,25 @@ def extract_dissent(text):
 
 
 def extract_search_queries(text):
-    section = re.search(r"##\s*Suchanfragen\s*\n(.*?)(?=\n## |\Z)", text, re.DOTALL)
+    section = re.search(r"##\s*Suchanfragen\s*\n(.*?)(?=\n#{2,}\s|\Z)", text, re.DOTALL)
     if not section:
         return []
     queries = []
     for line in section.group(1).splitlines():
-        line = line.strip().lstrip("-·*").strip()
-        if line.startswith('"') and line.endswith('"'):
-            line = line[1:-1]
-        if line:
-            queries.append(line)
+        item = re.match(r"\s*(?:[-·*]|\d+[.)])\s+(.+?)\s*$", line)
+        if not item:
+            continue
+        query = item.group(1).strip()
+        if len(query) >= 2 and query[0] == query[-1] and query[0] in {'"', '`'}:
+            query = query[1:-1].strip()
+        if query:
+            queries.append(query)
     return queries
+
+
+def recorded_search_queries(text, api_queries):
+    """Beobachtete API-Anfragen sind kanonisch; Modellprosa ist nur Fallback."""
+    return list(api_queries) if api_queries else extract_search_queries(text)
 
 
 def summarize_recommendations(session):
@@ -993,7 +1001,7 @@ def main():
                         "model": active_scout["model"],
                         "label": active_scout.get("label", active_scout["model"]),
                         "content_md": content_md,
-                        "search_queries": extract_search_queries(dossier_text) or api_queries,
+                        "search_queries": recorded_search_queries(dossier_text, api_queries),
                     }
                 )
             except Exception as exc:  # noqa: BLE001
