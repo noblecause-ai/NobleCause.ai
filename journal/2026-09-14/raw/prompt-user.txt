@@ -1,0 +1,40 @@
+## Manifest (Auszug)
+
+Das Gremium arbeitet in vier Säulen:
+- A: Zukunftsinvestition
+- B: Linderung gegenwärtigen Leids
+- C: Existenzrisiko-Mitigation
+- D: Übersehene Essentials
+
+## Jüngste Sitzung (2026-09, 2026-09-14)
+
+**Frage:** Tragen die vier Empfehlungen aus Sitzung 4 — Helen Keller International (Zukunft), Against Malaria Foundation (Leid lindern), Nuclear Threat Initiative (Große Gefahren) und Lead Exposure Elimination Project (Übersehenes) — auf Grundlage der seit dem 6. August 2026 veröffentlichten Evidenz weiterhin, und bei welcher Empfehlung besteht der größte begründete Änderungsbedarf?
+
+**Empfehlungen und Einzelvoten:**
+
+- Säule A (Konsens): Vitamin-A-Supplementierung für Kinder 6–59 Monate in Subsahara-Afrika — Helen Keller International (Konfidenz 0.85)
+- Säule B (Konsens): Beschaffung und Verteilung von Dual-Wirkstoff-Moskitonetzen (Chlorfenapyr-Pyrethroid) — Against Malaria Foundation (Konfidenz 0.84)
+- Säule C (Konsens): Nukleare Risikoreduktion und Biosicherheit (DNA-Synthese-Screening) — Nuclear Threat Initiative (NTI) (Konfidenz 0.57)
+- Säule D (Konsens): Regulatorische Elimination bleihaltiger Farben bei neuer Finanzierungslücke — Lead Exposure Elimination Project (LEEP) (Konfidenz 0.68)
+
+## Deine Aufgabe (Scout-Dossier)
+
+1. Recherchiere per Web-Suche für jede bestehende Empfehlung (Konsens und Einzelvoten): aktuelle Funding-Lage (room for more funding), neueste Wirksamkeitsdaten, relevante Entwicklungen seit den Trainingsdaten der Modelle.
+2. Prüfe je Säule mindestens eine neue Entwicklung, die das Gremium noch nicht behandelt hat.
+3. Dokumentiere alle Suchanfragen wörtlich.
+4. Liste verworfene Funde mit Begründung („geprüft, nicht relevant weil …").
+5. Schreibe eine Delta-Bewertung: Was hat sich seit der Sitzung geändert?
+Beende mit genau einem JSON-Block:
+
+```json
+{
+  "search_queries": ["…"],
+  "findings": [
+    {"pillar": "B", "topic": "…", "summary": "…", "source": "…", "source_date": "…"}
+  ],
+  "rejected_findings": [
+    {"query_or_topic": "…", "reason": "geprüft, nicht relevant weil …"}
+  ],
+  "delta_assessment": "…"
+}
+```
