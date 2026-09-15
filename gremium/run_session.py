@@ -24,7 +24,11 @@ ROOT = HERE.parent
 import prompts  # noqa: E402
 import organizations  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
-from process_config import configured_scouts, feature_enabled  # noqa: E402
+from process_config import (  # noqa: E402
+    SUPPORTED_SCOUT_FAMILIES,
+    configured_scouts,
+    feature_enabled,
+)
 
 
 # ---------------------------------------------------------------- utilities
@@ -248,6 +252,12 @@ def call_anthropic(model, system, user, max_tokens):
 
 
 def call_scout_dossier(scout_cfg, system, user, raw_dir):
+    if scout_cfg.get("family") == "google":
+        from google_scout import call_google_scout
+
+        return call_google_scout(
+            scout_cfg, system, user, raw_dir, "r0-wart.json"
+        )
     if scout_cfg.get("family") != "anthropic":
         raise RuntimeError(
             f"Kein freigegebener Web-Suche-Adapter für Scout-Familie "
@@ -845,7 +855,9 @@ def main():
     except ValueError as exc:
         sys.exit(f"Abbruch: {exc}")
     if args.with_dossier:
-        unsupported = sorted({s["family"] for s in scouts if s["family"] != "anthropic"})
+        unsupported = sorted(
+            {s["family"] for s in scouts if s["family"] not in SUPPORTED_SCOUT_FAMILIES}
+        )
         if unsupported:
             sys.exit(
                 "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "

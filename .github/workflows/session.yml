@@ -148,6 +148,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: bash .github/scripts/resolve-ci-failure.sh "ci-failure:session" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
+      - name: Erledigte Sitzungserinnerung schließen
+        # Nur ein scharfer Lauf mit tatsächlich veröffentlichtem Rekord erfüllt
+        # die Fälligkeit. Trockenläufe und No-op-Läufe schließen sie nicht.
+        if: ${{ !inputs.dry_run && steps.commit.outputs.changed == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/resolve-ci-failure.sh "session-due" "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" "due"
+
       - name: Rohantwort sichern (bei Fehlschlag)
         if: failure()
         uses: actions/upload-artifact@v4

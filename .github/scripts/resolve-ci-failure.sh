@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
-# Schliesst nach einem erfolgreichen Workflow-Lauf dessen offene Altalarme.
-# Issue-Pflege ist Beobachtbarkeit, nicht der fachliche Lauf: Ein temporaerer
-# GitHub-API-Fehler darf einen gruenen Wart-/Session-/Deploy-Lauf nicht rot machen.
+# Schliesst nach einem erfolgreichen Workflow-Lauf offene, labelgebundene
+# Betriebsalarme. Issue-Pflege ist Beobachtbarkeit, nicht der fachliche Lauf:
+# Ein temporaerer GitHub-API-Fehler darf einen gruenen Lauf nicht rot machen.
 
 set -u
 
-LABEL="${1:?ci-failure-Label fehlt}"
+LABEL="${1:?Issue-Label fehlt}"
 RUN_URL="${2:?Run-URL fehlt}"
+KIND="${3:-failure}"
 
 if ! NUMBERS=$(gh issue list \
   --label "$LABEL" \
@@ -24,7 +25,11 @@ if [ -z "$NUMBERS" ]; then
   exit 0
 fi
 
-BODY="Automatische Erholung bestätigt: Der Lauf $RUN_URL wurde erfolgreich abgeschlossen. Dieses Altalarm-Issue wird geschlossen; ein künftiger neuer Fehler wird wieder unter dem Label \`$LABEL\` gemeldet."
+if [ "$KIND" = "due" ]; then
+  BODY="Automatischer Sitzungsabschluss bestätigt: Der scharfe Lauf $RUN_URL hat einen neuen Sitzungsrekord veröffentlicht. Die Fälligkeit ist damit erledigt; ein künftiger Termin wird wieder unter dem Label \`$LABEL\` gemeldet."
+else
+  BODY="Automatische Erholung bestätigt: Der Lauf $RUN_URL wurde erfolgreich abgeschlossen. Dieses Altalarm-Issue wird geschlossen; ein künftiger neuer Fehler wird wieder unter dem Label \`$LABEL\` gemeldet."
+fi
 
 while IFS= read -r NUMBER; do
   [ -n "$NUMBER" ] || continue

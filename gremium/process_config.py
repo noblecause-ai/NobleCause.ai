@@ -5,6 +5,8 @@ Die Funktionen liegen absichtlich gemeinsam, damit Wochen- und Sitzungslauf
 dieselben Grenzen prüfen und kein zweites Auswahlverfahren entsteht.
 """
 
+SUPPORTED_SCOUT_FAMILIES = {"anthropic", "google"}
+
 
 def feature_enabled(config, name):
     feature = (config.get("features") or {}).get(name) or {}

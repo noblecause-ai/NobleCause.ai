@@ -21,7 +21,11 @@ ROOT = HERE.parent
 
 import prompts  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
-from process_config import configured_scouts, scout_divergence  # noqa: E402
+from process_config import (  # noqa: E402
+    SUPPORTED_SCOUT_FAMILIES,
+    configured_scouts,
+    scout_divergence,
+)
 
 
 def extract_json_block(text):
@@ -218,6 +222,12 @@ def actions_run_url():
 
 
 def call_scout(scout_cfg, system, user, raw_dir):
+    if scout_cfg.get("family") == "google":
+        from google_scout import call_google_scout
+
+        return call_google_scout(
+            scout_cfg, system, user, raw_dir, "scout-response.json"
+        )
     if scout_cfg.get("family") != "anthropic":
         raise RuntimeError(
             f"Kein freigegebener Web-Suche-Adapter für Scout-Familie "
@@ -535,15 +545,19 @@ def main():
     args = parser.parse_args()
 
     load_env(HERE, ROOT)
-    require_keys("ANTHROPIC_API_KEY")
-
     config = json.loads((HERE / "config.json").read_text())
     wart_cfg = config.get("wart")
     try:
         scouts = configured_scouts(config)
     except ValueError as exc:
         sys.exit(f"Abbruch: {exc}")
-    unsupported = sorted({s["family"] for s in scouts if s["family"] != "anthropic"})
+    required_keys = ["ANTHROPIC_API_KEY"]
+    if any(s["family"] == "google" for s in scouts):
+        required_keys.append("GEMINI_API_KEY")
+    require_keys(*required_keys)
+    unsupported = sorted(
+        {s["family"] for s in scouts if s["family"] not in SUPPORTED_SCOUT_FAMILIES}
+    )
     if unsupported:
         sys.exit(
             "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "

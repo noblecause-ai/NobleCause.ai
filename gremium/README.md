@@ -46,8 +46,11 @@ Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
   Beide erhalten denselben Auftrag. Beide Wortlaute, Ausfälle und ein exakter
   (nicht semantisch geratener) Divergenzausweis werden veröffentlicht. Ein
   gültiges Dossier kann den Ausfall des anderen Scouts auffangen; fallen beide
-  aus, bricht der Wochenlauf ab. Der zweite Anbieter und sein Websuche-Adapter
-  sind bewusst noch **nicht** gewählt oder eingebaut.
+  aus, entsteht ein sichtbarer Refusal-Rekord ohne Wart-Entscheid. Als zweiter
+  Provider ist der bestehende Google-Zugang vorbereitet: Der Adapter nutzt
+  Gemini Search Grounding und übernimmt nur tatsächlich gemeldete Suchqueries
+  in Nutzung und Rekord. Die konkrete Scout-Besetzung bleibt bis zum
+  Steward-Entscheid unkonfiguriert.
 - **`deliberation_0_5`:** Fügt nach den unabhängigen Erstvoten eine adressierte
   Erwiderung ein. Jedes Modell muss genau eine überprüfbare Behauptung eines
   anderen, durch Modell-ID benannten Teilnehmers stützen, bestreiten oder

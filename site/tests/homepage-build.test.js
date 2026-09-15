@@ -82,6 +82,7 @@ const currentData = () => {
 		plain: session.plain ?? null,
 		dossier: session.wart_dossier ?? null,
 		dossierRefusal: session.wart_dossier_refusal ?? null,
+		corrections: session.correction_notice ?? [],
 		participants: session.participants ?? []
 	};
 };
@@ -312,10 +313,14 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 		'keine Einigung',
 		'Dissens und Vorbehalte', // Archiv-Dissens-Überschrift (P5: benennt den Abschnitt, behauptet keinen Rekordstand)
 		'Wortlaut des Rates ▸', // aufklappbarer Dissens (gerendert, nicht roh)
-		'Nachträge zum Rekord', // neutrale Überschrift (behauptet keine Korrektur; hält Korrektur + Einordnung)
 		'Kosten dieser Sitzung',
 		'/sitzungen/2026-07c/' // Link zum vollständigen Protokoll
 	]);
+	assert.equal(
+		html.includes('Nachträge zum Rekord'),
+		DATA.corrections.length > 0,
+		'Nachtrags-Abschnitt entspricht nicht dem aktuellen Sitzungsrekord'
+	);
 	assert.match(html, />Archive<\/p>/, 'Raumwort „Archive" fehlt');
 	assert.ok(!html.includes('The Archive · das Archiv'), 'alte Eyebrow noch sichtbar');
 	assert.ok(!html.includes('Empfehlungen in allen Bereichen'), 'alte Zeilen-Zusammenfassung noch sichtbar');
@@ -464,7 +469,6 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 		'no agreement', // offener Bereich als Chip-Markierung
 		'Dissent and reservations',
 		"The council's wording ▸",
-		'Record addenda',
 		'Cost of this session',
 		'/sitzungen/2026-07c/',
 		'Original protocol in German.', // Rekord-Vermerk (Korrektur/Dissens)
@@ -472,6 +476,11 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 		'lang="de"', // Rekordtexte maschinell als deutsch markiert
 		'Korrektur vom 14.07.2026' // publizierter Rekord: unverändert deutsch
 	]);
+	assert.equal(
+		html.includes('Record addenda'),
+		DATA.corrections.length > 0,
+		'addenda section does not match the current session record'
+	);
 	assert.match(html, />Archive<\/p>/, 'room word "Archive" missing (EN)');
 });
 
