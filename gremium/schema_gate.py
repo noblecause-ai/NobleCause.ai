@@ -48,7 +48,15 @@ def validate_tree(subdir, filename, schema_name, label):
                 loc = "/".join(str(p) for p in e.path) or "(root)"
                 print(f"    @{loc}: {e.message}")
         else:
-            print(f"✓ {f.relative_to(ROOT)}")
+            try:
+                if filename == 'session.json' and data.get('procedure_version') == '0.6':
+                    from council_state import validate_record
+                    validate_record(d)
+            except (ValueError, KeyError, OSError, jsonschema.ValidationError) as exc:
+                failures += 1
+                print(f"✗ {f.relative_to(ROOT)} — Ereignisrekord inkonsistent ({type(exc).__name__})")
+            else:
+                print(f"✓ {f.relative_to(ROOT)}")
     print(f"{label}: {checked} geprüft, {failures} fehlerhaft.")
     return failures
 

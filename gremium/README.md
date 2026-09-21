@@ -5,6 +5,17 @@ nach `../sessions/YYYY-MM/`. Kein Server, keine Datenbank: Der Orchestrator
 (`run_session.py`) ist deterministisch. Modelle liefern Beratungsinhalt und
 Voten; die Zählung bleibt vollständig im Code.
 
+Der neue **Live-Rat 0.6** ist als ausgeschalteter Backend-Pilot vorbereitet:
+fünf Stimmen, rotierender Vorsitz, fortlaufende Debatte und Ereignisrekord.
+Er wird ausdrücklich mit `--live-council` aufgerufen und schreibt isolierte
+Artefakte statt veröffentlichter Sitzungen. Im Standardmodus sperrt B4 echte
+Modellaufrufe, solange die belegten Eingabe-Kostengrenzen fehlen. Der Steward
+hat für den ersten Pilot ausdrücklich `--observe-costs` freigegeben:
+[Kostenbeobachtung und Testergebnis](../docs/live-rat-kostenbeobachtung-2026-09-20.md).
+Bedienung, Nachweise und
+offene Schritte stehen in [der Backend-Abnahme](../docs/live-rat-backend-2026-09-20.md).
+Die folgende Standardbeschreibung gilt weiterhin für den bisherigen Ablauf.
+
 ## Ablauf eines Laufs
 
 Standardmodus:
@@ -37,7 +48,7 @@ Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
 
 ## Vorbereitete Verfahrensschalter (standardmäßig aus)
 
-`config.json` enthält zwei Schalter unter `features`. Beide stehen auf
+`config.json` enthält Verfahrensschalter unter `features`. Alle stehen auf
 `enabled: false`; ihr Vorhandensein ändert daher weder Wochenlauf noch Sitzung.
 
 - **`two_scouts`:** Verlangt bei Aktivierung genau zwei Einträge in
@@ -59,6 +70,12 @@ Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
   ausgefallene Erwiderungen bleiben sichtbar, verhindern aber nicht die
   Schlussvoten. Für die Empfehlung zählt weiterhin ausschließlich die
   deterministische Aggregation der strukturierten Schlussvoten.
+- **`three_scouts`:** Drei voneinander unabhängige, zunächst blinde Recherchen;
+  Besetzung und Herkunftsnachweise siehe [Scout-Adapter](../docs/scout-adapter-2026-09-20.md).
+- **`live_council`:** Bereitet die Wochenrolle des nächsten Vorsitzes vor.
+  Der Sitzungspilot benötigt weiterhin ausdrücklich `--live-council`; das
+  bloße Einschalten aktiviert keinen öffentlichen Sitzungslauf. Verfahren:
+  [Nachtrag 0.6](../docs/verfahren-0.6.md).
 
 Vor der ersten echten Aktivierung sind Steward-Freigabe, synthetische Abnahme,
 eine veröffentlichte DE/EN-Verfahrenserklärung und ein ausdrücklich genehmigter

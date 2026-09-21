@@ -39,7 +39,7 @@ on:
     - cron: '0 12 * * *'
 
 concurrency:
-  group: gremium-session
+  group: gremium-records
   cancel-in-progress: false
 
 permissions:
@@ -70,6 +70,7 @@ jobs:
 
       - name: Preflight (Key-Canary)
         env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -80,6 +81,7 @@ jobs:
       - name: Sitzung (Council + optional Wart)
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           IN_QUESTION: ${{ inputs.question }}

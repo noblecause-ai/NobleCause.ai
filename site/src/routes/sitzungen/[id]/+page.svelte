@@ -1,6 +1,11 @@
 <script>
+ import { hasOpenRouter, openRouterVoices, openRouterProcedure } from '$lib/openrouter.js';
+ import OpenRouterProvenance from '$lib/components/OpenRouterProvenance.svelte';
 	import { PILLARS, PILLAR_ORDER } from '$lib/pillars.js';
 	import { companyName, modelName } from '$lib/model-display.js';
+	import CouncilMessage from '$lib/components/rooms/CouncilMessage.svelte';
+	import { conversation, liveCopy } from '$lib/live-council.js';
+	import { md } from '$lib/markdown.js';
 
 	let { data } = $props();
 	const s = $derived(data.session);
@@ -69,8 +74,7 @@
 <h2>Die vier Bereiche</h2>
 <p class="muted small">
 	Je Bereich das Erst- und Schlussvotum jedes Modells (Änderungen und Vorbehalte gekennzeichnet),
-	darüber der Zählstand. Das Programm zählt nur gleiche Nennungen: zwei gleiche ergeben eine
-	Empfehlung.
+	darüber der Zählstand. {s.procedure_version === '0.6' ? 'Eine gemeinsame Empfehlung benötigt mindestens drei der fünf Stimmen; Enthaltungen werden getrennt ausgewiesen.' : 'Das Programm zählt nur gleiche Nennungen: zwei gleiche ergeben eine Empfehlung.'}
 </p>
 <ol class="rec-rows">
 	{#each PILLAR_ORDER as p (p)}
@@ -117,6 +121,31 @@
 	{/each}
 </ol>
 
+{#if hasOpenRouter(s)}<p class="openrouter-procedure">{openRouterProcedure.de}</p>{/if}
+{#if s.procedure_version === '0.6'}<p>{liveCopy.de.procedure}</p>{/if}
+
+{#if data.research}
+	<details>
+		<summary>Gemeinsames Recherche-Dossier der drei Scouts</summary>
+		<p>Die Suche begann ohne frühere Ergebnisse. Suchanfragen stammen aus Modellangaben; ein vollständiges Suchprotokoll der Anbieter liegt nicht vor. Zitationen, Selbstauskünfte und rechnerische Vergleiche sind getrennte Belegarten.</p>
+		{#each data.research.scouts ?? [] as scout (scout.model)}
+			<h3>{modelName(scout.model, scout.label)}</h3>
+			<div class="verbatim">{@html md(scout.content_md ?? '')}</div>
+			<details><summary>Herkunft, Suchangaben und Belege</summary><pre>{JSON.stringify({ search_queries: scout.search_queries, findings: scout.findings, rejected_findings: scout.rejected_findings, provenance: scout.research_provenance }, null, 2)}</pre></details>
+		{/each}
+	</details>
+{/if}
+
+{#if data.events}
+	<details class="record-conversation">
+		<summary>Das vollständige Ratsgespräch in zeitlicher Reihenfolge</summary>
+		<p><a href="/live/sessions/{s.id}/events.json">Unveränderter Ereignisrekord</a> · {s.event_record.event_count} Ereignisse</p>
+		{#each conversation(data.events) as event (event.seq)}
+			<CouncilMessage {event} members={participants} copy={liveCopy.de} lang="de" />
+		{/each}
+	</details>
+{/if}
+
 <h2 id="vollprotokoll">Die Stimmen im Wortlaut</h2>
 <p class="muted small">Ungekürzt. Jede Stimme trägt ihr Medaillon; darunter die Selbstdarstellung.</p>
 <ol class="voices">
@@ -138,6 +167,7 @@
 					{#if pt.begruendung}<p class="self-begr">{pt.begruendung}</p>{/if}
 				</details>
 			{/if}
+			<OpenRouterProvenance voices={openRouterVoices(s, pt.model)} />
 			{#if voteHtml(pt.model, 'initial_vote')}
 				<details>
 					<summary>Erstvotum (unabhängig)</summary>

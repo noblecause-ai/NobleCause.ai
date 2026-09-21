@@ -1,3 +1,4 @@
+import { hasOpenRouter } from '../openrouter.js';
 const PILLARS = {
 	A: 'Investition in die Zukunft',
 	B: 'Linderung von Leid',
@@ -27,6 +28,7 @@ export function resolveOrganization(id, registry) {
 }
 
 function resolveVote(vote, registry) {
+    if (vote.decision === 'abstain') return { ...vote, organization: null };
 	const organization = resolveOrganization(vote.organization_id, registry);
 	if (vote.organization && vote.organization !== organization.name) {
 		throw new Error(
@@ -63,7 +65,7 @@ export function buildModelTracks(session, registry, models = new Map()) {
 				pillarName: PILLARS[pillar],
 				initial: before,
 				final: after,
-				changed: Boolean(before && after && before.organization.id !== after.organization.id)
+				changed: Boolean(before && after && (before.organization?.id !== after.organization?.id || (before.decision === 'abstain') !== (after.decision === 'abstain')))
 			};
 		});
 		return {
@@ -162,6 +164,7 @@ export function buildHomepageViewModel({ session, sessions, registry, models = n
 	const plain = session.plain ?? null;
 	const plainEn = session.plain_en ?? plain;
 	return {
+		openRouter: hasOpenRouter(session),
 		currentSession: {
 			id: session.id,
 			number: session.number,

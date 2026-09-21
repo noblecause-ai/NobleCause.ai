@@ -1,4 +1,4 @@
-import { getModelsRegistry, getSession, listSessions, md } from '$lib/server/content.js';
+import { getModelsRegistry, getSession, getSessionEvents, getSessionResearch, listSessions, md } from '$lib/server/content.js';
 
 export function entries() {
 	return listSessions().map((s) => ({ id: s.id }));
@@ -34,10 +34,10 @@ export function load({ params }) {
 	const markOf = (rec) =>
 		rec
 			? {
-					org: rec.organization,
+					org: rec.decision === 'abstain' ? 'Enthaltung' : rec.organization,
 					orgId: rec.organization_id ?? null,
 					conditional: !!rec.conditional,
-					reservation: rec.reservation
+					reservation: rec.decision === 'abstain' ? rec.abstention_reason : rec.reservation
 				}
 			: null;
 
@@ -74,7 +74,11 @@ export function load({ params }) {
 	});
 
 	return {
+		research: s.event_record ? getSessionResearch(params.id) : null,
+		events: s.event_record ? getSessionEvents(params.id) : null,
 		session: {
+			procedure_version: s.procedure_version ?? null,
+			event_record: s.event_record ?? null,
 			id: s.id,
 			number: s.number,
 			date: s.date,

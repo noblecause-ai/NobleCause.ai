@@ -168,6 +168,18 @@
       "donation_url_verified_at": null,
       "donation_url_source": "kein Konsens (Runde-1-Votum); nicht publiziert",
       "evaluator_source": "Verkehrssicherheit"
+    },
+    {
+      "id": "youth-impact",
+      "canonical_name": "Youth Impact",
+      "beschreibung": "Setzt Bildungs- und Gesundheitsprogramme für junge Menschen um, darunter lernstandsorientierten Unterricht und telefonische Lernförderung mit ConnectEd.",
+      "aliases": [
+        "Youth Impact",
+        "Young 1ove"
+      ],
+      "donation_url": "https://www.youth-impact.org/donate",
+      "donation_url_verified_at": "2026-09-20",
+      "donation_url_source": "Offizielle Spendenseite https://www.youth-impact.org/donate: nennt Youth Impact als Handelsnamen von Young 1ove (EIN 36-4803179) und verlinkt Programm-Spendenformulare, darunter ConnectEd unter https://secure.lglforms.com/form_engine/s/rf58KbmrLVHxa8PTTxD7FQ. Programmzuordnung: https://www.youth-impact.org/connected. Geprüft sind Identität und offizieller Spendenweg, nicht die Wirksamkeits- oder Finanzierungslückenbehauptungen."
     }
   ]
 }

@@ -6,7 +6,7 @@
 	let { tracks, sessionId, t } = $props();
 
 	// Zelle als ein Ausdruck, damit SSR „Erst <Name>" zusammenhängend ausgibt.
-	const cell = (prefix, vote) => `${prefix} ${vote?.organization.name ?? t.council.noVote}`;
+	const cell = (prefix, vote) => `${prefix} ${vote?.decision === 'abstain' ? (t.lang === 'en' ? 'Abstention' : 'Enthaltung') : vote?.organization?.name ?? t.council.noVote}`;
 </script>
 
 <div class="pulpits">

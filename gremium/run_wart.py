@@ -20,11 +20,15 @@ HERE = Path(__file__).parent
 ROOT = HERE.parent
 
 import prompts  # noqa: E402
+import openrouter_scout  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
+from scout_context import blind_research, historical_comparison  # noqa: E402
 from process_config import (  # noqa: E402
-    SUPPORTED_SCOUT_FAMILIES,
     configured_scouts,
+    configured_wart,
+    feature_enabled,
     scout_divergence,
+    validate_scout_transport,
 )
 
 
@@ -222,6 +226,9 @@ def actions_run_url():
 
 
 def call_scout(scout_cfg, system, user, raw_dir):
+    validate_scout_transport(scout_cfg)
+    if scout_cfg.get("transport") == "openrouter_api":
+        return openrouter_scout.call_scout(scout_cfg, system, user, raw_dir)
     if scout_cfg.get("family") == "google":
         from google_scout import call_google_scout
 
@@ -287,8 +294,8 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
 
     Technische Fehler des Einzel-Scouts bleiben streng. Eine explizite
     Verweigerung wird dagegen auch beim Einzel-Scout als publizierbares Ereignis
-    zurückgegeben. Bei zwei Scouts darf genau ein Ausfall durch den zweiten
-    Bericht aufgefangen werden. Verweigern beide, entscheidet ``main`` ohne
+    zurückgegeben. Bei mehreren Scouts darf ein Ausfall durch einen anderen
+    Bericht aufgefangen werden. Verweigern alle, entscheidet ``main`` ohne
     Wart-Call über den Refusal-Rekord. Es wird niemals ein fehlender Bericht
     geraten oder aus dem anderen ergänzt.
     """
@@ -302,8 +309,11 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
         api_queries = []
         stop_reason = None
         try:
+            scout_system = prompts.scout_system_for(scout_cfg, system)
+            if scout_cfg.get("research_role"):
+                (scout_raw_dir / "prompt-scout-system.txt").write_text(scout_system)
             text, usage, raw, api_queries = caller(
-                scout_cfg, system, user, scout_raw_dir
+                scout_cfg, scout_system, user, scout_raw_dir
             )
             stop_reason = raw.get("stop_reason")
             if stop_reason != "end_turn":
@@ -312,17 +322,21 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
                 parsed = parse_scout_answer(text)
             except SystemExit as exc:
                 raise RuntimeError(str(exc)) from exc
+            if "max_findings" in scout_cfg and len(parsed["findings"]) > scout_cfg["max_findings"]:
+                raise RuntimeError("Scout überschreitet max_findings — Dossier nicht übernommen")
             reports.append(
                 {
                     "index": index,
                     "config": scout_cfg,
                     "text": text,
-                    "content_md": strip_json_block(text),
+                    "content_md": strip_json_block(text) + openrouter_scout.disclosure(usage.get("research_provenance")),
                     "parsed": parsed,
                     "usage": usage,
                     "api_queries": api_queries,
                 }
             )
+        except openrouter_scout.ScoutAccountingError:
+            raise  # Unresolved charges/identity abort all further paid steps.
         except Exception as exc:  # noqa: BLE001
             if len(scouts) == 1 and stop_reason != "refusal":
                 raise
@@ -344,7 +358,9 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
                 "Alle Scouts sind technisch ausgefallen — kein publizierbarer Refusal-Rekord."
             )
         return [], failures, None
-    divergence = scout_divergence([r["parsed"] for r in reports]) if len(reports) == 2 else None
+    divergence = scout_divergence([r["parsed"] for r in reports]) if len(reports) >= 2 else None
+    if divergence and len(scouts) == 3:
+        divergence["report_scout_indices"] = [r["index"] for r in reports]
     return reports, failures, divergence
 
 
@@ -355,6 +371,7 @@ def combined_scout_dossier(reports, failures, divergence):
         sections.append(
             f"## Scout {report['index']}: {cfg.get('label', cfg['model'])} "
             f"({cfg['model']})\n\n{report['text']}"
+            + openrouter_scout.disclosure(report["usage"].get("research_provenance"))
         )
     for failure in failures:
         sections.append(
@@ -371,6 +388,11 @@ def combined_scout_dossier(reports, failures, divergence):
 
 
 def call_wart_decision(wart_cfg, system, user, raw_dir):
+    if wart_cfg.get("transport") == "openrouter_api":
+        result = openrouter_scout.call_wart(wart_cfg, system, user, raw_dir, "wart-decision", max_tokens=2048)
+        if result[2]["stop_reason"] != "end_turn":
+            raise openrouter_scout.ScoutAccountingError("Wart-Entscheid unvollständig; Rohdaten und Kosten erhalten")
+        return result
     import anthropic
 
     client = anthropic.Anthropic()
@@ -397,6 +419,12 @@ def call_wart_decision(wart_cfg, system, user, raw_dir):
 
 
 def compute_role_costs(usage, cfg, fx):
+    if "billed_usd" in usage:
+        usd = openrouter_scout.amount(usage["billed_usd"])
+        return {"currency": "EUR", "total": float(usd * openrouter_scout.amount(fx)),
+                "fx_rate_usd_eur": fx, "model": cfg["model"], "cost_basis": "billed",
+                "input_tokens": usage["input_tokens"], "output_tokens": usage["output_tokens"],
+                "web_search_requests": usage.get("web_search_requests"), "usd_total": float(usd)}
     token_usd = (
         usage["input_tokens"] / 1e6 * cfg["usd_per_1m_input"]
         + usage["output_tokens"] / 1e6 * cfg["usd_per_1m_output"]
@@ -431,17 +459,25 @@ def compute_run_costs(scout_usage, scout_cfg, wart_usage, wart_cfg, fx):
 
 
 def write_schedule(entry_date, session_date, convene, journal_path):
+    from council_state import atomic_write
     now = datetime.datetime.now(datetime.timezone.utc)
     next_research = next_monday_0600_utc(now)
     next_session = next_regular_session(session_date, convene)
-    schedule = {
+    schedule_path = ROOT / 'schedule.json'
+    schedule = json.loads(schedule_path.read_text()) if schedule_path.exists() else {}
+    if schedule.get('next_session'):
+        previous = datetime.datetime.fromisoformat(schedule['next_session'].replace('Z', '+00:00'))
+        proposed = datetime.datetime.fromisoformat(next_session.replace('Z', '+00:00'))
+        if previous <= proposed:
+            next_session = schedule['next_session']
+    schedule.update({
         "next_research": next_research.replace(tzinfo=datetime.timezone.utc).isoformat().replace(
             "+00:00", "Z"
         ),
         "next_session": next_session,
         "last_journal": f"/journal/{entry_date}/",
-    }
-    (ROOT / "schedule.json").write_text(json.dumps(schedule, indent=2, ensure_ascii=False) + "\n")
+    })
+    atomic_write(schedule_path, (json.dumps(schedule, indent=2, ensure_ascii=False) + '\n').encode())
     print(f"schedule.json aktualisiert (nächster Research: {schedule['next_research']})")
 
 
@@ -455,7 +491,8 @@ def write_refusal_schedule(entry_date):
         tzinfo=datetime.timezone.utc
     ).isoformat().replace("+00:00", "Z")
     schedule["last_journal"] = f"/journal/{entry_date}/"
-    schedule_file.write_text(json.dumps(schedule, indent=2, ensure_ascii=False) + "\n")
+    from council_state import atomic_write
+    atomic_write(schedule_file, (json.dumps(schedule, indent=2, ensure_ascii=False) + '\n').encode())
     print(
         "schedule.json nach Refusal aktualisiert "
         f"(nächster Research: {schedule['next_research']}; next_session unverändert)"
@@ -539,30 +576,40 @@ def write_scout_refusal_entry(out_dir, entry_date, session_id, scouts, failures,
     return entry
 
 
-def main():
+def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=datetime.date.today().isoformat())
+    parser.add_argument("--budget-cap", type=float, default=2.0, help="EUR stop threshold between steps; key limit bounds native calls")
     args = parser.parse_args()
+    cap = openrouter_scout.amount(args.budget_cap)
+    if cap <= 0:
+        parser.error("--budget-cap muss positiv sein")
 
     load_env(HERE, ROOT)
     config = json.loads((HERE / "config.json").read_text())
-    wart_cfg = config.get("wart")
     try:
         scouts = configured_scouts(config)
+        schedule_snapshot = json.loads((ROOT / 'schedule.json').read_text()) if feature_enabled(config, 'live_council') else None
+        wart_cfg = configured_wart(config, schedule_snapshot)
     except ValueError as exc:
         sys.exit(f"Abbruch: {exc}")
-    required_keys = ["ANTHROPIC_API_KEY"]
+    try:
+        for scout in scouts:
+            validate_scout_transport(scout)
+    except ValueError as exc:
+        sys.exit(f"Abbruch: {exc} Kein Verzeichnis angelegt.")
+    required_keys = []
+    if any(s.get("transport", "api") == "api" and s["family"] == "anthropic" for s in scouts + [wart_cfg]):
+        required_keys.append("ANTHROPIC_API_KEY")
+    if any(s.get("transport") == "openrouter_api" for s in scouts + [wart_cfg]):
+        required_keys.append("OPENROUTER_API_KEY")
     if any(s["family"] == "google" for s in scouts):
         required_keys.append("GEMINI_API_KEY")
     require_keys(*required_keys)
-    unsupported = sorted(
-        {s["family"] for s in scouts if s["family"] not in SUPPORTED_SCOUT_FAMILIES}
-    )
-    if unsupported:
-        sys.exit(
-            "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "
-            f"{unsupported}. Kein Verzeichnis angelegt, kein API-Call."
-        )
+    if wart_cfg.get('role') == 'weekly_chair':
+        from cost_bounds import InputBounds
+        # The weekly chair must be callable BEFORE paying for any new Scouts.
+        InputBounds(config['live_council'].get('input_bounds', {}), ROOT).policy(wart_cfg)
 
     session_id, session = latest_session()
     # Aktualitäts-Gate VOR Verzeichnis-Anlage und API-Call: eine falsche session_ref
@@ -587,18 +634,33 @@ def main():
     print(f"Datum: {entry_date}")
     print(f"Jüngste Sitzung: {session_id} ({session.get('date')})")
 
-    user = prompts.SCOUT_USER.format(
-        session_id=session_id,
-        session_date=session.get("date"),
-        question=session.get("question"),
-        recommendations_summary=summarize_recommendations(session),
-    )
+    if blind_research(scouts):
+        # Even the preceding question may enumerate earlier recommendations.
+        user = prompts.SCOUT_BLIND_USER.format(question=prompts.SCOUT_BLIND_QUESTION, as_of=entry_date)
+    else:
+        user = prompts.SCOUT_USER.format(
+            session_id=session_id,
+            session_date=session.get("date"),
+            question=session.get("question"),
+            recommendations_summary=summarize_recommendations(session),
+        )
     (raw_dir / "prompt-user.txt").write_text(user)
 
     print(f"\nSchritt 1 — Web-Recherche ({len(scouts)} Scout{'s' if len(scouts) != 1 else ''})")
     try:
+        spent = openrouter_scout.amount(0)
+        def budgeted_scout(spec, system, user, directory):
+            nonlocal spent
+            result = call_scout(spec, system, user, directory)
+            if 'billed_usd' in result[1]:
+                spent += openrouter_scout.amount(result[1]['billed_usd']) * openrouter_scout.amount(config['fx_rate_usd_eur'])
+            else:
+                spent += openrouter_scout.amount(compute_role_costs(result[1], spec, config["fx_rate_usd_eur"])["total"])
+            if any(s.get("transport") == "openrouter_api" for s in scouts) and openrouter_scout.amount(spent) >= cap:
+                raise openrouter_scout.ScoutAccountingError("Recherche-Budget erreicht; Rohantwort erhalten, kein weiterer Aufruf")
+            return result
         scout_reports, scout_failures, divergence = collect_scout_reports(
-            scouts, prompts.SCOUT_SYSTEM, user, raw_dir
+            scouts, prompts.SCOUT_SYSTEM, user, raw_dir, caller=budgeted_scout
         )
     except RuntimeError as exc:
         sys.exit(f"Abbruch: {exc}")
@@ -647,11 +709,35 @@ def main():
         session_date=session.get("date"),
         scout_dossier=dossier_for_wart,
     )
+    if blind_research(scouts):
+        # History enters only after every Scout has completed its own context.
+        decision_user += "\n\n" + historical_comparison(ROOT, entry_date, session_id, session)
     (raw_dir / "prompt-wart-decision.txt").write_text(decision_user)
     print("\nSchritt 3 — Einberufungs-Entscheid (Wart)")
-    decision_text, wart_usage, _ = call_wart_decision(
-        wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir
-    )
+    if wart_cfg.get('role') == 'weekly_chair':
+        from live_session import weekly_decision, WeeklyRefusal
+        try:
+            decision_text, wart_usage, _ = weekly_decision(
+                wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir, config, spent, cap, ROOT)
+        except WeeklyRefusal as exc:
+            entry = {
+                'schema_version':2, 'procedure_version':'0.6', 'kind':'refusal', 'refusal':True,
+                'date':entry_date, 'session_ref':session_id, 'decision_model':wart_cfg['model'],
+                'decision_role':'weekly_chair', 'rotation_index':wart_cfg['rotation_index'],
+                'search_queries':search_queries, 'content_md':public_dossier,
+                'refusal_note':'Der Vorsitz hat die Ausgabe verweigert. Es liegt kein Einberufungsentscheid vor.',
+                'refusals':[{'family':wart_cfg['family'],'model':wart_cfg['model'],'stop_reason':'refusal',
+                             'raw_artifact_dir':str(raw_dir.relative_to(ROOT)),'search_queries':[]}],
+                'costs':{'currency':'EUR','total':None,'confirmed_scout_total':float(spent),'status':'unresolved'},
+                'actions_run_url':actions_run_url(), 'raw_refusal':exc.artifact,
+            }
+            (out_dir/'entry.json').write_text(json.dumps(entry,ensure_ascii=False,indent=2))
+            write_refusal_schedule(entry_date)
+            return
+    else:
+        decision_text, wart_usage, _ = call_wart_decision(
+            wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir
+        )
     (raw_dir / "wart-decision-content.md").write_text(decision_text)
     decision = parse_wart_decision(decision_text)
     convene = decision["convene"]
@@ -713,17 +799,19 @@ def main():
         "costs": costs,
         "actions_run_url": run_url,
     }
-    if len(scouts) == 2:
+    if len(scouts) > 1:
         entry["scouts"] = [
             {
                 "family": r["config"]["family"],
                 "model": r["config"]["model"],
                 "label": r["config"].get("label", r["config"]["model"]),
+                **({"research_role": r["config"]["research_role"]} if r["config"].get("research_role") else {}),
                 "content_md": r["content_md"],
                 "search_queries": r["parsed"].get("search_queries") or r["api_queries"],
                 "findings": r["parsed"].get("findings", []),
                 "rejected_findings": r["parsed"].get("rejected_findings", []),
                 "delta_assessment": r["parsed"].get("delta_assessment", ""),
+                **({"research_provenance": r["usage"]["research_provenance"]} if "research_provenance" in r["usage"] else {}),
             }
             for r in scout_reports
         ]
@@ -732,6 +820,13 @@ def main():
             for failure in scout_failures
         ]
         entry["scout_divergence"] = divergence
+    if blind_research(scouts):
+        entry["research_mode"] = "blind_then_compare"
+    if "research_provenance" in wart_usage:
+        entry["decision_provenance"] = wart_usage["research_provenance"]
+    if wart_cfg.get('role') == 'weekly_chair':
+        entry.update(procedure_version='0.6', decision_role='weekly_chair', rotation_index=wart_cfg['rotation_index'],
+                     decision_provenance=wart_usage['provenance'])
     (out_dir / "entry.json").write_text(json.dumps(entry, indent=2, ensure_ascii=False))
     print(f"\nJournal geschrieben: {out_dir / 'entry.json'}")
     print(f"Kosten des Laufs: {costs['total']} €")
@@ -739,6 +834,15 @@ def main():
     print("\nSchritt 4 — schedule.json")
     write_schedule(entry_date, session.get("date"), convene, out_dir)
     print("\n=== Wart-Lauf abgeschlossen ===")
+
+
+def main():
+    config = json.loads((HERE / 'config.json').read_text())
+    if feature_enabled(config, 'live_council'):
+        from council_state import process_lock
+        with process_lock(ROOT):
+            return _main()
+    return _main()
 
 
 if __name__ == "__main__":

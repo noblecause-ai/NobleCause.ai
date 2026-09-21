@@ -14,6 +14,10 @@ Keys:    ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY (oder gremium/.env)
 import argparse
 import datetime
 import json
+import math
+from decimal import Decimal
+import openrouter
+import openrouter_scout
 import re
 import sys
 from pathlib import Path
@@ -23,11 +27,14 @@ ROOT = HERE.parent
 
 import prompts  # noqa: E402
 import organizations  # noqa: E402
+from ballot_status import check_contract, read_decision  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
+from scout_context import blind_research, historical_comparison  # noqa: E402
 from process_config import (  # noqa: E402
-    SUPPORTED_SCOUT_FAMILIES,
     configured_scouts,
+    configured_wart,
     feature_enabled,
+    validate_scout_transport,
 )
 
 
@@ -183,6 +190,29 @@ def summarize_recommendations(session):
     return "\n".join(lines)
 
 
+def scout_dossier_prompt(scouts, question, as_of, prior_id, prior, led_by_wart, scout_question=None):
+    """The independent research question never defaults to a historical brief."""
+    if blind_research(scouts):
+        return prompts.SCOUT_BLIND_USER.format(
+            question=scout_question or prompts.SCOUT_BLIND_QUESTION, as_of=as_of
+        )
+    if not prior:
+        sys.exit("Abbruch: keine Vorgänger-Sitzung für Dossier gefunden.")
+    if led_by_wart:
+        return prompts.SCOUT_FOUNDING_DOSSIER_USER.format(
+            question=question,
+            prior_session_id=prior_id,
+            prior_session_date=prior.get("date"),
+            pillar_a_context=pillar_a_context(prior),
+        )
+    return prompts.SCOUT_DOSSIER_USER.format(
+        question=question,
+        prior_session_id=prior_id,
+        prior_session_date=prior.get("date"),
+        prior_recommendations=summarize_recommendations(prior),
+    )
+
+
 def prior_session():
     sessions_dir = ROOT / "sessions"
     entries = []
@@ -252,6 +282,9 @@ def call_anthropic(model, system, user, max_tokens):
 
 
 def call_scout_dossier(scout_cfg, system, user, raw_dir):
+    validate_scout_transport(scout_cfg)
+    if scout_cfg.get("transport") == "openrouter_api":
+        return openrouter_scout.call_scout(scout_cfg, system, user, raw_dir)
     if scout_cfg.get("family") == "google":
         from google_scout import call_google_scout
 
@@ -353,7 +386,14 @@ def call_google(model, system, user, max_tokens):
 CALLERS = {"anthropic": call_anthropic, "openai": call_openai, "google": call_google}
 
 
-def call_model(spec, system, user, max_tokens, raw_dir, tag):
+def call_model(spec, system, user, max_tokens, raw_dir, tag, *, budget=None):
+    transport = spec.get("transport", "api")
+    if transport == "openrouter_api":
+        if budget is None:
+            raise openrouter.OpenRouterError("OpenRouter requires an explicit budget")
+        return openrouter.call(spec, system, user, max_tokens, raw_dir, tag, **budget)
+    if transport != "api":
+        raise ValueError("Unsupported transport")
     caller = CALLERS[spec["family"]]
     last_err = None
     for attempt in (1, 2):
@@ -383,16 +423,26 @@ def _vote_recommendations(parsed):
     return parsed.get("recommendations") or parsed.get("empfehlungen") or []
 
 
-def structured_vote_recs(parsed):
+def structured_vote_recs(parsed, *, ballot_contract=None):
     """Registry-aufgelöste Voten je Säule für die Persistenz in session.json.
 
     Erlaubt dem Frontend, Protokollspalten + Revision (wer nannte r1 vs r2 welche
     Org) zu rendern, OHNE Prosa zu parsen. Unbekannte Org → weggelassen (der
     Aggregator meldet sie separat als unresolved); nie stiller Textfall.
     """
+    check_contract(ballot_contract)
     out = []
     for r in _vote_recommendations(parsed):
         pillar = r.get("pillar")
+        if ballot_contract:
+            decision = read_decision(r)
+            if not decision or pillar not in ('A', 'B', 'C', 'D'):
+                continue
+            if decision == 'abstain':
+                out.append({'pillar':pillar, 'decision':decision, 'organization_id':None,
+                    'organization':None, 'title':r.get('title'), 'confidence':r.get('confidence'),
+                    'conditional':None, 'reservation':None, 'abstention_reason':r['abstention_reason']})
+                continue
         org_id = organizations.resolve(r.get("organization"))
         if pillar not in ("A", "B", "C", "D") or org_id is None:
             continue
@@ -400,6 +450,7 @@ def structured_vote_recs(parsed):
         # kein gültiges Bool lieferte (der Aggregator schließt es separat als ungültig aus).
         _valid, cond, reservation = read_conditional(r)
         out.append({
+            **({'decision':'recommend', 'abstention_reason':None} if ballot_contract else {}),
             "pillar": pillar,
             "organization_id": org_id,
             "organization": organizations.get(org_id)["canonical_name"],
@@ -428,10 +479,11 @@ def read_conditional(rec):
     return True, cond, reservation
 
 
-def aggregate_recommendations(final_votes, total_models=None):
+def aggregate_recommendations(final_votes, total_models=None, procedure_version=None, *, ballot_contract=None):
     """Deterministische Aggregation gegen die Organisations-Registry.
 
-    Konsens = >=2 VERSCHIEDENE Modelle lösen auf dieselbe org_id auf. Auflösung
+    Bis 0.5: >=2 verschiedene Modelle; ab 0.6: Mehrheit >=3 bei Nenner 5.
+    Die Stimmen lösen auf dieselbe org_id auf. Auflösung
     ausschließlich via organizations.resolve() (Alias-Match, kein Modell, kein
     Fuzzy). donation_url + canonical_name kommen aus der Registry, nie aus dem
     Votum (Halluzinationsschutz).
@@ -440,14 +492,33 @@ def aggregate_recommendations(final_votes, total_models=None):
     unbekannter Organisation — sie werden NIE stillschweigend als Dissens
     verbucht, sondern explizit ausgewiesen.
     """
-    total = total_models or len(final_votes)
+    if procedure_version not in (None, '0.5', '0.6'):
+        raise ValueError('Unbekannte Verfahrensversion')
+    check_contract(ballot_contract)
+    if ballot_contract and procedure_version != '0.6':
+        raise ValueError('Explizite Enthaltung benötigt Verfahren 0.6')
+    if ballot_contract and (len(final_votes) > 5 or len({v['label'] for v in final_votes}) != len(final_votes)):
+        raise ValueError('Doppelte oder zusätzliche Sitzstimme')
+    total = 5 if procedure_version == '0.6' else (total_models or len(final_votes))
+    threshold = 3 if procedure_version == '0.6' else 2
     recs = []
     unresolved = []
     for pillar in ("A", "B", "C", "D"):
         candidates = []
+        abstentions = []
         contract_warnings = []
         for vote in final_votes:
-            for r in _vote_recommendations(vote["parsed"]):
+            entries = _vote_recommendations(vote["parsed"])
+            if ballot_contract:
+                entries = entries if isinstance(entries, list) else []
+                entries = [r for r in entries if isinstance(r, dict) and r.get('pillar') == pillar]
+                if len(entries) != 1 or read_decision(entries[0]) is None:
+                    contract_warnings.append(f"{vote['label']}: Säule {pillar} — fehlende, doppelte oder widersprüchliche strukturierte Entscheidung; ungültig.")
+                    continue
+                if entries[0]['decision'] == 'abstain':
+                    abstentions.append({'model':vote['label'], 'reason':entries[0]['abstention_reason']})
+                    continue
+            for r in entries:
                 if r.get("pillar") != pillar:
                     continue
                 org_id = organizations.resolve(r.get("organization"))
@@ -477,13 +548,17 @@ def aggregate_recommendations(final_votes, total_models=None):
                 })
         # Zähler statt Sonderflag (Steward-Entscheid): votes_valid = verschiedene
         # Modelle mit auswertbarem, aufgelöstem Votum in dieser Säule; votes_invalid =
-        # der Rest der teilnehmenden Modelle (unlesbar/ohne verwertbares Säulen-Votum).
+        # der Rest der teilnehmenden Modelle abzüglich expliziter Enthaltungen.
+        # Enthaltungen werden separat gezählt, niemals als Zustimmung/ungültig.
         # Damit sind alle vier Fälle unterscheidbar — Konsens · Dissens aus
         # vollständigen Voten · unvollständig · gar nichts (votes_valid=0) — und die
         # Tafel entscheidet selbst, ab wann sie welchen Zustand zeigt.
         valid_models = sorted({c["_model"] for c in candidates})
         votes_valid = len(valid_models)
-        votes_invalid = max(0, total - votes_valid)
+        votes_invalid = max(0, total - votes_valid - len(abstentions))
+        abstention_fields = ({'votes_abstained':len(abstentions),
+                              'abstentions':sorted(abstentions, key=lambda a:a['model'])} if ballot_contract else {})
+        abstention_clause = f" {len(abstentions)} Enthaltung(en); der Nenner bleibt fünf." if abstentions else ''
         # Doppelvotum-Warnung (Kimi P3): ein Modell mit mehreren Empfehlungen in
         # derselben Säule ist vom Vertrag untersagt — als Warnung in den Rekord.
         per_model = {}
@@ -498,6 +573,7 @@ def aggregate_recommendations(final_votes, total_models=None):
         # nie fehlt der Bereich, nie stille Leere. Wortlaut vom Steward.
         if not candidates:
             rec = {
+                **abstention_fields,
                 "pillar": pillar,
                 "has_consensus": False,
                 "votes_valid": 0,
@@ -506,8 +582,8 @@ def aggregate_recommendations(final_votes, total_models=None):
                 "organization": None,
                 "donation_url": None,
                 "confidence": None,
-                "rationale_md": "Die Antworten zu diesem Bereich waren nicht auswertbar. "
-                "Die Rohdaten liegen im Protokoll.",
+                "rationale_md": ("Für diese Säule liegt keine auswertbare Empfehlung vor." + abstention_clause
+                    if abstentions else "Die Antworten zu diesem Bereich waren nicht auswertbar. Die Rohdaten liegen im Protokoll."),
             }
             if warnings:
                 rec["warnings"] = warnings
@@ -524,7 +600,7 @@ def aggregate_recommendations(final_votes, total_models=None):
         leaders = [k for k, n in support.items() if n == max_support]
         tie = max_support >= 2 and len(leaders) > 1
 
-        if max_support >= 2 and not tie:
+        if max_support >= threshold and not tie:
             best_id = leaders[0]
             best = groups[best_id]
             best_models = sorted({c["_model"] for c in best})
@@ -548,6 +624,7 @@ def aggregate_recommendations(final_votes, total_models=None):
                 if votes_invalid else ""
             )
             rec = {
+                **abstention_fields,
                 "pillar": pillar,
                 "has_consensus": True,
                 "votes_valid": votes_valid,
@@ -564,9 +641,9 @@ def aggregate_recommendations(final_votes, total_models=None):
                     "models": best_models,
                     "votes": vote_details,
                 },
-                "rationale_md": f"Konvergenz im Schlussvotum: {len(best_models)} von "
+                "rationale_md": f"{'Mehrheit' if procedure_version == '0.6' else 'Konvergenz'} im Schlussvotum: {len(best_models)} von "
                 f"{total} Modellen{cond_clause} empfehlen diese Organisation "
-                f"({', '.join(best_models)}).{invalid_clause} Begründungen in den Schlussvoten.",
+                f"({', '.join(best_models)}).{abstention_clause}{invalid_clause} Begründungen in den Schlussvoten.",
             }
             if warnings:
                 rec["warnings"] = warnings
@@ -578,13 +655,16 @@ def aggregate_recommendations(final_votes, total_models=None):
                 if tie
                 else "Die Schlussvoten konvergieren für diese Säule nicht auf eine Organisation."
             )
+            if procedure_version == '0.6':
+                note = 'Keine Organisation erreicht die erforderliche Mehrheit von drei der fünf Sitzstimmen.'
             rec = {
+                **abstention_fields,
                 "pillar": pillar,
                 "has_consensus": False,
                 "votes_valid": votes_valid,
                 "votes_invalid": votes_invalid,
                 "tie": tie,
-                "title": "Kein Konsens — Einzelvoten",
+                "title": "Keine Mehrheit — Einzelvoten" if procedure_version == '0.6' else "Kein Konsens — Einzelvoten",
                 "organization": None,
                 "donation_url": None,
                 "confidence": None,
@@ -601,7 +681,7 @@ def aggregate_recommendations(final_votes, total_models=None):
                     }
                     for c in candidates
                 ],
-                "rationale_md": note,
+                "rationale_md": note + abstention_clause,
             }
             if warnings:
                 rec["warnings"] = warnings
@@ -658,13 +738,11 @@ def generate_summary(
         if summary_prompt
         else "Du bist ein nüchterner Protokollredakteur. Antworte nur mit JSON."
     )
-    text, usage, raw = call_anthropic(
-        summarizer["model"],
-        system,
-        user,
-        max_tokens,
-    )
     tag = "summary-wart" if summary_prompt else "summary-anthropic"
+    if summarizer.get("transport") == "openrouter_api":
+        text, usage, raw = openrouter_scout.call_wart(summarizer, system, user, raw_dir, tag, max_tokens)
+    else:
+        text, usage, raw = call_anthropic(summarizer["model"], system, user, max_tokens)
     (raw_dir / f"{tag}.json").write_text(
         json.dumps(raw, indent=2, ensure_ascii=False, default=str)
     )
@@ -700,6 +778,10 @@ def pillar_a_context(prior):
 
 
 def call_wart_simple(wart_cfg, system, user, raw_dir, tag, max_tokens=None):
+    if wart_cfg.get("transport") == "openrouter_api":
+        result = openrouter_scout.call_wart(wart_cfg, system, user, raw_dir, tag, max_tokens)
+        (raw_dir / f"{tag}.json").write_text(json.dumps(result[2], indent=2))
+        return result
     import anthropic
 
     raw_dir.mkdir(parents=True, exist_ok=True)
@@ -769,9 +851,19 @@ def accumulate_wart_usage(total, usage):
     total["input_tokens"] += usage.get("input_tokens", 0)
     total["output_tokens"] += usage.get("output_tokens", 0)
     total["web_search_requests"] += usage.get("web_search_requests", 0)
+    if "billed_usd" in usage:
+        total["billed_usd"] = str(openrouter.amount(total.get("billed_usd", "0")) + openrouter.amount(usage["billed_usd"]))
+        total["research_provenance"] = usage.get("research_provenance")
 
 
 def compute_wart_cost(usage, wart_cfg, fx):
+    if "billed_usd" in usage:
+        usd = openrouter.amount(usage["billed_usd"])
+        provenance = usage.get("research_provenance") or {}
+        return {"model": wart_cfg["model"], "label": wart_cfg.get("label", wart_cfg["model"]),
+                "input_tokens": usage["input_tokens"], "output_tokens": usage["output_tokens"],
+                "web_search_requests": provenance.get("web_search_requests"),
+                "cost_basis": "billed", "usd": float(usd), "eur": float(usd * openrouter.amount(fx))}
     token_usd = (
         usage["input_tokens"] / 1e6 * wart_cfg["usd_per_1m_input"]
         + usage["output_tokens"] / 1e6 * wart_cfg["usd_per_1m_output"]
@@ -795,7 +887,8 @@ def compute_costs(usage_by_model, model_specs, fx, role_costs=None):
     by_model = []
     for spec in model_specs:
         u = usage_by_model.get(spec["model"], {"input_tokens": 0, "output_tokens": 0})
-        usd = (
+        routed = spec.get("transport") == "openrouter_api"
+        usd = float(openrouter.amount(u.get("billed_usd", "0"))) if routed else (
             u["input_tokens"] / 1e6 * spec["usd_per_1m_input"]
             + u["output_tokens"] / 1e6 * spec["usd_per_1m_output"]
         )
@@ -805,8 +898,9 @@ def compute_costs(usage_by_model, model_specs, fx, role_costs=None):
                 "label": spec.get("label", spec["model"]),
                 "input_tokens": u["input_tokens"],
                 "output_tokens": u["output_tokens"],
-                "usd": round(usd, 4),
-                "eur": round(usd * fx, 4),
+                "usd": usd if routed else round(usd, 4),
+                "eur": usd * fx if routed else round(usd * fx, 4),
+                **({"cost_basis": "billed", "transport": "openrouter_api"} if routed else {}),
             }
         )
     if role_costs:
@@ -816,13 +910,46 @@ def compute_costs(usage_by_model, model_specs, fx, role_costs=None):
 
 
 def check_budget(costs, cap_eur, label):
-    total = costs["total"]
+    if not math.isfinite(cap_eur) or cap_eur < 0:
+        raise ValueError("Budgetdeckel muss endlich und nicht negativ sein")
+    by_model = costs.get("by_model")
+    total = sum(entry["eur"] for entry in by_model) if by_model else costs["total"]
+    if not math.isfinite(total) or total < 0:
+        raise SystemExit("Abbruch: Kostenstand ist nicht auswertbar.")
     print(f"  Zwischenkosten ({label}): {total:.2f} €")
     if total > cap_eur:
-        print(f"  WARNUNG: Budgetdeckel {cap_eur} € überschritten ({total:.2f} €)", file=sys.stderr)
+        raise SystemExit(
+            f"Abbruch: Budgetdeckel {cap_eur:.2f} € überschritten "
+            f"({total:.4f} €, Stand {label}). Kein weiterer Modellaufruf."
+        )
 
 
 # ---------------------------------------------------------------- main
+
+def openrouter_phase_barrier(models, entries, kind, raw_dir):
+    """Strict OpenRouter phase contract; API-only historical procedure unchanged."""
+    if not any(m.get("transport") == "openrouter_api" for m in models):
+        return
+    valid = len(entries) == len(models) and {e["model"] for e in entries} == {m["model"] for m in models}
+    for entry in entries:
+        if kind == "challenge":
+            valid = valid and entry.get("status") == "valid"
+        else:
+            try:
+                raw_recs = _vote_recommendations(entry.get("parsed"))
+                recommendations = structured_vote_recs(entry.get("parsed"))
+                valid = valid and len(raw_recs) == 4 and len(recommendations) == 4 and {
+                    r["pillar"] for r in recommendations
+                } == {"A", "B", "C", "D"} and all(read_conditional(r)[0] for r in raw_recs)
+            except (AttributeError, TypeError, ValueError):
+                valid = False
+
+    if not valid:
+        (raw_dir / f"phase-{kind}-invalid.json").write_text(
+            json.dumps(entries, indent=2, ensure_ascii=False) + "\n"
+        )
+        raise SystemExit(f"Abbruch: OpenRouter-Phasenbarriere {kind} nicht erfüllt; Rohdaten erhalten, keine Folgephase")
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -836,33 +963,85 @@ def main():
     parser.add_argument("--number", type=int, default=None)
     parser.add_argument("--with-dossier", action="store_true")
     parser.add_argument(
+        "--scout-question",
+        help="Eigenständige Suchfrage für die drei blinden Scouts; Standard: offene Frage über vier Säulen",
+    )
+    parser.add_argument(
         "--led-by-wart",
         action="store_true",
         help="Gründungssitzung: Wart eröffnet, moderiert, schreibt Kurzfassung (impliziert --with-dossier)",
     )
     parser.add_argument("--budget-cap", type=float, default=15.0)
+    parser.add_argument('--live-council', action='store_true', help='Isolierter Backend-Pilot 0.6, ohne Publikation')
+    parser.add_argument('--observe-costs', action='store_true', help='Pilot: belegte Ist-Kosten beobachten, ohne Input-Bound/Abschlussreserve; Key-Limit bleibt')
+    parser.add_argument('--stop-after-first', action='store_true', help='Pilot nach erstem gültigen Erstvotum pausieren; mit --resume weiterverwenden')
+    parser.add_argument('--dossier-json', help='Vorhandener blinder Drei-Scout-Journalrekord')
+    parser.add_argument('--output-dir', help='Lokaler Pilotordner außerhalb der veröffentlichten Rekorde')
+    parser.add_argument('--resume', action='store_true', help='Bestätigte Aufrufe wiederverwenden; keine Inferenzwiederholung')
+    parser.add_argument('--live-feed-dir', help='Optionales Dateiziel für den ausdrücklich sichtbaren Live-Pilot; kein Upload')
+    parser.add_argument('--public-session', action='store_true', help='Freigegebene öffentliche Sitzung: Originalrekord in sessions/, Rotation nach gültigem Abschluss')
+    parser.add_argument('--live-feed-ssh', help='Vorhandener SSH-Deploy-Host für synchrone Live-Publikation')
+    parser.add_argument('--live-feed-identity', help='Optionaler Pfad zum vorhandenen SSH-Deploy-Key')
     args = parser.parse_args()
+    if not math.isfinite(args.budget_cap) or args.budget_cap < 0:
+        parser.error("--budget-cap muss endlich und nicht negativ sein")
+    if args.observe_costs and not args.live_council:
+        parser.error('--observe-costs ist ausschließlich für den isolierten Live-Pilot zulässig')
+    if args.stop_after_first and not args.live_council:
+        parser.error('--stop-after-first ist ausschließlich für den isolierten Live-Pilot zulässig')
+    if args.live_feed_dir and not args.live_council:
+        parser.error('--live-feed-dir benötigt --live-council')
+    if (args.public_session or args.live_feed_ssh or args.live_feed_identity) and not args.live_council:
+        parser.error('Öffentliche Sitzung/SSH-Publisher benötigen --live-council')
+    if args.live_feed_ssh and not args.live_feed_dir:
+        parser.error('--live-feed-ssh benötigt ein lokales --live-feed-dir als Veröffentlichungsbeleg')
 
     if args.led_by_wart:
         args.with_dossier = True
 
-    load_env(HERE, ROOT)
-    require_keys("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY")
     config = json.loads((HERE / "config.json").read_text())
-    wart_cfg = config.get("wart")
+    if args.live_council:
+        from live_session import run
+        result = run(ROOT, config, args)
+        if args.public_session and result['status'] == 'completed':
+            from council_state import accept_session
+            accept_session(ROOT, ROOT/'sessions'/result['id'], config)
+            print(f"Öffentlicher Live-Rat {result['id']}: abgeschlossen und übernommen")
+        else:
+            print(f"Live-Rat-Pilot {result['id']}: {result['status']}; keine Rekordübernahme oder Rotation")
+        return
+    if feature_enabled(config, 'live_council'):
+        parser.error('0.6-Backend derzeit über --live-council und --dossier-json starten; Frontend/Rollout noch offen')
+    routed = openrouter.validate_roster(config["models"])
+    if routed:
+        openrouter.amount(config["fx_rate_usd_eur"])
+        if config["fx_rate_usd_eur"] <= 0:
+            sys.exit("Abbruch: positiver Wechselkurs erforderlich")
     try:
         scouts = configured_scouts(config)
+        wart_cfg = configured_wart(config)
     except ValueError as exc:
         sys.exit(f"Abbruch: {exc}")
     if args.with_dossier:
-        unsupported = sorted(
-            {s["family"] for s in scouts if s["family"] not in SUPPORTED_SCOUT_FAMILIES}
-        )
-        if unsupported:
-            sys.exit(
-                "Abbruch: kein freigegebener Web-Suche-Adapter für Scout-Familie(n) "
-                f"{unsupported}. Kein Verzeichnis angelegt, kein API-Call."
-            )
+        try:
+            for scout in scouts:
+                validate_scout_transport(scout)
+        except ValueError as exc:
+            sys.exit(f"Abbruch: {exc} Kein Verzeichnis angelegt.")
+    role_specs = ([wart_cfg] if args.led_by_wart else [config["summarizer"]])
+    if any(s.get("transport", "api") != "api" and s.get("role") != "wart" for s in role_specs):
+        sys.exit("Abbruch: Redaktion bleibt direkt")
+    if args.with_dossier:
+        role_specs += scouts
+    load_env(HERE, ROOT)
+    gateway_roles = [s for s in role_specs if s.get("transport") == "openrouter_api"]
+    direct_roles = [s for s in role_specs if s not in gateway_roles]
+    require_keys(*openrouter.required_keys(config["models"] + direct_roles), *(["OPENROUTER_API_KEY"] if gateway_roles else []))
+    openrouter.preflight(config["models"])
+    if routed:
+        # This preflight happens before directories, even for insufficient budget.
+        for spec in config["models"]:
+            openrouter.reserve(spec, config["max_output_tokens"], 0, args.budget_cap, config["fx_rate_usd_eur"])
     deliberation_05 = feature_enabled(config, "deliberation_0_5")
     manifest = (ROOT / "manifest.md").read_text()
     sources = (HERE / "sources.md").read_text()
@@ -923,6 +1102,16 @@ def main():
         u = usage_by_model[spec["model"]]
         u["input_tokens"] += usage["input_tokens"]
         u["output_tokens"] += usage["output_tokens"]
+        if spec.get("transport") == "openrouter_api":
+            u["billed_usd"] = str(openrouter.amount(u.get("billed_usd", "0")) + openrouter.amount(usage["billed_usd"]))
+        check_budget(interim_costs(), args.budget_cap, f"nach {spec['model']}")
+
+    def council_call(spec, system, user, max_tokens, raw_dir, tag):
+        if spec.get("transport") == "openrouter_api":
+            spent = sum(Decimal(str(c["eur"])) for c in interim_costs()["by_model"])
+            return call_model(spec, system, user, max_tokens, raw_dir, tag,
+                              budget={"spent_eur": spent, "cap_eur": args.budget_cap, "fx": fx})
+        return call_model(spec, system, user, max_tokens, raw_dir, tag)
 
     prior_id, prior = prior_session()
 
@@ -963,22 +1152,9 @@ def main():
 
     # -------- Runde 0 (Scout-Dossier; historische Rekordfelder heißen wart_dossier)
     if args.with_dossier:
-        if not prior:
-            sys.exit("Abbruch: keine Vorgänger-Sitzung für Dossier gefunden.")
-        if args.led_by_wart:
-            wart_dossier_prompt = prompts.SCOUT_FOUNDING_DOSSIER_USER.format(
-                question=args.question,
-                prior_session_id=prior_id,
-                prior_session_date=prior.get("date"),
-                pillar_a_context=pillar_a_context(prior),
-            )
-        else:
-            wart_dossier_prompt = prompts.SCOUT_DOSSIER_USER.format(
-                question=args.question,
-                prior_session_id=prior_id,
-                prior_session_date=prior.get("date"),
-                prior_recommendations=summarize_recommendations(prior),
-            )
+        wart_dossier_prompt = scout_dossier_prompt(
+            scouts, args.question, today, prior_id, prior, args.led_by_wart, args.scout_question
+        )
         (raw_dir / "prompt-r0-wart.txt").write_text(wart_dossier_prompt)
         print(f"Runde 0 — {len(scouts)} Scout-Dossier{'s' if len(scouts) != 1 else ''} (+ Web-Suche)")
         valid_dossiers = []
@@ -988,14 +1164,18 @@ def main():
             scout_dir.mkdir(parents=True, exist_ok=True)
             print(f"  Scout {index}: {active_scout['model']}")
             try:
+                scout_system = prompts.scout_system_for(active_scout, prompts.SCOUT_DOSSIER_SYSTEM)
+                if active_scout.get("research_role"):
+                    (scout_dir / "prompt-scout-system.txt").write_text(scout_system)
                 text, usage, raw, api_queries = call_scout_dossier(
                     active_scout,
-                    prompts.SCOUT_DOSSIER_SYSTEM,
+                    scout_system,
                     wart_dossier_prompt,
                     scout_dir,
                 )
                 (scout_dir / "r0-wart-content.md").write_text(text)
                 accumulate_wart_usage(scout_usages[active_scout["model"]], usage)
+                check_budget(interim_costs(), args.budget_cap, f"nach Scout {index}")
                 artifact = (
                     "r0-wart.json" if len(scouts) == 1 else f"scout-{index}/r0-wart.json"
                 )
@@ -1007,15 +1187,28 @@ def main():
                         "kein Inhalt übernommen."
                     )
                     continue
-                content_md = strip_json_block(dossier_text)
+                content_md = strip_json_block(dossier_text) + openrouter_scout.disclosure(usage.get("research_provenance"))
+                structured = {}
+                if "max_findings" in active_scout:
+                    parsed_dossier = extract_json_block(dossier_text)
+                    if not isinstance(parsed_dossier, dict) or not isinstance(parsed_dossier.get("findings"), list):
+                        raise RuntimeError("Scout-Dossier ohne strukturierte findings")
+                    if len(parsed_dossier["findings"]) > active_scout["max_findings"]:
+                        raise RuntimeError("Scout überschreitet max_findings — Dossier nicht übernommen")
+                    structured = {k: parsed_dossier.get(k) for k in ("findings", "rejected_findings", "delta_assessment")}
                 valid_dossiers.append(
                     {
                         "model": active_scout["model"],
                         "label": active_scout.get("label", active_scout["model"]),
+                        **({"research_role": active_scout["research_role"]} if active_scout.get("research_role") else {}),
                         "content_md": content_md,
                         "search_queries": recorded_search_queries(dossier_text, api_queries),
+                        **structured,
+                        **({"research_provenance": usage["research_provenance"]} if "research_provenance" in usage else {}),
                     }
                 )
+            except openrouter_scout.ScoutAccountingError:
+                raise
             except Exception as exc:  # noqa: BLE001
                 if len(scouts) == 1:
                     raise
@@ -1044,6 +1237,7 @@ def main():
                             all_queries.append(query)
                 combined = "\n\n---\n\n".join(
                     f"## {d['label']} ({d['model']})\n\n{d['content_md']}"
+                    + ("\n\n```json\n" + json.dumps({"findings": d["findings"]}, ensure_ascii=False) + "\n```" if "findings" in d else "")
                     for d in valid_dossiers
                 )
                 wart_dossier = {
@@ -1076,6 +1270,12 @@ def main():
                     "keine Empfehlung — nur Fakten und Quellen.\n\n---\n\n"
                     f"{wart_dossier['content_md']}\n\n---"
                 )
+            if blind_research(scouts):
+                wart_dossier["research_mode"] = "blind_then_compare"
+                # The Council may compare only after all independent searches.
+                comparison = historical_comparison(ROOT, today, prior_id, prior)
+                (raw_dir / "prompt-history-comparison.txt").write_text(comparison)
+                dossier_section += "\n\n" + comparison
         else:
             # dossier_section bleibt "" — kein fiktives Dossier im Ratsprompt.
             wart_dossier_refusal = dossier_failures[0] if dossier_failures else None
@@ -1097,10 +1297,11 @@ def main():
     r1 = []
     for spec in config["models"]:
         print(f"  {spec['label']} ({spec['model']}) …")
-        text, usage = call_model(spec, system, round1_prompt, max_tokens, raw_dir, "r1")
+        text, usage = council_call(spec, system, round1_prompt, max_tokens, raw_dir, "r1")
         record_usage(spec, usage)
-        r1.append({**spec, "text": text, "parsed": extract_json_block(text)})
+        r1.append({**spec, "text": text, "parsed": extract_json_block(text), **({"provenance": usage["provenance"]} if "provenance" in usage else {})})
     check_budget(interim_costs(), args.budget_cap, "nach Runde 1")
+    openrouter_phase_barrier(config["models"], r1, "r1", raw_dir)
 
     # -------- Moderation (Wart-Leitung)
     if args.led_by_wart:
@@ -1160,7 +1361,7 @@ def main():
             (raw_dir / f"prompt-challenge-{spec['family']}.txt").write_text(challenge_prompt)
             print(f"  {spec['label']} ({spec['model']}) …")
             try:
-                text, usage = call_model(
+                text, usage = council_call(
                     spec, system, challenge_prompt, max_tokens, raw_dir, "challenge"
                 )
                 record_usage(spec, usage)
@@ -1174,6 +1375,7 @@ def main():
                             "model": spec["model"],
                             "status": "valid",
                             "content_md": content_md,
+                            **({"provenance": usage["provenance"]} if "provenance" in usage else {}),
                             **structured,
                         }
                     )
@@ -1183,12 +1385,15 @@ def main():
                             "model": spec["model"],
                             "status": "invalid",
                             "content_md": content_md,
+                            **({"provenance": usage["provenance"]} if "provenance" in usage else {}),
                             "target_model_id": None,
                             "failure": str(exc),
-                            "raw_artifact": f"raw/challenge-{spec['family']}.json",
+                            "raw_artifact": usage.get("provenance", {}).get("raw_artifact", f"raw/challenge-{spec['family']}.json"),
                         }
                     )
             except Exception as exc:  # noqa: BLE001
+                if spec.get("transport") == "openrouter_api":
+                    raise SystemExit("OpenRouter-Erwiderung fehlgeschlagen; keine weiteren Calls") from exc
                 exchanges.append(
                     {
                         "model": spec["model"],
@@ -1199,6 +1404,7 @@ def main():
                     }
                 )
         check_budget(interim_costs(), args.budget_cap, "nach adressierter Erwiderung")
+        openrouter_phase_barrier(config["models"], exchanges, "challenge", raw_dir)
 
     # -------- Runde 2
     print("Runde 2 — Antwort und Schlussvoten" if deliberation_05 else "Runde 2 — Gegenlese und Schlussvoten")
@@ -1224,10 +1430,11 @@ def main():
                 moderation_section=moderation_section,
             )
         print(f"  {spec['label']} ({spec['model']}) …")
-        text, usage = call_model(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
+        text, usage = council_call(spec, system, round2_prompt, max_tokens, raw_dir, "r2")
         record_usage(spec, usage)
-        r2.append({**spec, "text": text, "parsed": extract_json_block(text)})
+        r2.append({**spec, "text": text, "parsed": extract_json_block(text), **({"provenance": usage["provenance"]} if "provenance" in usage else {})})
     check_budget(interim_costs(), args.budget_cap, "nach Runde 2")
+    openrouter_phase_barrier(config["models"], r2, "r2", raw_dir)
 
     # -------- Kurzfassung
     print("Kurzfassung — Protokollredaktion")
@@ -1283,6 +1490,7 @@ def main():
                 "content_md": strip_json_block(v["text"]),
                 "confidence": (v["parsed"] or {}).get("confidence"),
                 "recommendations": structured_vote_recs(v["parsed"]),
+                **({"provenance": v["provenance"]} if "provenance" in v else {}),
             }
             for v in round_votes
         ]
@@ -1332,6 +1540,8 @@ def main():
         "unresolved_votes": unresolved,
         "costs": costs,
     }
+    if routed:
+        session["council_transport"] = "openrouter_api"
     if deliberation_05:
         session["deliberation_version"] = "0.5"
     if args.led_by_wart:

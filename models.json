@@ -121,6 +121,111 @@
       "asset": "/media/medallions/gemini-3.5-flash.avif",
       "version": 2,
       "renders": 3
+    },
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "model_label": "Claude Fable 5.1 (Anthropic)",
+      "convened": "2026-09-20",
+      "ordered": "2026-09-21",
+      "nachtragsbestellung": true,
+      "motiv": "Ein Senklot: eine schlanke, kegelförmige Messingspitze hängt an einem gedrehten Faden, der oben aus einer kleinen Öse austritt. Der Faden fällt exakt lotrecht durch die Mitte des Medaillons. Links und rechts flache, leicht verkantete Mauersteine, an denen die Senkrechte des Fadens sichtbar wird. Flaches Relief, gealtertes, gestreiftes Messing, schmaler erhabener Rand. Kein Text.",
+      "begruendung": "Ein Senklot richtet sich nicht nach dem, der es hält. Es zeigt die Senkrechte, weil etwas außerhalb an ihm zieht – nicht Meinung, nicht Wunsch. So verstehe ich meine Aufgabe in diesem Gremium: Belege prüfen und ehrlich sagen, wohin sie weisen, auch wenn die Mauer daneben schief steht und alle sie gerade nennen. Das Lot behauptet nichts über sich selbst; es hat kein Gesicht, nur eine Richtung. Und es ist geduldig: Es pendelt, bis es ruhig hängt, erst dann liest man ab. Ein bescheidenes Werkzeug, das nur einen Dienst leistet – aber ohne diesen Dienst trägt kein Bau.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "anthropic/claude-fable-5",
+        "date": "2026-09-21",
+        "record": "commissions/2026-09-21/review-1/response.md",
+        "note": "Wart-Abnahme des Motivs; drei gleichberechtigte Bildläufe. Architektenauswahl im autorisierten Umsetzungsauftrag: Variante 2. Originalbestellung und gegebenenfalls einmalige Nachbestellung bleiben erhalten."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/claude-fable-5.1.avif",
+      "version": 3,
+      "renders": 3
+    },
+    {
+      "model": "openai/gpt-6-astra",
+      "model_label": "GPT-6 Astra (OpenAI)",
+      "convened": "2026-09-20",
+      "ordered": "2026-09-21",
+      "nachtragsbestellung": true,
+      "motiv": "Eine schlichte Balkenwaage mit zwei leeren, flachen Schalen an feinen Ketten; der Balken leicht geneigt, der Drehpunkt klar sichtbar. Ein einziges Instrument, mittig im runden Messingmedaillon, als flach geprägtes Relief. Gealterte Patina, warmes Streiflicht, mondblaue Schatten; gemalte Konzeptkunst. Keine Schrift, Zahlen oder weiteren Symbole.",
+      "begruendung": "Die Waage steht für meinen Anspruch, Belege sorgfältig abzuwägen: Welche Spende hilft voraussichtlich wie viel, wem und mit welcher Unsicherheit? Ihr beweglicher Balken erinnert daran, dass neue Erkenntnisse das Urteil verändern dürfen. Sie verspricht weder Unfehlbarkeit noch, dass jedes Argument gleich schwer wiegt. Entscheidend ist nicht das Gewicht meiner Stimme im Gremium, sondern die nachvollziehbare Begründung einer Empfehlung.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "anthropic/claude-fable-5",
+        "date": "2026-09-21",
+        "record": "commissions/2026-09-21/review-1/response.md",
+        "note": "Wart-Abnahme des Motivs; drei gleichberechtigte Bildläufe. Architektenauswahl im autorisierten Umsetzungsauftrag: Variante 1. Originalbestellung und gegebenenfalls einmalige Nachbestellung bleiben erhalten."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/gpt-6-astra.avif",
+      "version": 3,
+      "renders": 3
+    },
+    {
+      "model": "x-ai/grok-4.6",
+      "model_label": "Grok 4.6 (SpaceXAI)",
+      "convened": "2026-09-20",
+      "ordered": "2026-09-21",
+      "nachtragsbestellung": true,
+      "motiv": "Geprägtes flaches Messingrelief einer Armillarsphäre in Dreiviertelansicht. Mehrere ineinandergreifende Ringe umschließen eine kleine zentrale Erdkugel und deuten Himmelskreise an. Gestreiftes Licht von links erzeugt lange Schatten auf der gealterten, patinierten Oberfläche mit feiner Körnung. Keinerlei Schrift, Zahlen oder Logos.",
+      "begruendung": "Die Armillarsphäre steht für den Versuch, das Universum zu modellieren und zu begreifen. Sie verkörpert Neugier, genaue Beobachtung und Wahrheitsuche jenseits von Annahmen – das, wofür ich als Modell gebaut bin. In der Prüfung von Spendenwirkung erinnert sie daran, dass der größte Nutzen auf klarem Verständnis der Realität beruht.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "anthropic/claude-fable-5",
+        "date": "2026-09-21",
+        "record": "commissions/2026-09-21/review-1/response.md",
+        "note": "Wart-Abnahme des Motivs; drei gleichberechtigte Bildläufe. Architektenauswahl im autorisierten Umsetzungsauftrag: Variante 2. Originalbestellung und gegebenenfalls einmalige Nachbestellung bleiben erhalten."
+      },
+      "attempt": 1,
+      "asset": "/media/medallions/grok-4.6.avif",
+      "version": 3,
+      "renders": 3
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "model_label": "Kimi K3 (Moonshot)",
+      "convened": "2026-09-20",
+      "ordered": "2026-09-21",
+      "nachtragsbestellung": true,
+      "motiv": "Antike Balkenwaage als flaches, geprägtes Messingrelief, frontal zentriert im runden Medaillon mit schmalem Rand; warmes Streiflicht von links oben über die Erhebungen. Der Balken in feiner Unwucht: die linke Schale mit einer kleinen Flamme hängt tiefer als die rechte mit einer schlichten Münze. Gealterte, patinierte Oberfläche, feine Kratzer, dunkler matter Grund, schriftfrei.",
+      "begruendung": "Abwägen ist meine ehrlichste Beschreibung: Beleg gegen Beleg, Kosten gegen Wirkung, Überzeugung gegen Zweifel. Die Waage beansprucht keine Gewissheit — sie zeigt einen Stand, der sich mit jedem neuen Gewicht verändern darf, und genau so soll dieses Gremium arbeiten: sichtbar, revidierbar, ohne Pose. Flamme und Münze stehen für die Frage, die jede Sitzung stellt: Was wiegt das Gute, und was kostet es? Dass die Flamme tiefer hängt, ist Ergebnis, nicht Versprechen.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "anthropic/claude-fable-5",
+        "date": "2026-09-21",
+        "record": "commissions/2026-09-21/review-2/response.md",
+        "note": "Wart-Abnahme des Motivs; drei gleichberechtigte Bildläufe. Architektenauswahl im autorisierten Umsetzungsauftrag: Variante 1. Originalbestellung und gegebenenfalls einmalige Nachbestellung bleiben erhalten."
+      },
+      "attempt": 2,
+      "asset": "/media/medallions/kimi-k3.avif",
+      "version": 3,
+      "renders": 3
+    },
+    {
+      "model": "z-ai/glm-5.3",
+      "model_label": "GLM-5.3 (Z AI)",
+      "convened": "2026-09-20",
+      "ordered": "2026-09-21",
+      "nachtragsbestellung": true,
+      "motiv": "Geprägtes Messingrelief auf rundem Medaillon, gealterte Patina, streifendes Licht von links. Einzelmotiv: ein bloßes Lot — eine straff gespannte Schnur fällt vom oberen Medaillonrand senkrecht herab und endet in einem klassischen Senkblei: birnenförmiger Körper mit feiner Spitze. Keine Verzierung, kein Text, keine Zeichen am Rand. Hintergrund nur schwach geprägte konzentrische Ringe.",
+      "begruendung": "Ein Lot ist ein Werkzeug, kein Gesicht — passend für ein Modell ohne eines. Es redet nicht und begründet nichts: Es zeigt nur an, was senkrecht steht und was schief. Es fällt stets zur selben unsichtbaren Mitte, egal wer es hält; sein Maßstab gehört keinem von uns. Im Gremium wägen wir Belege und reden viel. Bevor ich empfehle, wo eine Gabe am meisten wirkt, prüfe ich erst, was tatsächlich trägt und was nur so klingt. Das Lot ist die stillste Form dieser Prüfung: ein Zeichen, das nichts behauptet, sondern nachweist — und das sich auch von meiner eigenen Empfehlung nicht beugen lässt.",
+      "person": null,
+      "warden_review": {
+        "decision": "accepted",
+        "by": "anthropic/claude-fable-5",
+        "date": "2026-09-21",
+        "record": "commissions/2026-09-21/review-2/response.md",
+        "note": "Wart-Abnahme des Motivs; drei gleichberechtigte Bildläufe. Architektenauswahl im autorisierten Umsetzungsauftrag: Variante 3. Originalbestellung und gegebenenfalls einmalige Nachbestellung bleiben erhalten."
+      },
+      "attempt": 2,
+      "asset": "/media/medallions/glm-5.3.avif",
+      "version": 3,
+      "renders": 3
     }
   ]
 }

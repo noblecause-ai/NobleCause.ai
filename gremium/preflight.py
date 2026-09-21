@@ -17,6 +17,7 @@ einzige Wahrheit ist.
 
 import os
 import sys
+import json
 from pathlib import Path
 
 HERE = Path(__file__).parent
@@ -70,6 +71,22 @@ PROVIDERS = [
 
 
 def main():
+    config = json.loads((HERE / 'config.json').read_text())
+    from process_config import feature_enabled
+    if '--live-council' in sys.argv or feature_enabled(config, 'live_council'):
+        import openrouter
+        from cost_bounds import InputBounds
+        from envtools import load_env, require_keys
+        from live_session import settings
+        cfg = settings(config)
+        bounds = InputBounds(cfg.get('input_bounds', {}), HERE.parent)
+        for spec in cfg['models']:
+            bounds.policy(spec)
+        load_env(HERE, HERE.parent)
+        require_keys('OPENROUTER_API_KEY')
+        openrouter.preflight(cfg['models'])
+        print('OpenRouter: Key, fünf gepinnte Endpunkte und B4-Belege geprüft; keine Inferenz und kein Live-Canary.')
+        return
     results = {}
     for name, key_env, ping in PROVIDERS:
         # (a) Key gesetzt & nicht leer — nie den Wert zeigen.

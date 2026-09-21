@@ -65,7 +65,7 @@
 {/if}
 
 {#if e.delta_assessment}
-	<h2>Delta-Bewertung</h2>
+	<h2>{e.research_mode === 'blind_then_compare' ? 'Evidenzübersicht der Scouts' : 'Delta-Bewertung'}</h2>
 	<p>{e.delta_assessment}</p>
 {/if}
 
@@ -85,10 +85,15 @@
 						<span class="med med-none"></span>
 					{/if}
 					<span class="order-name">{modelName(o.model, o.label)}</span>
-					<span class="order-company">{o.family ? companyName(o.family) : ''}{#if o.within_limits === false} · über den Grenzwerten (angenommen){/if}</span>
+					<span class="order-company">{o.family ? companyName(o.family) : ''}{#if o.within_limits === false} · {o.reorder ? 'Erstbestellung über den Grenzwerten; einmalige Nachbestellung' : 'über den Grenzwerten (angenommen)'}{/if}</span>
 				</div>
 				{#if o.motiv}<p class="order-motiv">{o.motiv}</p>{/if}
 				{#if o.begruendung}<p class="order-begr">{o.begruendung}</p>{/if}
+				{#if o.reorder}
+					<p><strong>Freigegebene Nachbestellung</strong></p>
+					<p class="order-motiv">{o.reorder.motiv}</p>
+					<p class="order-begr">{o.reorder.begruendung}</p>
+				{/if}
 			</li>
 		{/each}
 	</ol>
@@ -115,6 +120,9 @@
 
 {#if e.search_queries?.length}
 	<h2>Suchanfragen</h2>
+	{#if e.scouts?.some((s) => s.research_provenance?.query_log_complete === false)}
+		<p class="muted small">Die Suchanfragen sind Modellangaben. Ein vollständiges Suchprotokoll der Anbieter liegt nicht vor.</p>
+	{/if}
 	<ul class="queries">
 		{#each e.search_queries as q (q)}<li><code>{q}</code></li>{/each}
 	</ul>

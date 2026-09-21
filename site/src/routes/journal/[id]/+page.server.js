@@ -38,6 +38,7 @@ export function load({ params }) {
 						motiv: o.motiv ?? null,
 						begruendung: o.begruendung ?? null,
 						within_limits: o.within_limits ?? null,
+						reorder: c.reorders?.find((r) => r.model === o.model) ?? null,
 						medallion: reg?.asset ? reg.asset.replace(/\.avif$/, '-lo.avif') : null
 					};
 				})

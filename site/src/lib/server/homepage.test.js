@@ -72,3 +72,15 @@ test('Medaillonpfad kommt nur aus der Registratur; fehlendes Asset bleibt neutra
 	);
 	assert.equal(home.modelTracks.find((track) => track.model === second.model).medallion, null);
 });
+
+test('ausdrückliche Enthaltung bleibt vom Organisationsregister und den Empfehlungen getrennt', () => {
+ const s=structuredClone(session('2026-07c'));
+ const v=s.rounds.find(r=>r.kind==='final_vote').votes[0].recommendations[0];
+ v.decision='abstain'; v.abstention_reason='Möglicher Interessenkonflikt';
+ v.organization=null; v.organization_id=null;
+ const home=buildHomepageViewModel({session:s,sessions,registry});
+ const row=home.modelTracks[0].rows.find(r=>r.pillar===v.pillar);
+ assert.equal(row.final.organization,null);
+ assert.equal(row.final.decision,'abstain');
+ assert.equal(row.changed,true);
+});

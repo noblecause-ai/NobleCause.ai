@@ -1,4 +1,5 @@
 <script>
+ import { openRouterProcedure } from '$lib/openrouter.js';
 	// The Archive: Ergebnis-Tafel (dieselbe eine Instanz wie in den anderen
 	// Räumen — die Antwort reist durchs Haus), Sitzungsliste, Kosten,
 	// Korrekturhinweis, Dissens im Wortlaut, Türen.
@@ -59,6 +60,7 @@
 </svelte:head>
 
 {#if home}
+ {#if home.openRouter}<p class="openrouter-procedure">{openRouterProcedure[lang]}</p>{/if}
 	<StageHero
 		scene="/media/scenes/archive-display.avif"
 		sceneMobile="/media/scenes/archive-portrait-display.avif"

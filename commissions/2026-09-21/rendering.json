@@ -1,0 +1,248 @@
+{
+  "date": "2026-09-21",
+  "generator": "Codex imagegen",
+  "frame": "Use case: stylized-concept. Asset type: NobleCause Council medallion icon, square high resolution.\nReference image 1 supplies only the night-world palette, black point, warm brass and cool shadow. Reference image 2 supplies only the painted aged-brass material style. Do not reproduce either reference scene or instrument.\nCreate one single circular commemorative brass medallion, exactly front-on and centered, diameter 92 percent of the square canvas. A shallow STRUCK BAS-RELIEF with raised soft-edged shapes, never an engraving line drawing or a three-dimensional sculpture. Worn, unevenly patinated dull brass; dark recesses and lighter raised edges. A narrow, plain, smooth rim, completely visible and circular. Warm raking light from upper left; recesses dark and slightly cool. Hand-painted concept art matching the reference world's black point; no shiny lacquer, no new gold. The object is made entirely of brass, including every element of the relief.\nNO text, letters, numbers, inscriptions, logos, corporate colors or watermark.\nTechnical delivery: TRANSPARENT ALPHA outside the medallion, clean hard circular edge, no cast shadow, backdrop, square surface or scenery. This replaces only the old magenta keying background and leaves the commissioned motif unchanged.\nThe model's commissioned motif below is verbatim. Render exactly this motif, with no additions or substitutions:\n",
+  "reference_images": [
+    "docs/asset-originals/media/provenance/ref-archiv-plate-heute.png",
+    "docs/asset-originals/media/provenance/ref-emblem-objektstil.png"
+  ],
+  "renders_per_model": 3,
+  "selection_by": "Architekt im autorisierten Umsetzungsauftrag des Stewards",
+  "entries": [
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "motif": "Ein Senklot: eine schlanke, kegelförmige Messingspitze hängt an einem gedrehten Faden, der oben aus einer kleinen Öse austritt. Der Faden fällt exakt lotrecht durch die Mitte des Medaillons. Links und rechts flache, leicht verkantete Mauersteine, an denen die Senkrechte des Fadens sichtbar wird. Flaches Relief, gealtertes, gestreiftes Messing, schmaler erhabener Rand. Kein Text.",
+      "order_ref": "commissions/2026-09-21/commission.json",
+      "review_ref": "commissions/2026-09-21/review-1/response.md",
+      "selected_variant": 2,
+      "variants": [
+        {
+          "variant": 1,
+          "generation_file": "exec-946e81e7-5c8f-4b4e-ab46-8b02bf2437ac.png",
+          "sha256": "6ab3a47410ab4d16f730aabeac4249863d8151d7667dfc756937876b652f31d0"
+        },
+        {
+          "variant": 2,
+          "generation_file": "exec-586352ab-80cf-4abb-8f93-99a732178b20.png",
+          "sha256": "efad464580eab168e8814a3b6ed1efbd274b286267559c73362ed1c85f4fff35"
+        },
+        {
+          "variant": 3,
+          "generation_file": "exec-62142312-f133-4304-9204-43dae612a6b4.png",
+          "sha256": "af4d1c566bd08c9ea16cb08f97e06042afe5feae809399b2ee4fe4bddcc6afc6"
+        }
+      ],
+      "master": "docs/asset-originals/media/provenance/medallions-commission-3/claude-fable-5.1.png",
+      "assets": [
+        {
+          "path": "site/static/media/medallions/claude-fable-5.1.avif",
+          "bytes": 195414,
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "quality": 65,
+          "sha256": "4783c135867e3c1786409c203c72ea4680006365cca964fd53f2c0ae5b8e52d4"
+        },
+        {
+          "path": "site/static/media/medallions/claude-fable-5.1-lo.avif",
+          "bytes": 11927,
+          "dimensions": [
+            256,
+            256
+          ],
+          "quality": 65,
+          "sha256": "c27f5d9ed010f02f7e8d53d8d986a336124bc539268002ef44c4656279412798"
+        }
+      ]
+    },
+    {
+      "model": "openai/gpt-6-astra",
+      "motif": "Eine schlichte Balkenwaage mit zwei leeren, flachen Schalen an feinen Ketten; der Balken leicht geneigt, der Drehpunkt klar sichtbar. Ein einziges Instrument, mittig im runden Messingmedaillon, als flach geprägtes Relief. Gealterte Patina, warmes Streiflicht, mondblaue Schatten; gemalte Konzeptkunst. Keine Schrift, Zahlen oder weiteren Symbole.",
+      "order_ref": "commissions/2026-09-21/commission.json",
+      "review_ref": "commissions/2026-09-21/review-1/response.md",
+      "selected_variant": 1,
+      "variants": [
+        {
+          "variant": 1,
+          "generation_file": "exec-56982738-8931-4d72-a1f6-e7d92ab81bc6.png",
+          "sha256": "a72921b32696f68f68db721992d02535ea7a64377c3c5122d8b9c07ebf498cab"
+        },
+        {
+          "variant": 2,
+          "generation_file": "exec-1b64e995-1828-447c-a68a-7f198833d78a.png",
+          "sha256": "6e4af90fad49b6655dd5557130662a6d67109b15f2a65d1bb14961e5f669f6b4"
+        },
+        {
+          "variant": 3,
+          "generation_file": "exec-078af661-781e-4edf-8dbb-a6a61b99e824.png",
+          "sha256": "318d4246b0bff60fcba408e31ea9e70c89a7de72f4c2ef65de89f735200fdc84"
+        }
+      ],
+      "master": "docs/asset-originals/media/provenance/medallions-commission-3/gpt-6-astra.png",
+      "assets": [
+        {
+          "path": "site/static/media/medallions/gpt-6-astra.avif",
+          "bytes": 207433,
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "quality": 75,
+          "sha256": "72d66efe8d57c2997f0da56cf4e6cde49fde3c1dce6b66cbd6cd1696819d8670"
+        },
+        {
+          "path": "site/static/media/medallions/gpt-6-astra-lo.avif",
+          "bytes": 10295,
+          "dimensions": [
+            256,
+            256
+          ],
+          "quality": 65,
+          "sha256": "79281a9d33d4d9eb6c7d1c9c73159a15705eec81916be712c26681a1fe87d195"
+        }
+      ]
+    },
+    {
+      "model": "x-ai/grok-4.6",
+      "motif": "Geprägtes flaches Messingrelief einer Armillarsphäre in Dreiviertelansicht. Mehrere ineinandergreifende Ringe umschließen eine kleine zentrale Erdkugel und deuten Himmelskreise an. Gestreiftes Licht von links erzeugt lange Schatten auf der gealterten, patinierten Oberfläche mit feiner Körnung. Keinerlei Schrift, Zahlen oder Logos.",
+      "order_ref": "commissions/2026-09-21/commission.json",
+      "review_ref": "commissions/2026-09-21/review-1/response.md",
+      "selected_variant": 2,
+      "variants": [
+        {
+          "variant": 1,
+          "generation_file": "exec-497c532c-f16f-41d6-8773-80363f334936.png",
+          "sha256": "d11e0fcdabcc01a9b6b4edf14213678643aa8d13676b1bd07cb1c480eaf0a4c2"
+        },
+        {
+          "variant": 2,
+          "generation_file": "exec-ecbf095e-5f2a-4d49-8970-edc5b0acd6fc.png",
+          "sha256": "9765e27c8a438e3a222796bd83927ba7c9cb8aacc39c0022362518786aff7962"
+        },
+        {
+          "variant": 3,
+          "generation_file": "exec-a79c6c48-cc57-4db8-806a-eba1bcb2acb7.png",
+          "sha256": "f92b96cf9b31af627bbce7a0facc12230f5b165dcd398778329163a043b268bf"
+        }
+      ],
+      "master": "docs/asset-originals/media/provenance/medallions-commission-3/grok-4.6.png",
+      "assets": [
+        {
+          "path": "site/static/media/medallions/grok-4.6.avif",
+          "bytes": 185162,
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "quality": 65,
+          "sha256": "d6f3533f24c2d34a58a9ad83093625e9ff174e056d5b472b51e67d1405a61e87"
+        },
+        {
+          "path": "site/static/media/medallions/grok-4.6-lo.avif",
+          "bytes": 10721,
+          "dimensions": [
+            256,
+            256
+          ],
+          "quality": 60,
+          "sha256": "3f76e98bf0aa34eecbfe8cf5474d7d4190a286b076c28f374ac954e886c11e49"
+        }
+      ]
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "motif": "Antike Balkenwaage als flaches, geprägtes Messingrelief, frontal zentriert im runden Medaillon mit schmalem Rand; warmes Streiflicht von links oben über die Erhebungen. Der Balken in feiner Unwucht: die linke Schale mit einer kleinen Flamme hängt tiefer als die rechte mit einer schlichten Münze. Gealterte, patinierte Oberfläche, feine Kratzer, dunkler matter Grund, schriftfrei.",
+      "order_ref": "commissions/2026-09-21/reorders.json",
+      "review_ref": "commissions/2026-09-21/review-2/response.md",
+      "selected_variant": 1,
+      "variants": [
+        {
+          "variant": 1,
+          "generation_file": "exec-8e1d90d2-400c-41d5-b8dc-6814c82c2f0a.png",
+          "sha256": "ef0190bae2eedc060b9eb8829e669b7f1855d0f3e212829d79e9afce89102210"
+        },
+        {
+          "variant": 2,
+          "generation_file": "exec-23f4af74-551a-4f5e-ab3f-f61cd1d3043c.png",
+          "sha256": "781b9ed4030b394b3a2057bb47718a8bf5a4ce1c8a706bf0501b3a361b6ac633"
+        },
+        {
+          "variant": 3,
+          "generation_file": "exec-568f0c64-0578-4cdf-88f4-5672349b7e96.png",
+          "sha256": "27d401ad51170ce784765cacc22180a6b7973983e8c2339b6254d1a123f7395f"
+        }
+      ],
+      "master": "docs/asset-originals/media/provenance/medallions-commission-3/kimi-k3.png",
+      "assets": [
+        {
+          "path": "site/static/media/medallions/kimi-k3.avif",
+          "bytes": 213445,
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "quality": 70,
+          "sha256": "74bdf09b0cc07ddfc3f6fc3925be9dd8d5f56e131697403045aa45b4b6a0a71b"
+        },
+        {
+          "path": "site/static/media/medallions/kimi-k3-lo.avif",
+          "bytes": 11089,
+          "dimensions": [
+            256,
+            256
+          ],
+          "quality": 65,
+          "sha256": "f65668a4776024d08359022fc70abd39de9a7d600d25f2f437a58fa5e2cc4eb7"
+        }
+      ]
+    },
+    {
+      "model": "z-ai/glm-5.3",
+      "motif": "Geprägtes Messingrelief auf rundem Medaillon, gealterte Patina, streifendes Licht von links. Einzelmotiv: ein bloßes Lot — eine straff gespannte Schnur fällt vom oberen Medaillonrand senkrecht herab und endet in einem klassischen Senkblei: birnenförmiger Körper mit feiner Spitze. Keine Verzierung, kein Text, keine Zeichen am Rand. Hintergrund nur schwach geprägte konzentrische Ringe.",
+      "order_ref": "commissions/2026-09-21/reorders.json",
+      "review_ref": "commissions/2026-09-21/review-2/response.md",
+      "selected_variant": 3,
+      "variants": [
+        {
+          "variant": 1,
+          "generation_file": "exec-86965773-9286-46e7-8f3e-83404c04c18c.png",
+          "sha256": "df60f9632a790dc55d4e9a13ddab23d95cf8dd63dcadfcb5e0b5d4882bf418d8"
+        },
+        {
+          "variant": 2,
+          "generation_file": "exec-25315f2a-034e-4a99-91f0-8755bce18934.png",
+          "sha256": "52a430d79c2c89d218145c6f4f8b33cd98b5bbe372b9e384f3312b289ecd1db7"
+        },
+        {
+          "variant": 3,
+          "generation_file": "exec-c6c0322d-b183-49da-b2b8-a5857109a258.png",
+          "sha256": "d7abaa4b983d728308a33e09d762cfe18c01065ea3d9cbed73e00bb1b0f53f93"
+        }
+      ],
+      "master": "docs/asset-originals/media/provenance/medallions-commission-3/glm-5.3.png",
+      "assets": [
+        {
+          "path": "site/static/media/medallions/glm-5.3.avif",
+          "bytes": 209331,
+          "dimensions": [
+            1200,
+            1200
+          ],
+          "quality": 75,
+          "sha256": "f31e6371ffd7714396fdf564ec73b162af4c3135a199c1cceea777b1c01823e9"
+        },
+        {
+          "path": "site/static/media/medallions/glm-5.3-lo.avif",
+          "bytes": 10344,
+          "dimensions": [
+            256,
+            256
+          ],
+          "quality": 65,
+          "sha256": "5c6e0a46b9481a5b58d14e948d4e67a61873f5cae1b50f4c75b4e2fa1e09815b"
+        }
+      ]
+    }
+  ]
+}

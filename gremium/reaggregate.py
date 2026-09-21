@@ -63,6 +63,20 @@ def text_of(raw, family):
 def final_votes_from_raw(session_dir, session):
     """Baut die final_votes-Struktur (label/parsed) aus raw/r2-*.json."""
     label_by_family = {p["family"]: p["label"] for p in session.get("participants", [])}
+    if session.get('procedure_version') == '0.6':
+        by_model = {p['model']:p['label'] for p in session['participants']}
+        final = next(r for r in session['rounds'] if r['kind'] == 'final_vote')
+        votes = []
+        for vote in final['votes']:
+            artifact = (session_dir / vote['provenance']['raw_artifact']).resolve()
+            if not artifact.is_relative_to(session_dir.resolve() / 'raw'):
+                raise ValueError('Ungültiger Rohpfad')
+            raw = json.loads(artifact.read_text())
+            text = raw['choices'][0]['message']['content']
+            if text != vote['content_md']:
+                raise ValueError('Rohantwort und Votum unterscheiden sich')
+            votes.append({'label':by_model[vote['model']], 'parsed':extract_json_block(text)})
+        return votes
     votes = []
     for rawf in sorted(glob.glob(str(session_dir / "raw" / "r2-*.json"))):
         family = os.path.basename(rawf).replace("r2-", "").replace(".json", "")
@@ -87,7 +101,8 @@ def diff_session(sid, write):
     session_dir = ROOT / "sessions" / sid
     session = json.loads((session_dir / "session.json").read_text())
     votes = final_votes_from_raw(session_dir, session)
-    new_recs, unresolved = aggregate_recommendations(votes)
+    new_recs, unresolved = aggregate_recommendations(votes, procedure_version=session.get('procedure_version'),
+        ballot_contract=session.get('ballot_contract'))
     old_by_pillar = {r["pillar"]: r for r in session.get("recommendations", [])}
     new_by_pillar = {r["pillar"]: r for r in new_recs}
 

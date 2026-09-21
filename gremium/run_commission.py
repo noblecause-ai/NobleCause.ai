@@ -25,6 +25,7 @@ import argparse
 import datetime
 import hashlib
 import json
+import openrouter
 import re
 import sys
 from pathlib import Path
@@ -39,7 +40,7 @@ from run_session import call_model  # noqa: E402
 MOTIV_MAX = 400
 BEGR_MAX = 600
 MAX_TOKENS = 3000
-FAMILY_DISPLAY = {"anthropic": "Anthropic", "openai": "OpenAI", "google": "Google"}
+FAMILY_DISPLAY = {"anthropic": "Anthropic", "openai": "OpenAI", "google": "Google", "spacexai": "SpaceXAI", "moonshotai": "Moonshot", "z-ai": "Z AI"}
 
 # Hinweistext nur für eine frisch angelegte Registratur (kein Bestand). Bei einer
 # bereits vorhandenen models.json wird deren Hinweistext unverändert übernommen —
@@ -187,6 +188,12 @@ def _existing_commission_ids(root):
 
 
 def _run(root, config, args, call_model_fn=call_model):
+    routed = openrouter.validate_roster(config["models"])
+    cap = getattr(args, "budget_cap", 15.0)
+    observe = getattr(args, 'observe_costs', False)
+    resume = getattr(args, 'resume', False)
+    spent = openrouter.amount(0)
+    openrouter.amount(cap)
     date = args.date
     commission_id = args.commission_id
     convened = args.convened
@@ -206,7 +213,10 @@ def _run(root, config, args, call_model_fn=call_model):
 
     models_path = root / "models.json"
     out_dir = root / "commissions" / date
-    journal_dir = root / "journal" / date
+    journal_id = getattr(args, 'journal_id', None) or date
+    if not re.fullmatch(re.escape(date) + r'(?:-[A-Za-z0-9_-]+)?', journal_id):
+        sys.exit('Abbruch: --journal-id muss das Bestelldatum mit optionalem Suffix sein.')
+    journal_dir = root / "journal" / journal_id
 
     registry_existing = (
         json.loads(models_path.read_text()) if models_path.exists() else None
@@ -226,7 +236,7 @@ def _run(root, config, args, call_model_fn=call_model):
             "kein API-Call."
         )
     for p in (out_dir, journal_dir):
-        if p.exists():
+        if p.exists() and not (resume and p == out_dir and not (out_dir / 'commission.json').exists()):
             sys.exit(f"Abbruch: {p} existiert bereits — Rekord ist unveränderlich.")
     used = _existing_commission_ids(root)
     if commission_id in used:
@@ -235,7 +245,13 @@ def _run(root, config, args, call_model_fn=call_model):
             f"({used[commission_id]}) — Kennungen sind repositoryweit eindeutig."
         )
 
+    # Historical three-seat orders keep their exact frame; the live roster only
+    # changes the two explicit seat counts, identically for all five models.
     frame = prompts.COMMISSION_FRAME
+    if getattr(args, 'live_council', False):
+        if len(config['models']) != 5:
+            sys.exit('Abbruch: Live-Ratsbestellung benötigt fünf Sitze.')
+        frame = frame.replace('eines von drei Modellen', 'eines von fünf Modellen').replace('für alle drei Modelle', 'für alle fünf Modelle')
     frame_sha = hashlib.sha256(frame.encode("utf-8")).hexdigest()
 
     # --- ab hier Schreiben/API: Key-Preflight ZUERST, VOR jeder Verzeichnis-
@@ -243,9 +259,13 @@ def _run(root, config, args, call_model_fn=call_model):
     # nächsten Lauf am Unveränderlichkeits-Gate scheitern ließe. ----------------
     if not args.dry_run:
         load_env(HERE, ROOT)
-        require_keys("ANTHROPIC_API_KEY", "OPENAI_API_KEY", "GEMINI_API_KEY")
+        require_keys(*openrouter.required_keys(new_specs))
+        openrouter.preflight(new_specs)
+        if routed and not observe:
+            for spec in new_specs:
+                openrouter.reserve(spec, MAX_TOKENS, 0, cap, config["fx_rate_usd_eur"])
     raw_dir = out_dir / "raw"
-    raw_dir.mkdir(parents=True)
+    raw_dir.mkdir(parents=True, exist_ok=resume)
 
     print(
         f"Bestell-Sondersitzung {commission_id} · {date}"
@@ -265,7 +285,33 @@ def _run(root, config, args, call_model_fn=call_model):
         else:
             # GETRENNT: der Rahmen als user-Prompt, kein System-Zusatz, KEINE
             # anderen Voten. call_model dumpt die Rohantwort nach raw_dir.
-            text, usage = call_model_fn(spec, "", frame, MAX_TOKENS, raw_dir, "order")
+            budget = {"spent_eur": spent, "cap_eur": cap, "fx": config["fx_rate_usd_eur"], 'observe_costs': observe} if routed else None
+            request_path = raw_dir / f"order-{spec['family']}-request.json"
+            if resume and routed and request_path.exists():
+                if json.loads(request_path.read_text()) != openrouter.request_for(spec, '', frame, MAX_TOKENS):
+                    raise ValueError('Bestellauftrag hat sich seit dem gespeicherten Aufruf verändert')
+                stem = raw_dir / f"order-{spec['family']}"
+                response = openrouter.decode(Path(str(stem)+'-response.json').read_bytes())
+                generation = openrouter.decode(Path(str(stem)+'-generation.json').read_bytes())
+                endpoint = openrouter.decode(Path(str(stem)+'-endpoint.json').read_bytes())
+                text, usage = openrouter.validate_response(spec, response, generation, endpoint.get('canonical_model'))
+                if usage['output_tokens'] > MAX_TOKENS:
+                    if not observe:
+                        raise ValueError('Tokenüberschreitung verlangt ausdrücklich Kostenbeobachtung')
+                    usage['provenance']['output_limit_observation'] = {'requested': MAX_TOKENS, 'billed': usage['output_tokens']}
+                usage['provenance'].update(raw_artifact=f'raw/order-{spec["family"]}-response.json',
+                    generation_artifact=f'raw/order-{spec["family"]}-generation.json')
+                recovery = Path(str(stem)+'-recovered.json')
+                if not recovery.exists():
+                    recovery.write_text(json.dumps({'retry_inference':False, 'cost_mode':'observe' if observe else 'bounded', **usage},default=float,indent=2))
+                ts = datetime.datetime.fromtimestamp(response['created'],datetime.timezone.utc).isoformat()
+            else:
+                text, usage = call_model_fn(spec, "", frame, MAX_TOKENS, raw_dir, "order",
+                                            **({"budget": budget} if routed else {}))
+            if routed:
+                spent += openrouter.amount(usage["billed_usd"]) * openrouter.amount(config["fx_rate_usd_eur"])
+                if spent > openrouter.amount(cap):
+                    raise SystemExit("Commission budget exceeded; no further calls")
         motiv, begr = parse_order(text)
         m_len = len(motiv) if motiv is not None else None
         b_len = len(begr) if begr is not None else None
@@ -285,7 +331,7 @@ def _run(root, config, args, call_model_fn=call_model):
             "frame_sha256": frame_sha,
             "timestamp": ts,
             "usage": usage,
-            "raw": f"raw/order-{spec['family']}.json",
+            "raw": usage.get('provenance', {}).get('raw_artifact', f"raw/order-{spec['family']}.json"),
         })
         print(
             f"  {spec['label']:>12}: motiv={m_len if m_len is not None else '—'}z "
@@ -386,7 +432,7 @@ def _run(root, config, args, call_model_fn=call_model):
         ),
         "costs": {
             "currency": "EUR",
-            "total": None,
+            "total": float(spent) if routed else None,
             "input_tokens": tok_in or None,
             "output_tokens": tok_out or None,
         },
@@ -418,9 +464,16 @@ def main(argv=None):
                     help="Datum der Ersteinberufung dieser Modellbesetzung, "
                          "ISO YYYY-MM-DD (Pflicht)")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--budget-cap", type=float, default=15.0)
+    ap.add_argument('--live-council', action='store_true', help='Die fünf bestätigten Live-Ratssitze bestellen.')
+    ap.add_argument('--journal-id', help='Eigenes Journalziel bei bereits vorhandenem Tagesjournal (Datum mit Suffix).')
+    ap.add_argument('--observe-costs', action='store_true', help='Bestätigte Ist-Kosten; Tokenlimitüberschreitungen vollständig abgeschlossener Antworten dokumentieren')
+    ap.add_argument('--resume', action='store_true', help='Gespeicherte vollständige Antworten prüfen und ohne erneute Inferenz weiterverwenden')
     args = ap.parse_args(argv)
 
     config = json.loads((HERE / "config.json").read_text())
+    if args.live_council:
+        config = {**config, 'models': config['live_council']['models']}
     _run(ROOT, config, args)
 
 

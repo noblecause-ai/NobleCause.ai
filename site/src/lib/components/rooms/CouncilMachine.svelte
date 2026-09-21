@@ -55,7 +55,7 @@
 	// rAF je Frame aktualisiert. Eine rAF-Schleife (40–60 s/Umdrehung), pausiert
 	// bei document.hidden und außerhalb des Viewports. Einflug nach dem Pult-
 	// Takt, von unten mit leichtem Überschwingen. Modellname immer am Medaillon.
-	let { t, tracks = [] } = $props();
+	let { t, tracks = [], showMedallions = true, rule = null } = $props();
 
 	let rucking = $state(false);
 	function ruck() {
@@ -109,6 +109,7 @@
 	let frontEls = $state([]);
 
 	$effect(() => {
+		if (!showMedallions) return;
 		if (typeof window === 'undefined') return;
 		// §0-Gate: nur Desktop, nur bei Bewegungswunsch. Sonst bleibt der SSR-
 		// Ruhezustand stehen (still an den Bahnpunkten, keine rAF).
@@ -146,7 +147,7 @@
 	});
 </script>
 
-<div class="council-machine">
+<div class="council-machine" class:medallions-docked={!showMedallions}>
 	<!-- §7 Orbit, hintere Hälfte: DOM VOR cm-plate → liegt unter P10 (Verdeckung).
 	     Jedes Medaillon hier UND in der vorderen Gruppe; der rAF zeigt je Tiefe
 	     die passende Kopie. Ruhezustand (SSR) trägt §0. -->
@@ -198,11 +199,12 @@
 	<div class="cm-zone">
 		<div class="cm-hotspot" aria-hidden="true" onmouseenter={ruck}></div>
 		<span class="cm-glow" aria-hidden="true"></span>
-		<p class="cm-plaque">{t.council.actors.machine.rule}</p>
+		<p class="cm-plaque">{rule ?? t.council.actors.machine.rule}</p>
 	</div>
 </div>
 
 <style>
+	.medallions-docked .cm-orbit { display: none; }
 	.council-machine {
 		position: absolute;
 		inset: 0;

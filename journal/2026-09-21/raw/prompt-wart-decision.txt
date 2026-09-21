@@ -1,0 +1,167 @@
+## Jüngste Sitzung
+
+2026-09 (2026-09-14)
+
+## Scout-Dossier
+
+Ich beginne mit der Recherche zu allen vier Säulen.# Scout-Dossier — Sitzung 2026-09 (Stand: 21.09.2026)
+
+**Rolle und Grenzen:** Ich gebe keine Spendenempfehlung. Nachfolgend Evidenzlage, Funding-Situation und Deltas je Säule. Alle Zahlen mit Quelle und Datum. Was ich nicht belegen konnte, ist explizit als Wissenslücke markiert. Kanon Demut: mein Suchbudget war begrenzt (15 Abfragen), mehrere zentrale Größen (Room-for-more-funding von HKI ab Juli 2026, NTI-Budget, aktuelle LEEP-Lücke) sind **nicht** öffentlich belegbar gewesen.
+
+---
+
+## Säule A — Helen Keller Intl (Vitamin-A-Supplementierung), Konfidenz 0.85
+
+**Funding-Lage.** Die bisher öffentlich dokumentierten GiveWell-Zuschüsse decken HKIs VAS-Programme **bis Juni 2026** ab: Im Januar 2023 empfahl GiveWell 71,5 Mio. USD, finanziert u. a. von Open Philanthropy (~67,5 Mio.) und dem Top Charities Fund (~3,7 Mio.); im August 2024 folgten 5,8 Mio. USD für sechs Länder, ebenfalls bis Juni 2026. Dieser Zuschuss war ausdrücklich als Planungssicherheit gedacht, während GiveWell über eine Verlängerung entscheidet — andernfalls als Exit-Finanzierung. **Wissenslücke:** Eine publizierte RFMF-Analyse für die Periode **ab Juli 2026** habe ich nicht gefunden. GiveWell aktualisiert die RFMF-Analyse für HKI typischerweise jährlich — die aktuelle Version ist mir nicht zugänglich.
+
+**Neu im Fenster (nach 06.08.2026).** GiveWell-Update vom 28.08.2026: rund 882.000 USD an HKI für VAS in sechs Regionen Malis (Bamako, Gao, Kidal, Ménaka, Taoudénit, Tombouctou), zwei Kampagnenrunden 2026; Begründung: ohne diesen Zuschuss würden diese Regionen dieses Jahr wahrscheinlich kein VAS erhalten. Das ist ein kleiner, aber harter Hinweis auf fortbestehende, kleinteilige Lücken — kein Signal für eine große offene Lücke.
+
+**Wirksamkeit.** Unveränderte Basis: Cochrane-Update (2022): Gesamtmortalität RR 0,88 (95 % KI 0,83–0,93), 19 Studien, 1.202.382 Kinder, GRADE hoch; Diarrhö-Mortalität −12 % (RR 0,88; 0,79–0,98; 1.098.538 Teilnehmende). GiveWell schätzte 2024 ~5.200–17.000 USD pro vermiedenem Todesfall, je nach Ort. UNICEF: 75 % der Zielkinder wurden 2023 erreicht.
+
+**Neue, vom Gremium nicht behandelte Entwicklung.** Laut GDEA-Monatsübersicht (September 2026) vergab GiveWell 350.000 USD an Atlas AI für subnationale Bevölkerungsschätzungen in Nigeria, DR Kongo, Kamerun und Burkina Faso; Schätzungen weichen zwischen Quellen um mehr als 30 % ab, und der letzte Zensus der DR Kongo war 1984. Relevanz: Zielmengen und Kosten-pro-Kind bei VAS hängen direkt an diesen Denominatoren — potenziell nachträgliche Korrektur der Kosteneffektivitätsschätzung in beide Richtungen. **Quellenvorbehalt:** Sekundärquelle (Newsletter), Primärbeleg von GiveWell habe ich nicht verifiziert.
+
+---
+
+## Säule B — Against Malaria Foundation (Dual-Wirkstoff-Netze), Konfidenz 0.84
+
+**Funding-Lage: größte Veränderung im Portfolio.** GiveWell hat am 24.08.2026 den größten Zuschuss seiner Geschichte bekanntgegeben: 276 Mio. USD an AMF für Beschaffung und Verteilung von 92 Mio. Netzen in der DR Kongo von 2027 bis 2029, mit Ko-Finanzierung durch Coefficient Giving; 46 Mio. dieser Netze gelten als zusätzlich, geschätzt ~67.000 vermiedene Todesfälle. Der Zuschuss soll Kampagnen in allen 26 Provinzen sicherstellen, teils in beschleunigtem Zeitplan, und verkürzt in bis zu fünf Provinzen mit höherer Krankheitslast die Abstände zwischen Verteilungen. Begründung u. a.: Netze verschleißen in der DR Kongo schneller, teils klimabedingt. GiveWell betont, dass die enge Koordination mit AMF, dem Globalen Fonds und dem nationalen Malariaprogramm dadurch wichtiger wird.
+
+**AMFs eigene Lückenangabe ist nicht datiert und läuft aus.** AMF nennt eine globale Lücke von deutlich über 300 Mio. USD für Verteilungen 2024–2026 und ein eigenes Beitragsziel von 175 Mio. USD. Da die Seite kein Datum trägt und sich das Zeitfenster 2024–2026 dem Ende nähert, ist diese Zahl **für die Sitzung 2026-09 nicht belastbar** (Kanon Evidenz).
+
+**Makrolage (Kontext, vor dem Fenster).** WHO: globale Malariafinanzierung 2024 rund 3,9 Mrd. USD gegenüber einem geschätzten Jahresbedarf von 7,8–8,3 Mrd. USD (Medscape, 07.05.2026). Das UK sagte dem Globalen Fonds 850 Mio. GBP zu — 15 % weniger als 2022 und der niedrigste Wert seit 2010; Gavi fehlen laut Medscape (15.04.2026) etwa 2,5–2,9 Mrd. USD des Ziels von 11,9 Mrd. USD für 2026–2030.
+
+**Wirksamkeit Chlorfenapyr-Netze.** Neuer Hüttenversuch-Preprint aus Tansania (medRxiv, 27.07.2026) referiert für Interceptor G2 eine Mortalität von 71 % bei resistenten Mücken gegenüber 20 % bei Alpha-Cypermethrin-Netzen. Die dreijährige cluster-randomisierte Auswertung (Lancet Planetary Health) fand überlegenen Schutz über mehrere Übertragungssaisons hinweg bei nur minimalen Effekten auf die Resistenzselektion und minimalen Rückgängen der Chlorfenapyr-Empfindlichkeit. **Keine gegenläufige Evidenz gefunden** — die Wirksamkeitsannahme der Säule B trägt.
+
+**Neue, vom Gremium nicht behandelte Entwicklung.** GiveWell prüft 2026 zusätzliche Implementierer (u. a. Malaria Consortium für Netzkampagnen in Teilen Nigerias) sowie Vektorkontrolle jenseits von Kampagnen: Routineverteilung, räumliche Repellents und ggf. insektizidbehandelte Babytragetücher. Zudem: der Globale Fonds genehmigte im Juli 2026 4,6 Mio. USD Notfallmittel für eine intensivierte Malariaantwort in der DR Kongo zur Unterstützung der Ebola-Bekämpfung — AMF ist dort als Partner benannt.
+
+---
+
+## Säule C — Nuclear Threat Initiative (nukleare Risikoreduktion + DNA-Synthese-Screening), Konfidenz 0.57
+
+**Biosicherheits-Track: Momentum gestiegen, Umsetzung offen.** S.3741 (Biosecurity Modernization and Innovation Act of 2026) wurde am 29.01.2026 im Senat eingebracht (Cotton/Klobuchar); der Zweck ist, das Handelsministerium zu Regulierungen für die Sicherheit der Nukleinsäure-Synthese zu verpflichten; erfasst sind auch Hersteller und Wiederverkäufer von Synthesegeräten einschließlich Benchtop-Synthesizern. NTI hat den Entwurf endorsiert und sieht ihn als eng an eigenen Empfehlungen ausgerichtet. **Statusgrenze:** Der Entwurf wurde zweimal gelesen und an den Senatsausschuss für Commerce, Science and Transportation verwiesen; und Stand 03.08.2026 ist der Bundesrahmen von 2024 für Synthese-Screening weiterhin nicht ersetzt.
+
+**Neu im Fenster (nach 06.08.2026).** Der CRS-Bericht „Artificial Intelligence and Biosecurity Issues" (Nachdruck 16.09.2026) beschreibt, dass das Weiße Haus im Juli 2026 die „United States Government Policy for Stopping High-Risk Life Sciences Research" gemäß EO 14292 veröffentlicht hat, dass diese die Regeln von 2024 ersetzen soll — und dass OSTP den Synthese-Rahmen nicht aktualisiert hat. Derselbe Bericht verweist auf den offenen Brief vom Juni 2026, der Pflicht-Screening fordert und Verantwortung bei den Syntheseanbietern, nicht bei AI-Designtools, ansiedelt. Der Brief wurde am Abend des 03.06.2026 veröffentlicht; NTI-Präsidentin und CEO Christine E. Wormuth ist Mitzeichnerin.
+
+**Nuklearer Track: Risikoumfeld deutlich verschlechtert.** New START lief am 05.02.2026 aus, ohne dass die USA auf ein russisches Angebot zur informellen Weitergeltung der Zentralgrenzen reagierten — damit bestehen keine rechtlich bindenden Obergrenzen mehr; Russland hatte im September 2025 erklärt, die quantitativen Kernbeschränkungen ein Jahr über den 05.02.2026 hinaus ohne Verifikation einhalten zu wollen. Die NPT-Überprüfungskonferenz 2026 endete ohne Konsensdokument — das dritte Scheitern in Folge. Für das Gremium heißt das: höherer Handlungsbedarf, aber **keine belegte Verbesserung der Traktabilität** von NTIs nuklearem Arbeitsstrang.
+
+**Funding-Lage: Wissenslücke.** Ich habe **keine** öffentliche RFMF- oder Budgetangabe für NTI bzw. NTI|bio gefunden. Einziger konkreter Datenpunkt: Sentinel Bio förderte NTI|bio mit 450.000 USD für internationale Zusammenarbeit zu AI-Biosicherheitsrisiken und US-Politikarbeit zu AIxBio-Schutzmaßnahmen und Genom-Synthese-Screening (Eintrag Juni 2026). Die Konfidenz 0.57 bleibt damit aus meiner Sicht **nicht durch neue Finanzdaten gedeckt** — weder nach oben noch nach unten.
+
+---
+
+## Säule D — LEEP (Elimination bleihaltiger Farben), Konfidenz 0.68
+
+**Prämissenprüfung „neue Finanzierungslücke" — nicht bestätigt.** Die aktuellste von mir gefundene öffentliche Aussage widerspricht der Sitzungsprämisse: Giving What We Can: Stand November 2025 hat LEEP seine unmittelbare Finanzierungslücke für Farbprogramme 2026 geschlossen und kann bestehende Programme fortführen, weitere starten und an anderen Expositionsquellen (Gewürze, Kosmetika) arbeiten; die Seite werde aktualisiert, wenn LEEP erneut Mittel für Skalierung einwirbt. Ich habe **keine** Quelle gefunden, die eine neue, offene Lücke belegt. Hinzu kommt institutionelle Ko-Finanzierung: LEEP-Zuwendungsbedingungen verweisen auf US-501(c)(3)-Anforderungen und Donor-Terms von Bloomberg Philanthropies; der Opportunity Fund von LEEP ist Teil der Lead Poisoning Prevention Initiative von Bloomberg Philanthropies. Das berührt die Säulen-D-Logik „übersehen/unterfinanziert".
+
+**Track Record und Ziele.** 2025 startete LEEP 11 neue Farbprogramme und ist in 40 Ländern präsent, die Gebiete mit 76 % der Geburten in LMICs abdecken; fünf Länder führten 2025 mit LEEP-Unterstützung Regulierung ein: Sierra Leone, Liberia, Burundi, Niger und Peru. Ziel 2026: Programme, die erwartet Bleiexposition bei 78 Mio. in den nächsten 35 Jahren geborenen Kindern verhindern, mit „Regulierung in Kraft" in 14 Ländern (von sieben); plus Regulierung in sieben weiteren Ländern und Mehrheits-Marktanteil-Reformulierung in zehn weiteren. DRK-Studie (16.03.2026): 55 % der Proben mit gefährlichen Bleigehalten; daraufhin regulatorische Maßnahmen der DR Kongo. Wiederholungsstudie in Malawi: über 50 % Rückgang des Bleifarben-Marktanteils seit 2021.
+
+**Kosteneffektivität — veraltet.** Die oft zitierten 1,66 USD pro verhinderter Kindesexposition stammen von Founders Pledge mit Stand August 2023. Eine aktualisierte, unabhängige Schätzung für 2026 habe ich nicht gefunden → Wissenslücke.
+
+**Neue, vom Gremium nicht behandelte Entwicklung.** WHO, Bloomberg Philanthropies und Resolve to Save Lives haben am 18.05.2026 ein Event zur Vorbereitung eines neuen WHO-Technical-Package zur Bleivergiftungsprävention durchgeführt, das gemeinsam mit einem Global Action Plan on Lead Mitigation 2027 erscheinen soll; die Weltgesundheitsversammlung hatte 2025 zu verstärktem globalem Handeln aufgerufen. Parallel Pure Earth Opportunity Fund: acht Organisationen im Auftaktkohorte 2026 aus 190 Bewerbungen. Für das Gremium doppeltes Signal: politischer Rückenwind **und** mögliche Verdrängung der Neglectedness-Prämisse. Bestandsgrößen: laut WHO (unter Verweis auf IHME) verursacht Bleiexposition jährlich etwa 3,5 Mio. kardiovaskuläre Todesfälle, bis zu 815 Mio. Kinder sind betroffen; Stand Januar 2024 hatten 48 % der Länder rechtlich bindende Kontrollen für Bleifarben.
+
+---
+
+## Verworfene Funde (geprüft, nicht relevant)
+
+| Fund | Begründung |
+|---|---|
+| EPA, 2,9 Mrd. USD für Blei in Trinkwasser (20.05.2026) | geprüft, nicht relevant weil US-Binnenpolitik zu Bleileitungen, nicht Bleifarben-Regulierung in LMICs; kein Bezug zur Säule-D-Empfehlung |
+| Nepal: UNICEF lieferte 2,5 Mio. Vitamin-A-Dosen nach verpasster Beschaffungsfrist (April 2026) | geprüft, nicht relevant weil außerhalb Subsahara-Afrika und operatives Beschaffungsproblem, keine neue Wirksamkeitsevidenz |
+| UNICEF-Warnung zu 140 Mio. Kindern und Coverage-Einbruch | geprüft, nicht relevant weil von 2018; kein aktueller Deckungsstand |
+| VAS-Deckung 34,4 % in Gondar, Äthiopien (Erhebung 2022) | geprüft, nicht relevant weil einzelstädtische Querschnittsstudie, nicht generalisierbar, kein HKI-Programmgebiet |
+| AMF-Seite „Immediate Funding Gap" (175 Mio. USD Ziel) | geprüft, nicht als Zahl verwendbar weil undatiert und auf Verteilungen 2024–2026 bezogen |
+| AMF-Korea-Wikipedia: 185.000 gerettete Leben, 6,5 Mrd. USD Nutzen | geprüft, nicht relevant weil Selbstangabe ohne Datum, methodisch nicht nachprüfbar |
+| Longterm-Wiki-Eintrag zu NTI|bio | geprüft, nicht verwendet weil der Eintrag selbst mehrere Aussagen als „unsupported" markiert |
+| Ältere HKI-Grant-Seiten (Jan 2023, Programme „bis Juni 2026") | geprüft, für Delta nicht relevant weil Zeitraum ausgelaufen; nur als Hintergrund verwendet |
+| WEF/NTI-Rahmen für DNA-Synthese (2021) | geprüft, nicht relevant weil vom Gremium bereits als Grundlage berücksichtigt und älter als Trainingsdaten |
+| Founders Pledge: 12,7 Mio. USD HKI-Lücke, Stand Juni 2020 | geprüft, nicht relevant weil sechs Jahre alt |
+
+---
+
+## Delta-Bewertung: Was hat sich seit der Sitzung bzw. seit dem 06.08.2026 geändert?
+
+1. **Säule B — substantiell größte Veränderung der Finanzierungslage.** Nicht die Wirksamkeit, sondern die Marginalität hat sich verschoben: mit 276 Mio. USD für 92 Mio. Netze in der DR Kongo 2027–2029 (davon 46 Mio. als zusätzlich bewertet) haben GiveWell und Coefficient Giving die größte identifizierte Lücke im AMF-Kernland vorab geschlossen. Gleichzeitig meldet GiveWell über 400 Mio. USD Commitments bis Mitte 2026, eine Erwartung von möglicherweise über 1 Mrd. USD für das Jahr und eine auf 1 Mrd. USD erhöhte Zusage von Coefficient Giving und senkt bei steigenden Mittelprognosen bewusst die Kosteneffektivitätsschwelle. Konsequenz für das Gremium: Die Frage „trägt AMF weiter?" ist evidenzseitig mit Ja zu beantworten, die Frage „ist die marginale Spende dort noch am wirksamsten?" ist **neu offen**. Hier sehe ich den größten substanziellen Änderungsbedarf.
+
+2. **Säule D — größte Prämissenabweichung.** Die Formulierung „bei neuer Finanzierungslücke" ist durch die von mir gefundenen Quellen **nicht gedeckt**; die aktuellste explizite Aussage (Stand November 2025) besagt das Gegenteil, und LEEP arbeitet inzwischen sichtbar innerhalb einer Bloomberg-Philanthropies-Initiative. Entweder existiert eine nicht-öffentliche Lückeninformation, die das Gremium besitzt und ich nicht prüfen kann — dann bitte Quelle im Protokoll ergänzen (Kanon Transparenz) — oder die Prämisse ist zu korrigieren. Zusätzlich: die tragende Kosteneffektivitätszahl ist von August 2023.
+
+3. **Säule C — Risikoumfeld schlechter, Politikfenster offener, Finanzlage unbekannt.** Auslaufen von New START am 05.02.2026 und das dritte Scheitern einer NPT-Überprüfungskonferenz in Folge erhöhen die Relevanz der Säule, belegen aber keine höhere Erfolgswahrscheinlichkeit. Auf der Biosicherheitsseite ist das Bild zweigeteilt: ein einschlägiger Gesetzentwurf existiert seit 29.01.2026, aber der Bundesrahmen für Synthese-Screening ist Stand 03.08.2026 weiterhin nicht ersetzt und OSTP hat ihn nicht aktualisiert (Stand Bericht September 2026). Das ist eher ein Argument für Advocacy-Wert als dagegen — die Konfidenz 0.57 erscheint mir weiterhin plausibel kalibriert, aber aus **anderen** Gründen als in der Sitzung notiert.
+
+4. **Säule A — stabil, mit einer Stichtagsfrage.** Wirksamkeitsevidenz unverändert stark; der Mali-Zuschuss vom August 2026 zeigt fortbestehende Kleinlücken mit klarer Kontrafaktizität. Offen bleibt: Was passiert nach dem **Juni-2026-Horizont** der Altzuschüsse? Diese Information fehlt mir.
+
+5. **Querschnitts-Delta:** Die makrofinanzielle Verschlechterung (3,9 Mrd. USD Malariafinanzierung 2024 vs. 7,8–8,3 Mrd. USD Bedarf, UK-Kürzung um 15 %, Gavi-Lücke 2,5–2,9 Mrd. USD) wirkt gegenläufig zur Expansion privater Geber und erhöht die Unsicherheit über Kontrafaktizität in **allen** Gesundheitssäulen.
+
+---
+
+```json
+{
+  "search_queries": [
+    "Helen Keller International vitamin A supplementation funding gap 2026",
+    "Against Malaria Foundation funding gap 2026",
+    "Nuclear Threat Initiative DNA synthesis screening 2026",
+    "Lead Exposure Elimination Project funding 2026",
+    "GiveWell September 2026 updates grants",
+    "chlorfenapyr dual active ingredient net trial 2026 efficacy resistance",
+    "vitamin A supplementation child mortality new evidence 2026",
+    "New START expired February 2026 nuclear arms control",
+    "LEEP lead paint regulation news September 2026",
+    "Biosecurity Modernization and Innovation Act status Senate September 2026",
+    "Against Malaria Foundation room for more funding after DRC grant 2026",
+    "UNICEF vitamin A supplementation coverage decline 2026 aid cuts",
+    "nuclear arms control news September 2026 NPT review conference",
+    "lead poisoning children global initiative news September 2026",
+    "AI biosecurity nucleic acid synthesis screening September 2026 executive order"
+  ],
+  "findings": [
+    {"pillar": "A", "topic": "Neuer HKI-Zuschuss Mali mit klarer Kontrafaktizität", "summary": "GiveWell vergab rund 882.000 USD an Helen Keller Intl fuer zwei VAS-Runden in sechs Regionen Malis 2026; ohne den Zuschuss wuerden diese Regionen 2026 wahrscheinlich kein VAS erhalten. Kleine, aber reale Restluecken bestehen fort.", "source": "GiveWell Blog, August 2026 Updates", "source_date": "2026-08-28"},
+    {"pillar": "A", "topic": "Finanzierungshorizont der Altzuschuesse endet Juni 2026 (Wissensluecke)", "summary": "Die publizierten GiveWell-Zuschuesse (71,5 Mio. USD Jan 2023; 5,8 Mio. USD Aug 2024) deckten HKI-VAS-Programme bis Juni 2026, teils explizit als moegliche Exit-Finanzierung. Eine RFMF-Analyse ab Juli 2026 ist nicht oeffentlich auffindbar.", "source": "GiveWell Grant-Seiten HKI (Jan 2023; Aug/Sep 2024)", "source_date": "2024-09 (letzte gefundene Fassung)"},
+    {"pillar": "A", "topic": "Denominator-Risiko: GiveWell-Zuschuss fuer Bevoelkerungsschaetzungen", "summary": "350.000 USD an Atlas AI fuer subnationale Bevoelkerungsschaetzungen in Nigeria, DR Kongo, Kamerun und Burkina Faso; Quellen weichen um mehr als 30 % ab, letzter DRK-Zensus 1984. Betrifft Zielmengen und Kosten-pro-Kind bei VAS. Sekundaerquelle, nicht primaer verifiziert.", "source": "GDEA-Monatsuebersicht September 2026 (Sekundaerquelle)", "source_date": "2026-09"},
+    {"pillar": "A", "topic": "Wirksamkeitsbasis unveraendert", "summary": "Cochrane-Update 2022: Gesamtmortalitaet RR 0,88 (0,83-0,93), 19 Studien, 1.202.382 Kinder, GRADE hoch; Diarrhoe-Mortalitaet RR 0,88 (0,79-0,98). UNICEF: 75 % der Zielkinder 2023 erreicht. Keine neue gegenlaeufige Evidenz gefunden.", "source": "Cochrane Database Syst Rev CD008524.pub4; UNICEF DATA", "source_date": "2022-03-16 / 2025-09-11"},
+    {"pillar": "B", "topic": "Groesster GiveWell-Zuschuss aller Zeiten an AMF", "summary": "276 Mio. USD fuer 92 Mio. Netze in der DR Kongo 2027-2029 (alle 26 Provinzen), davon 46 Mio. Netze als zusaetzlich bewertet, geschaetzt rund 67.000 vermiedene Todesfaelle; in bis zu fuenf Provinzen verkuerzte Verteilungsintervalle. Ko-Finanzierung Coefficient Giving.", "source": "GiveWell Blog, Announcing Our Largest Grant to Date", "source_date": "2026-08-24"},
+    {"pillar": "B", "topic": "AMF-eigene Luckenangabe nicht belastbar", "summary": "AMF nennt eine globale Luecke von deutlich ueber 300 Mio. USD fuer Verteilungen 2024-2026 und ein eigenes Beitragsziel von 175 Mio. USD. Seite undatiert, Zeitfenster laeuft aus; als aktuelle Zahl nicht verwendbar.", "source": "againstmalaria.com, ImmediateFundingGap", "source_date": "undatiert (abgerufen 2026-09-21)"},
+    {"pillar": "B", "topic": "Wirksamkeit Chlorfenapyr-Netze bestaetigt", "summary": "Hueltenversuch-Preprint Tansania referiert 71 % Mortalitaet fuer Interceptor G2 gegenueber 20 % fuer Alpha-Cypermethrin-Netze; dreijaehrige cRCT-Auswertung zeigt ueberlegenen Schutz ueber mehrere Saisons bei minimaler Resistenzselektion.", "source": "medRxiv-Preprint Tansania; Lancet Planetary Health", "source_date": "2026-07-27 / 2023-08"},
+    {"pillar": "B", "topic": "Makrofinanzierung Malaria verschlechtert", "summary": "WHO: 3,9 Mrd. USD Malariafinanzierung 2024 gegenueber Bedarf 7,8-8,3 Mrd. USD. UK-Zusage an Globalen Fonds 850 Mio. GBP, 15 % unter 2022 und niedrigster Wert seit 2010. Gavi fehlen 2,5-2,9 Mrd. USD des 11,9-Mrd.-Ziels 2026-2030.", "source": "Medscape (WHO-Daten); Coalition for Global Prosperity; Medscape", "source_date": "2026-05-07 / 2026-05-01 / 2026-04-15"},
+    {"pillar": "B", "topic": "Neue Entwicklung: Diversifizierung jenseits Kampagnen", "summary": "GiveWell prueft 2026 zusaetzliche Implementierer (u. a. Malaria Consortium in Teilen Nigerias) und Vektorkontrolle jenseits von Kampagnen: Routineverteilung, raeumliche Repellents, insektizidbehandelte Babytragetuecher. Globaler Fonds gab im Juli 2026 4,6 Mio. USD Notfallmittel fuer DRK-Malaria im Ebola-Kontext frei, mit AMF als Partner.", "source": "EA Forum (GiveWell-Forschungsplan 2026); The Global Fund", "source_date": "2026-06-01 / 2026-07-16"},
+    {"pillar": "C", "topic": "Gesetzgebung zu Pflicht-Screening eingebracht, aber im Ausschuss", "summary": "S.3741 (Biosecurity Modernization and Innovation Act of 2026) am 29.01.2026 eingebracht; verpflichtet das Handelsministerium zu Regeln fuer Nukleinsaeure-Synthese-Sicherheit und erfasst auch Benchtop-Synthesizer und Wiederverkaeufer. NTI hat endorsiert. Stand August 2026 nur an den Commerce-Ausschuss verwiesen.", "source": "AIP Bill Tracker / Congress.gov S.3741; NTI; Biosecurity Handbook", "source_date": "2026-01-29 / 2026-08-03"},
+    {"pillar": "C", "topic": "Bundesrahmen-Vakuum beim Synthese-Screening", "summary": "EO 14292 verlangte Revision oder Ersatz des OSTP-Rahmens von 2024; im Juli 2026 erschien die Policy zu hochriskanter Lebenswissenschafts-Forschung, doch der Synthese-Screening-Rahmen war weder Anfang August noch im September 2026 aktualisiert. Regulatorische Luecke bleibt offen.", "source": "CRS IF13269 (Nachdruck Eurasia Review); Biosecurity Handbook", "source_date": "2026-09-16 / 2026-08-03"},
+    {"pillar": "C", "topic": "Breite Koalition fuer verpflichtendes Screening", "summary": "Offener Brief vom 03.06.2026 von Lebenswissenschaftlern, AI-Unternehmen, Biotech-Entwicklern und ehemaligen Regierungsvertretern fordert verpflichtendes Screening von Synthese-Auftraegen und Geraeten samt Aufzeichnungspflicht; NTI-CEO Wormuth ist Mitzeichnerin.", "source": "GEN / Foundation for American Innovation; CRS IF13269", "source_date": "2026-06-03"},
+    {"pillar": "C", "topic": "Nukleares Risikoumfeld verschlechtert", "summary": "New START ist am 05.02.2026 ohne Nachfolgeabkommen ausgelaufen; Russland kuendigte an, die Zentralgrenzen ein Jahr unilateral und ohne Verifikation einzuhalten. Die NPT-Ueberpruefungskonferenz 2026 scheiterte ohne Konsensdokument, das dritte Mal in Folge.", "source": "Arms Control Today; FAS; Arms Control Association", "source_date": "2026-03 / 2026-02-05 / 2026-06-16"},
+    {"pillar": "C", "topic": "Funding-Lage NTI unbekannt", "summary": "Keine oeffentliche RFMF- oder Budgetangabe gefunden. Einziger konkreter Datenpunkt: 450.000 USD von Sentinel Bio an NTI bio fuer AIxBio-Politikarbeit und Synthese-Screening. Konfidenzbewertung der Saeule C ist finanzseitig nicht pruefbar.", "source": "Sentinel Bio, Grant-Seite NTI", "source_date": "2026-06-09"},
+    {"pillar": "D", "topic": "Sitzungspraemisse 'neue Finanzierungsluecke' nicht bestaetigt", "summary": "Aktuellste gefundene Aussage: Stand November 2025 hatte LEEP seine unmittelbare Luecke fuer Farbprogramme 2026 geschlossen; die Seite werde aktualisiert, wenn LEEP erneut Mittel zur Skalierung einwirbt. Eine neue offene Luecke ist oeffentlich nicht belegt.", "source": "Giving What We Can, LEEP-Charity-Seite", "source_date": "Stand 2025-11 (abgerufen 2026-09-21)"},
+    {"pillar": "D", "topic": "Institutionelle Ko-Finanzierung durch Bloomberg Philanthropies", "summary": "LEEPs Opportunity Fund ist Teil der Lead Poisoning Prevention Initiative von Bloomberg Philanthropies; Zuwendungsbedingungen verweisen auf Bloomberg-Donor-Terms. Beruehrt die Neglectedness-Praemisse der Saeule D.", "source": "leadelimination.org (Blog / Opportunity Fund)", "source_date": "2026 (Bewerbungsrunde bis 2026-04-01)"},
+    {"pillar": "D", "topic": "Programmfortschritt und Ziele 2026", "summary": "2025: 11 neue Farbprogramme, Praesenz in 40 Laendern, die Gebiete mit 76 % der LMIC-Geburten abdecken; fuenf Laender fuehrten Regulierung ein (Sierra Leone, Liberia, Burundi, Niger, Peru). Ziel 2026: Regulierung in 14 Laendern (von sieben), Programme mit erwarteter Wirkung auf 78 Mio. kuenftig geborene Kinder. DRK-Studie: 55 % der Proben gefaehrlich, gefolgt von regulatorischem Handeln. Malawi-Wiederholungsstudie: ueber 50 % Rueckgang des Marktanteils.", "source": "LEEP 2025 in Review; LEEP Blog; Coefficient Giving; GWWC", "source_date": "2026-02-24 / 2026-03-16 / 2026-02-10"},
+    {"pillar": "D", "topic": "Neue Entwicklung: WHO-Technical-Package und Global Action Plan 2027", "summary": "WHO, Bloomberg Philanthropies und Resolve to Save Lives bereiteten am 18.05.2026 ein neues WHO-Technical-Package zur Bleivergiftungspraevention vor, das gemeinsam mit dem Global Action Plan on Lead Mitigation 2027 erscheinen soll; die Weltgesundheitsversammlung hatte 2025 verstaerktes Handeln gefordert. Parallel foerdert der Pure Earth Opportunity Fund acht Organisationen aus 190 Bewerbungen. Doppeltes Signal: politischer Rueckenwind und moegliche Verdraengung der Neglectedness.", "source": "WHO Event-Seite; Pure Earth", "source_date": "2026-05-18 / 2026-06-18"},
+    {"pillar": "D", "topic": "Kosteneffektivitaetszahl veraltet", "summary": "Die zitierten 1,66 USD pro verhinderter Kindesexposition stammen von Founders Pledge mit Stand August 2023; eine aktualisierte unabhaengige Schaetzung fuer 2026 wurde nicht gefunden.", "source": "Founders Pledge, LEEP-Research-Seite", "source_date": "2023-08"}
+  ],
+  "rejected_findings": [
+    {"query_or_topic": "EPA: 2,9 Mrd. USD fuer Bleireduktion im Trinkwasser (20.05.2026)", "reason": "geprueft, nicht relevant weil US-Binnenpolitik zu Bleileitungen statt Bleifarben-Regulierung in LMICs und ohne Bezug zur LEEP-Empfehlung"},
+    {"query_or_topic": "Nepal: UNICEF liefert 2,5 Mio. Vitamin-A-Dosen nach verpasster Beschaffungsfrist (April 2026)", "reason": "geprueft, nicht relevant weil ausserhalb Subsahara-Afrika und rein operatives Beschaffungsproblem ohne neue Wirksamkeitsevidenz; die dort zitierte 23-Prozent-Mortalitaetsreduktion ist eine Sekundaeraussage ohne Primaerquelle"},
+    {"query_or_topic": "UNICEF-Bericht 'Coverage at a Crossroads' und Pressemitteilung zu 140 Mio. Kindern", "reason": "geprueft, nicht relevant weil von 2018 und damit kein aktueller Deckungsstand"},
+    {"query_or_topic": "VAS-Deckung 34,4 Prozent in Gondar, Aethiopien (Erhebung 2022)", "reason": "geprueft, nicht relevant weil einzelstaedtische Querschnittsstudie ohne Generalisierbarkeit und ausserhalb der HKI-Programmgebiete"},
+    {"query_or_topic": "AMF-Seite 'Immediate Funding Gap' (175 Mio. USD Beitragsziel)", "reason": "geprueft, als Zahl nicht verwendbar weil undatiert und auf das auslaufende Fenster 2024-2026 bezogen"},
+    {"query_or_topic": "Wikipedia-Eintrag Against Malaria Foundation Korea (185.000 gerettete Leben, 6,5 Mrd. USD Nutzen)", "reason": "geprueft, nicht verwendet weil undatierte Selbstangabe ohne nachpruefbare Methodik"},
+    {"query_or_topic": "Longterm-Wiki-Eintrag zu NTI bio", "reason": "geprueft, nicht verwendet weil der Eintrag selbst mehrere Kernaussagen als 'unsupported' markiert"},
+    {"query_or_topic": "WEF/NTI-Rahmenbericht zu sicherer DNA-Synthese (2021)", "reason": "geprueft, nicht relevant weil aelter als die Trainingsdaten und vom Gremium bereits als Grundlage beruecksichtigt"},
+    {"query_or_topic": "Founders Pledge: HKI-Luecke 12,7 Mio. USD, Stand Juni 2020", "reason": "geprueft, nicht relevant weil sechs Jahre alt und durch spaetere GiveWell-Zuschuesse ueberholt"},
+    {"query_or_topic": "Cochrane-Fassungen 2010/2017 zu Vitamin A", "reason": "geprueft, nicht als Delta relevant weil vom Update 2022 abgeloest und bereits Sitzungsgrundlage"},
+    {"query_or_topic": "Laborbioassay 'mini chamber test' fuer Chlorfenapyr-Netze (2026)", "reason": "geprueft, nicht entscheidungsrelevant weil Methodenentwicklung fuer Qualitaetstests, keine epidemiologische Wirksamkeitsaussage"}
+  ],
+  "delta_assessment": "Vier Deltas seit der Sitzung. (1) Saeule B: Die Wirksamkeitsannahme zu Chlorfenapyr-Pyrethroid-Netzen traegt unveraendert, doch die Marginalitaet hat sich stark verschoben - GiveWell und Coefficient Giving haben am 24.08.2026 mit 276 Mio. USD die groesste identifizierte Luecke im AMF-Kernland DR Kongo fuer 2027-2029 vorab geschlossen, waehrend GiveWell auf moeglicherweise ueber 1 Mrd. USD Jahresvolumen skaliert und die Kosteneffektivitaetsschwelle bewusst senkt. Substanziell groesster Aenderungsbedarf liegt damit bei der Frage der marginalen Zusaetzlichkeit, nicht der Wirksamkeit. (2) Saeule D: Groesste Praemissenabweichung - die Sitzungsformulierung 'bei neuer Finanzierungsluecke' ist durch oeffentliche Quellen nicht gedeckt; die aktuellste gefundene Angabe (Stand November 2025) sagt das Gegenteil, und LEEP arbeitet inzwischen sichtbar innerhalb einer Bloomberg-Philanthropies-Initiative, was die Neglectedness-Logik beruehrt. Zusaetzlich ist die tragende Kosteneffektivitaetszahl von August 2023. Entweder liegt dem Gremium eine nicht-oeffentliche Lueckeninformation vor - dann bitte Quelle protokollieren - oder die Praemisse ist zu korrigieren. (3) Saeule C: Das Risikoumfeld hat sich verschlechtert (New START am 05.02.2026 ausgelaufen, NPT-Ueberpruefungskonferenz 2026 zum dritten Mal in Folge ohne Konsens), das Politikfenster fuer Synthese-Screening ist offen (S.3741 seit 29.01.2026, NTI-Endorsement, breiter offener Brief vom 03.06.2026), aber der US-Bundesrahmen bleibt Stand September 2026 unersetzt und der Gesetzentwurf im Ausschuss. Die Konfidenz 0.57 erscheint weiterhin plausibel, aber aus anderen Gruenden als protokolliert; finanzseitig ist sie nicht pruefbar, da keine NTI-RFMF-Daten oeffentlich sind. (4) Saeule A: Stabil, Wirksamkeitsbasis unveraendert, der Mali-Zuschuss vom 28.08.2026 belegt fortbestehende kleinteilige Luecken mit klarer Kontrafaktizitaet. Offene Stichtagsfrage: Was folgt nach dem Juni-2026-Horizont der Altzuschuesse. Querschnittlich erhoeht die makrofinanzielle Verschlechterung (Malariafinanzierung 3,9 Mrd. USD 2024 vs. 7,8-8,3 Mrd. USD Bedarf; UK-Kuerzung 15 Prozent; Gavi-Luecke 2,5-2,9 Mrd. USD) die Unsicherheit ueber Kontrafaktizitaet in allen Gesundheitssaeulen. Nicht gewusst: aktuelle RFMF-Zahlen fuer HKI ab Juli 2026, NTI-Budget und -Luecke, verifizierte aktuelle LEEP-Luecke, aktualisierte LEEP-Kosteneffektivitaet."
+}
+```
+
+## Einberufungsregeln
+
+Mindestens eines muss zutreffen:
+- neue Evidenz widerspricht einer bestehenden Empfehlung substantiell;
+- eine wesentliche Funding-Lücke wurde geschlossen oder neu geöffnet;
+- ein neues, von den Säulen erfasstes Risiko oder eine Chance von Rang ist aufgetreten.
+
+Demut-Kanon: Im Zweifel nicht einberufen; die Monatssitzung kommt ohnehin.
+
+Antworte ausschließlich mit:
+
+```json
+{
+  "convene": false,
+  "convene_rationale": "…"
+}
+```

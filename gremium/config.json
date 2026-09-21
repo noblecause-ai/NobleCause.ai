@@ -19,6 +19,16 @@
 		},
 		"deliberation_0_5": {
 			"enabled": false
+		},
+		"three_scouts": {
+			"enabled": false,
+			"selection_status": "approved",
+			"approved_on": "2026-09-20",
+			"adapter_status": "tested_native_search",
+			"search_provenance_policy": "native_observations_with_disclosed_gaps"
+		},
+		"live_council": {
+			"enabled": false
 		}
 	},
 	"scout": {
@@ -42,6 +52,26 @@
 		"max_output_tokens": 32768,
 		"max_web_search_uses": 15
 	},
+	"wart_openrouter": {
+		"family": "anthropic",
+		"model": "anthropic/claude-fable-5",
+		"label": "Der Wart (Fable)",
+		"role": "wart",
+		"transport": "openrouter_api",
+		"max_output_tokens": 4096,
+		"openrouter": {
+			"endpoint": "anthropic",
+			"provider_name": "Anthropic",
+			"quantization": "unknown",
+			"max_price": {
+				"prompt": 10.0,
+				"completion": 50.0
+			},
+			"max_search_price_usd": 0,
+			"allow_fallbacks": false,
+			"search_engine": "none"
+		}
+	},
 	"models": [
 		{
 			"family": "anthropic",
@@ -64,5 +94,207 @@
 			"usd_per_1m_input": 0.75,
 			"usd_per_1m_output": 3.75
 		}
-	]
+	],
+	"scouts": [
+		{
+			"family": "spacexai",
+			"model": "x-ai/grok-4.6",
+			"label": "Grok 4.6 · Entdeckung",
+			"model_label": "Grok 4.6",
+			"transport": "openrouter_api",
+			"research_role": "discovery",
+			"research_context": "blind",
+			"max_findings": 4,
+			"max_words_per_finding": 100,
+			"max_output_tokens": 8000,
+			"max_web_search_uses": 8,
+			"openrouter": {
+				"endpoint": "xai/zdr",
+				"provider_name": "xAI",
+				"quantization": "unknown",
+				"max_price": {
+					"prompt": 2.0,
+					"completion": 6.0
+				},
+				"allow_fallbacks": false,
+				"search_engine": "native",
+				"max_search_price_usd": 0.005,
+				"reasoning_effort": "high"
+			}
+		},
+		{
+			"family": "perplexity",
+			"model": "perplexity/sonar-pro",
+			"label": "Sonar Pro · Regionale Ergänzung",
+			"model_label": "Sonar Pro",
+			"transport": "openrouter_api",
+			"research_role": "regional",
+			"research_context": "blind",
+			"max_findings": 4,
+			"max_words_per_finding": 100,
+			"max_output_tokens": 8000,
+			"max_web_search_uses": 8,
+			"openrouter": {
+				"endpoint": "perplexity",
+				"provider_name": "Perplexity",
+				"quantization": "unknown",
+				"max_price": {
+					"prompt": 3.0,
+					"completion": 15.0
+				},
+				"allow_fallbacks": false,
+				"search_engine": "intrinsic",
+				"max_search_price_usd": 0.005,
+				"search_context_size": "low"
+			}
+		},
+		{
+			"family": "anthropic",
+			"model": "anthropic/claude-opus-5",
+			"label": "Claude Opus 5 · Gegenbelege",
+			"model_label": "Claude Opus 5",
+			"transport": "openrouter_api",
+			"research_role": "counterevidence",
+			"research_context": "blind",
+			"max_findings": 4,
+			"max_words_per_finding": 100,
+			"max_output_tokens": 8000,
+			"max_web_search_uses": 4,
+			"openrouter": {
+				"endpoint": "anthropic",
+				"provider_name": "Anthropic",
+				"quantization": "unknown",
+				"max_price": {
+					"prompt": 5.0,
+					"completion": 25.0
+				},
+				"allow_fallbacks": false,
+				"search_engine": "native",
+				"max_search_price_usd": 0.01,
+				"reasoning_effort": "medium"
+			}
+		}
+	],
+	"live_council": {
+		"procedure_version": "0.6",
+		"rotation": [
+			"anthropic/claude-fable-5.1",
+			"openai/gpt-6-astra",
+			"x-ai/grok-4.6",
+			"moonshotai/kimi-k3",
+			"z-ai/glm-5.3"
+		],
+		"models": [
+			{
+				"family": "anthropic",
+				"model": "anthropic/claude-fable-5.1",
+				"label": "Claude Fable 5.1",
+				"transport": "openrouter_api",
+				"openrouter": {
+					"endpoint": "anthropic",
+					"provider_name": "Anthropic",
+					"quantization": "unknown",
+					"reasoning_effort": "medium",
+					"context_length": 1000000,
+					"max_output_tokens": 32768,
+					"max_price": {
+						"prompt": 10,
+						"completion": 50
+					},
+					"token_parameter": "max_tokens"
+				},
+				"chair_reasoning_effort": "low"
+			},
+			{
+				"family": "openai",
+				"model": "openai/gpt-6-astra",
+				"label": "GPT-6 Astra",
+				"transport": "openrouter_api",
+				"openrouter": {
+					"endpoint": "azure/us",
+					"provider_name": "Azure",
+					"quantization": "unknown",
+					"reasoning_effort": "medium",
+					"context_length": 1050000,
+					"max_output_tokens": 32768,
+					"max_price": {
+						"prompt": 11,
+						"completion": 55
+					},
+					"token_parameter": "max_completion_tokens"
+				},
+				"chair_reasoning_effort": "low"
+			},
+			{
+				"family": "spacexai",
+				"model": "x-ai/grok-4.6",
+				"label": "Grok 4.6",
+				"transport": "openrouter_api",
+				"openrouter": {
+					"endpoint": "xai/zdr",
+					"provider_name": "xAI",
+					"quantization": "unknown",
+					"reasoning_effort": "medium",
+					"context_length": 500000,
+					"max_output_tokens": 32768,
+					"max_price": {
+						"prompt": 2,
+						"completion": 6
+					},
+					"token_parameter": "max_tokens"
+				},
+				"chair_reasoning_effort": "low"
+			},
+			{
+				"family": "moonshotai",
+				"model": "moonshotai/kimi-k3",
+				"label": "Kimi K3",
+				"transport": "openrouter_api",
+				"openrouter": {
+					"endpoint": "inference-net/fp4",
+					"provider_name": "InferenceNet",
+					"quantization": "fp4",
+					"reasoning_effort": "high",
+					"context_length": 1048576,
+					"max_output_tokens": 32768,
+					"max_price": {
+						"prompt": 2.1,
+						"completion": 10.95
+					},
+					"token_parameter": "max_tokens"
+				},
+				"chair_reasoning_effort": "low"
+			},
+			{
+				"family": "z-ai",
+				"model": "z-ai/glm-5.3",
+				"label": "GLM-5.3",
+				"transport": "openrouter_api",
+				"openrouter": {
+					"endpoint": "baidu/fp8",
+					"provider_name": "Baidu",
+					"quantization": "fp8",
+					"reasoning_effort": "high",
+					"context_length": 1048576,
+					"max_output_tokens": 32768,
+					"max_price": {
+						"prompt": 0.8918,
+						"completion": 2.8028
+					},
+					"token_parameter": "max_tokens"
+				},
+				"chair_reasoning_effort": "low"
+			}
+		],
+		"output_limits": {
+			"initial": 16384,
+			"chair": 4096,
+			"debate": 4096,
+			"final": 16384,
+			"summary": 4096,
+			"weekly": 4096
+		},
+		"input_bounds": {},
+		"context_projection": "compact_evidence_v1"
+	}
 }

@@ -979,3 +979,41 @@ test('Zeitschicht: schedule.last_journal zeigt auf einen Research-Lauf (search_q
 		`schedule.last_journal (${id}) ist kein Research-Lauf (keine search_queries)`
 	);
 });
+
+test('OpenRouter: neue Provenienz und DE/EN-Verfahren bedingt, Bestandsanzeige unverändert', async () => {
+ const { createServer } = await import('vite');
+ const server = await createServer({ root: SITE,
+  server: { middlewareMode: true, hmr: false, ws: false, watch: null }, appType: 'custom' });
+ try {
+  const { render } = await server.ssrLoadModule('svelte/server');
+  const page = await server.ssrLoadModule('/src/routes/sitzungen/[id]/+page.svelte');
+  const route = await server.ssrLoadModule('/src/routes/sitzungen/[id]/+page.server.js');
+  const data = structuredClone(route.load({ params: { id: DATA.session.id } }));
+  const original = render(page.default, { props: { data } }).body;
+  assert.ok(original.includes('an API-Aufrufen'));
+  assert.ok(!original.includes('openrouter-provenance'));
+  assert.ok(!original.includes('API-Gateway OpenRouter'));
+  const vote = data.session.rounds.find(r => r.votes?.length).votes[0];
+  const provenance = { transport:'openrouter_api', requested_model:'anthropic/claude-fable-5.1',
+   reported_model:'anthropic/claude-fable-5.1', upstream_provider:'Anthropic', endpoint:'anthropic',
+   quantization:'unknown', generation_id:'gen-synthetic', finish_reason:'stop', native_finish_reason:'end_turn',
+   cost:0.001, cost_basis:'billed', usage:{prompt_tokens:10,completion_tokens:20},
+   raw_artifact:'raw/r1-anthropic-response.json', generation_artifact:'raw/r1-anthropic-generation.json' };
+  vote.provenance = provenance;
+  data.session.rounds.push({ kind:'addressed_challenge', votes:[], exchanges:[{
+   model:vote.model,status:'valid',content_md:'',provenance:{...provenance,generation_id:'gen-challenge'} }] });
+  const html = render(page.default, { props: { data } }).body;
+  requireAll(html,'OpenRouter synthetic',['API-Gateway OpenRouter','anthropic/claude-fable-5.1',
+   'gen-synthetic','gen-challenge','Nicht ausgewiesen','end_turn','abgerechnet; Antwort und Generationsmetadaten abgeglichen']);
+  const archive = await server.ssrLoadModule('/src/lib/components/rooms/ArchiveRoom.svelte');
+  const rooms = await server.ssrLoadModule('/src/routes/(rooms)/+layout.server.js');
+  const { hasOpenRouter } = await server.ssrLoadModule('/src/lib/openrouter.js');
+  const home = structuredClone(rooms.load().home);
+  for (const lang of ['de','en']) {
+   assert.ok(!render(archive.default,{props:{home,lang}}).body.includes('openrouter-procedure'));
+   const synthetic = {...home,openRouter:hasOpenRouter(data.session)};
+   const result = render(archive.default,{props:{home:synthetic,lang}}).body;
+   assert.ok(result.includes(lang === 'de' ? 'es antwortet kein stilles Ersatzmodell' : 'no silent substitute model answers'));
+  }
+ } finally { await server.close(); }
+});

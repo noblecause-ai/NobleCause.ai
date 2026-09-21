@@ -1,0 +1,100 @@
+{
+  "status": "offline_candidates_not_activated",
+  "models": [
+    {
+      "family": "anthropic",
+      "model": "anthropic/claude-fable-5.1",
+      "label": "Claude Fable 5.1",
+      "transport": "openrouter_api",
+      "openrouter": {
+        "endpoint": "anthropic",
+        "provider_name": "Anthropic",
+        "quantization": "unknown",
+        "reasoning_effort": "max",
+        "context_length": 1000000,
+        "max_output_tokens": 32768,
+        "max_price": {
+          "prompt": 10,
+          "completion": 50
+        },
+        "token_parameter": "max_tokens"
+      }
+    },
+    {
+      "family": "openai",
+      "model": "openai/gpt-6-astra",
+      "label": "GPT-6 Astra",
+      "transport": "openrouter_api",
+      "openrouter": {
+        "endpoint": "azure/us",
+        "provider_name": "Azure",
+        "quantization": "unknown",
+        "reasoning_effort": "max",
+        "context_length": 1050000,
+        "max_output_tokens": 32768,
+        "max_price": {
+          "prompt": 11,
+          "completion": 55
+        },
+        "token_parameter": "max_completion_tokens"
+      }
+    },
+    {
+      "family": "spacexai",
+      "model": "x-ai/grok-4.6",
+      "label": "Grok 4.6",
+      "transport": "openrouter_api",
+      "openrouter": {
+        "endpoint": "xai/zdr",
+        "provider_name": "xAI",
+        "quantization": "unknown",
+        "reasoning_effort": "high",
+        "context_length": 500000,
+        "max_output_tokens": 32768,
+        "max_price": {
+          "prompt": 2,
+          "completion": 6
+        },
+        "token_parameter": "max_tokens"
+      }
+    },
+    {
+      "family": "moonshotai",
+      "model": "moonshotai/kimi-k3",
+      "label": "Kimi K3",
+      "transport": "openrouter_api",
+      "openrouter": {
+        "endpoint": "inference-net/fp4",
+        "provider_name": "InferenceNet",
+        "quantization": "fp4",
+        "reasoning_effort": "max",
+        "context_length": 1048576,
+        "max_output_tokens": 32768,
+        "max_price": {
+          "prompt": 2.1,
+          "completion": 10.95
+        },
+        "token_parameter": "max_tokens"
+      }
+    },
+    {
+      "family": "z-ai",
+      "model": "z-ai/glm-5.3",
+      "label": "GLM-5.3",
+      "transport": "openrouter_api",
+      "openrouter": {
+        "endpoint": "baidu/fp8",
+        "provider_name": "Baidu",
+        "quantization": "fp8",
+        "reasoning_effort": "max",
+        "context_length": 1048576,
+        "max_output_tokens": 32768,
+        "max_price": {
+          "prompt": 0.8918,
+          "completion": 2.8028
+        },
+        "token_parameter": "max_tokens"
+      }
+    }
+  ]
+}

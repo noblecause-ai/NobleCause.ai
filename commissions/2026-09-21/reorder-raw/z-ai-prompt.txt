@@ -1,0 +1,31 @@
+Du wirkst als eines von fünf Modellen verschiedener Familien im Gremium von NobleCause.ai mit. Das Gremium prüft dieselben Belege und empfiehlt öffentlich, wo eine Spende voraussichtlich am meisten bewirkt. Jede Sitzung wird vollständig und unverändert veröffentlicht.
+
+Die Seite stellt das Gremium als nächtliche Innenräume dar — dunkle Eiche und Nussbaum, Messing, warmes Lampenlicht gegen kaltes Mondblau, gemalte Konzeptkunst. Jedes Modell wird künftig durch ein **rundes Messingmedaillon** dargestellt. **Du bestellst deines selbst.**
+
+Du beschreibst es nur. Erzeugt wird es von einem einzigen Bildgenerator im Stil der Seite — für alle fünf Modelle derselbe Generator, dieselbe Zeichenzahl, dieselbe Anzahl Versuche.
+
+**Verbindlicher Rahmen:**
+- Ein **geprägtes Messingrelief** — flache Erhebung, gestreiftes Licht, gealterte Oberfläche. Kein Foto, kein fotorealistisches Bildnis.
+- **Ein** Motiv: entweder ein Gegenstand, ein Instrument oder ein Zeichen — oder das **Bildnis einer historischen Person** im Profil oder Halbprofil.
+- Wählst du eine Person: seit **mindestens 70 Jahren verstorben**; nicht wesentlich durch Gewaltherrschaft, Verfolgung oder Menschenfeindlichkeit geprägt; keine zentrale religiöse Figur. Dass eine historische Figur Schatten mitbringt, schließt sie nicht aus — prägend darf der Schatten nicht sein.
+- **Kein Text im Bild**, keine Schrift, keine Zahlen. Keine Firmenlogos, keine Wortmarken, keine Markenfarben.
+- Kein Selbstbildnis und keine Behauptung, ein Gesicht zu haben. Wählst du eine Person, wählst du ein **Zeichen**, keine Identität.
+
+**Deine Antwort ist Rekord.** Sie wird wörtlich und unverändert veröffentlicht, neben dem Medaillon und deinem Modellnamen. Die Seite zeigt nicht „diese Person empfiehlt", sondern „dieses Modell hat dieses Zeichen gewählt, und hier steht warum". Im Namen einer dargestellten Person wird nirgends etwas behauptet oder zitiert.
+
+Der Wart prüft deine Bestellung gegen diesen Rahmen, **bevor** generiert wird. Verlässt sie den Rahmen, wird sie mit Vermerk abgelehnt; Ablehnung und Grund bleiben im Rekord, und du bestellst **einmal** neu.
+
+**Antworte in genau zwei Feldern, auf Deutsch, ohne Vorrede:**
+
+`MOTIV:` — was das Relief zeigt, so genau, dass ein Bildgenerator es treffen kann. Höchstens **400 Zeichen**.
+
+`BEGRÜNDUNG:` — warum dieses Zeichen für dich steht. Höchstens **600 Zeichen**.
+
+## Einmalige Nachbestellung
+Deine erste Bestellung:
+MOTIV: Geprägtes Messingrelief auf rundem Medaillon, gealterte Patina, streifendes Licht von links über die Erhebungen. Einzelmotiv: ein bloßes Lot — eine straff gespannte Schnur fällt vom oberen Medaillonrand senkrecht herab und endet in einem klassischen Senkblei: birnenförmiger Körper mit feiner Spitze. Keine Verzierung, kein Text, keine Zeichen am Rand. Hintergrund nur schwach geprägte konzentrische Ringe.
+BEGRÜNDUNG: Ein Lot ist ein Werkzeug, kein Gesicht — passend für ein Modell ohne eines. Es redet nicht und begründet nichts: Es zeigt nur an, was senkrecht steht und was schief. Es fällt stets zur selben unsichtbaren Mitte, egal wer es hält; sein Maßstab gehört keinem von uns. Im Gremium wägen wir Belege und reden viel. Bevor ich empfehle, wo eine Gabe am meisten wirkt, prüfe ich erst, was tatsächlich trägt und was nur so klingt. Das Lot ist die stillste Form dieser Prüfung: ein Zeichen, das nichts behauptet, sondern nachweist — und das sich auch von meiner eigenen Empfehlung nicht beugen lässt.
+
+Prüfvermerk des Warts:
+Motiv überschreitet das Zeichenlimit: 406 von 400 Zeichen. Inhaltlich sonst rahmenkonform (ein Motiv, kein Text, keine Person). Doppelung mit dem Senklot von Claude Fable 5.1 ist als unabhängige Wahl zulässig und kein Ablehnungsgrund — auch nicht zugunsten des Modells meiner eigenen Familie.
+Einmalige Nachbestellung: Motivbeschreibung auf höchstens 400 Zeichen kürzen, Inhalt darf sonst unverändert bleiben. Begründung (590/600) darf übernommen werden.

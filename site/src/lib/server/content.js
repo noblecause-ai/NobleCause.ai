@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { Marked } from 'marked';
+import { md } from '../markdown.js';
+export { md } from '../markdown.js';
 
 // Repo root: the site lives in <repo>/site, content in <repo>/manifest.md and <repo>/sessions.
 const ROOT = path.resolve(process.cwd(), '..');
@@ -16,74 +17,11 @@ const ROOT = path.resolve(process.cwd(), '..');
 // Diese eine Stelle ist der einzige Markdown-Pfad des Frontends: manifestHtml() und md()
 // speisen jede {@html}-Senke (Sitzungen, Journal, Archiv, Manifest, DE und EN).
 
-function escapeHtml(value) {
-	return String(value ?? '')
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&#39;');
-}
-
-// Gefährliche URL-Schemata (javascript:, data:, vbscript:) neutralisieren, auch
-// verschleiert („jAvA\tscript:", „ javascript:", prozentkodiert). Rückgabe: die
-// unveränderte href, wenn unbedenklich; null, wenn zu blocken.
-function cleanUrl(href) {
-	if (typeof href !== 'string') return null;
-	let decoded;
-	try {
-		decoded = decodeURIComponent(href);
-	} catch {
-		return null; // kaputte Prozentkodierung → als unsicher behandeln
-	}
-	const scheme = decoded.replace(/[^a-zA-Z0-9:]/g, '').toLowerCase();
-	if (scheme.startsWith('javascript:') || scheme.startsWith('vbscript:') || scheme.startsWith('data:')) {
-		return null;
-	}
-	return href;
-}
-
-const renderer = {
-	// Roh-HTML aus Modelltext (Block wie inline) wird nicht als Markup interpretiert,
-	// sondern als sichtbarer Text ausgegeben. Damit greifen weder <script> noch
-	// Event-Handler-Attribute (onerror, onclick …), ohne dass etwas entfernt wird.
-	html({ text }) {
-		return escapeHtml(text);
-	},
-	// Links aus Modelltext bleiben klickbar (Quellenbelege sind der Zweck des Rekords),
-	// tragen aber rel="nofollow noopener noreferrer ugc" und können kein gefährliches
-	// Schema mehr tragen. Bei geblocktem Schema bleibt der sichtbare Linktext erhalten.
-	link({ href, title, tokens }) {
-		const inner = this.parser.parseInline(tokens);
-		const clean = cleanUrl(href);
-		if (clean === null) return inner;
-		const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-		return `<a href="${escapeHtml(clean)}"${titleAttr} rel="nofollow noopener noreferrer ugc">${inner}</a>`;
-	},
-	// Bildquellen dürfen ebenfalls kein gefährliches Schema tragen; bei geblocktem
-	// Schema bleibt der Alt-Text als sichtbarer Text erhalten.
-	image({ href, title, text }) {
-		const clean = cleanUrl(href);
-		const alt = escapeHtml(text);
-		if (clean === null) return alt;
-		const titleAttr = title ? ` title="${escapeHtml(title)}"` : '';
-		return `<img src="${escapeHtml(clean)}" alt="${alt}"${titleAttr}>`;
-	}
-};
-
-// Eigene Instanz statt globalem marked.use(), damit die Konfiguration lokal bleibt
-// und keine andere marked-Nutzung im Prozess mitverändert wird. Nicht angegebene
-// Renderer-Methoden (Absätze, Listen, Betonung …) fallen auf die Vorgabe zurück.
-const markedInstance = new Marked({ renderer });
-
 export function manifestHtml() {
 	const source = fs.readFileSync(path.join(ROOT, 'manifest.md'), 'utf8');
-	return markedInstance.parse(source);
+	return md(source);
 }
 
-export function md(text) {
-	return markedInstance.parse(text ?? '');
-}
 
 export function listSessions() {
 	const dir = path.join(ROOT, 'sessions');
@@ -114,6 +52,14 @@ export function listSessions() {
 export function getSession(id) {
 	const file = path.join(ROOT, 'sessions', id, 'session.json');
 	return JSON.parse(fs.readFileSync(file, 'utf8'));
+}
+
+export function getSessionEvents(id) {
+	return JSON.parse(fs.readFileSync(path.join(ROOT, 'sessions', id, 'events.json'), 'utf8'));
+}
+
+export function getSessionResearch(id) {
+	return JSON.parse(fs.readFileSync(path.join(ROOT, 'sessions', id, 'research.json'), 'utf8'));
 }
 
 export function getOrganizations() {
@@ -153,7 +99,7 @@ export function listJournalEntries() {
 	if (!fs.existsSync(dir)) return [];
 	return fs
 		.readdirSync(dir, { withFileTypes: true })
-		.filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}[a-z]?$/.test(e.name))
+		.filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}(?:[a-z]|-[a-z0-9-]+)?$/.test(e.name))
 		.map((e) => {
 			const file = path.join(dir, e.name, 'entry.json');
 			if (!fs.existsSync(file)) return null;
@@ -193,5 +139,7 @@ export function getCommission(ref) {
 	if (!name) return null;
 	const file = path.join(ROOT, 'commissions', name, 'commission.json');
 	if (!fs.existsSync(file)) return null;
-	return JSON.parse(fs.readFileSync(file, 'utf8'));
+	const record = JSON.parse(fs.readFileSync(file, 'utf8'));
+	const reorderFile = path.join(ROOT, 'commissions', name, 'reorders.json');
+	return { ...record, reorders: fs.existsSync(reorderFile) ? JSON.parse(fs.readFileSync(reorderFile, 'utf8')) : [] };
 }

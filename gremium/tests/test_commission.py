@@ -307,3 +307,19 @@ def test_journal_prose_grammar_and_selector(root):
     assert "Sitzmodell(en)" not in entry["delta_assessment"]
     assert "noch nicht in der Medaillon-Registratur steht" in entry["content_md"]
     assert "deren Medaillon noch fehlt" not in entry["content_md"]
+
+
+def test_live_frame_and_distinct_same_day_journal_preserve_existing_record(root):
+    specs=json.loads((REPO/'gremium/config.json').read_text())['live_council']['models']
+    existing=root/'journal/2026-08-07/entry.json'
+    existing.parent.mkdir(parents=True)
+    existing.write_text('immutable original')
+    args=_args(dry_run=True)
+    args.live_council=True
+    args.journal_id='2026-08-07-commission-3'
+    result=run_commission._run(root,{'models':specs},args)
+    assert len(result['commission']['orders'])==5
+    assert 'von fünf Modellen' in result['commission']['frame']
+    assert 'von drei Modellen' in prompts.COMMISSION_FRAME
+    assert existing.read_text()=='immutable original'
+    assert (root/'journal/2026-08-07-commission-3/entry.json').exists()

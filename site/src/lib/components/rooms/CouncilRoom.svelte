@@ -15,6 +15,7 @@
 	// den Datenpfaden (modelTracks, Röhren-Schritt 3), nicht in der Copy.
 	import CouncilActors from './CouncilActors.svelte';
 	import CouncilMachine from './CouncilMachine.svelte';
+	import CouncilLive from './CouncilLive.svelte';
 	import Door from './Door.svelte';
 	import ModelPulpits from './ModelPulpits.svelte';
 	import ResultBoard from './ResultBoard.svelte';
@@ -24,11 +25,15 @@
 	import { formatDate } from '$lib/format.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
 	import { DOOR_PASSAGES } from '$lib/door-passages.js';
+	import { liveCopy } from '$lib/live-council.js';
 
 	let { home, lang = 'de', orgEn = {} } = $props();
 	void orgEn; // Prop bleibt verdrahtet (Mechanismus), hat hier keine Anzeigefläche.
 
 	let t = $derived(locales[lang]);
+	let liveFeed = $state(null);
+	let chatOpen = $state(false);
+	const voteName = vote => vote?.decision === 'abstain' ? (lang === 'en' ? 'Abstention' : 'Enthaltung') : vote?.organization?.name ?? t.council.noVote;
 	// Die große Tür im Saal-Plate führt WEITER ins Archiv — Daten wie bei der
 	// Tür-Karte (sub/label). Der Rundgang läuft Study → Council → Archive.
 	let archiveDoor = $derived(t.council.doors.find((door) => door.label === 'The Archive'));
@@ -88,13 +93,14 @@
 		passage={DOOR_PASSAGES.council}
 		bgPos="center top"
 		title={t.common.heroTitle}
-		pitch={t.common.heroPitch}
+		pitch={liveFeed ? liveCopy[lang].intro : t.common.heroPitch}
 		whySummary={t.common.whySummary}
-		whyBody={t.common.whyBody}
+		whyBody={liveFeed ? liveCopy[lang].procedure : t.common.whyBody}
 		roomWord={t.council.roomWord}
-		roomLead={t.council.lead}
+		roomLead={liveFeed ? liveCopy[lang].lead : t.council.lead}
 	>
 		{#snippet overlay()}
+			<CouncilLive {lang} bind:feed={liveFeed} bind:open={chatOpen} />
 			{#if archiveDoor}
 				<!-- Die Tür IM Saal-Bild: Hotspot auf der gemalten Doppeltür, führt
 				     weiter ins Archiv. Echter Link (No-JS/Tastatur); die Tür-Karte
@@ -112,11 +118,11 @@
 		{#snippet scene2()}
 			<!-- Zweite Ebene: die Zählmaschine (P10, deckungsgleich über der
 			     gemalten) — hinter den Pulten, trägt später §7-Verdeckung/§8-Ruck. -->
-			<CouncilMachine {t} {tracks} />
+			<CouncilMachine {t} {tracks} showMedallions={!liveFeed} rule={liveFeed ? liveCopy[lang].majorityRule : null} />
 			<!-- Zweite Ebene: die Lesepulte der Teilnehmer nehmen von unten ihre
 			     Plätze ein (Kantenprinzip) — generisch aus modelTracks, N Pulte
 			     im Saal; Türachse und Zählmaschine bleiben frei. -->
-			<CouncilActors {t} {tracks} />
+			{#if !liveFeed}<CouncilActors {t} {tracks} />{/if}
 		{/snippet}
 		{#snippet tube()}
 			<!-- Prozess-Röhre: The Council steht bei Zählen (Stand 5 von 6). -->
@@ -151,6 +157,7 @@
 		     steht ausschließlich das Zustandekommen. -->
 		<section class="room-section" aria-labelledby="count-title">
 			<h2 id="count-title">{t.council.countTitle}</h2>
+			{#if liveFeed}<p class="count-intro">{liveCopy[lang].session(home.currentSession.number)} · {formatDate(home.currentSession.date, t.lang)}</p>{/if}
 			<p class="count-intro">{t.council.countIntro} {t.council.countAreaCue}</p>
 			<!-- Fokus-Auswahl als CSS-Radiogruppe: der Klick auf ein Emblem aktualisiert
 			     NUR den Trichter (Maschinenergebnis), kein Sprung — kein Fragment, kein
@@ -192,7 +199,7 @@
 							<span class="cf-votes">
 								{#each track.rows as row (row.pillar)}
 									<span class="cf-vote" data-b={row.pillar}>
-										{#if row.changed}<del>{row.initial.organization.name}</del> <strong>{row.final.organization.name}</strong> <em class="cf-changed">{t.council.changedMark}</em>{:else if row.final}<strong>{row.final.organization.name}</strong>{:else}<span class="mark-none">{t.council.noVote}</span>{/if}
+										{#if row.changed}<del>{voteName(row.initial)}</del> <strong>{voteName(row.final)}</strong> <em class="cf-changed">{t.council.changedMark}</em>{:else if row.final}<strong>{voteName(row.final)}</strong>{:else}<span class="mark-none">{t.council.noVote}</span>{/if}
 									</span>
 								{/each}
 							</span>
@@ -244,10 +251,10 @@
 								<span class="mark">
 									<span class="mark-model">{mark.label}</span>
 									{#if mark.row?.changed}
-										<del>{mark.row.initial.organization.name}</del>
-										<strong>{mark.row.final.organization.name}</strong>
+										<del>{voteName(mark.row.initial)}</del>
+										<strong>{voteName(mark.row.final)}</strong>
 									{:else if mark.row?.final}
-										<strong>{mark.row.final.organization.name}</strong>
+										<strong>{voteName(mark.row.final)}</strong>
 									{:else}
 										<span class="mark-none">{t.council.noVote}</span>
 									{/if}
@@ -288,6 +295,13 @@
 {/if}
 
 <style>
+	/* The live window belongs to this room. The previous accepted result remains
+	   below it; it must not overlap or masquerade as the ongoing session's tally. */
+	:global(.room-hero:has(.live-council)) { min-height: max(100svh, var(--live-stage-height, 58rem)); }
+	/* Der historische Ablauf beschreibt noch die frühere Ratsbesetzung. */
+	:global(.room-hero:has(.live-council) .stage-tube),
+	:global(.room-hero:has(.live-council[data-open='true']) .door-hotspot) { visibility: hidden; pointer-events: none; }
+	:global(.rooms-shell:has(.live-council) .result-board) { position: relative; top: auto; left: auto; }
 	/* ---- Tür-Hotspot (Ratssaal-eigene Werte) ------------------------------
 	   Türzone des hall-Plate (1672×941, 16:9), am gerenderten Plate gemessen
 	   x ≈ 43,5–57,9 %, y ≈ 18,3–65,9 %. Unterkante bewusst bei 66 %, NICHT

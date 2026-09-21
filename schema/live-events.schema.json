@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unveränderlicher Ereignisrekord, Verfahren 0.6",
+  "description": "Lückenlose Nummerierung und SHA-256-Kette werden zusätzlich im Backend geprüft. Publizierte Ereignisse bleiben im Archiv erhalten.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "procedure_version",
+    "session_id",
+    "events"
+  ],
+  "properties": {
+    "procedure_version": {
+      "const": "0.6"
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "seq",
+          "session_id",
+          "at",
+          "kind",
+          "phase",
+          "model",
+          "role",
+          "content_md",
+          "data",
+          "content_sha256",
+          "previous_sha256",
+          "sha256"
+        ],
+        "properties": {
+          "seq": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "session_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "at": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "started",
+              "checkpoint",
+              "waiting",
+              "initial_votes",
+              "moderation",
+              "contribution",
+              "debate_closed",
+              "final_votes",
+              "summary",
+              "completed",
+              "aborted",
+              "resumed"
+            ]
+          },
+          "phase": {
+            "enum": [
+              "setup",
+              "initial",
+              "debate",
+              "final",
+              "summary",
+              "terminal"
+            ]
+          },
+          "model": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "role": {
+            "enum": [
+              "system",
+              "chair",
+              "member"
+            ]
+          },
+          "content_md": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          },
+          "content_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "previous_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

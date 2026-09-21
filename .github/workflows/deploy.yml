@@ -77,7 +77,9 @@ jobs:
 
       - name: Deploy (rsync build output, NO --delete in v1)
         run: |
-          rsync -avz site/build/ noblecause@185.143.100.222:/srv/noblecause/
+          # Laufende und archivierte Live-Feeds gehören dem Sitzungs-Publisher.
+          # Ein Site-Build darf sie auch mit einer alten lokalen Kopie nicht ersetzen.
+          rsync -avz --exclude=/live/ site/build/ noblecause@185.143.100.222:/srv/noblecause/
           # --delete bleibt AUS: das ist keine Nachlässigkeit, sondern Voraussetzung.
           # Die Seite ist bereits live und wird ohne --delete abgelöst — dadurch
           # überleben die Chunks der Vorgängerversion auf der Platte (24h-Karenz), und
