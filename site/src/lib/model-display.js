@@ -3,7 +3,7 @@
 // i18n-Maps `familyNames`/`modelNames`, die die Explorer-Routen nicht nutzen.
 // Frühere Sitzungen haben andere Sitzinhaber (z. B. Claude Sonnet 4.5) — darum
 // hier auch die historischen Modelle, mit Roh-Fallback auf Familie/Label.
-const FAMILY = { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' };
+const FAMILY = { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google', spacexai: 'SpaceXAI', moonshotai: 'Moonshot AI', 'z-ai': 'Z.ai', perplexity: 'Perplexity' };
 
 const MODEL = {
 	'claude-opus-4-8': 'Claude Opus 4.8',

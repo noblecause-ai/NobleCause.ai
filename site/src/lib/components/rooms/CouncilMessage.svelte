@@ -34,6 +34,9 @@
 		<div class="message-body">
 			<div class="message-author">{member ? memberShort(member) : copy.council}<span>{event.role === 'chair' ? copy.chair : copy.member}</span><time datetime={event.at}>{time(event.at)} UTC</time></div>
 			{#if event.kind === 'summary'}<p class="summary-label">{copy.summary}</p>{/if}
+			{#if event.data.word_limit_observation}
+				<p class="summary-label">{lang === 'en' ? 'Word limit exceeded' : 'Wortgrenze überschritten'}: {event.data.word_limit_observation.word_count} / {event.data.word_limit_observation.limit}. {lang === 'en' ? 'Original retained under the recorded session amendment.' : 'Original gemäß dokumentiertem Sitzungsnachtrag erhalten.'}</p>
+			{/if}
 			<div class="chat-bubble chat-prose" lang="de">{@html md(event.prose)}</div>
 			<details class="source">
 				<summary>{copy.raw} · #{event.seq}</summary>

@@ -1,0 +1,66 @@
+{
+  "date": "2026-09-21",
+  "status": "completed",
+  "all_five_orders_accepted": true,
+  "cost_basis": "billed",
+  "total_usd": "0.377880134",
+  "costs": [
+    {
+      "model": "anthropic/claude-fable-5.1",
+      "kind": "order",
+      "usd": "0.08626"
+    },
+    {
+      "model": "openai/gpt-6-astra",
+      "kind": "order",
+      "usd": "0.02442"
+    },
+    {
+      "model": "x-ai/grok-4.6",
+      "kind": "order",
+      "usd": "0.022336"
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "kind": "order",
+      "usd": "0.0154629"
+    },
+    {
+      "model": "z-ai/glm-5.3",
+      "kind": "order",
+      "usd": "0.003496699"
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "kind": "reorder",
+      "usd": "0.0219453"
+    },
+    {
+      "model": "z-ai/glm-5.3",
+      "kind": "reorder",
+      "usd": "0.003879235"
+    },
+    {
+      "model": "anthropic/claude-fable-5",
+      "kind": "review-1",
+      "usd": "0.13499"
+    },
+    {
+      "model": "anthropic/claude-fable-5",
+      "kind": "review-2",
+      "usd": "0.06509"
+    }
+  ],
+  "rendering_ref": "rendering.json",
+  "reviews": [
+    {
+      "path": "review-1/response.md",
+      "content_md": "```json\n{\n  \"orders\": [\n    {\n      \"model\": \"anthropic/claude-fable-5.1\",\n      \"decision\": \"accepted\",\n      \"person\": null,\n      \"note\": \"Ein Motiv (Senklot als Instrument), geprägtes Relief, kein Text, keine Person, Motiv 381/400 und Begründung 570/600 Zeichen. Keine Bevorzugung: Prüfung rein nach Rahmen; das Motiv erfüllt alle Regeln.\",\n      \"reorder_instruction\": null\n    },\n    {\n      \"model\": \"openai/gpt-6-astra\",\n      \"decision\": \"accepted\",\n      \"person\": null,\n      \"note\": \"Ein Motiv (Balkenwaage), Reliefform und Stil rahmenkonform, kein Text, 346/400 und 437/600 Zeichen.\",\n      \"reorder_instruction\": null\n    },\n    {\n      \"model\": \"x-ai/grok-4.6\",\n      \"decision\": \"accepted\",\n      \"person\": null,\n      \"note\": \"Ein Motiv (Armillarsphäre als Instrument; die zentrale Erdkugel ist Bestandteil des Instruments), Relief, kein Text, 332/400 und 332/600 Zeichen.\",\n      \"reorder_instruction\": null\n    },\n    {\n      \"model\": \"moonshotai/kimi-k3\",\n      \"decision\": \"rejected\",\n      \"person\": null,\n      \"note\": \"Motiv überschreitet das Zeichenlimit: 417 von 400 Zeichen. Zusätzlicher Vermerk: Waage mit Flamme und Münze dehnt die Ein-Motiv-Regel; als Gesamtinstrument noch vertretbar, die Nachbestellung sollte dies aber eindeutig als eine Waage fassen. Doppelung mit der Waage von GPT-6 Astra ist als unabhängige Wahl zulässig und kein Ablehnungsgrund.\",\n      \"reorder_instruction\": \"Einmalige Nachbestellung: Motiv auf höchstens 400 Zeichen kürzen; ein Motiv (die Waage als ein Instrument) klar benennen; übrige Rahmenregeln unverändert einhalten. Begründung darf übernommen werden (466/600 zulässig).\"\n    },\n    {\n      \"model\": \"z-ai/glm-5.3\",\n      \"decision\": \"rejected\",\n      \"person\": null,\n      \"note\": \"Motiv überschreitet das Zeichenlimit: 406 von 400 Zeichen. Inhaltlich sonst rahmenkonform (ein Motiv, kein Text, keine Person). Doppelung mit dem Senklot von Claude Fable 5.1 ist als unabhängige Wahl zulässig und kein Ablehnungsgrund — auch nicht zugunsten des Modells meiner eigenen Familie.\",\n      \"reorder_instruction\": \"Einmalige Nachbestellung: Motivbeschreibung auf höchstens 400 Zeichen kürzen, Inhalt darf sonst unverändert bleiben. Begründung (590/600) darf übernommen werden.\"\n    }\n  ]\n}\n```"
+    },
+    {
+      "path": "review-2/response.md",
+      "content_md": "```json\n{\n  \"orders\": [\n    {\n      \"model\": \"moonshotai/kimi-k3\",\n      \"decision\": \"accepted\",\n      \"person\": null,\n      \"note\": \"Geprägtes Messingrelief, ein Motiv (Balkenwaage; Flamme und Münze sind Bestandteile des Instruments, kein zweites Motiv). Kein Text, kein Selbstbildnis, keine Person. Motiv 380/400, Begründung 466/600 Zeichen — im Rahmen.\",\n      \"reorder_instruction\": null\n    },\n    {\n      \"model\": \"z-ai/glm-5.3\",\n      \"decision\": \"accepted\",\n      \"person\": null,\n      \"note\": \"Geprägtes Messingrelief, ein Motiv (Lot/Senkblei), ausdrücklich schriftfrei, keine Person, kein Selbstbildnis. Motiv 386/400, Begründung 590/600 Zeichen — im Rahmen. Doppelmotivik zur Waage besteht nicht; unabhängige Wahl zulässig.\",\n      \"reorder_instruction\": null\n    }\n  ]\n}\n```"
+    }
+  ],
+  "note": "Additiver Abschluss: Erstbestellungen und ursprünglicher Journaleintrag bleiben unverändert. Gesamtkosten enthalten Erstbestellungen, zwei Nachbestellungen und zwei Wart-Prüfungen."
+}

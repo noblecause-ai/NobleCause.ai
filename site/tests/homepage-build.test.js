@@ -44,7 +44,7 @@ const currentData = () => {
 	const dir = path.join(ROOT, 'sessions');
 	const sessions = fs
 		.readdirSync(dir, { withFileTypes: true })
-		.filter((e) => e.isDirectory())
+		.filter((e) => e.isDirectory() && fs.existsSync(path.join(dir, e.name, 'session.json')))
 		.map((e) => readJson(path.join(dir, e.name, 'session.json')))
 		.sort((a, b) => (b.number ?? 0) - (a.number ?? 0) || (a.date < b.date ? 1 : -1));
 	const session = sessions[0];

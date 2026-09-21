@@ -95,7 +95,7 @@ def transcript(events):
     )
 
 
-def conduct(models, chair, context, system, caller, events, limits, *, stop_after_first=False):
+def conduct(models, chair, context, system, caller, events, limits, *, stop_after_first=False, speech_amendment=None):
     """caller.run performs/replays one evidenced call and records actual cost."""
     import run_session as session
     ids = [m['model'] for m in models]
@@ -159,9 +159,18 @@ def conduct(models, chair, context, system, caller, events, limits, *, stop_afte
                 or any(type(n) is not int or n not in {e['seq'] for e in visible} for n in parsed['reply_to'])
                 or not session.strip_json_block(text).strip()):
             raise ValueError('Ungültiger Debattenbeitrag')
-        if len(session.strip_json_block(text).split()) > 180:
+        words = session.strip_json_block(text).split()
+        word_count = len(words)
+        if word_count > (speech_amendment['max_words'] if speech_amendment else 180):
             raise ValueError('Debattenbeitrag überschreitet das Redekontingent von 180 Wörtern')
         observations = {}
+        if word_count > 180:
+            observations['word_limit_observation'] = {
+                'limit':180, 'word_count':word_count, 'excess':word_count-180,
+                'lexical_word_count':sum(any(c.isalnum() for c in word) for word in words),
+                'counting_method':'whitespace_split_without_json',
+                'amendment_version':speech_amendment['amendment_version'],
+                'amendment_sha256':speech_amendment['sha256']}
         if target in parsed['addressees']:
             # The Steward requires mistaken self-identification to remain an
             # observable result. Preserve the literal target, speaker and text;

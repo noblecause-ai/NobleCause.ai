@@ -15,14 +15,14 @@
 	import StageHero from './StageHero.svelte';
 	import StageTube from './StageTube.svelte';
 	import StudyActors from './StudyActors.svelte';
-	import { locales, roomPaths } from '$lib/i18n/index.js';
+	import { localeForProcedure, roomPaths } from '$lib/i18n/index.js';
 	import { formatDate } from '$lib/format.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
 	import { DOOR_PASSAGES } from '$lib/door-passages.js';
 
 	let { home, lang = 'de' } = $props();
 
-	let t = $derived(locales[lang]);
+	let t = $derived(localeForProcedure(lang, home?.currentSession?.procedureVersion));
 	let tracks = $derived(home?.modelTracks ?? []);
 	let participantCount = $derived(tracks.length);
 	// Rekordtexte (Frage, Suchanfragen, Rats-Wortlaut) sind deutsch — im

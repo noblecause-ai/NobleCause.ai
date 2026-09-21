@@ -21,7 +21,7 @@
 	import ResultBoard from './ResultBoard.svelte';
 	import StageHero from './StageHero.svelte';
 	import StageTube from './StageTube.svelte';
-	import { locales, roomPaths } from '$lib/i18n/index.js';
+	import { localeForProcedure, roomPaths } from '$lib/i18n/index.js';
 	import { formatDate } from '$lib/format.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
 	import { DOOR_PASSAGES } from '$lib/door-passages.js';
@@ -30,7 +30,7 @@
 	let { home, lang = 'de', orgEn = {} } = $props();
 	void orgEn; // Prop bleibt verdrahtet (Mechanismus), hat hier keine Anzeigefläche.
 
-	let t = $derived(locales[lang]);
+	let t = $derived(localeForProcedure(lang, liveFeed ? '0.6' : home?.currentSession?.procedureVersion));
 	let liveFeed = $state(null);
 	let chatOpen = $state(false);
 	const voteName = vote => vote?.decision === 'abstain' ? (lang === 'en' ? 'Abstention' : 'Enthaltung') : vote?.organization?.name ?? t.council.noVote;

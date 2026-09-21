@@ -141,5 +141,8 @@ export function getCommission(ref) {
 	if (!fs.existsSync(file)) return null;
 	const record = JSON.parse(fs.readFileSync(file, 'utf8'));
 	const reorderFile = path.join(ROOT, 'commissions', name, 'reorders.json');
-	return { ...record, reorders: fs.existsSync(reorderFile) ? JSON.parse(fs.readFileSync(reorderFile, 'utf8')) : [] };
+	const completionFile = path.join(ROOT, 'commissions', name, 'completion.json');
+	return { ...record,
+		completion: fs.existsSync(completionFile) ? JSON.parse(fs.readFileSync(completionFile, 'utf8')) : null,
+		reorders: fs.existsSync(reorderFile) ? JSON.parse(fs.readFileSync(reorderFile, 'utf8')) : [] };
 }

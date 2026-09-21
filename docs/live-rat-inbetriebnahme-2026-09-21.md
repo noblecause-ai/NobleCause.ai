@@ -64,3 +64,27 @@ akzeptiert. Im begrenzten Modus bleibt sie ein Fehler. Abgeschnittene Antworten,
 unbekannte Abschlussgründe, unklare Abrechnung und Preisüberschreitungen bleiben
 Fehler. Die gespeicherte Grok-Antwort wurde ohne erneute Inferenz übernommen;
 ursprünglicher Fehlerbeleg und zusätzliche Übernahme bleiben erhalten.
+
+## Auslieferung und Beginn
+
+Website und Medaillons: Commit `fd02f578f9220342432e66d6543defeace143d07`,
+[erfolgreicher Produktions-Deploy](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/35631869839).
+Vor Auslieferung: 311 Backend-Tests, 60 Website-Tests, Schema-Tor und
+Produktionsbuild erfolgreich. 129 historische Dateien unverändert; sechs alte
+Medaillon-Einträge objektgleich. Original-Rohantworten behalten einschließlich
+Transport-Leerzeichen ihre ursprünglichen Bytes; die Quellcode-Formatprüfung
+ist grün.
+
+Die öffentliche Sitzung `2026-09-21-live` wurde als Sitzung 6 am 21.09.2026
+um 17:26 UTC begonnen. Vorsitz: Fable 5.1, Rotationsindex 0. Der öffentliche
+Ereignisrekord liegt unter `/live/sessions/2026-09-21-live/events.json`.
+Das vor dem Lauf abgefragte Key-Limit betrug 40 Credits, der bestätigte bisherige
+Verbrauch 14,363424135 Credits und der verfügbare Rest 25,636575865 Credits.
+
+Die fünf Medaillons und zwei Wart-Prüfungen kosteten zusammen 0,377880134 Credits
+(siehe `asset-originals/medaillons-kommission-3.md`). Das wiederverwendete
+Recherche-Dossier trägt SHA-256
+`bd04167c7a7a0f12c1627a568322f07c81462b7f7757237b8f1eda136eea54f4`.
+Seine 27 Original-Scout-Artefakte sind zusätzlich unverändert unter
+`sessions/2026-09-21-live/research-raw/` gesichert. Daraus entstanden keine neuen
+Recherchekosten.

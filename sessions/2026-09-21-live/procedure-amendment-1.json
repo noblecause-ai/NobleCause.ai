@@ -1,0 +1,20 @@
+{
+  "procedure_version": "0.6",
+  "amendment_version": "0.6-speech-limit-1",
+  "session_id": "2026-09-21-live",
+  "scope": "one_session",
+  "prompt_limit": 180,
+  "max_words": 200,
+  "counting_method": "whitespace_split_without_json",
+  "standalone_punctuation": "included; lexical_word_count additionally excludes standalone punctuation",
+  "applies_to": "all_five_members",
+  "review_ref": "procedure-review/response.md",
+  "review_sha256": "9c98ec0979acc7936372f3bb6f85936e577a3583ca3f7ed2d554cff2a3f093af",
+  "authorization_basis": "Wart-Abnahme: Wiederaufnahme dieser Sitzung als Fehlerbehebung vom bestehenden Steward-Auftrag gedeckt; keine dauerhafte Aktivierung",
+  "original_observation": {
+    "model": "moonshotai/kimi-k3",
+    "word_count": 186,
+    "lexical_word_count": 183
+  },
+  "new_inference_for_existing_answers": false
+}

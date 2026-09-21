@@ -85,11 +85,11 @@ class FakeCalls:
         return {'currency':'EUR','total':0,'fx_rate_usd_eur':.85,'by_model':[]}
 
 
-def conduct(tmp_path, caller=None):
+def conduct(tmp_path, caller=None, **options):
     events=state.Events(tmp_path/'events.json','synthetic')
     caller=caller or FakeCalls()
     limits=json.loads((ROOT/'gremium/config.json').read_text())['live_council']['output_limits']
-    result=live_debate.conduct(SPECS,SPECS[0],'GLEICHE BELEGE','SYSTEM',caller,events,limits)
+    result=live_debate.conduct(SPECS,SPECS[0],'GLEICHE BELEGE','SYSTEM',caller,events,limits,**options)
     return result,caller,events
 
 
@@ -171,6 +171,28 @@ def test_oversized_speech_stops_without_truncation_or_repair(tmp_path):
     with pytest.raises(ValueError,match='180 Wörtern'):
         conduct(tmp_path,caller)
     assert len(caller.calls)==7
+
+
+@pytest.mark.parametrize('count', [186, 200, 201])
+def test_session_amendment_records_small_overrun_and_retains_hard_ceiling(tmp_path, count):
+    original = fenced({'addressees':[], 'objection':False, 'reply_to':[]}, ' '.join(['Wort']*count))
+    class LongSpeech(FakeCalls):
+        def run(self, *args):
+            text, u = super().run(*args)
+            return (original if args[4]=='speech-0' else text), u
+    caller = LongSpeech()
+    amendment = {'max_words':200, 'amendment_version':'0.6-speech-limit-1', 'sha256':'documented'}
+    if count > 200:
+        with pytest.raises(ValueError, match='180 Wörtern'):
+            conduct(tmp_path, caller, speech_amendment=amendment)
+        assert len(caller.calls)==7
+    else:
+        result, caller, events = conduct(tmp_path, caller, speech_amendment=amendment)
+        contribution = next(e for e in events.record['events'] if e['kind']=='contribution')
+        assert contribution['content_md']==original
+        assert contribution['data']['word_limit_observation']['word_count']==count
+        assert len([c for c in caller.calls if c[4].startswith('speech-')])==10
+        assert len(result['rounds'][-1]['votes'])==5
 
 
 @pytest.mark.parametrize('case', ['no_section','no_assessment','missing_answer','section_after_vote'])

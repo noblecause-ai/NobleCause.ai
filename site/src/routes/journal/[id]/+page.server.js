@@ -26,6 +26,7 @@ export function load({ params }) {
 		if (c) {
 			const models = getModelsRegistry();
 			commission = {
+				completion: c.completion ? { ...c.completion, reviews: c.completion.reviews.map(r => ({ ...r, content_html: md(r.content_md) })) } : null,
 				convened: c.convened ?? null,
 				ordered: c.ordered ?? null,
 				dry_run: c.dry_run ?? null,

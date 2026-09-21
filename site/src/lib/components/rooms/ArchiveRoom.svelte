@@ -10,13 +10,13 @@
 	import ResultBoard from './ResultBoard.svelte';
 	import StageHero from './StageHero.svelte';
 	import StageTube from './StageTube.svelte';
-	import { locales, roomPaths } from '$lib/i18n/index.js';
+	import { localeForProcedure, roomPaths } from '$lib/i18n/index.js';
 	import { TUBE_FILLED } from '$lib/stage.js';
 	import { DOOR_PASSAGES } from '$lib/door-passages.js';
 
 	let { home, lang = 'de' } = $props();
 
-	let t = $derived(locales[lang]);
+	let t = $derived(localeForProcedure(lang, home?.currentSession?.procedureVersion));
 	// Die große Tür im Archiv-Plate führt ZURÜCK in die Study — der Rundgang
 	// schließt sich (Study → Council → Archive → Study), und der Study steht die
 	// Antwort samt Spendenlinks. Daten wie bei der Tür-Karte (sub/label).

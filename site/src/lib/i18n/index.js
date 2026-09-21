@@ -3,8 +3,30 @@
 // `locales[lang]` — kein stiller Globalimport mehr.
 import { de } from './de.js';
 import { en } from './en.js';
+import { liveCopy } from '../live-council.js';
 
 export const locales = { de, en };
+
+// Historical editions keep their original procedure wording.
+export function localeForProcedure(lang, version) {
+	const base = locales[lang];
+	if (version !== '0.6') return base;
+	const copy = liveCopy[lang];
+	const english = lang === 'en';
+	const flow = base.study.flow.map((step, index) => ({ ...step,
+		...(index === 1 ? { text: english ? 'Three Scouts independently research evidence, counterevidence and funding gaps.' : 'Drei Scouts recherchieren unabhängig Belege, Gegenbelege und Finanzierungslücken.' } : {}),
+		...(index === 2 ? { name: english ? 'Five initial votes' : 'Fünf Erstvoten', text: english ? 'Five models prepare their initial votes independently; all are then revealed together.' : 'Fünf Modelle erstellen ihre Erstvoten unabhängig; danach werden alle gemeinsam offengelegt.' } : {}),
+		...(index === 3 ? { name: english ? 'Discussion' : 'Beratung', text: english ? 'The rotating chair guides the conversation. Each member has two contributions and one final vote.' : 'Der wechselnde Vorsitz führt das Gespräch. Jedes Mitglied hat zwei Sachbeiträge und eine Schlussstimme.' } : {}),
+		...(index === 4 ? { text: copy.majorityRule } : {}),
+		...(index === 5 ? { text: english ? 'The conversation, votes, sources and costs remain publicly available.' : 'Gespräch, Voten, Quellen und Kosten bleiben öffentlich zugänglich.' } : {})
+	}));
+	return { ...base,
+		common: { ...base.common, heroPitch: copy.intro, whyBody: copy.procedure },
+		study: { ...base.study, flow },
+		council: { ...base.council, lead: copy.lead,
+			actors: { ...base.council.actors, machine: { ...base.council.actors.machine, rule: copy.majorityRule } } }
+	};
+}
 
 // Die drei Räume in beiden Sprachen. Alle übrigen Routen (sitzungen, journal,
 // manifest, idee, impressum) bleiben deutsch-only — sie sind der Rekord.

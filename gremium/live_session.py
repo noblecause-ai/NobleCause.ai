@@ -223,6 +223,21 @@ def run(root, config, args):
         raise ValueError('Öffentliche Sitzung braucht einen Live-Feed und verwendet sessions/ als Rekordziel')
     output = root / 'sessions' if public else (Path(args.output_dir) if args.output_dir else root / '.review/live-sessions')
     output = output.resolve() / args.session_id
+    speech_amendment = None
+    amendment_path = getattr(args, 'speech_limit_amendment', None)
+    if amendment_path:
+        path = Path(amendment_path).resolve()
+        if (not public or not args.resume or path.parent != output
+                or not path.is_file() or path.is_symlink()):
+            raise ValueError('Redetoleranz braucht einen sitzungsgebundenen Nachtrag bei öffentlicher Wiederaufnahme')
+        payload = path.read_bytes()
+        amendment = json.loads(payload)
+        if (amendment.get('session_id') != args.session_id or amendment.get('scope') != 'one_session'
+                or amendment.get('procedure_version') != '0.6'
+                or amendment.get('amendment_version') != '0.6-speech-limit-1'
+                or amendment.get('prompt_limit') != 180 or amendment.get('max_words') != 200):
+            raise ValueError('Unzulässiger Redetoleranz-Nachtrag')
+        speech_amendment = {**amendment, 'sha256':digest(payload), 'path':path.name}
     if not public and any(output.is_relative_to(root / p) for p in ('sessions','journal','commissions','site')):
         raise ValueError('Backend-Pilot schreibt zunächst außerhalb veröffentlichter Rekorde')
     today = datetime.date.today().isoformat()
@@ -296,7 +311,10 @@ def run(root, config, args):
         events = Events(output/'events.json', args.session_id, publisher=publisher)
         events.once('start','started','setup',data={'chair':descriptor['chair'], 'research':research_info, 'dry_run':not public})
         if args.resume:
-            events.append('resumed','setup',data={'retry_inference':False})
+            data = {'retry_inference':False}
+            if speech_amendment:
+                data['procedure_amendment'] = speech_amendment
+            events.append('resumed','setup',data=data)
         attempt = sum(e['kind'] == 'resumed' for e in events.record['events'])
         caller = Calls(output/'raw',events,budget,fx)
         prompt = prompts.SESSION_CONTEXT.format(manifest=(root/'manifest.md').read_text(), sources=(root/'gremium/sources.md').read_text(),
@@ -306,7 +324,7 @@ def run(root, config, args):
                 events.publish()
                 publisher.start()
             result = conduct(cfg['models'],chair,prompt,prompts.SYSTEM_WITH_CONFLICT,caller,events,cfg['output_limits'],
-                             stop_after_first=getattr(args,'stop_after_first',False))
+                             stop_after_first=getattr(args,'stop_after_first',False), speech_amendment=speech_amendment)
             if result.get('status') == 'initial_ready':
                 checkpoint = {**result,'id':args.session_id,'costs':caller.costs()}
                 atomic_write(output/'checkpoint.json',encoded(checkpoint))

@@ -33,7 +33,8 @@
 
 <p class="meta">
 	{#if e.model}Modell <code>{e.model}</code>{:else if isCommission}Bestell-Kommission{:else if isRefusal}Scouts{:else}Steward{/if}
-	{#if e.costs?.total != null} · Laufkosten {e.costs.total.toFixed(2)} €{/if}
+	{#if commission?.completion} · Gesamtkosten einschließlich Nachbestellungen und Wart-Prüfungen: {Number(commission.completion.total_usd).toFixed(3)} Credits
+	{:else if e.costs?.total != null} · Laufkosten {e.costs.total.toFixed(2)} €{/if}
 	{#if e.session_ref} · Referenz <a href="/sitzungen/{e.session_ref}/">Sitzung {e.session_ref}</a>{/if}
 </p>
 {#if e.deputation_note}
@@ -97,6 +98,9 @@
 			</li>
 		{/each}
 	</ol>
+	{#each commission.completion?.reviews ?? [] as review (review.path)}
+		<details><summary>Wart-Prüfung · {review.path}</summary><div class="verbatim">{@html review.content_html}</div></details>
+	{/each}
 {/if}
 
 {#if e.findings?.length}

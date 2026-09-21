@@ -166,6 +166,7 @@ export function buildHomepageViewModel({ session, sessions, registry, models = n
 	return {
 		openRouter: hasOpenRouter(session),
 		currentSession: {
+			procedureVersion: session.procedure_version ?? null,
 			id: session.id,
 			number: session.number,
 			date: session.date,
