@@ -21,9 +21,12 @@ export function localeForProcedure(lang, version) {
 		...(index === 5 ? { text: english ? 'The conversation, votes, sources and costs remain publicly available.' : 'Gespräch, Voten, Quellen und Kosten bleiben öffentlich zugänglich.' } : {})
 	}));
 	return { ...base,
-		common: { ...base.common, heroPitch: copy.intro, whyBody: copy.procedure },
-		study: { ...base.study, flow },
+		common: { ...base.common, heroPitch: copy.intro, whyBody: copy.procedure,
+			familyNames: { ...base.common.familyNames, spacexai:'SpaceXAI', moonshotai:'Moonshot AI', 'z-ai':'Z.ai' } },
+		study: { ...base.study, flow, actors: { ...base.study.actors,
+			warden: { ...base.study.actors.warden, sentence: english ? 'reviews the procedure when consulted. The rotating chair guides Council meetings.' : 'prüft das Verfahren bei Rückfragen. Den Rat leitet sein wechselnder Vorsitz.' } } },
 		council: { ...base.council, lead: copy.lead,
+			abstentions: n => english ? `${n} abstentions · no recommendation` : `${n} Enthaltungen · keine Empfehlung`,
 			actors: { ...base.council.actors, machine: { ...base.council.actors.machine, rule: copy.majorityRule } } }
 	};
 }

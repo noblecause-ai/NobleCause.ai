@@ -88,3 +88,53 @@ Recherche-Dossier trägt SHA-256
 Seine 27 Original-Scout-Artefakte sind zusätzlich unverändert unter
 `sessions/2026-09-21-live/research-raw/` gesichert. Daraus entstanden keine neuen
 Recherchekosten.
+
+## Abschluss
+
+Sitzung 6 ist abgeschlossen und genau einmal übernommen. Alle fünf Erst- und
+Schlussvoten sind gültig, alle zehn Sachbeiträge liegen vor. Der vollständige
+Rekord enthält 59 Ereignisse einschließlich eines erhaltenen Abbruchs und einer
+Wiederaufnahme. Anlass und erlaubte Behandlung von Kimis 186-Wort-Beitrag sind
+in `live-rat-redelaenge-2026-09-21.md` dokumentiert. Sämtliche neun bis dahin
+bezahlten Antworten wurden ohne neue Inferenz wiederverwendet.
+
+Endergebnis aus der deterministischen Zählung: B / Against Malaria Foundation
+5 von 5, davon Astra mit Vorbehalt; A, C und D jeweils 5 Enthaltungen. Keine
+ungültigen oder unaufgelösten Schlussstimmen. Die Oberfläche zeigt Enthaltungen
+als solche, nicht als Meinungsstreit oder fehlende Antworten.
+
+Kosten der Sitzung: **7,214258149 Credits**, 31 Modellaufrufe. Aufteilung:
+
+| Modell | Aufrufe | Credits |
+|---|---:|---:|
+| Claude Fable 5.1 | 15 | 5.54399 |
+| GPT-6 Astra | 4 | 1.10417450 |
+| Grok 4.6 | 4 | 0.217588 |
+| Kimi K3 | 4 | 0.26022705 |
+| GLM-5.3 | 4 | 0.088278599 |
+
+Fable enthält zusätzlich zu seinen vier Ratsbeiträgen zehn Moderationen und die
+Leserfassung. Der gesonderte Wart-Review zur Wiederaufnahme kostete 0,17493
+Credits. Mit Medaillonbestellungen und deren Prüfungen (0,377880134) beträgt der
+Verbrauch dieses Inbetriebnahme-Auftrags **7,767068283 Credits**.
+Nach dem Abschluss bestätigt die Key-API 21,752612284 verbrauchte und
+**18,247387716 verbleibende Credits** innerhalb des 40-Credit-Limits.
+
+SHA-256 des öffentlichen Ereignisrekords:
+`d143e42e16a83b88af15937957332c48da1ef5aa0165b215e2d4c80bb4d96e48`.
+Ein erneuter HTTPS-Abruf nach Abschluss war bytegleich zum lokalen Original.
+SHA-256 des übernommenen `session.json`:
+`b6c24ced0b7f6a455ec068bd7c1a76e41e40e3b8414182f77ee4987a1023813a`.
+
+Nächster Vorsitz: Astra (Index 1). Nächster regulärer Sitzungstermin laut
+bestehendem 30-Tage-Abstand: 21.10.2026, 12:00 UTC. Unbekannte Schedule-Felder
+sind erhalten. Der laufbezogene Redetoleranz-Nachtrag ist kein neuer Standard;
+der Wochenrollenwechsel bleibt eine gesonderte offene Bestätigung.
+
+Die abschließende Browserprüfung deckt das veröffentlichte Ratsgespräch und die
+Archivansicht ab. Beim ersten Archivaufbau wurde die Kostenliste auf die bereits
+vom Backend berechneten Modell-Summen umgestellt: mehrere Aufrufe desselben
+Modells dürfen keine doppelten Svelte-Schlüssel erzeugen. Die Oberfläche zählt
+keine Stimmen und summiert keine Modellkosten selbst. Die Verfahrenstexte der
+drei Räume wechseln für abgeschlossene 0.6-Rekorde auf fünf Sitze und die
+Dreiermehrheit; historische Sitzungsprosa bleibt unverändert.

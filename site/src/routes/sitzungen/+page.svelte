@@ -59,7 +59,7 @@
 									<span class="rec-tally">{cell.count} von {cell.total}</span>
 								{/if}
 							{:else if cell?.status === 'open'}
-								<span class="rec-tally split">getrennt</span>
+								<span class="rec-tally split">{cell.abstained ? `${cell.abstained} Enthaltungen` : 'getrennt'}</span>
 							{:else}
 								<span class="mark-none">—</span>
 							{/if}

@@ -1,0 +1,304 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 964,
+  "output_tokens": 2047,
+  "billed_usd": "0.0396",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1789912671-sR6PkdzjW17I4W0JkgSc",
+    "requested_model": "perplexity/sonar-pro",
+    "reported_model": "perplexity/sonar-pro",
+    "generation_model": "perplexity/sonar-pro",
+    "provider": "Perplexity",
+    "endpoint": "perplexity",
+    "finish_reason": "stop",
+    "native_finish_reason": "stop",
+    "cost_basis": "billed",
+    "billed_usd": "0.0396",
+    "search_engine_requested": "intrinsic",
+    "search_engine_reported": null,
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": null,
+    "citations": [
+      {
+        "url": "https://www.gob.pe/es/55337-ministerio-de-economia-y-finanzas-repositorio-de-evidencia",
+        "title": "Repositorio de Evidencia",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dialnet.unirioja.es/descarga/articulo/2544944.pdf",
+        "title": "Salud Pública basada en la evidencia",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://es.scribd.com/document/698544112/Investigacion-1-Evidencia-empirica-de-evaluacion-de-proyectos-sociales-a-nivel-latinoamericano",
+        "title": "Investigación 1 Evidencia Empírica de Evaluación ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://odphp.health.gov/healthypeople/tools-action/browse-evidence-based-resources",
+        "title": "Browse Evidence-Based Resources - Healthy People 2030",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.studocu.com/es-mx/document/universidad-autonoma-de-nuevo-leon/derecho-ambiental/documentos-escaneados-2/141302185?origin=related-document",
+        "title": "Análisis de Causas de la Pobreza y Estrategias de Intervención - 2. Valoraich",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.scielo.org.mx/scielo.php?pid=S2683-28522025000200005&script=sci_arttext",
+        "title": "Evaluación del impacto de programas sociales en hogares ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.studocu.com/es-mx/document/universidad-autonoma-de-nuevo-leon/servicio-social-uanl/ev-3-ss-gacc-analisis-del-impacto-social-de-la-pobreza/141870845?origin=related-document",
+        "title": "EV 3 SS - GACC: Análisis del Impacto Social de la Pobreza",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.mineducacion.gov.co/portal/salaprensa/Comunicados/416155:Mineducacion-lanza-Orientaciones-en-Salud-Mental-para-el-Sistema-de-Educacion-Superior",
+        "title": "Inicio",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.healthevidence.org/",
+        "title": "Health Evidence™",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://embed.siis.net/ver.php?id=es&Ncodigo=594090&Ntipo=",
+        "title": "una revisión sistemática. Revista de Psicología Clínica con Niños y ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dialnet.unirioja.es/descarga/articulo/7121075.pdf",
+        "title": "Reducción de la pobreza",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dialnet.unirioja.es/descarga/articulo/8383841.pdf",
+        "title": "DOI: http://dx.doi.org/10.23857/dc.v7i5.2285",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://medicina.uniandes.edu.co/es/programas/posgrado/maestria-salud-publica",
+        "title": "Maestría en Salud Pública - Facultad de Medicina | Uniandes",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.redalyc.org/journal/440/44070055004/html/",
+        "title": "Desarrollo de intervenciones comunitarias de salud pública por estudiantes de Farmacia de la Universidad de Costa Rica durante la pandemia por SARS-COV2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.coneval.org.mx/InformesPublicaciones/InformesPublicaciones/Documents/Metodologia-medicion-multidimensional-3er-edicion.pdf",
+        "title": "[PDF] Metodología para la medición multidimensional de la pobreza en ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://portail.documentation.developpement-durable.gouv.fr/pub/MPDOUV00269090-plan-national-adaptation-changement-climatique-pna.html",
+        "title": "Ministère de la Transition écologique et de la Cohésion des ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ve.scielo.org/scielo.php?script=sci_arttext&pid=S2665-01692026000200405",
+        "title": "Impacto del cambio climático en la seguridad alimentaria de ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.mx/cms/uploads/attachment/file/859926/ForoSeguridadAlimentaria_26sep.pdf",
+        "title": "Memoria del",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://portail.documentation.developpement-durable.gouv.fr/pub/MPDOUV00265913-pnacc-troisieme-plan-national-adaptation-changemen.html",
+        "title": "PNACC : troisième plan national d'adaptation au changement ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dialnet.unirioja.es/servlet/articulo?codigo=10517599",
+        "title": "Impacto del cambio climático en la seguridad alimentaria en ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://zaguan.unizar.es/record/127310",
+        "title": "Seguridad Alimentaria y Cambio Climático: Revisión Bibliográfica",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.studocu.com/pe/document/universidad-nacional-de-cajamarca/economia-ambiental/monografia-ambiental-2/68101897?origin=related-document",
+        "title": "Monografía Ambiental 2: Cambio Climático y Seguridad Alimentaria en Perú - Studocu",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ecologie.gouv.fr/actualites/gouvernement-lance-nouveau-plan-national-dadaptation-changement-climatique",
+        "title": "Le gouvernement lance un nouveau plan national d'adaptation au ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.uncclearn.org/wp-content/uploads/library/spa_4.pdf",
+        "title": "EL TRABAJO DE LA FAO SOBRE EL CAMBIO CLIMÁTICO",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ecologie.gouv.fr/politiques-publiques/adaptation-france-changement-climatique",
+        "title": "Adaptation de la France au changement climatique",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.adaptation-changement-climatique.gouv.fr/",
+        "title": "Home 2023",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://openknowledge.fao.org/server/api/core/bitstreams/4804560d-ab06-4d61-8001-309334e45e59/content",
+        "title": "CL 172/5 - Los desafíos de la seguridad alimentaria mundial y sus causas: los\nconflictos y las guerras en Ucrania y otros países, las desaceleraciones y\nrecesiones económicas y el cambio climático",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.mx/agricultura/documentos/memoria-del-foro-nacional-de-seguridad-alimentaria-y-cambio-climatico",
+        "title": "Memoria del Foro Nacional de Seguridad Alimentaria y Cambio Climático",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://climate-adapt.eea.europa.eu/es/metadata/publications/climate-change-and-food-security-risks-and-responses-1",
+        "title": "Cambio climático y seguridad alimentaria: riesgos y respuestas",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://alliancebioversityciat.org/es/informe-anual-2023/climatica",
+        "title": "Resiliencia a través de la acción climática | Informe Anual 2023",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.miteco.gob.es/content/dam/miteco/es/cambio-climatico/temas/impactos-vulnerabilidad-y-adaptacion/2023-Plan-Excesos-Temperaturas.pdf",
+        "title": "Plan Nacional de actuaciones preventivas de los efectos del ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.lamoncloa.gob.es/serviciosdeprensa/notasprensa/sanidad14/paginas/2023/150623-medidas-proteccion-altas-temperaturas.aspx",
+        "title": "¿Cómo prevenir los efectos de las altas temperaturas sobre la salud?",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://alicia.concytec.gob.pe/vufind/Record/PUCP_9beeb4081d9711566180afb8f5df363d/Details",
+        "title": "Metadatos: Una experiencia de salud nutricional desde la ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/publicaciones/informesAnteriores/docs/Balance_Plan_Calor_2023.pdf",
+        "title": "[PDF] Plan Nacional de actuaciones preventivas de los efectos del exceso ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.pe/institucion/midagri/noticias/912417-midagri-gobierno-publica-reglamento-de-la-ley-31315-de-seguridad-alimentaria-y-nutricional",
+        "title": "MIDAGRI: Gobierno publica reglamento de la Ley 31315 ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www3.gobiernodecanarias.org/noticias/category/consejerias/sanidad/salud-publica-sanidad/",
+        "title": "Salud Pública - Portal de Noticias del Gobierno de Canarias",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://fr.slideshare.net/slideshow/plan-de-actuacin-ante-episodios-de-altas-temperaturas/257696506",
+        "title": "Plan de Actuación ante episodios de altas temperaturas",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.comunidad.madrid/noticias/2023/04/26/comunidad-madrid-aprueba-plan-actuacion-episodios-altas-temperaturas",
+        "title": "La Comunidad de Madrid aprueba el Plan de Actuación ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.legifrance.gouv.fr/circulaire/id/45454",
+        "title": "Instruction du gouvernement du 23 juin 2023 relative au plan de gestion des vagues de chaleur.",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sanidad.gob.es/areas/sanidadAmbiental/riesgosAmbientales/calorExtremo/publicaciones/docs/balancePlanCalor_2023.pdf",
+        "title": "PLAN NACIONAL DE ACTUACIONES PREVENTIVAS DE LOS EFECTOS DEL EXCESO DE TEMPERATURAS SOBRE LA SALUD",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://lpderecho.pe/reglamento-ley-seguridad-alimentaria-nutricional-decreto-supremo-003-2024-midagri/",
+        "title": "Reglamento de la Ley de seguridad alimentaria y nutricional [DS 003 ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.pe/institucion/midagri/noticias/1001494-gobierno-sigue-impulsando-el-agro-para-contribuir-con-la-seguridad-alimentaria-del-pais",
+        "title": "Gobierno sigue impulsando el agro para contribuir con la ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rfi.fr/es/francia/20230608-el-plan-del-gobierno-franc%C3%A9s-ante-las-pr%C3%B3ximas-olas-de-calor",
+        "title": "El plan del Gobierno francés ante las próximas olas de calor",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rtve.es/noticias/20241022/datos-pobreza-energetica-2023/16297976.shtml",
+        "title": "Los datos de la pobreza energética mejoran ligeramente",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.pe/institucion/ceplan/noticias/1007900-ceplan-instala-comite-multidisciplinario-para-abordar-la-seguridad-alimentaria-y-nutricional-al-2050",
+        "title": "Ceplan instala comité multidisciplinario para abordar la seguridad alimentaria y nutricional al 2050",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+    ],
+    "started_at": "2026-09-20T13:57:51.598568+00:00",
+    "finished_at": "2026-09-20T13:58:25.424294+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  }
+}

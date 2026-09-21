@@ -12,6 +12,9 @@
 {#if notice}
 	<p class="chat-notice" data-event-seq={event.seq} data-kind={event.kind}>
 		{copy[event.kind]} <time datetime={event.at}>{time(event.at)} UTC</time>
+		{#if event.data.procedure_amendment}
+			<a href="https://github.com/noblecause-ai/NobleCause.ai/blob/master/sessions/{encodeURIComponent(event.session_id)}/{encodeURIComponent(event.data.procedure_amendment.path)}">{lang === 'en' ? 'Recorded session amendment' : 'Dokumentierter Sitzungsnachtrag'}</a>
+		{/if}
 	</p>
 {:else if voting}
 	<details class="vote-round" data-event-seq={event.seq}>

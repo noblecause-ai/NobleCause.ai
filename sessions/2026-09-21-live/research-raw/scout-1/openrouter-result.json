@@ -1,0 +1,42 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 140977,
+  "output_tokens": 5455,
+  "billed_usd": "0.2691",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1789912559-Ge7DQ61zRjVoriwdZeY2",
+    "requested_model": "x-ai/grok-4.6",
+    "reported_model": "x-ai/grok-4.6",
+    "generation_model": "x-ai/grok-4.6-20260810",
+    "provider": "xAI",
+    "endpoint": "xai/zdr",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "cost_basis": "billed",
+    "billed_usd": "0.2691",
+    "search_engine_requested": "native",
+    "search_engine_reported": "native",
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": 14,
+    "citations": [
+      {
+        "url": "https://www.nature.com/articles/s41586-026-10990-x",
+        "title": "1",
+        "start_index": 326,
+        "end_index": 383
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "Der Anbieter hat mehr Suchen ausgeführt als angefordert."
+    ],
+    "started_at": "2026-09-20T13:55:59.762053+00:00",
+    "finished_at": "2026-09-20T13:57:51.055280+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  },
+  "web_search_requests": 14
+}

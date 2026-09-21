@@ -50,8 +50,8 @@ const currentData = () => {
 	const session = sessions[0];
 	const registry = readJson(path.join(ROOT, 'organizations.json'));
 	const orgById = new Map((registry.organizations ?? []).map((o) => [o.id, o]));
-	const FAMILY = { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google' };
-	const nameOf = (rec) => orgById.get(rec.organization_id)?.canonical_name ?? rec.organization;
+	const FAMILY = { anthropic: 'Anthropic', openai: 'OpenAI', google: 'Google', spacexai:'SpaceXAI', moonshotai:'Moonshot AI', 'z-ai':'Z.ai' };
+	const nameOf = (rec) => rec.decision === 'abstain' ? 'Enthaltung' : orgById.get(rec.organization_id)?.canonical_name ?? rec.organization;
 	const consensus = (session.recommendations ?? []).filter((r) => r.has_consensus);
 	const round = (k) => (session.rounds ?? []).find((r) => r.kind === k);
 	const initial = new Map((round('initial_vote')?.votes ?? []).map((v) => [v.model, v]));
@@ -87,6 +87,7 @@ const currentData = () => {
 	};
 };
 const DATA = currentData();
+const LIVE = DATA.session.procedure_version === '0.6';
 // Zählstände der Konsens-Bereiche als „N von M" (DE) bzw. „N of M" (EN).
 const tally = (of) => [...new Set(DATA.consensus.map((r) => `${r.convergence.count} ${of} ${r.convergence.total}`))];
 // Organisationsnamen + direkte Spendenlinks der Konsens-Empfehlungen (Registry).
@@ -104,19 +105,19 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		'Hier beginnt jede Prüfung: mit einer klaren Frage und denselben Belegen für alle Modelle.', // Raum-Lead
 		'NobleCause.ai lässt mehrere KI-Modelle dieselbe Spendenfrage prüfen', // Pitch (ohne Familiennamen/Zahl)
 		'Warum so umständlich? ▸', // Verfahrens-Ausklapp im stabilen Kopf
-		'Ein einzelnes Modell kann irren oder eine blinde Stelle haben.',
+		(LIVE ? 'Fünf KI-Modelle beraten über dieselben Belege.' : 'Ein einzelnes Modell kann irren oder eine blinde Stelle haben.'),
 		// Prozess-Röhre: alle sechs kanonischen Schritte mit Name + Klartext-Satz
 		'Die Frage',
 		'Die Belege',
-		'Drei Antworten',
-		'Umdenken',
+		(LIVE ? 'Fünf Erstvoten' : 'Drei Antworten'),
+		(LIVE ? 'Beratung' : 'Umdenken'),
 		'Zählen',
 		'Veröffentlichen',
 		'Eine Frage pro Sitzung — vier Bereiche, je eine Empfehlung.',
-		'Der Späher sammelt Studien, Kosten-Wirksamkeit und Finanzierungslücken.',
-		'Drei Modelle antworten getrennt — jedes Votum öffentlich.',
-		'Ein einfaches Programm zählt nur die Nennungen.',
-		'Der Wart veröffentlicht alles — Empfehlungen, Uneinigkeit, Kosten.',
+		(LIVE ? 'Drei Scouts recherchieren unabhängig Belege, Gegenbelege und Finanzierungslücken.' : 'Der Späher sammelt Studien, Kosten-Wirksamkeit und Finanzierungslücken.'),
+		(LIVE ? 'Fünf Modelle erstellen ihre Erstvoten unabhängig; danach werden alle gemeinsam offengelegt.' : 'Drei Modelle antworten getrennt — jedes Votum öffentlich.'),
+		(LIVE ? 'Mindestens drei der fünf Stimmen ergeben eine gemeinsame Empfehlung.' : 'Ein einfaches Programm zählt nur die Nennungen.'),
+		(LIVE ? 'Gespräch, Voten, Quellen und Kosten bleiben öffentlich zugänglich.' : 'Der Wart veröffentlicht alles — Empfehlungen, Uneinigkeit, Kosten.'),
 		'Die Empfehlungen dieser Sitzung', // answerTitle
 		// Dossiers (§3.4): Kennzeichnungs-Ausklapp + Wortlaut-Beleg (stabil).
 		'Dossiers',
@@ -234,10 +235,10 @@ test('The Council (/ratssaal/) trägt Zählwerk, Voten, Revisionen in der Marke,
 	// Stabiler Kopf + Zähl-Block-Gerüst (sitzungsunabhängig).
 	requireAll(html, 'The Council', [
 		'Wo hilft meine Spende am meisten?', // h1 — die Leitfrage überall
-		'Je ein KI-Modell verschiedener Familien prüft dieselben Belege', // Pitch
+		(LIVE ? 'Fünf KI-Modelle beraten gemeinsam und geben anschließend unabhängig ihre Schlussvoten ab.' : 'Je ein KI-Modell verschiedener Familien prüft dieselben Belege'), // Pitch
 		'Warum so umständlich? ▸', // inline-Ausklapp im Kopf
-		'Getrennt abgestimmt, dann öffentlich gezählt. Was mehrfach genannt wird, wird Empfehlung.', // Raum-Lead
-		'Drei Antworten', // Röhren-Kugel (Name)
+		(LIVE ? 'Ein gemeinsames Gespräch. Fünf unabhängige Schlussvoten.' : 'Getrennt abgestimmt, dann öffentlich gezählt. Was mehrfach genannt wird, wird Empfehlung.'), // Raum-Lead
+		(LIVE ? 'Fünf Erstvoten' : 'Drei Antworten'), // Röhren-Kugel (Name)
 		'Wie gezählt wurde', // §4.2 ein Block statt drei
 		'Das Programm zählt nur gleiche Nennungen.',
 		'Alle Voten im Wortlaut ▸', // volle Matrix am Blockende
@@ -302,7 +303,7 @@ test('The Archive (/archiv/) trägt Sitzungen mit Ergebnis-Chips, Kosten, Korrek
 	requireAll(html, 'The Archive', [
 		// Stabiler Kopf — auf allen drei Raum-Seiten identisch (Titelbereich-Neuordnung)
 		'Wo hilft meine Spende am meisten?',
-		'Je ein KI-Modell verschiedener Familien prüft dieselben Belege',
+		(LIVE ? 'Fünf KI-Modelle beraten gemeinsam und geben anschließend unabhängig ihre Schlussvoten ab.' : 'Je ein KI-Modell verschiedener Familien prüft dieselben Belege'),
 		'Warum so umständlich? ▸',
 		'Jede Sitzung, vollständig und unverändert — Empfehlungen, Uneinigkeit, Kosten.', // Raum-Lead
 		'Sitzungsarchiv',
@@ -335,12 +336,12 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		'Every review begins here: with a clear question and the same evidence for every model.', // room lead
 		'NobleCause.ai asks several AI models to examine the same donation question', // pitch (no names/count)
 		'Why so elaborate? ▸', // process toggle in the plaque
-		'A single model can be wrong or have a blind spot.',
-		'Three AI models review the same evidence', // head description
-		'The question', 'The evidence', 'Three answers', 'Second thoughts', 'The count', 'Publication',
-		'The Scout gathers studies, cost-effectiveness and funding gaps.',
-		'Three models answer separately — every vote public.',
-		'The Warden publishes everything — recommendations, disagreement, costs.',
+		(LIVE ? 'Five AI models consider the same evidence.' : 'A single model can be wrong or have a blind spot.'),
+		(LIVE ? 'Five AI models review the same evidence' : 'Three AI models review the same evidence'), // head description
+		'The question', 'The evidence', (LIVE ? 'Five initial votes' : 'Three answers'), (LIVE ? 'Discussion' : 'Second thoughts'), 'The count', 'Publication',
+		(LIVE ? 'Three Scouts independently research evidence, counterevidence and funding gaps.' : 'The Scout gathers studies, cost-effectiveness and funding gaps.'),
+		(LIVE ? 'Five models prepare their initial votes independently; all are then revealed together.' : 'Three models answer separately — every vote public.'),
+		(LIVE ? 'The conversation, votes, sources and costs remain publicly available.' : 'The Warden publishes everything — recommendations, disagreement, costs.'),
 		"This session's recommendations",
 		'Dossiers',
 		"This session's question",
@@ -416,10 +417,10 @@ test('The Council (/en/council/) zeigt englische Chrome, deutsche Vorbehalte mit
 	// Stable head + block scaffold (session-independent).
 	requireAll(html, 'The Council (EN)', [
 		'Where does my donation help the most?', // h1 — the core question everywhere
-		'One AI model each from different families reviews the same evidence', // pitch
+		(LIVE ? 'Five AI models discuss the evidence together, then cast their final votes independently.' : 'One AI model each from different families reviews the same evidence'), // pitch
 		'Why so elaborate? ▸', // inline toggle in the head
-		'Voted separately, then counted publicly.', // room lead
-		'Three answers', // tube bead (name)
+		(LIVE ? 'One shared conversation. Five independent final votes.' : 'Voted separately, then counted publicly.'), // room lead
+		(LIVE ? 'Five initial votes' : 'Three answers'), // tube bead (name)
 		'How the votes were counted', // §4.2 one block
 		'The program only counts matching mentions.',
 		'All votes, verbatim ▸', // full matrix at the end of the block
@@ -460,7 +461,7 @@ test('The Archive (/en/archive/) zeigt englische Chrome — Rekord bleibt deutsc
 	requireAll(html, 'The Archive (EN)', [
 		// Stable head — identical on all three room pages (title reorder)
 		'Where does my donation help the most?',
-		'One AI model each from different families reviews the same evidence',
+		(LIVE ? 'Five AI models discuss the evidence together, then cast their final votes independently.' : 'One AI model each from different families reviews the same evidence'),
 		'Why so elaborate? ▸',
 		'Every session, complete and unchanged — recommendations, disagreement, costs.', // room lead
 		'Session archive',
@@ -988,7 +989,11 @@ test('OpenRouter: neue Provenienz und DE/EN-Verfahren bedingt, Bestandsanzeige u
   const { render } = await server.ssrLoadModule('svelte/server');
   const page = await server.ssrLoadModule('/src/routes/sitzungen/[id]/+page.svelte');
   const route = await server.ssrLoadModule('/src/routes/sitzungen/[id]/+page.server.js');
-  const data = structuredClone(route.load({ params: { id: DATA.session.id } }));
+  const legacyId = fs.readdirSync(path.join(ROOT,'sessions'))
+   .filter(id => fs.existsSync(path.join(ROOT,'sessions',id,'session.json')))
+   .map(id => readJson(path.join(ROOT,'sessions',id,'session.json')))
+   .find(s => !s.rounds.some(r => (r.votes ?? []).some(v => v.provenance?.transport === 'openrouter_api'))).id;
+  const data = structuredClone(route.load({ params: { id: legacyId } }));
   const original = render(page.default, { props: { data } }).body;
   assert.ok(original.includes('an API-Aufrufen'));
   assert.ok(!original.includes('openrouter-provenance'));
@@ -1008,7 +1013,7 @@ test('OpenRouter: neue Provenienz und DE/EN-Verfahren bedingt, Bestandsanzeige u
   const archive = await server.ssrLoadModule('/src/lib/components/rooms/ArchiveRoom.svelte');
   const rooms = await server.ssrLoadModule('/src/routes/(rooms)/+layout.server.js');
   const { hasOpenRouter } = await server.ssrLoadModule('/src/lib/openrouter.js');
-  const home = structuredClone(rooms.load().home);
+  const home = { ...structuredClone(rooms.load().home), openRouter:false };
   for (const lang of ['de','en']) {
    assert.ok(!render(archive.default,{props:{home,lang}}).body.includes('openrouter-procedure'));
    const synthetic = {...home,openRouter:hasOpenRouter(data.session)};

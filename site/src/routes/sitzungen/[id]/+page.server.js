@@ -64,6 +64,7 @@ export function load({ params }) {
 		return {
 			pillar,
 			hasConsensus: rec?.has_consensus ?? false,
+			abstained: rec?.votes_abstained ?? 0,
 			organization: rec?.organization ?? null,
 			organizationId: rec?.organization_id ?? null,
 			count: rec?.convergence?.count ?? null,

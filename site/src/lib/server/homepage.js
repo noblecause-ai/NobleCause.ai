@@ -106,6 +106,7 @@ export function buildRecommendations(session, registry) {
 			pillar: recommendation.pillar,
 			pillarName: PILLARS[recommendation.pillar],
 			hasConsensus: false,
+			abstained: recommendation.votes_abstained ?? 0,
 			title: recommendation.title,
 			votes: (recommendation.individual_votes ?? []).map((vote) => ({
 				...vote,
@@ -133,7 +134,7 @@ export function buildSessionSummaries(sessions, registry) {
 			const recommendation = (session.recommendations ?? []).find((r) => r.pillar === pillar);
 			if (!recommendation) return { pillar, status: 'missing', name: null, count: null, total: null };
 			if (!recommendation.has_consensus) {
-				return { pillar, status: 'open', name: null, count: null, total: null };
+				return { pillar, status: 'open', name: null, count: null, total: null, abstained: recommendation.votes_abstained ?? 0 };
 			}
 			const organization = organizations.get(recommendation.organization_id);
 			return {
@@ -214,7 +215,7 @@ export function buildHomepageViewModel({ session, sessions, registry, models = n
 			chips: ['A', 'B', 'C', 'D'].map((pillar) => {
 				const recommendation = (item.recommendations ?? []).find((r) => r.pillar === pillar);
 				if (!recommendation) return { pillar, status: 'missing', name: null };
-				if (!recommendation.has_consensus) return { pillar, status: 'open', name: null };
+					if (!recommendation.has_consensus) return { pillar, status: 'open', name: null, abstained: recommendation.votes_abstained ?? 0 };
 				const organization = organizations.get(recommendation.organization_id);
 				return {
 					pillar,

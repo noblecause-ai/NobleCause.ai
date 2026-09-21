@@ -42,7 +42,7 @@
 						<a class="board-donate" href={rec.organization.donationUrl}>{t.common.donate}</a>
 					{/if}
 				{:else}
-					<strong>{t.council.noConsensus}</strong>
+					<strong>{rec.abstained ? t.council.abstentions(rec.abstained) : t.council.noConsensus}</strong>
 				{/if}
 			</li>
 		{/each}

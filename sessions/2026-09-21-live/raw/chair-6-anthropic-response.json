@@ -1,0 +1,7 @@
+
+         
+
+         
+
+         
+{"id":"gen-1790012942-W7LZs2pY8QfDjdphAAdP","object":"chat.completion","created":1790012942,"model":"anthropic/claude-fable-5.1","provider":"Anthropic","system_fingerprint":null,"service_tier":"default","choices":[{"index":0,"logprobs":null,"finish_reason":"stop","native_finish_reason":"end_turn","message":{"role":"assistant","content":"{\"next_model_id\": \"openai/gpt-6-astra\", \"question\": \"GLM hat sich in Säule D dem Prüfauftrag ohne Mittelfreigabe angeschlossen und eine Regel vorgeschlagen: fällige, verfehlte Bedingungen gebieten Enthaltung; künftige, erfüllbare Bedingungen tragen eine bedingte Empfehlung mit gesperrter Kasse. Sie sind nun das einzige Mitglied mit Enthaltung in D. Tragen Sie diese Regel und die gemeinsame Formulierung für LEEP mit – oder sehen Sie einen prüfbaren Grund, warum eine noch nicht ausgewiesene Lücke 2027 anders zu behandeln ist als die Youth-Impact-Bedingungen in Säule A, denen Sie zugestimmt haben?\"}","refusal":null,"reasoning":null}}],"usage":{"prompt_tokens":33220,"completion_tokens":303,"total_tokens":33523,"cost":0.34735,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":0,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.34735,"upstream_inference_prompt_cost":0.3322,"upstream_inference_completions_cost":0.01515},"completion_tokens_details":{"reasoning_tokens":0,"image_tokens":0,"audio_tokens":0}}}

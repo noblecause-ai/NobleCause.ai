@@ -133,7 +133,7 @@
 												height="24"
 												loading="lazy"
 											/>
-											{chip.status === 'open' ? t.archive.noConsensusNote : chip.name}
+											{chip.abstained ? t.council.abstentions(chip.abstained) : chip.status === 'open' ? t.archive.noConsensusNote : chip.name}
 										</span>
 									{/if}
 								{/each}
@@ -156,10 +156,10 @@
 						</tr>
 					</thead>
 					<tbody>
-						{#each home.costs.by_model as row (`${row.model}:${row.label ?? ''}`)}
+						{#each home.costs.totals_by_model ?? home.costs.by_model as row, i (`${row.model}:${i}`)}
 							<tr>
 								<td>{row.label}</td>
-								<td>{money(row.eur, home.costs.currency)}</td>
+								<td>{row.eur != null ? money(row.eur, home.costs.currency) : row.usd != null ? `${Number(row.usd).toFixed(4)} Credits` : '—'}</td>
 							</tr>
 						{/each}
 					</tbody>

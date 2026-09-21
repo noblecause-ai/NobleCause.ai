@@ -86,7 +86,7 @@
 				{#if pil?.hasConsensus}
 					<span class="rec-tally">{pil.organization} · {pil.count} von {pil.total}</span>
 				{:else}
-					<span class="rec-tally split">getrennt — keine Empfehlung</span>
+					<span class="rec-tally split">{pil?.abstained ? `${pil.abstained} Enthaltungen — keine Empfehlung` : 'getrennt — keine Empfehlung'}</span>
 				{/if}
 			</div>
 			<div class="marks">
@@ -139,7 +139,7 @@
 {#if data.events}
 	<details class="record-conversation">
 		<summary>Das vollständige Ratsgespräch in zeitlicher Reihenfolge</summary>
-		<p><a href="/live/sessions/{s.id}/events.json">Unveränderter Ereignisrekord</a> · {s.event_record.event_count} Ereignisse</p>
+		<p><a href="https://noblecause.ai/live/sessions/{s.id}/events.json">Unveränderter Ereignisrekord</a> · {s.event_record.event_count} Ereignisse</p>
 		{#each conversation(data.events) as event (event.seq)}
 			<CouncilMessage {event} members={participants} copy={liveCopy.de} lang="de" />
 		{/each}
@@ -275,10 +275,10 @@
 <p class="costs-total">{s.costs.total.toFixed(2)} € an API-Aufrufen</p>
 {#if s.costs.by_model?.length}
 	<ul class="costs">
-		{#each s.costs.by_model as m (`${m.model}:${m.label ?? ''}`)}
+		{#each s.costs.totals_by_model ?? s.costs.by_model as m, i (`${m.model}:${i}`)}
 			<li>
 				<span class="cost-model">{modelName(m.model, m.label)}</span>
-				<span class="cost-eur">{m.eur != null ? `${m.eur.toFixed(2)} €` : '—'}</span>
+				<span class="cost-eur">{m.eur != null ? `${m.eur.toFixed(2)} €` : m.usd != null ? `${Number(m.usd).toFixed(4)} Credits` : '—'}</span>
 			</li>
 		{/each}
 	</ul>

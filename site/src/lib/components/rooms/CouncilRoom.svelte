@@ -228,7 +228,7 @@
 								<span class="cf-plaque-count">{rec.count} {t.common.ofWord} {rec.total}</span>
 								<span class="cf-plaque-org">{rec.organization.name}</span>
 							{:else}
-								<span class="cf-plaque-count split">{t.council.countSplit}</span>
+								<span class="cf-plaque-count split">{rec.abstained ? t.council.abstentions(rec.abstained) : t.council.countSplit}</span>
 							{/if}
 						</div>
 					{/each}
@@ -243,7 +243,7 @@
 							{#if rec.hasConsensus}
 								<span class="count-tally">→ {rec.count} {t.common.ofWord} {rec.total}</span>
 							{:else}
-								<span class="count-tally split">→ {t.council.countSplit}</span>
+								<span class="count-tally split">→ {rec.abstained ? t.council.abstentions(rec.abstained) : t.council.countSplit}</span>
 							{/if}
 						</div>
 						<div class="count-marks">

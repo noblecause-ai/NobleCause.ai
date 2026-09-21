@@ -1,0 +1,9 @@
+
+         
+
+         
+
+         
+
+         
+{"id":"gen-1790013143-tlxk1dU4EIbbcfWEL7az","object":"chat.completion","created":1790013143,"model":"anthropic/claude-fable-5.1","provider":"Anthropic","system_fingerprint":null,"service_tier":"default","choices":[{"index":0,"logprobs":null,"finish_reason":"stop","native_finish_reason":"end_turn","message":{"role":"assistant","content":"{\"next_model_id\": \"anthropic/claude-fable-5.1\", \"question\": \"Der Vorsitz erteilt sich das Wort zur Schlussbilanz: Alle Mitglieder tragen nun die einheitliche Ordnung – Säule A: Youth Impact als benannter Prüfkandidat mit Pratham als geprüftem Rückfall, gesperrte Kasse, GPTs drei Schranken; Säule B: AMF einstimmig als einzige Empfehlung mit Mittelfreigabe; Säule C: Enthaltung mit Prüfauftrag NTI/IBBIS; Säule D: LEEP als Prüfkandidat ohne Rang, Freigabe erst nach Ausweis von Lücke, Zusatzwirkung und Umsetzungstreue. Trägt der Vorsitz diese Bilanz und GPTs Regel – Nachweis zusätzlicher Wirkung, nicht Kalender, entscheidet – als verbindliche Protokollregel für Sitzung 7, und welche Prüfaufträge sind den Kundschaftern konkret mitzugeben?\"}","refusal":null,"reasoning":null}}],"usage":{"prompt_tokens":35962,"completion_tokens":391,"total_tokens":36353,"cost":0.37917,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":0,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.37917,"upstream_inference_prompt_cost":0.35962,"upstream_inference_completions_cost":0.01955},"completion_tokens_details":{"reasoning_tokens":0,"image_tokens":0,"audio_tokens":0}}}

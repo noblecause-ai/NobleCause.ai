@@ -1,0 +1,116 @@
+{
+  "research_date": "2026-09-20",
+  "copied_unchanged": true,
+  "new_inference": false,
+  "source_dossier_sha256": "bd04167c7a7a0f12c1627a568322f07c81462b7f7757237b8f1eda136eea54f4",
+  "artifacts": [
+    {
+      "path": "research-raw/scout-1/prompt-scout-system.txt",
+      "sha256": "84787b89b7aa540e6a31b1132bec8a44d6e68b9f58ca39fd80a1cf6619b75748"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-endpoint.json",
+      "sha256": "be879ce90818e89d2718655ea653c52ec1e0417771f5f0fee058a08690cbcd9f"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-generation-2.json",
+      "sha256": "c05d441e8ee49f6db3e618909fe2849a253a93d038d81de8e11243a2caf6e69d"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-result.json",
+      "sha256": "4e80d1da170ee6963fa0934efaf1163283c0479a91f5d93939fdcea918cb5fa7"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-model.json",
+      "sha256": "514c1ff0d809b2262561661ad952e6998abfa818b80673f0ff3e922ae1b080ea"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-generation-0.json",
+      "sha256": "861b8b426eca777b5e05c7f24d1e7a791db5fde42d9a522ca441da082be3b405"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-request.json",
+      "sha256": "6be05ac84c6e1c892745ae5fd66b187d6a83e30af4aba923cc1026e1d8bb5ee3"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-generation-1.json",
+      "sha256": "861b8b426eca777b5e05c7f24d1e7a791db5fde42d9a522ca441da082be3b405"
+    },
+    {
+      "path": "research-raw/scout-1/openrouter-response.json",
+      "sha256": "3107dfd203aa31bf447b52b3e9d9c455ed5c822bd586d047bdc1a305186a3800"
+    },
+    {
+      "path": "research-raw/scout-2/prompt-scout-system.txt",
+      "sha256": "4f7490c004b239d217a1191f788cfa08ce9060b9519f59970b3a45392a726266"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-endpoint.json",
+      "sha256": "a8bddda86aed77f1c009be02a39e159ddad551c0de905690d48e84933cca17e4"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-generation-2.json",
+      "sha256": "98a699ffb55d0762b4950a851037c75cd1069f5ba55f661b8fa4e42e2caf7801"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-result.json",
+      "sha256": "b1beaa52add24bdb6bf5517ed4ee7d017ccd7675ebf728f7a9c769225eb98ed9"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-model.json",
+      "sha256": "dca77d90583d443aece8da38cf229282de42285dc34d93746bf2a02a1cdecdaa"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-generation-0.json",
+      "sha256": "911b0ab2615a19d1deb10c054b2a177ee3faeecb9a7f89b9fb64e259b3cd1b3f"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-request.json",
+      "sha256": "50171f2baf9db91a3555d99a061921579b073cc02927437a83bec557f3bd872d"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-generation-1.json",
+      "sha256": "911b0ab2615a19d1deb10c054b2a177ee3faeecb9a7f89b9fb64e259b3cd1b3f"
+    },
+    {
+      "path": "research-raw/scout-2/openrouter-response.json",
+      "sha256": "78edffdb977568efe4fa732c122a19b792b91b29c3eddf2c4a3d6fb118cc0f09"
+    },
+    {
+      "path": "research-raw/scout-3/prompt-scout-system.txt",
+      "sha256": "0a52d81e6fb8a4ed070aac172cb07e8ede2f0497c92d14d7ed464a267652f7ef"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-endpoint.json",
+      "sha256": "60aa3e170370beb7f78b49e60e55d86390c7d8112e2e21991647e0d66d328f2e"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-generation-2.json",
+      "sha256": "6b6cb124c628052724959daa2480b1ecd734d83461675e821a2cacdbef526d8a"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-result.json",
+      "sha256": "33438507486025e6bc194135cb864004a10b01e6459718febaa03680a22e1fac"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-model.json",
+      "sha256": "38762b76a2c9471d5dfa6ab44d1205826f3a19d8e7ab66394841d985dac67b24"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-generation-0.json",
+      "sha256": "9c8787a1e50e0713287440963142585a84edfb988a99ef94009ad31dea3f4353"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-request.json",
+      "sha256": "ef2bc9ce61a1a0b9725953465ac183ac7eeb152f3bd019f999a8b4eb6aec8387"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-generation-1.json",
+      "sha256": "9c8787a1e50e0713287440963142585a84edfb988a99ef94009ad31dea3f4353"
+    },
+    {
+      "path": "research-raw/scout-3/openrouter-response.json",
+      "sha256": "77986c7c86014a38bb23e6b8dfe96aaef54ab67f1f5b3951a29a7676070ffcb9"
+    }
+  ]
+}

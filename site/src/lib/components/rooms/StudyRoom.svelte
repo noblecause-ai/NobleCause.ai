@@ -166,7 +166,7 @@
 									{#if rec.hasConsensus}
 										<strong>{rec.organization.name}</strong>
 									{:else}
-										<strong>{t.council.noConsensus}</strong>
+										<strong>{rec.abstained ? t.council.abstentions(rec.abstained) : t.council.noConsensus}</strong>
 									{/if}
 								{/if}
 							</p>

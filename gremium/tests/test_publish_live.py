@@ -216,4 +216,4 @@ def test_public_run_requires_own_symbols_and_advances_rotation_only_once(tmp_pat
     assert json.loads((tmp_path/'feed/current.json').read_text())['mode']=='live'
     assert state.accept_session(tmp_path,tmp_path/'sessions/test',cfg)
     assert not state.accept_session(tmp_path,tmp_path/'sessions/test',cfg)
-    assert json.loads((tmp_path/'schedule.json').read_text())['council_rotation']['next_index']==1
+    assert json.loads((tmp_path/'schedule.json').read_text())['council_rotation']['next_index']==(result['chair']['rotation_index']+1)%5
