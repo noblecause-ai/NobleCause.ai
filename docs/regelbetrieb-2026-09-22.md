@@ -105,3 +105,20 @@ festgelegte GLM-Endpunkt `baidu/fp8` Status -5 statt betriebsbereit (0). Das wir
 sichtbar gemeldet und bei den nächsten kostenlosen Checks erneut geprüft; keine
 Ersatzroute wurde eingestellt. Verfügbares Key-Budget weiterhin 18,247387716
 Credits. Für diese Inbetriebnahme entstand keine Inferenzrechnung.
+
+## Aktivierung abgeschlossen
+
+Die Freigabe und der Regelbetrieb wurden mit Commit
+`74629519de0cdc67fd9dd02d91f6d37d3573dcec` per Fast-forward auf `master`
+ausgeliefert. Der [Produktions-Deploy](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/35776195348)
+und alle drei kostenlosen GitHub-Prüfungen waren erfolgreich:
+[Wochenlauf mit Astra und drei Scouts](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/35776257979),
+[Sitzungsanschluss samt SSH-Publisher](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/35776261184),
+[täglicher Preflight und Budget](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/35776264448).
+
+Der GLM-Endpunkt war bei dieser abschließenden Prüfung wieder verfügbar; der
+bestehende Preflight-Alarm wurde automatisch geschlossen. Keine Ersatzroute war
+nötig. Beide Zeitplan-Workflows sind aktiv; die Checks bestätigen den nächsten
+Research am 28.09.2026 und die reguläre Sitzung am 21.10.2026. Der bestehende
+Sitzungsfeed wurde nach dem Deploy bytegleich über HTTPS verifiziert, der
+Zeitplan inhaltlich unverändert. Es wurde keine zusätzliche Sitzung gestartet.
