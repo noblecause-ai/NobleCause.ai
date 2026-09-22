@@ -5,8 +5,13 @@ Dieses Dokument gilt für alle Agenten, die in diesem Repository arbeiten.
 ## Aktueller Auftrag
 
 Der produktive Stand liegt auf `master`. Die drei statischen Räume und die
-Rekordmaschine sind live; aktuell folgen Betriebsfestigkeit 0.4.1 und danach die
-Deliberationsform 0.5 hinter einem standardmäßig ausgeschalteten Schalter.
+Rekordmaschine sind live. Der Steward hat am 22.09.2026 den autonomen Regelbetrieb
+des Fünfer-Rats 0.6 beauftragt: drei blinde Scouts, rotierender Wochenvorsitz,
+automatische fällige Live-Sitzungen und Veröffentlichung. Auftrag, Budgetmodus
+und Nachtrag stehen in `docs/regelbetrieb-2026-09-22.md`. Die GitHub-Workflows
+führen dieses Mandat ohne neue Einzelfreigaben aus; Schlüsselweitergabe verlangt
+die dafür dokumentierte gesonderte Freigabe. Historische Verfahren bleiben
+für ihre Rekorde erhalten.
 
 Arbeitsbaum für Builds, Tests und Commits:
 `~/Projects/nc-sanitize`. `~/Projects/NobleCause.ai` ist der kanonische

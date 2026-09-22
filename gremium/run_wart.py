@@ -580,6 +580,7 @@ def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", default=datetime.date.today().isoformat())
     parser.add_argument("--budget-cap", type=float, default=2.0, help="EUR stop threshold between steps; key limit bounds native calls")
+    parser.add_argument('--observe-costs', action='store_true', help='Ist-Kosten beobachten; finanziertes Key-Limit bleibt')
     args = parser.parse_args()
     cap = openrouter_scout.amount(args.budget_cap)
     if cap <= 0:
@@ -606,7 +607,9 @@ def _main():
     if any(s["family"] == "google" for s in scouts):
         required_keys.append("GEMINI_API_KEY")
     require_keys(*required_keys)
-    if wart_cfg.get('role') == 'weekly_chair':
+    if args.observe_costs and wart_cfg.get('role') != 'weekly_chair':
+        parser.error('--observe-costs benötigt den rotierenden Wochenvorsitz')
+    if wart_cfg.get('role') == 'weekly_chair' and not args.observe_costs:
         from cost_bounds import InputBounds
         # The weekly chair must be callable BEFORE paying for any new Scouts.
         InputBounds(config['live_council'].get('input_bounds', {}), ROOT).policy(wart_cfg)
@@ -651,6 +654,8 @@ def _main():
         spent = openrouter_scout.amount(0)
         def budgeted_scout(spec, system, user, directory):
             nonlocal spent
+            if args.observe_costs:
+                openrouter_scout.key_state()
             result = call_scout(spec, system, user, directory)
             if 'billed_usd' in result[1]:
                 spent += openrouter_scout.amount(result[1]['billed_usd']) * openrouter_scout.amount(config['fx_rate_usd_eur'])
@@ -712,13 +717,19 @@ def _main():
     if blind_research(scouts):
         # History enters only after every Scout has completed its own context.
         decision_user += "\n\n" + historical_comparison(ROOT, entry_date, session_id, session)
+    decision_system = prompts.WART_DECISION_SYSTEM
+    if wart_cfg.get('role') == 'weekly_chair':
+        decision_system = prompts.WEEKLY_CHAIR_SYSTEM
+        decision_user = '## Das Manifest (Verfassung des Rates)\n\n' + (ROOT/'manifest.md').read_text() + '\n\n' + decision_user
+    (raw_dir / 'prompt-wart-system.txt').write_text(decision_system)
     (raw_dir / "prompt-wart-decision.txt").write_text(decision_user)
     print("\nSchritt 3 — Einberufungs-Entscheid (Wart)")
     if wart_cfg.get('role') == 'weekly_chair':
         from live_session import weekly_decision, WeeklyRefusal
         try:
             decision_text, wart_usage, _ = weekly_decision(
-                wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir, config, spent, cap, ROOT)
+                wart_cfg, decision_system, decision_user, raw_dir, config, spent, cap, ROOT,
+                observe_costs=args.observe_costs)
         except WeeklyRefusal as exc:
             entry = {
                 'schema_version':2, 'procedure_version':'0.6', 'kind':'refusal', 'refusal':True,
@@ -736,7 +747,7 @@ def _main():
             return
     else:
         decision_text, wart_usage, _ = call_wart_decision(
-            wart_cfg, prompts.WART_DECISION_SYSTEM, decision_user, raw_dir
+            wart_cfg, decision_system, decision_user, raw_dir
         )
     (raw_dir / "wart-decision-content.md").write_text(decision_text)
     decision = parse_wart_decision(decision_text)
@@ -826,7 +837,7 @@ def _main():
         entry["decision_provenance"] = wart_usage["research_provenance"]
     if wart_cfg.get('role') == 'weekly_chair':
         entry.update(procedure_version='0.6', decision_role='weekly_chair', rotation_index=wart_cfg['rotation_index'],
-                     decision_provenance=wart_usage['provenance'])
+                     decision_provenance=wart_usage['provenance'], cost_mode='observe' if args.observe_costs else 'bounded')
     (out_dir / "entry.json").write_text(json.dumps(entry, indent=2, ensure_ascii=False))
     print(f"\nJournal geschrieben: {out_dir / 'entry.json'}")
     print(f"Kosten des Laufs: {costs['total']} €")

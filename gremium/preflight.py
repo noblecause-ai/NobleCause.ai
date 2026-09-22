@@ -79,13 +79,52 @@ def main():
         from envtools import load_env, require_keys
         from live_session import settings
         cfg = settings(config)
-        bounds = InputBounds(cfg.get('input_bounds', {}), HERE.parent)
-        for spec in cfg['models']:
-            bounds.policy(spec)
+        observe = (config.get('regular_operation') or {}).get('cost_mode') == 'observe'
+        if not observe:
+            bounds = InputBounds(cfg.get('input_bounds', {}), HERE.parent)
+            for spec in cfg['models']:
+                bounds.policy(spec)
         load_env(HERE, HERE.parent)
         require_keys('OPENROUTER_API_KEY')
-        openrouter.preflight(cfg['models'])
-        print('OpenRouter: Key, fünf gepinnte Endpunkte und B4-Belege geprüft; keine Inferenz und kein Live-Canary.')
+        from council_state import chair_for
+        weekly = '--weekly' in sys.argv
+        seats = [chair_for(config,json.loads((HERE.parent/'schedule.json').read_text()))[0]] if weekly else cfg['models']
+        import openrouter_scout
+        from process_config import configured_scouts
+        from live_debate import chair_response_format
+        key = openrouter_scout.key_state()
+        print(f"OpenRouter-Key: {key['limit_remaining']} Credits verbleiben; Limit {key['limit']}, ohne Rücksetzung.")
+        if os.environ.get('GITHUB_OUTPUT'):
+            with open(os.environ['GITHUB_OUTPUT'],'a') as output:
+                output.write(f"remaining={key['limit_remaining']}\nlow_budget={'true' if openrouter.amount(key['limit_remaining']) < 10 else 'false'}\n")
+        credit = openrouter.decode(openrouter.http('GET','/credits'))['data']
+        if openrouter.amount(credit['total_credits']) <= openrouter.amount(credit['total_usage']):
+            raise openrouter.OpenRouterError('Kein Kontoguthaben')
+        errors = []
+        for spec in seats:
+            try:
+                openrouter.endpoint_preflight(spec)
+                openrouter.endpoint_preflight({**spec, 'response_format':chair_response_format([m['model'] for m in cfg['models']]),
+                    'openrouter':{**spec['openrouter'],'reasoning_effort':spec['chair_reasoning_effort']}})
+                print(f"Rat/Vorsitz: {spec['model']} · {spec['openrouter']['endpoint']} OK")
+            except openrouter.OpenRouterError as exc:
+                errors.append(f"{spec['model']} · {spec['openrouter']['endpoint']}: {exc}")
+        catalog = openrouter.decode(openrouter.http('GET','/models'))
+        from urllib.parse import quote
+        for scout in configured_scouts(config):
+            endpoints = openrouter.decode(openrouter.http('GET','/models/'+quote(scout['model'],safe='/')+'/endpoints'))
+            try:
+                openrouter_scout.endpoint_check(scout,catalog,endpoints)
+                print(f"Scout: {scout['model']} · {scout['openrouter']['endpoint']} OK")
+            except ValueError as exc:
+                errors.append(f"Scout {scout['model']}: {exc}")
+        print('Anschlussprüfung abgeschlossen; keine Inferenz.')
+        if observe:
+            print('Kostenbeobachtung aktiv: kein belegter Input-Bound und keine Abschlussreserve; Key-Limit bleibt unverändert.')
+        if openrouter.amount(key['limit_remaining']) < 10:
+            print('::warning::Weniger als 10 Credits verfügbar; Budget vor dem nächsten Sitzungszyklus prüfen.')
+        if errors:
+            sys.exit('\n'.join(errors))
         return
     results = {}
     for name, key_env, ping in PROVIDERS:

@@ -1,0 +1,165 @@
+name: Regelbetrieb — gemeinsamer Ausführungspfad
+
+on:
+  workflow_call:
+    inputs:
+      kind:
+        required: true
+        type: string
+      check_only:
+        type: boolean
+        default: false
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: 'Betriebsteil'
+        type: choice
+        options: [session, research]
+        default: session
+      check_only:
+        description: 'Nur Anschluss und Fälligkeit prüfen, ohne Modellaufrufe'
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  issues: write
+  actions: write
+
+jobs:
+  operation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    concurrency:
+      group: gremium-records
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: master
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Abhängigkeiten
+        run: pip install -r gremium/requirements.txt
+
+      - name: Fälligkeit und unveränderte Rotation
+        id: plan
+        env:
+          OPERATION_KIND: ${{ inputs.kind }}
+        run: |
+          set -o pipefail
+          python3 gremium/regular_operation.py --kind "$OPERATION_KIND" --plan-only 2>&1 | tee run.log
+
+      - name: Anschlussprüfung ohne Inferenz
+        if: steps.plan.outputs.ready == 'true' || inputs.check_only
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPERATION_KIND: ${{ inputs.kind }}
+        run: |
+          set -o pipefail
+          ARGS=()
+          if [ "$OPERATION_KIND" = 'research' ]; then ARGS+=(--weekly); fi
+          python3 gremium/preflight.py "${ARGS[@]}" 2>&1 | tee -a run.log
+
+      - name: Vorhandener SSH-Zugang
+        if: (steps.plan.outputs.ready == 'true' && inputs.kind == 'session') || inputs.check_only
+        uses: webfactory/ssh-agent@v0.10.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Verifizierten Host-Key installieren
+        if: (steps.plan.outputs.ready == 'true' && inputs.kind == 'session') || inputs.check_only
+        env:
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          test -n "$VPS_KNOWN_HOSTS"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$VPS_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+      - name: Dateipublisher am vorhandenen Server bereitstellen und prüfen
+        if: (steps.plan.outputs.ready == 'true' && inputs.kind == 'session') || inputs.check_only
+        run: bash .github/scripts/council-publisher.sh
+
+      - name: Lauf vor der ersten Zahlung dauerhaft reservieren
+        if: steps.plan.outputs.ready == 'true' && !inputs.check_only
+        env:
+          OPERATION_KIND: ${{ inputs.kind }}
+        run: |
+          python3 gremium/regular_operation.py --kind "$OPERATION_KIND" --reserve
+          git config user.name 'noblecause-gremium'
+          git config user.email 'gremium@noblecause.ai'
+          git add schedule.json
+          git commit -m "operation: Laufreservierung ${GITHUB_RUN_ID}.${GITHUB_RUN_ATTEMPT}"
+          git push origin HEAD:master
+
+      - name: Fälligen Lauf ausführen
+        id: execute
+        if: steps.plan.outputs.ready == 'true' && !inputs.check_only
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPERATION_KIND: ${{ inputs.kind }}
+        run: |
+          set -o pipefail
+          python3 gremium/regular_operation.py --kind "$OPERATION_KIND" --reserved 2>&1 | tee -a run.log
+
+      - name: Rekorde vor Übernahme prüfen
+        id: gate
+        if: always() && steps.execute.outcome != 'skipped'
+        run: python3 gremium/schema_gate.py all
+
+      # Auch ein abgebrochener Lauf behält seine Rohbelege. Der Controller setzt
+      # eine dauerhafte Sperre vor weiteren Zahlungen; keine automatische Inferenzwiederholung.
+      - name: Rekorde und Zeitplan sichern
+        id: commit
+        if: always() && steps.execute.outcome != 'skipped'
+        env:
+          RECORD_GATE: ${{ steps.gate.outcome }}
+        run: |
+          git config user.name 'noblecause-gremium'
+          git config user.email 'gremium@noblecause.ai'
+          if [ "$RECORD_GATE" = 'success' ]; then git add sessions/ journal/; fi
+          git add schedule.json
+          if git diff --staged --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "operation: unveraenderter Laufrekord und Zeitplan ${GITHUB_RUN_ID}"
+          git push origin HEAD:master
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+
+      - name: Bestehenden Website-Deploy starten
+        if: steps.commit.outputs.changed == 'true' && steps.execute.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref master
+
+      - name: Behobenen Betriebsalarm schließen
+        if: steps.execute.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          bash .github/scripts/resolve-ci-failure.sh 'ci-failure:regular-operation' "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          if [ '${{ inputs.kind }}' = 'research' ]; then
+            bash .github/scripts/resolve-ci-failure.sh 'ci-failure:wart' "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          else
+            bash .github/scripts/resolve-ci-failure.sh 'session-due' "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" due
+          fi
+
+      - name: Vollständige Wiederherstellungsbelege sichern
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: council-recovery-${{ github.run_id }}
+          path: |
+            journal/
+            sessions/
+            schedule.json
+            run.log
+            .automation/live/
+          include-hidden-files: true
+          retention-days: 90
+
+      - name: Betriebsfehler melden
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/report-operation-failure.sh

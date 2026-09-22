@@ -224,6 +224,10 @@ def run(root, config, args):
     output = root / 'sessions' if public else (Path(args.output_dir) if args.output_dir else root / '.review/live-sessions')
     output = output.resolve() / args.session_id
     speech_amendment = None
+    if getattr(args, 'regular_operation', False):
+        from regular_operation import configuration
+        policy = configuration(config)['speech_policy']
+        speech_amendment = {**policy, 'sha256':digest(policy), 'path':'speech-policy.json'}
     amendment_path = getattr(args, 'speech_limit_amendment', None)
     if amendment_path:
         path = Path(amendment_path).resolve()
@@ -284,6 +288,8 @@ def run(root, config, args):
                 if (symbol.get('warden_review', {}).get('decision') != 'accepted' or not asset
                         or not (root / 'site/static' / asset.lstrip('/')).is_file()):
                     raise ValueError('Öffentliche Sitzung benötigt ein eigenes freigegebenes Medaillon je Sitz')
+        if getattr(args, 'regular_operation', False):
+            descriptor['speech_policy'] = speech_amendment
         if output.exists():
             if not args.resume:
                 raise ValueError('Lauf existiert; Wiederaufnahme muss ausdrücklich gewählt werden')
@@ -297,6 +303,8 @@ def run(root, config, args):
             atomic_write(output/'research.json', research_bytes)
             atomic_write(output/'history-full.md', history_bytes)
             atomic_write(output/'council-context.json', context.encode())
+            if speech_amendment:
+                atomic_write(output/'speech-policy.json', encoded(speech_amendment))
         (output/'raw').mkdir(exist_ok=True)
         publisher = None
         if getattr(args, 'live_feed_dir', None):
@@ -309,7 +317,10 @@ def run(root, config, args):
             else:
                 publisher = FilePublisher(destination, meta, mode='live' if public else 'pilot')
         events = Events(output/'events.json', args.session_id, publisher=publisher)
-        events.once('start','started','setup',data={'chair':descriptor['chair'], 'research':research_info, 'dry_run':not public})
+        start_data = {'chair':descriptor['chair'], 'research':research_info, 'dry_run':not public}
+        if getattr(args, 'regular_operation', False):
+            start_data['procedure_amendment'] = speech_amendment
+        events.once('start','started','setup',data=start_data)
         if args.resume:
             data = {'retry_inference':False}
             if speech_amendment:
@@ -363,17 +374,21 @@ class WeeklyRefusal(RuntimeError):
         super().__init__('Native Verweigerung des Wochenvorsitzes; Rohbeleg erhalten')
 
 
-def weekly_decision(spec, system, user, raw_dir, config, spent_eur, cap_eur, root):
+def weekly_decision(spec, system, user, raw_dir, config, spent_eur, cap_eur, root, *, observe_costs=False):
     """Same Council transport, with the existing strict weekly decision parser."""
     from run_wart import parse_wart_decision
     cfg = settings(config)
     bound = InputBounds(cfg.get('input_bounds', {}), root)
     limit = cfg['output_limits']['weekly']
     request = openrouter.request_for(spec, system, user, limit)
-    tokens = bound.tokens(spec, request)
+    tokens = None if observe_costs else bound.tokens(spec, request)
+    if observe_costs:
+        from openrouter_scout import key_state
+        key_state()
     try:
         text, usage = openrouter.call(spec, system, user, limit, raw_dir, 'chair-weekly',
-            spent_eur=spent_eur, cap_eur=cap_eur, fx=config['fx_rate_usd_eur'], input_bound=tokens)
+            spent_eur=spent_eur, cap_eur=cap_eur, fx=config['fx_rate_usd_eur'], input_bound=tokens,
+            observe_costs=observe_costs)
     except openrouter.OpenRouterError:
         artifact = Path(raw_dir) / f'chair-weekly-{spec["family"]}-response.json'
         if artifact.exists():

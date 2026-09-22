@@ -168,6 +168,7 @@ def test_missing_or_exhausted_key_limit_blocks_inference(monkeypatch, data):
 def test_weekly_record_persists_search_limitations_and_billed_costs(tmp_path, monkeypatch):
     cfg = json.loads((ROOT / 'gremium/config.json').read_text())
     cfg['features']['three_scouts']['enabled'] = True
+    cfg['features']['live_council']['enabled'] = False
     here = tmp_path / 'gremium'
     here.mkdir()
     (here / 'config.json').write_text(json.dumps(cfg))

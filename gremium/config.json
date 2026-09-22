@@ -21,14 +21,14 @@
 			"enabled": false
 		},
 		"three_scouts": {
-			"enabled": false,
+			"enabled": true,
 			"selection_status": "approved",
 			"approved_on": "2026-09-20",
 			"adapter_status": "tested_native_search",
 			"search_provenance_policy": "native_observations_with_disclosed_gaps"
 		},
 		"live_council": {
-			"enabled": false
+			"enabled": true
 		}
 	},
 	"scout": {
@@ -296,5 +296,22 @@
 		},
 		"input_bounds": {},
 		"context_projection": "compact_evidence_v1"
+	},
+	"regular_operation": {
+		"enabled": true,
+		"approved_on": "2026-09-22",
+		"cost_mode": "observe",
+		"question": "Welche Intervention und umsetzende Organisation bietet nach der vorliegenden aktuellen Evidenz je NobleCause-Säule die stärkste begründete Empfehlung für zusätzliche Mittel, und welche Unsicherheiten oder Gegenbelege könnten diese Empfehlung ändern?",
+		"title": "Reguläre Ratssitzung: Empfehlungen auf dem Prüfstand",
+		"speech_policy": {
+			"amendment_version": "0.6-speech-limit-2",
+			"procedure_version": "0.6",
+			"scope": "regular_operation",
+			"prompt_limit": 180,
+			"max_words": 200,
+			"approved_on": "2026-09-22",
+			"review_reference": "sessions/2026-09-21-live/procedure-review/",
+			"authorization_reference": "docs/regelbetrieb-2026-09-22.md"
+		}
 	}
 }

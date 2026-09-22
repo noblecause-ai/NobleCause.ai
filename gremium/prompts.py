@@ -424,6 +424,12 @@ gelieferte Evidenz-Dossier gegen die Einberufungsregeln. Du recherchierst hier n
 und gibst keine Spendenempfehlung ab. Du entscheidest nur, ob der Council vor der regulären \
 Monatssitzung einberufen werden soll. Antworte auf Deutsch und ausschließlich mit JSON."""
 
+WEEKLY_CHAIR_SYSTEM = SYSTEM + """\n\n## Auftrag als nächster Ratsvorsitz
+Prüfe die getrennt recherchierten Scout-Dossiers gegen die beigefügten
+Einberufungsregeln. Recherchiere hier nicht selbst und gib keine
+Spendenempfehlung ab. Entscheide ausschließlich, ob vor der regulären Sitzung
+einberufen werden soll. Antworte nur im angegebenen JSON-Format."""
+
 WART_DECISION_USER = """## Jüngste Sitzung
 
 {session_id} ({session_date})

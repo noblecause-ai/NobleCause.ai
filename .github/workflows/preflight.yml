@@ -1,8 +1,7 @@
-name: Preflight — Key-Canary
+name: Preflight — OpenRouter und Budget
 
-# Täglicher Canary: prüft, dass ANTHROPIC/OPENAI/GEMINI-Secrets gesetzt und live
-# erreichbar sind — BEVOR ein echter Wart- oder Session-Lauf am Key scheitert.
-# Schlägt der Canary fehl, wird ein Issue angelegt/aktualisiert.
+# Tägliche kostenlose Metadatenprüfung der fünf Ratssitze und drei Scouts.
+# Keine Inferenz. Der bestehende Key-Deckel wird niemals verändert.
 
 on:
   schedule:
@@ -15,7 +14,7 @@ permissions:
 
 jobs:
   canary:
-    name: Key-Canary (3 Anbieter)
+    name: OpenRouter-Anschluss (ohne Inferenz)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -30,15 +29,31 @@ jobs:
       - name: Install dependencies
         run: pip install -r gremium/requirements.txt
 
-      - name: Canary (minimaler Live-Call je Anbieter)
+      - name: Schlüssel, festgelegte Endpunkte und Budget prüfen
+        id: preflight
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           set -o pipefail
           python3 gremium/preflight.py 2>&1 | tee run.log
+
+      - name: Niedriges Budget einmalig melden
+        if: always() && steps.preflight.outputs.low_budget == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REMAINING_CREDITS: ${{ steps.preflight.outputs.remaining }}
+        run: |
+          gh label create 'budget:openrouter' --color D4C5F9 --description 'OpenRouter-Budget wird knapp' 2>/dev/null || true
+          NUMBER=$(gh issue list --label 'budget:openrouter' --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$NUMBER" ]; then exit 0; fi
+          printf 'Unter dem bestehenden OpenRouter-Key-Limit bleiben %s Credits. Der Betrieb erhöht dieses Limit nicht. Beim Erreichen stoppt er weitere Modellaufrufe.\n' "$REMAINING_CREDITS" > budget-notice.md
+          gh issue create --title 'OpenRouter: weniger als 10 Credits verfügbar' --label 'budget:openrouter' --body-file budget-notice.md
+
+      - name: Behobenen Budgethinweis schließen
+        if: steps.preflight.outputs.low_budget == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/resolve-ci-failure.sh 'budget:openrouter' "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
       - name: Behobenen Preflight-Alarm schließen
         env:

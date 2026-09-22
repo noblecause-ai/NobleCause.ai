@@ -22,6 +22,9 @@ GREMIUM = HERE.parent
 sys.path.insert(0, str(GREMIUM))
 
 import run_wart  # noqa: E402
+import pytest
+
+pytestmark = pytest.mark.usefixtures("legacy_weekly_configuration")
 
 
 @pytest.fixture

@@ -250,6 +250,8 @@ def test_phase_barrier_stops_invalid_votes_and_challenges(tmp_path):
 
 def test_session_missing_key_precedes_any_write(tmp_path,monkeypatch):
     cfg=json.loads((ROOT/'gremium/config.json').read_text());cfg['models']=SPECS
+    cfg['features']['live_council']['enabled']=False
+    cfg['features']['three_scouts']['enabled']=False
     here=tmp_path/'gremium';here.mkdir();(here/'config.json').write_text(json.dumps(cfg))
     monkeypatch.setattr(run_session,'HERE',here);monkeypatch.setattr(run_session,'ROOT',tmp_path)
     monkeypatch.setattr(run_session,'load_env',lambda *a:None)
@@ -279,6 +281,8 @@ def synthetic_vote():
 def synthetic_run(tmp_path,monkeypatch,invalid_phase=None):
     cfg=json.loads((ROOT/'gremium/config.json').read_text());cfg['models']=copy.deepcopy(SPECS)
     cfg['features']['deliberation_0_5']['enabled']=True
+    cfg['features']['live_council']['enabled']=False
+    cfg['features']['three_scouts']['enabled']=False
     here=tmp_path/'gremium';here.mkdir();(here/'config.json').write_text(json.dumps(cfg))
     for name in ['manifest.md','organizations.json','schedule.json']:
         (tmp_path/name).write_bytes((ROOT/name).read_bytes())

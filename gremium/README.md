@@ -5,16 +5,20 @@ nach `../sessions/YYYY-MM/`. Kein Server, keine Datenbank: Der Orchestrator
 (`run_session.py`) ist deterministisch. Modelle liefern Beratungsinhalt und
 Voten; die Zählung bleibt vollständig im Code.
 
-Der neue **Live-Rat 0.6** ist als ausgeschalteter Backend-Pilot vorbereitet:
-fünf Stimmen, rotierender Vorsitz, fortlaufende Debatte und Ereignisrekord.
-Er wird ausdrücklich mit `--live-council` aufgerufen und schreibt isolierte
-Artefakte statt veröffentlichter Sitzungen. Im Standardmodus sperrt B4 echte
-Modellaufrufe, solange die belegten Eingabe-Kostengrenzen fehlen. Der Steward
-hat für den ersten Pilot ausdrücklich `--observe-costs` freigegeben:
-[Kostenbeobachtung und Testergebnis](../docs/live-rat-kostenbeobachtung-2026-09-20.md).
-Bedienung, Nachweise und
-offene Schritte stehen in [der Backend-Abnahme](../docs/live-rat-backend-2026-09-20.md).
-Die folgende Standardbeschreibung gilt weiterhin für den bisherigen Ablauf.
+Der **Live-Rat 0.6** ist seit dem Steward-Auftrag vom 22.09.2026 für den autonomen
+Regelbetrieb konfiguriert: fünf Stimmen, rotierender Vorsitz, drei blinde Scouts,
+fortlaufende öffentliche Debatte und unveränderlicher Ereignisrekord. Ablauf,
+Secret-Freigabe, Budget und Wiederherstellung stehen in
+[Regelbetrieb](../docs/regelbetrieb-2026-09-22.md).
+
+Die GitHub-Workflows `wart.yml` und `session.yml` verwenden gemeinsam
+`regular-operation.yml`. `regular_operation.py --kind research|session --check-only`
+prüft lokal nur den Zeitplan; ein Actions-Dispatch mit `check_only` prüft zusätzlich
+OpenRouter und den SSH-Publisher, ohne Inferenz. Bezahlte automatische Läufe
+reservieren ihren GitHub-Laufversuch vorab im Repository. Der Modus
+`--observe-costs` ist freigegeben; das vorhandene OpenRouter-Key-Limit bleibt.
+
+Die folgenden Abschnitte dokumentieren weiterhin die historischen Batch-Verfahren.
 
 ## Ablauf eines Laufs
 
@@ -46,10 +50,11 @@ Wart-geleiteter Modus (`--led-by-wart`, impliziert `--with-dossier`):
 5. **Runde 2:** Council liefert Schlussvoten.
 6. **Kurzfassung durch den Wart:** Summary/Dissens-Highlights via Fable.
 
-## Vorbereitete Verfahrensschalter (standardmäßig aus)
+## Verfahrensschalter
 
-`config.json` enthält Verfahrensschalter unter `features`. Alle stehen auf
-`enabled: false`; ihr Vorhandensein ändert daher weder Wochenlauf noch Sitzung.
+`config.json` enthält Verfahrensschalter unter `features`. `three_scouts` und
+`live_council` sind für den Regelbetrieb aktiv. Die älteren Alternativen
+`two_scouts` und `deliberation_0_5` bleiben aus.
 
 - **`two_scouts`:** Verlangt bei Aktivierung genau zwei Einträge in
   `config.scouts`, aus zwei verschiedenen Familien; mindestens eine Familie

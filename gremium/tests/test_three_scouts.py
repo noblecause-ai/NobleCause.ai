@@ -17,7 +17,10 @@ from scout_context import historical_comparison
 
 
 def config():
-    return json.loads((ROOT / "gremium/config.json").read_text())
+    cfg = json.loads((ROOT / "gremium/config.json").read_text())
+    cfg["features"]["three_scouts"]["enabled"] = False
+    cfg["features"]["live_council"]["enabled"] = False
+    return cfg
 
 
 def test_approved_roster_matches_measured_endpoints_without_activating_incomplete_transport():

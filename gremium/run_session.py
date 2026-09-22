@@ -983,11 +983,14 @@ def main():
     parser.add_argument('--live-feed-ssh', help='Vorhandener SSH-Deploy-Host für synchrone Live-Publikation')
     parser.add_argument('--live-feed-identity', help='Optionaler Pfad zum vorhandenen SSH-Deploy-Key')
     parser.add_argument('--speech-limit-amendment', help='Sitzungsgebundener Verfahrensnachtrag für eine ausdrücklich erlaubte Wiederaufnahme')
+    parser.add_argument('--regular-operation', action='store_true', help='Freigegebene Regelbetriebs-Redetoleranz im neuen Rekord ausweisen')
     args = parser.parse_args()
     if not math.isfinite(args.budget_cap) or args.budget_cap < 0:
         parser.error("--budget-cap muss endlich und nicht negativ sein")
     if args.observe_costs and not args.live_council:
         parser.error('--observe-costs benötigt --live-council')
+    if args.regular_operation and (not args.public_session or args.speech_limit_amendment):
+        parser.error('--regular-operation verlangt eine öffentliche Sitzung ohne Einzelfall-Nachtrag')
     if args.stop_after_first and not args.live_council:
         parser.error('--stop-after-first ist ausschließlich für den isolierten Live-Pilot zulässig')
     if args.live_feed_dir and not args.live_council:

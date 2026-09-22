@@ -350,6 +350,22 @@ def test_full_backend_record_byte_equality_rotation_and_resume(tmp_path,monkeypa
     with pytest.raises(ValueError,match='bytegleichen'):state.validate_record(directory)
 
 
+def test_regular_policy_is_archived_in_start_event_without_changing_prompt(tmp_path,monkeypatch):
+    cfg,args=setup_run(tmp_path,monkeypatch)
+    args.regular_operation=True
+    record=live_session.run(tmp_path,cfg,args)
+    directory=tmp_path/'runs/test'
+    policy=json.loads((directory/'speech-policy.json').read_text())
+    assert policy['amendment_version']=='0.6-speech-limit-2'
+    assert policy['max_words']==200 and policy['prompt_limit']==180
+    events=json.loads((directory/'events.json').read_text())['events']
+    assert events[0]['data']['procedure_amendment']==policy
+    assert json.loads((directory/'run-input.json').read_text())['speech_policy']==policy
+    assert '180 Wörter' in record['prompts']['speech']
+    args.resume=True
+    assert live_session.run(tmp_path,cfg,args)==record
+
+
 def test_failed_final_validation_never_writes_success_record(tmp_path,monkeypatch):
     cfg,args=setup_run(tmp_path,monkeypatch)
     def invalid(*args):
@@ -384,6 +400,7 @@ def test_all_five_models_can_hold_weekly_role(index):
 
 def test_live_weekly_role_requires_three_blind_scouts():
     cfg=json.loads((ROOT/'gremium/config.json').read_text())
+    cfg['features']['three_scouts']['enabled']=False
     cfg['features']['live_council']['enabled']=True
     with pytest.raises(ValueError,match='drei genehmigten'):
         process_config.configured_scouts(cfg)
@@ -627,6 +644,7 @@ def test_weekly_runner_chair_result_and_refusal_record(tmp_path,monkeypatch,mode
     cfg['features']['live_council']['enabled']=True;cfg['features']['three_scouts']['enabled']=True
     cfg['live_council']['input_bounds']=synthetic_policies(tmp_path)
     here=tmp_path/'gremium';here.mkdir();(here/'config.json').write_text(json.dumps(cfg))
+    (tmp_path/'manifest.md').write_text('SYNTHETIC MANIFEST')
     previous=tmp_path/'sessions/previous';previous.mkdir(parents=True)
     (previous/'session.json').write_text(json.dumps({'id':'previous','number':1,'date':'2026-09-14','question':'historical','recommendations':[]}))
     (tmp_path/'schedule.json').write_text(json.dumps({'custom':'keep','next_session':'2026-10-14T12:00:00Z'}))
