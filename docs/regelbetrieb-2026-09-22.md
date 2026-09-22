@@ -65,7 +65,12 @@ auf dem bestehenden VPS bereitgestellt und geprüft. Vor jeder neuen Inferenz
 muss der Server den veröffentlichten Ereignishash bestätigen. Website-Deploys
 lassen `/live/` weiterhin unberührt. Der OpenRouter-Key gehört ausschließlich
 als verschlüsseltes Secret in das bestehende GitHub-Repository, nicht auf den
-VPS oder in Git. Die separate Secret-Freigabe wird vor Aktivierung eingeholt.
+VPS oder in Git. Nach Erläuterung der Zugriffsmöglichkeiten hat der Steward am
+22.09.2026 ausdrücklich die Übertragung dieses Keys als verschlüsseltes
+`OPENROUTER_API_KEY`-Secret an `noblecause-ai/NobleCause.ai` und die Aktivierung
+bestätigt („dann hast du mein erlaubnist“). Das Secret wurde über die GitHub-CLI
+ohne Ausgabe oder Speicherung des Wertes in Git hinterlegt. Die zuvor von der
+automatischen Freigabeprüfung geforderte konkrete Zustimmung liegt damit vor.
 
 Anschlussfehler vor der Laufreservierung sind kostenlos erneut prüfbar.
 Ungeklärte bezahlte Läufe setzen eine dauerhafte Betriebssperre und einen
