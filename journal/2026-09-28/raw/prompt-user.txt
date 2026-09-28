@@ -1,0 +1,24 @@
+## Fragestellung
+
+Welche wirksamen, konkret unterstützbaren Interventionen und
+übersehenen Engpässe verdienen anhand der verfügbaren Evidenz Aufmerksamkeit
+in den vier Säulen?
+
+## Recherche-Stichtag
+
+2026-09-28
+
+## Vier Säulen
+
+- A: Zukunftsinvestition
+- B: Linderung gegenwärtigen Leids
+- C: Existenzrisiko-Mitigation
+- D: Übersehene Essentials
+
+Recherchiere eigenständig passende Interventionen, ihre Wirksamkeit, operative
+Engpässe und offene Fragen. Berücksichtige alle vier Säulen, mit belegten Funden
+oder einer ausdrücklich benannten Evidenzlücke. Nutze nur bis zum Stichtag
+veröffentlichte Quellen. Dokumentiere Suchanfragen und verworfene Ansätze.
+Das Feld delta_assessment enthält hier eine kurze Zusammenfassung der heutigen
+Evidenzlage und Unsicherheiten, keinen Vergleich mit früheren Sitzungen.
+Der historische Abgleich erfolgt erst nach Abschluss aller Scout-Recherchen.

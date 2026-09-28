@@ -1,0 +1,432 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 165203,
+  "output_tokens": 5384,
+  "billed_usd": "0.27567",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1790597783-13HLyIOB5PUtbug3i5lU",
+    "requested_model": "x-ai/grok-4.6",
+    "reported_model": "x-ai/grok-4.6",
+    "generation_model": "x-ai/grok-4.6-20260810",
+    "provider": "xAI",
+    "endpoint": "xai/zdr",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "cost_basis": "billed",
+    "billed_usd": "0.27567",
+    "search_engine_requested": "native",
+    "search_engine_reported": "native",
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": 16,
+    "citations": [
+      {
+        "url": "https://www.evidenceaction.org/insights/overlooked-solutions-2",
+        "title": "https://www.evidenceaction.org/insights/overlooked-solutions-2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6107077/",
+        "title": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6107077/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/content/dam/rand/pubs/research_reports/RRA4900/RRA4999-1/RAND_RRA4999-1.pdf",
+        "title": "https://www.rand.org/content/dam/rand/pubs/research_reports/RRA4900/RRA4999-1/RAND_RRA4999-1.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/pubs/research_reports/RRA4999-1.html",
+        "title": "https://www.rand.org/pubs/research_reports/RRA4999-1.html",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK525199/",
+        "title": "https://www.ncbi.nlm.nih.gov/books/NBK525199/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10231298/",
+        "title": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10231298/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/pubs/research_briefs/RB9993.html",
+        "title": "https://www.rand.org/pubs/research_briefs/RB9993.html",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://royalsociety.org/-/media/policy/projects/solar-radiation-modification/solar-radiation-modification-policy-briefing.pdf",
+        "title": "https://royalsociety.org/-/media/policy/projects/solar-radiation-modification/solar-radiation-modification-policy-briefing.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://80000hours.org/future-generations",
+        "title": "https://80000hours.org/future-generations",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://iris.who.int/items/5b68cf0e-2105-4252-8796-5a03b45bd57a",
+        "title": "https://iris.who.int/items/5b68cf0e-2105-4252-8796-5a03b45bd57a",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/content/dam/rand/pubs/external_publications/EP70000/EP71093/RAND_EP71093.pdf",
+        "title": "https://www.rand.org/content/dam/rand/pubs/external_publications/EP70000/EP71093/RAND_EP71093.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://link.springer.com/article/10.1007/s11292-013-9190-3",
+        "title": "https://link.springer.com/article/10.1007/s11292-013-9190-3",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dx.doi.org/10.3386/w34152",
+        "title": "https://dx.doi.org/10.3386/w34152",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sciencedirect.com/science/article/abs/pii/S0190740919311211",
+        "title": "https://www.sciencedirect.com/science/article/abs/pii/S0190740919311211",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w34152/revisions/w34152.rev0.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w34152/revisions/w34152.rev0.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://osf.io/dnc2r/download",
+        "title": "https://osf.io/dnc2r/download",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.foreignaffairs.com/united-states/new-way-fight-disease-and-boost-agriculture-poor-countries",
+        "title": "https://www.foreignaffairs.com/united-states/new-way-fight-disease-and-boost-agriculture-poor-countries",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.belfercenter.org/sites/default/files/2026-08/Belfer_Deterrence%20by%20Resilience_3.2_Digital%20Final.pdf",
+        "title": "https://www.belfercenter.org/sites/default/files/2026-08/Belfer_Deterrence%20by%20Resilience_3.2_Digital%20Final.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://wp.nyu.edu/jmorduch/files/2025/05/Balakrishnan-et-al-Design-and-Impact-of-Cash-Transfers-Compton-May-23-2025.pdf",
+        "title": "https://wp.nyu.edu/jmorduch/files/2025/05/Balakrishnan-et-al-Design-and-Impact-of-Cash-Transfers-Compton-May-23-2025.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nature.com/articles/d44148-025-00367-z",
+        "title": "https://www.nature.com/articles/d44148-025-00367-z",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4200/WRA4213-1/RAND_WRA4213-1.pdf",
+        "title": "https://www.rand.org/content/dam/rand/pubs/working_papers/WRA4200/WRA4213-1/RAND_WRA4213-1.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/pubs/research_reports/RRA4087-1.html",
+        "title": "https://www.rand.org/pubs/research_reports/RRA4087-1.html",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://arxiv.org/html/2310.20563v2",
+        "title": "https://arxiv.org/html/2310.20563v2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/randeurope/research/projects/2024/ai-risk-index.html",
+        "title": "https://www.rand.org/randeurope/research/projects/2024/ai-risk-index.html",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.science.org/doi/10.1126/sciadv.adj5778",
+        "title": "https://www.science.org/doi/10.1126/sciadv.adj5778",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.who.int/publications/i/item/9789240091535",
+        "title": "https://www.who.int/publications/i/item/9789240091535",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author",
+        "title": "https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://carnegieendowment.org/research/2025/07/geoengineering-assessing-risks-in-the-era-of-planetary-security",
+        "title": "https://carnegieendowment.org/research/2025/07/geoengineering-assessing-risks-in-the-era-of-planetary-security",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nature.com/articles/s41558-023-01738-w",
+        "title": "https://www.nature.com/articles/s41558-023-01738-w",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.who.int/teams/control-of-neglected-tropical-diseases/global-report-on-neglected-tropical-diseases-2025",
+        "title": "https://www.who.int/teams/control-of-neglected-tropical-diseases/global-report-on-neglected-tropical-diseases-2025",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://jamanetwork.com/journals/jamapediatrics/fullarticle/2834896",
+        "title": "https://jamanetwork.com/journals/jamapediatrics/fullarticle/2834896",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/pubs/working_papers/WRA4213-1.html",
+        "title": "https://www.rand.org/pubs/working_papers/WRA4213-1.html",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7787577/",
+        "title": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7787577/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.c2g2.net/wp-content/uploads/202203-C2G-RR-Full.pdf",
+        "title": "https://www.c2g2.net/wp-content/uploads/202203-C2G-RR-Full.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://cdr.lib.unc.edu/downloads/pk02cr87f?locale=en",
+        "title": "https://cdr.lib.unc.edu/downloads/pk02cr87f?locale=en",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pnas.org/doi/10.1073/pnas.2214851120",
+        "title": "https://www.pnas.org/doi/10.1073/pnas.2214851120",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w32779/revisions/w32779.rev2.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w32779/revisions/w32779.rev2.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://osf.io/download/x3wsb",
+        "title": "https://osf.io/download/x3wsb",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://centerforhealthsecurity.org/our-work/aixbio/biosecurity-guide-to-the-ai-action-plan",
+        "title": "https://centerforhealthsecurity.org/our-work/aixbio/biosecurity-guide-to-the-ai-action-plan",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.science.org/doi/10.1126/science.aed5212",
+        "title": "https://www.science.org/doi/10.1126/science.aed5212",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://d110txtih22jhy.cloudfront.net/The%20Impact%20of%20Global%20Health%20R&D%20Report.pdf",
+        "title": "https://d110txtih22jhy.cloudfront.net/The%20Impact%20of%20Global%20Health%20R&D%20Report.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://iris.who.int/server/api/core/bitstreams/0a8e5703-e772-4beb-b73e-2d2525cdc171/content",
+        "title": "https://iris.who.int/server/api/core/bitstreams/0a8e5703-e772-4beb-b73e-2d2525cdc171/content",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://bpspsychub.onlinelibrary.wiley.com/action/oidcStart?redirectUri=%2Fdoi%2F10.1111%2Fbjso.12775",
+        "title": "https://bpspsychub.onlinelibrary.wiley.com/action/oidcStart?redirectUri=%2Fdoi%2F10.1111%2Fbjso.12775",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://deb.ucdavis.edu/sites/g/files/dgvnsk7891/files/inline-files/NASEM%20AI%20Life%20Sciences%202025_0.pdf",
+        "title": "https://deb.ucdavis.edu/sites/g/files/dgvnsk7891/files/inline-files/NASEM%20AI%20Life%20Sciences%202025_0.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.who.int/publications-detail-redirect/9789240067295",
+        "title": "https://www.who.int/publications-detail-redirect/9789240067295",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.mdpi.com/2227-9091/13/12/241",
+        "title": "https://www.mdpi.com/2227-9091/13/12/241",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sciencedirect.com/science/article/abs/pii/S0272494423001226",
+        "title": "https://www.sciencedirect.com/science/article/abs/pii/S0272494423001226",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.rand.org/content/dam/rand/pubs/research_reports/RRA4000/RRA4087-1/RAND_RRA4087-1.pdf",
+        "title": "https://www.rand.org/content/dam/rand/pubs/research_reports/RRA4000/RRA4087-1/RAND_RRA4087-1.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w33844/w33844.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w33844/w33844.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nature.com/articles/s41562-025-02219-0",
+        "title": "https://www.nature.com/articles/s41562-025-02219-0",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://insights.som.yale.edu/insights/how-cooling-the-planet-with-geoengineering-would-upend-climate-economics",
+        "title": "https://insights.som.yale.edu/insights/how-cooling-the-planet-with-geoengineering-would-upend-climate-economics",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ora.ox.ac.uk/objects/uuid:0d1176dc-be8f-4657-a742-b70533a633c1",
+        "title": "https://ora.ox.ac.uk/objects/uuid:0d1176dc-be8f-4657-a742-b70533a633c1",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pennmedicine.org/news/cash-transfers-boost-health-in-low-and-middle-income-countries",
+        "title": "https://www.pennmedicine.org/news/cash-transfers-boost-health-in-low-and-middle-income-countries",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5576150",
+        "title": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5576150",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.who.int/publications/i/item/9789240114043",
+        "title": "https://www.who.int/publications/i/item/9789240114043",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.who.int/news-room/questions-and-answers/item/neglected-tropical-diseases",
+        "title": "https://www.who.int/news-room/questions-and-answers/item/neglected-tropical-diseases",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.belfercenter.org/bio-deterrence",
+        "title": "https://www.belfercenter.org/bio-deterrence",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nature.com/articles/s41586-023-06116-2",
+        "title": "https://www.nature.com/articles/s41586-023-06116-2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w32093/w32093.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w32093/w32093.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://iopscience.iop.org/article/10.1088/2752-5295/ae33df",
+        "title": "https://iopscience.iop.org/article/10.1088/2752-5295/ae33df",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ieg.worldbankgroup.org/sites/default/files/Data/Evaluation/files/ImpactsofInterventions_EarlyChildhoodonLaterOutcomes.pdf",
+        "title": "https://ieg.worldbankgroup.org/sites/default/files/Data/Evaluation/files/ImpactsofInterventions_EarlyChildhoodonLaterOutcomes.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.infectioncontroltoday.com/view/the-neglected-tropical-diseases-you-ve-never-heard-of",
+        "title": "https://www.infectioncontroltoday.com/view/the-neglected-tropical-diseases-you-ve-never-heard-of",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.atlanticcouncil.org/in-depth-research-reports/issue-brief/accelerating-climate-intervention-research-to-improve-climate-security/",
+        "title": "https://www.atlanticcouncil.org/in-depth-research-reports/issue-brief/accelerating-climate-intervention-research-to-improve-climate-security/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w34040/revisions/w34040.rev0.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w34040/revisions/w34040.rev0.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nature.com/articles/s44271-026-00440-9",
+        "title": "https://www.nature.com/articles/s44271-026-00440-9",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w32784/w32784.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w32784/w32784.pdf",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "Der Anbieter hat mehr Suchen ausgeführt als angefordert."
+    ],
+    "started_at": "2026-09-28T12:16:23.297862+00:00",
+    "finished_at": "2026-09-28T12:19:01.826545+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-3.json"
+  },
+  "web_search_requests": 16
+}
