@@ -278,8 +278,8 @@
 					"context_length": 1048576,
 					"max_output_tokens": 32768,
 					"max_price": {
-						"prompt": 0.8918,
-						"completion": 2.8028
+						"prompt": 1.4,
+						"completion": 4.4
 					},
 					"token_parameter": "max_tokens"
 				},

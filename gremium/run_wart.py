@@ -33,32 +33,24 @@ from process_config import (  # noqa: E402
 
 
 def extract_json_block(text):
-    """Letzten ```json-Block ziehen; balancierte Klammern für verschachteltes JSON."""
+    """JSON-Objekt direkt oder aus dem letzten Markdown-JSON-Block lesen.
+
+    Die Einfassung ist Darstellung, nicht Teil des Datenvertrags. JSON selbst
+    bleibt strikt; insbesondere wird freier Modelltext nicht zu Daten ergänzt.
+    """
     start = text.rfind("```json")
     if start == -1:
+        body = text.strip()
+    else:
+        body = text[start + 7 :]
+        end_fence = body.find("```")
+        if end_fence != -1:
+            body = body[:end_fence]
+    try:
+        parsed = json.loads(body)
+    except json.JSONDecodeError:
         return None
-    body = text[start + 7 :]
-    end_fence = body.find("```")
-    if end_fence != -1:
-        body = body[:end_fence]
-    body = body.strip()
-    if not body.startswith("{"):
-        brace = body.find("{")
-        if brace == -1:
-            return None
-        body = body[brace:]
-    depth = 0
-    for i, ch in enumerate(body):
-        if ch == "{":
-            depth += 1
-        elif ch == "}":
-            depth -= 1
-            if depth == 0:
-                try:
-                    return json.loads(body[: i + 1])
-                except json.JSONDecodeError:
-                    return None
-    return None
+    return parsed if isinstance(parsed, dict) else None
 
 
 def strip_json_block(text):
