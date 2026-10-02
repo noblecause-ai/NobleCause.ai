@@ -122,3 +122,28 @@ nötig. Beide Zeitplan-Workflows sind aktiv; die Checks bestätigen den nächste
 Research am 28.09.2026 und die reguläre Sitzung am 21.10.2026. Der bestehende
 Sitzungsfeed wurde nach dem Deploy bytegleich über HTTPS verifiziert, der
 Zeitplan inhaltlich unverändert. Es wurde keine zusätzliche Sitzung gestartet.
+
+## Tarifprüfung am 02.10.2026
+
+Die kostenlosen Preflights am 01. und 02.10. meldeten beim festgelegten Kimi-
+Endpunkt `moonshotai/kimi-k3` / `inference-net/fp4` eine Preisabweichung. Der
+öffentlich abgefragte Endpunkt war verfügbar (Status 0, InferenceNet, FP4),
+kostete aber 13 statt der hinterlegten maximalen 10.95 USD pro Million
+Ausgabetokens (+18.72 %). Eingabetokens kosteten 1.39 USD pro Million und lagen
+damit unter der bestehenden Grenze von 2.10. Die Ausgabe-Preisgrenze wurde auf
+den verifizierten Tarif 13 aktualisiert; Modell, Anbieter, Quantisierung und
+Gesamtlimit von 40 Credits bleiben bestehen. Weitere Tarifänderungen werden
+weiterhin vor einem Modellaufruf geprüft und nicht automatisch übernommen.
+
+Der [Preflight vom 02.10.](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/36999853144)
+bestätigte weiterhin 17.088019716 verfügbare Credits. Seit dem Recherchelauf vom
+28.09. gab es keine zusätzlichen Modellkosten. Die Fälligkeitsprüfungen für
+Recherche und Ratssitzung waren erfolgreich; der nächste Research bleibt am
+05.10., die reguläre Sitzung am 21.10.2026. Der am 29.09. reparierte JSON-Parser
+war an dieser neuen Meldung nicht beteiligt.
+
+Preisfehler nennen nun Tokenart, tatsächlichen Tarif und hinterlegte Grenze
+direkt im Protokoll. Neue Preflight-Alarme beschreiben die kostenlose
+Anschlussprüfung und behaupten nicht mehr pauschal einen Key- oder
+Erreichbarkeitsfehler. Die Tarifprüfung wird mit aufgezeichneten Preiswerten
+ohne HTTP-Inferenz getestet; der Produktionscheck erfolgt ebenfalls kostenlos.

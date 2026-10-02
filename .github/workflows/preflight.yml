@@ -69,10 +69,10 @@ jobs:
           RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           gh label create "$LABEL" --color B60205 --description "Automatischer CI-Fehler" 2>/dev/null || true
           TAIL=$(tail -c 3000 run.log 2>/dev/null || echo "(kein Log erfasst)")
-          BODY=$(printf '**Canary fehlgeschlagen** (mind. ein Key fehlt/leer oder Anbieter nicht erreichbar): %s\n\n```\n%s\n```' "$RUN_URL" "$TAIL")
+          BODY=$(printf '**Kostenlose Anschlussprüfung fehlgeschlagen:** %s\n\nEs wurden keine Modellaufrufe gestartet. Geprüft werden Key-Budget, Verfügbarkeit, Parameter und Preisgrenzen der festgelegten Endpunkte. Die konkrete Abweichung steht im folgenden Protokoll.\n\n```text\n%s\n```' "$RUN_URL" "$TAIL")
           NUM=$(gh issue list --label "$LABEL" --state open --json number --jq '.[0].number // empty')
           if [ -n "$NUM" ]; then
             gh issue comment "$NUM" --body "$BODY"
           else
-            gh issue create --title "CI-Fehler: Key-Canary (preflight)" --label "$LABEL" --body "$BODY"
+            gh issue create --title "OpenRouter-Anschlussprüfung fehlgeschlagen (ohne Modellaufrufe)" --label "$LABEL" --body "$BODY"
           fi

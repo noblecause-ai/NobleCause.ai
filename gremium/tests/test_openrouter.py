@@ -207,6 +207,25 @@ def test_price_increase_and_no_budget_are_write_free(tmp_path,monkeypatch):
     assert not any(c[0]=='POST' for c in calls)
 
 
+def test_kimi_tariff_change_reports_exact_reason_without_inference(tmp_path, monkeypatch):
+    config = json.loads((ROOT/'gremium/config.json').read_text())
+    spec = next(s for s in config['live_council']['models'] if s['model'] == 'moonshotai/kimi-k3')
+    old = copy.deepcopy(spec)
+    old['openrouter']['max_price']['completion'] = 10.95
+    ep = metadata(old)
+    ep['pricing'].update(prompt='0.00000139', completion='0.000013')
+    calls = stub_http(monkeypatch, old, endpoint=ep)
+    with pytest.raises(adapter.OpenRouterError, match='completion: 13 > 10.95 USD/1M tokens; no inference'):
+        adapter.call(old, 's', 'u', 100, tmp_path, 'r1', spent_eur=0, cap_eur=15, fx=.85, observe_costs=True)
+    assert not any(c[0] == 'POST' for c in calls)
+    assert not list(tmp_path.iterdir())
+    assert adapter.endpoint_preflight(spec)['pricing'] == ep['pricing']
+    request = adapter.request_for(spec, 's', 'u', 100)
+    assert request['provider']['max_price']['completion'] == 13
+    assert request['provider']['only'] == ['inference-net/fp4']
+    assert request['provider']['allow_fallbacks'] is False
+
+
 def test_timeout_never_retries_or_falls_back(tmp_path,monkeypatch):
     calls=stub_http(monkeypatch,SPECS[0],failure=TimeoutError('do not expose this credential-like diagnostic'))
     with pytest.raises(adapter.OpenRouterError,match='billing unresolved'):

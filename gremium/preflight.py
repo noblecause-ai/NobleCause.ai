@@ -1,18 +1,10 @@
 #!/usr/bin/env python3
-"""Canary: prüft, dass alle drei Provider-Keys gesetzt UND live erreichbar sind.
+"""Anschlussprüfung für den aktiven OpenRouter-Rat, ohne Modellaufrufe.
 
-Läuft in CI (preflight.yml, täglich 05:30 UTC) und via workflow_dispatch. Pro
-Provider ein minimaler Live-Call mit winzigem Output-Budget. Gibt pro Provider
-OK/FAIL aus, ohne je einen Key-Wert zu zeigen. Exit 1, sobald ein Provider
-fehlschlägt — dann feuert der Fehler-Issue-Step im Workflow.
-
-Die Canary-Modelle sind bewusst günstig/robust gewählt (Haiku, Flash mit
-abgeschaltetem Thinking), nicht die teuren Council-Modelle: getestet wird die
-Key-Gültigkeit je Anbieter, nicht ein bestimmtes Modell. Der Key ist pro Anbieter
-derselbe wie in der Pipeline.
-
-Kein load_env: der Canary läuft ausschließlich in CI, wo die Secret-Umgebung die
-einzige Wahrheit ist.
+Prüft Key-Budget und Metadaten der festgelegten Endpunkte einschließlich
+Preisen und unterstützten Parametern. Exit 1 meldet eine Abweichung vor jeder
+Inferenz; er bedeutet nicht, dass ein bezahlter Ratslauf fehlgeschlagen ist.
+Der historische Direktanbieter-Canary bleibt für Konfigurationen vor 0.6 erhalten.
 """
 
 import os

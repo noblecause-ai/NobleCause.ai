@@ -189,8 +189,12 @@ def endpoint_preflight(spec):
         raise OpenRouterError('Endpoint output limit too small')
     prices = ep.get('pricing') or {}
     for p in ('prompt', 'completion'):
-        if amount(prices.get(p)) * 1_000_000 > amount(cfg['max_price'][p]):
-            raise OpenRouterError('Endpoint price exceeds contract')
+        actual = amount(prices.get(p)) * 1_000_000
+        allowed = amount(cfg['max_price'][p])
+        if actual > allowed:
+            raise OpenRouterError(
+                f'Endpoint price exceeds contract ({p}: {actual.normalize():f} > '
+                f'{allowed.normalize():f} USD/1M tokens; no inference)')
     # No additional per-call/tool/media charge may escape our bound.
     if any(amount(prices[k]) for k in ('request', 'image', 'audio') if k in prices):
         raise OpenRouterError('Unsupported additional charge')
