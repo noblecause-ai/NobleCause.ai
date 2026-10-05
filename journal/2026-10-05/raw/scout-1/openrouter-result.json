@@ -1,0 +1,408 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 113603,
+  "output_tokens": 5300,
+  "billed_usd": "0.227238",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1791204873-wSok5DiOeYXUToTnDwVB",
+    "requested_model": "x-ai/grok-4.6",
+    "reported_model": "x-ai/grok-4.6",
+    "generation_model": "x-ai/grok-4.6-20260810",
+    "provider": "xAI",
+    "endpoint": "xai/zdr",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "cost_basis": "billed",
+    "billed_usd": "0.227238",
+    "search_engine_requested": "native",
+    "search_engine_reported": "native",
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": 13,
+    "citations": [
+      {
+        "url": "https://voxdev.org/topic/health/childhood-vaccinations-have-transformative-lifelong-benefits",
+        "title": "https://voxdev.org/topic/health/childhood-vaccinations-have-transformative-lifelong-benefits",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.feedbusinessmea.com/2026/09/29/africa-seeks-us2-26b-to-eradicate-sheep-and-goat-disease/",
+        "title": "https://www.feedbusinessmea.com/2026/09/29/africa-seeks-us2-26b-to-eradicate-sheep-and-goat-disease/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.woah.org/en/document/report-of-the-second-ad-hoc-group-meeting-on-the-nagoya-protocol-application-and-implementation-in-the-context-of-woah-activities/",
+        "title": "https://www.woah.org/en/document/report-of-the-second-ad-hoc-group-meeting-on-the-nagoya-protocol-application-and-implementation-in-the-context-of-woah-activities/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://news.uq.edu.au/2025-08-why-historical-health-data-falls-short-predicting-future-health-care-needs",
+        "title": "https://news.uq.edu.au/2025-08-why-historical-health-data-falls-short-predicting-future-health-care-needs",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://web.archive.org/web/20250117001351if_/https:/web.stanford.edu/~chadj/reduce_xrisk.pdf",
+        "title": "https://web.archive.org/web/20250117001351if_/https:/web.stanford.edu/~chadj/reduce_xrisk.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://forum.effectivealtruism.org/posts/55v2bwGJt8oEbNrPy/policy-and-research-ideas-to-reduce-existential-risk",
+        "title": "https://forum.effectivealtruism.org/posts/55v2bwGJt8oEbNrPy/policy-and-research-ideas-to-reduce-existential-risk",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK23797/",
+        "title": "https://www.ncbi.nlm.nih.gov/books/NBK23797/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://dash.harvard.edu/bitstreams/264dd06c-b548-4382-90c9-153ae01523c5/download",
+        "title": "https://dash.harvard.edu/bitstreams/264dd06c-b548-4382-90c9-153ae01523c5/download",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://cdn.impactglobalhealth.org/media/2025%20ND%20Pipeline%20Review%20exec%20summary.pdf",
+        "title": "https://cdn.impactglobalhealth.org/media/2025%20ND%20Pipeline%20Review%20exec%20summary.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.cityam.com/12-cost-effective-ways-to-help-the-worlds-poorest/",
+        "title": "https://www.cityam.com/12-cost-effective-ways-to-help-the-worlds-poorest/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://gh.bmj.com/content/6/2/e005169",
+        "title": "https://gh.bmj.com/content/6/2/e005169",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.devex.com/news/why-don-t-proven-health-interventions-reach-people-who-need-them-112315",
+        "title": "https://www.devex.com/news/why-don-t-proven-health-interventions-reach-people-who-need-them-112315",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.bovinevetonline.com/news/woah-report-highlights-growing-disease-pressure-and-veterinary-system-gaps",
+        "title": "https://www.bovinevetonline.com/news/woah-report-highlights-growing-disease-pressure-and-veterinary-system-gaps",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.myvetcandy.com/news/2026/5/14/woahs-2026-state-of-the-worlds-animal-health-report-is-out-the-numbers-are-hard-to-look-at-and-impossible-to-ignore",
+        "title": "https://www.myvetcandy.com/news/2026/5/14/woahs-2026-state-of-the-worlds-animal-health-report-is-out-the-numbers-are-hard-to-look-at-and-impossible-to-ignore",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.evidenceaction.org/insights/overlooked-solutions-2",
+        "title": "https://www.evidenceaction.org/insights/overlooked-solutions-2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.woah.org/app/uploads/2026/05/sowah26-english-digital-v4-single-pages-opt-vf.pdf",
+        "title": "https://www.woah.org/app/uploads/2026/05/sowah26-english-digital-v4-single-pages-opt-vf.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/system/files/working_papers/w30835/w30835.pdf",
+        "title": "https://www.nber.org/system/files/working_papers/w30835/w30835.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.weforum.org/stories/resilience-peace-and-security/global-aid-new-era-resilience/",
+        "title": "https://www.weforum.org/stories/resilience-peace-and-security/global-aid-new-era-resilience/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2824%2901297-2/fulltext",
+        "title": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736%2824%2901297-2/fulltext",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://link.springer.com/article/10.1186/s12939-026-02872-5",
+        "title": "https://link.springer.com/article/10.1186/s12939-026-02872-5",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://oecd-development-matters.org/2023/10/24/social-protection-is-key-to-ending-poverty-so-why-is-it-so-neglected-in-oda/",
+        "title": "https://oecd-development-matters.org/2023/10/24/social-protection-is-key-to-ending-poverty-so-why-is-it-so-neglected-in-oda/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://newshour.media/2019/08/10/automatically-chlorinating-water-at-public-taps-cuts-child-diarrhoea-by-almost-a-quarter-in-urban-bangladesh/",
+        "title": "https://newshour.media/2019/08/10/automatically-chlorinating-water-at-public-taps-cuts-child-diarrhoea-by-almost-a-quarter-in-urban-bangladesh/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5576214/",
+        "title": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5576214/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://focus2030.org/en/child-survival-dividend/",
+        "title": "https://focus2030.org/en/child-survival-dividend/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.sciencedirect.com/science/article/pii/S014067362400850X",
+        "title": "https://www.sciencedirect.com/science/article/pii/S014067362400850X",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://epochai.substack.com/p/do-the-biorisk-evaluations-of-ai",
+        "title": "https://epochai.substack.com/p/do-the-biorisk-evaluations-of-ai",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://github.com/ashattock/epi50",
+        "title": "https://github.com/ashattock/epi50",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://forecastingresearch.org/research/impacts-of-asl-3-safeguards-on-biorisks",
+        "title": "https://forecastingresearch.org/research/impacts-of-asl-3-safeguards-on-biorisks",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://vetmarketportal.com.ar/nota/4953/fiebre-aftosa-en-la-argentina-una-mirada-hacia-el-futuro/",
+        "title": "https://vetmarketportal.com.ar/nota/4953/fiebre-aftosa-en-la-argentina-una-mirada-hacia-el-futuro/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1001497",
+        "title": "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1001497",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.happierlivesinstitute.org/wp-content/uploads/2025/11/A-dozen-doubts-about-GiveWells-numbers-MASTER.pdf",
+        "title": "https://www.happierlivesinstitute.org/wp-content/uploads/2025/11/A-dozen-doubts-about-GiveWells-numbers-MASTER.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.nber.org/papers/w32984",
+        "title": "https://www.nber.org/papers/w32984",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.cirad.fr/en/cirad-news/news/2026/the-return-on-investment-for-the-one-health-approach",
+        "title": "https://www.cirad.fr/en/cirad-news/news/2026/the-return-on-investment-for-the-one-health-approach",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://link.springer.com/article/10.1186/s12939-026-02824-z",
+        "title": "https://link.springer.com/article/10.1186/s12939-026-02824-z",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.happierlivesinstitute.org/report/deworming-and-decay/",
+        "title": "https://www.happierlivesinstitute.org/report/deworming-and-decay/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.evidenceaction.org/insights/whats-holding-global-health-back",
+        "title": "https://www.evidenceaction.org/insights/whats-holding-global-health-back",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ncbi.nlm.nih.gov/books/NBK121300/table/appb.t7/",
+        "title": "https://www.ncbi.nlm.nih.gov/books/NBK121300/table/appb.t7/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://academic.oup.com/heapol/article/35/9/1237/5934743",
+        "title": "https://academic.oup.com/heapol/article/35/9/1237/5934743",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://business.columbia.edu/insights/ending-extreme-poverty-may-cost-less-you-think",
+        "title": "https://business.columbia.edu/insights/ending-extreme-poverty-may-cost-less-you-think",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://forecastingresearch.substack.com/p/forecasting-biosecurity-risks-from",
+        "title": "https://forecastingresearch.substack.com/p/forecasting-biosecurity-risks-from",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://arxiv.org/html/2310.20563v2",
+        "title": "https://arxiv.org/html/2310.20563v2",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://pubmed.ncbi.nlm.nih.gov/17297049/",
+        "title": "https://pubmed.ncbi.nlm.nih.gov/17297049/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pnas.org/doi/10.1073/pnas.2321978121",
+        "title": "https://www.pnas.org/doi/10.1073/pnas.2321978121",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://blog.givewell.org/2013/12/02/rigorous-study-of-givedirectlys-cash-transfers/www.givewell.org/international/technical/programs/deworming",
+        "title": "https://blog.givewell.org/2013/12/02/rigorous-study-of-givedirectlys-cash-transfers/www.givewell.org/international/technical/programs/deworming",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://eonsr.com/en/defending-against-existential-risks-a-global-security-imperative/",
+        "title": "https://eonsr.com/en/defending-against-existential-risks-a-global-security-imperative/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://doc.woah.org/dyn/portal/gallery/aloPdf.xhtml?aloId=45104",
+        "title": "https://doc.woah.org/dyn/portal/gallery/aloPdf.xhtml?aloId=45104",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.avma.org/news/report-global-investment-veterinary-services-insufficient-against-disease-threats",
+        "title": "https://www.avma.org/news/report-global-investment-veterinary-services-insufficient-against-disease-threats",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://researchonline.lshtm.ac.uk/id/eprint/4682366/7/Lai_etal_2026_Global_regional_and_national_impact_of_the_Expanded_Programme_on_Immunization.pdf",
+        "title": "https://researchonline.lshtm.ac.uk/id/eprint/4682366/7/Lai_etal_2026_Global_regional_and_national_impact_of_the_Expanded_Programme_on_Immunization.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://odihpn.org/en/publication/improving-sustainability-of-cash-based-animal-production-interventions/",
+        "title": "https://odihpn.org/en/publication/improving-sustainability-of-cash-based-animal-production-interventions/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.cidrap.umn.edu/childhood-vaccines/its-50-year-history-global-vaccination-program-generated-16-benefits-every-1",
+        "title": "https://www.cidrap.umn.edu/childhood-vaccines/its-50-year-history-global-vaccination-program-generated-16-benefits-every-1",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://zenodo.org/records/18252920",
+        "title": "https://zenodo.org/records/18252920",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://journals.plos.org/globalpublichealth/article?id=10.1371/journal.pgph.0002461",
+        "title": "https://journals.plos.org/globalpublichealth/article?id=10.1371/journal.pgph.0002461",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X%2826%2900110-5/fulltext",
+        "title": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X%2826%2900110-5/fulltext",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.woah.org/en/animal-health-receives-as-little-as-0-6-percent-of-global-health-spending-despite-mounting-disease-crises-new-report-warns/",
+        "title": "https://www.woah.org/en/animal-health-receives-as-little-as-0-6-percent-of-global-health-spending-despite-mounting-disease-crises-new-report-warns/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.happierlivesinstitute.org/report/a-dozen-doubts/",
+        "title": "https://www.happierlivesinstitute.org/report/a-dozen-doubts/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://forecastingresearch.substack.com/p/forecasting-the-impacts-of-anthropics",
+        "title": "https://forecastingresearch.substack.com/p/forecasting-the-impacts-of-anthropics",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.globalshieldpolicy.org/wp-content/uploads/2025/09/RAND_RRA2981-1-1.pdf",
+        "title": "https://www.globalshieldpolicy.org/wp-content/uploads/2025/09/RAND_RRA2981-1-1.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://safe.ai/blog/biosecurity-and-ai-risks-and-opportunities",
+        "title": "https://safe.ai/blog/biosecurity-and-ai-risks-and-opportunities",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://blog.givewell.org/2012/12/05/revisiting-the-case-for-developmental-effects-of-deworming/",
+        "title": "https://blog.givewell.org/2012/12/05/revisiting-the-case-for-developmental-effects-of-deworming/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.woah.org/en/document/the-state-of-the-worlds-animal-health-2026/",
+        "title": "https://www.woah.org/en/document/the-state-of-the-worlds-animal-health-2026/",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://link.springer.com/chapter/10.1007/978-3-032-29706-8_5",
+        "title": "https://link.springer.com/chapter/10.1007/978-3-032-29706-8_5",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gavi.org/vaccineswork/immunisation-education-how-vaccines-shape-childrens-futures",
+        "title": "https://www.gavi.org/vaccineswork/immunisation-education-how-vaccines-shape-childrens-futures",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "Der Anbieter hat mehr Suchen ausgeführt als angefordert."
+    ],
+    "started_at": "2026-10-05T12:54:33.549805+00:00",
+    "finished_at": "2026-10-05T12:56:36.267306+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-3.json"
+  },
+  "web_search_requests": 13
+}

@@ -1,0 +1,571 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-05",
+  "session_ref": "2026-09-21-live",
+  "model": "perplexity/sonar-pro",
+  "model_label": "Sonar Pro",
+  "decision_model": "openai/gpt-6-astra",
+  "search_queries": [
+    "site:gov.br transferência de renda avaliação impacto pobreza saúde",
+    "site:unam.mx intervención salud pública evaluación impacto español",
+    "site:gov.za social protection evaluation impact isiXhosa Afrikaans",
+    "deworming long-run effects replication null",
+    "RCT null result scale-up implementation failure education developing country 2025",
+    "far-UVC 222 nm safety efficacy real-world limitations evidence gaps",
+    "lead paint elimination low-income countries blood lead evidence limits evaluation"
+  ],
+  "findings": [
+    {
+      "pillar": "B",
+      "topic": "Bolsa Família: Geldtransfers mit Gesundheitsauflagen",
+      "summary": "Brasiliens Rechnungshof fasst Evaluationen zusammen, nach denen Bolsa Família beziehungsweise vergleichbare Transfers Armut mindern; eine ENAP-Evidenzsynthese berichtet zusätzlich niedrigere Kindersterblichkeit und bessere Schulindikatoren. Eine Regierungsmitteilung verweist auf eine Lancet-Public-Health-Studie: Für 2004–2019 wurden dem Programm zugeschriebene vermiedene Todesfälle und Hospitalisierungen berichtet. Tragender Mechanismus: Einkommen verbessert Ernährung und Zugang; Gesundheitsauflagen können Versorgung fördern. Quelle: Brasilien, Portugiesisch; Primär-/Behördenzusammenfassung, nicht unabhängige Volltextprüfung. Zahlen und Kausalität sollten am Originalartikel geprüft werden.",
+      "source": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+      "source_date": "2023",
+      "event_date": "2004–2019",
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "staatlicher Evaluationsbericht und zusammengefasste Wirkungsevidenz",
+      "uncertainty": "Der vorliegende Behördeneintrag nennt keine vollständige Studiemethodik, Konfidenzintervalle oder Kosten-Wirksamkeitsanalyse; die Gesundheitszahlen stammen aus einer sekundären Regierungsdarstellung.",
+      "counterevidence": "Ein IPEA-bezogener Behördeneintrag von 2022 berichtet, dass wachsende Ernährungsunsicherheit damals nicht in entsprechenden Hunger-Gesundheitsindikatoren sichtbar wurde; das begrenzt die Übertragbarkeit einzelner Wirkungsbehauptungen."
+    },
+    {
+      "pillar": "D",
+      "topic": "Ländliche Zisternen als übersehener Wasser- und Gesundheitsengpass",
+      "summary": "Das brasilianische Sozialministerium führt eine Evaluation des Programms zur Wasserversorgung ländlicher Haushalte an: Zisternen wurden mit geringerer Abhängigkeit von Transfers, höherem formellem Einkommen und weniger kindlichen Hospitalisierungen wegen wasserbezogener Erkrankungen verbunden. Das ist ein konkret unterstützbarer Engpass—verlässliches Wasser—mit plausibler Verbindung zu Gesundheit und ökonomischer Stabilität. Quelle: Brasilien, Portugiesisch; staatliche Evaluationsübersicht. Die Angaben sind vorläufig zu behandeln, weil das zugrunde liegende Paper im Treffer nicht geöffnet vorlag.",
+      "source": "https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes",
+      "source_date": "2026-07-15",
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "staatliche Zusammenfassung einer Evaluation",
+      "uncertainty": "Keine Angaben zu Vergleichsgruppe, Stichprobe, Unsicherheitsintervallen oder möglicher Selektionsverzerrung im verfügbaren Auszug; exakte Prozentwerte sind daher nicht unabhängig bewertbar.",
+      "counterevidence": "Die Quelle selbst liefert im verfügbaren Auszug keine Gegenanalyse; ohne Primärstudie bleibt offen, wie stark Klima, Standortwahl oder parallele Programme die Ergebnisse erklären."
+    },
+    {
+      "pillar": "A",
+      "topic": "Evidenzlücke bei langfristigen Zukunftsinvestitionen",
+      "summary": "Die gefundenen Quellen behandeln vor allem kurzfristige Armuts-, Gesundheits- und Wasserwirkungen. Der mexikanische UNAM-Treffer beschreibt Wirkungsevaluation als Methode zur Messung kausaler Programmfolgen, belegt aber keine konkrete langfristige Intervention. Damit ist eine zentrale Lücke dokumentiert: Es liegt hier kein belastbarer, interventionsspezifischer Nachweis zu langfristigen Bildungs-, Produktivitäts- oder Resilienzrenditen vor. Quelle: Mexiko, Spanisch; universitäre Lehr-/Abschlussquelle.",
+      "source": "https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content",
+      "source_date": "2025-10-26",
+      "event_date": null,
+      "source_language": "Spanisch (Mexiko)",
+      "evidence_type": "universitäre methodische Darstellung, keine Wirksamkeitsevaluation einer konkreten Maßnahme",
+      "uncertainty": "Die Quelle ist keine Primärstudie zu einer Intervention; aus ihr lässt sich weder Effektgröße noch Priorität ableiten.",
+      "counterevidence": "Die brasilianische ENAP-Synthese nennt positive Bildungswirkungen von Transfers, liefert im verfügbaren Treffer jedoch keine hinreichende Evidenz für langfristige Renditen oder Übertragbarkeit."
+    },
+    {
+      "pillar": "C",
+      "topic": "Keine ausreichende Evidenz für Existenzrisiko-Mitigation",
+      "summary": "Die vorliegenden Treffer belegen weder eine konkrete Intervention gegen ein globales oder zivilisatorisches Existenzrisiko noch deren Wirkung. Die brasilianischen Quellen zu Impfungen, Transfers, Wasser und Gesundheit sind wichtig, erfüllen aber allein nicht die geforderte Schwelle: Gewöhnliche Gesundheits- oder Hitzeschutzmaßnahmen sind nicht automatisch Existenzrisiko-Mitigation. Dieser Befund ist eine offen benannte Evidenzlücke.",
+      "source": "https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/",
+      "source_date": "2026-10-03",
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "staatliche Evidenzkommunikation; keine Existenzrisiko-Wirkungsstudie",
+      "uncertainty": "Es wurde kein geeigneter Primärnachweis zu Schwellenrisiken, globaler Reichweite, zusätzlicherity oder Wirkungskette gefunden.",
+      "counterevidence": "Die Quelle berichtet, dass extreme Klimaereignisse arme Kinder stärker treffen; das stützt Vulnerabilitätsrelevanz, beweist aber keine Existenzrisiko-Mitigation durch eine bestimmte Intervention."
+    },
+    {
+      "pillar": "B",
+      "topic": "Massenentwurmung: Wirkungskette nicht gedeckt",
+      "summary": "Netzwerk-Metaanalyse findet keine Stützung der kausalen Annahmen zu Wachstum, Kognition, Schulbesuch; Langzeiteffekte sehr geringe Evidenzsicherheit. Nachanalysen der Kenia-Kohorte zeigen abklingende bzw. nicht signifikante Langzeitnutzen.",
+      "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+      "uncertainty": "Gegenargument: Reviews sind für Wachstumseffekte evtl. unterpowert.",
+      "counterevidence": "Replikationen bestätigen Infektionsrückgang und teils Anwesenheitseffekte."
+    },
+    {
+      "pillar": "A",
+      "topic": "Skalierung: Pilot-Wirkung verschwindet",
+      "summary": "Telefonbasiertes Elternprogramm in Indien wurde planmäßig umgesetzt, hatte aber präzise geschätzte Nulleffekte auf kindliche Entwicklung und senkte Selbstwirksamkeit der Betreuenden (−0,11 SD), erhöhte Angst (+0,10 SD). Zeigt, dass kostengünstige Technologie-Skalierung wirksamer Präsenzprogramme scheitern kann.",
+      "source": "https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2450318",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "präregistrierte RCT",
+      "uncertainty": "Ein Kontext, ein Curriculum; Übertragbarkeit offen.",
+      "counterevidence": "Andere Elternprogramme wirken, abhängig von Bildungsniveau."
+    },
+    {
+      "pillar": "C",
+      "topic": "Far-UVC: Laborwirkung ohne Übertragungsnachweis",
+      "summary": "Far-UVC könnte Innenraumübertragung pandemischer, auch gezielt erzeugter Erreger dämpfen. Belegt sind Kammerexperimente; die Autoren betonen, Laborinaktivierung übersetze sich nicht automatisch in geringere Krankheitsübertragung, Feldevaluationen fehlten.",
+      "source": "https://www.nature.com/articles/s41598-022-08462-z",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Kammerexperiment",
+      "uncertainty": "Ozonbildung, Lampenhaltbarkeit, Dosisgrenzen ungeklärt.",
+      "counterevidence": "Reviews berichten inkonsistente Wirksamkeit und technisch begrenzte Dauerbetriebsreife."
+    },
+    {
+      "pillar": "D",
+      "topic": "Bleifarbe: Expositionsanteil unsicher",
+      "summary": "In 478 Studien aus Niedrigeinkommensländern war Batterieherstellung/-recycling häufigste Hauptquelle (118 Studien), Bleifarbe nur in 7 Studien. Regulierungserfolge werden meist an Farbproben, nicht an Blutbleiwerten gemessen; Wirkungskette Gesetz→Blutblei bleibt unbelegt.",
+      "source": "https://rethinkpriorities.org/research-area/global-lead-exposure-report/",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Sekundäranalyse eines Reviews",
+      "uncertainty": "Review erfasst nur Primärquellen; Farbe kann kumulativ beitragen.",
+      "counterevidence": "Marktstudien zeigen reale Bleigehalte weit über Grenzwerten."
+    }
+  ],
+  "rejected_findings": [
+    "Ein Treffer zur UNAM beschreibt lediglich allgemeine Impact-Evaluation und wurde nicht als Beleg für eine konkrete Gesundheitsintervention gewertet.",
+    "Die behaupteten Bolsa-Família-Wirkungszahlen aus einer Regierungsmitteilung wurden nicht als präzise eigene Schätzung weiterverwendet, weil der zugrunde liegende Lancet-Originalartikel im verfügbaren Recherchematerial nicht geöffnet war.",
+    "Ausbildungs-RCT-Kritik allgemein: zu unspezifisch, keine förderbare Intervention.",
+    "Far-UVC-Lebensmittelanwendung: thematisch abseits der Pandemiehärtung."
+  ],
+  "delta_assessment": "Scout 2 (perplexity/sonar-pro): Die heutige Evidenz ist am stärksten für soziale Transfers und ländliche Wasserversorgung in Brasilien, aber die vorliegenden Auszüge erlauben nur begrenzte Kausalitäts- und Kostenbewertungen. Für A fehlt eine belastbare langfristige Interventionsbewertung; für C fehlt ein Nachweis der geforderten Existenzrisiko-Verbindung. Ein älterer ENAP-Treffer von 2022 erschien mit einem späteren Aktualisierungsdatum; deshalb wurde sein Veröffentlichungsjahr getrennt ausgewiesen.\n\nScout 3 (anthropic/claude-opus-5): Heutige Lage: In allen vier Säulen dominieren Wirkungsketten-Annahmen über direkte Endpunktbelege. Stärkste Gegenbelege bei Entwurmung und Technologie-Skalierung (RCTs). Bei Far-UVC und Bleifarbe ist die Lücke eher Messung als widerlegte Wirkung. Datumsangaben vieler Quellen konnte ich nicht belastbar verifizieren; deshalb null. Evidenzlücke: keine Feldstudie zu Far-UVC und Übertragung.",
+  "convene": false,
+  "convene_rationale": "Keiner der drei Einberufungsgründe ist hinreichend belegt. Ein neuer Fund ist noch keine neue Lage. Erstens: Die Gegenbelege von Scout 3 betreffen Entwurmung, ein telefonisches Elternprogramm, Far-UVC und Bleifarbe, nicht die am 21.09. bestehende AMF-Netzempfehlung. Das Elternprogramm widerlegt weder ConnectEd noch Prathams Lerncamps; in A bestand ohnehin nur ein Prüfauftrag. Die Bleianalyse begrenzt ältere Archivformulierungen wie 'Wirksamkeit bestätigt': Farbmarktveränderungen belegen nicht unmittelbar sinkende Blutbleiwerte. Diese Unterscheidung war jedoch bereits im Vollzugshinweis vom 24.08. und im Prüfvorbehalt der Sitzung vom 21.09. berücksichtigt. Studienhäufigkeiten zu einzelnen Bleiquellen sind zudem keine Expositionsanteile. Zweitens: Keine aktuelle Schließung oder Wiederöffnung einer wesentlichen Finanzierungslücke ist dokumentiert. Der AMF-Großzuschuss und die zuletzt geschlossene LEEP-Lücke gehören bereits zum Vergleichsbestand. Drittens: Bolsa Família, Zisternen, Entwurmung, das Elternprogramm und Far-UVC sind darin als konkrete Funde nicht enthalten und damit möglicherweise neue Recherchefunde, nicht nachweislich neu aufgetretene Chancen oder Risiken von Rang. Scout 2 benennt selbst fehlende Originalprüfungen und Kostenbewertungen; bei Far-UVC fehlt der Übertragungsnachweis. Historischer Abgleich: Eine Wiederentdeckung mit identischer Ursprungsquelle ist hier nicht eindeutig ausgewiesen. Sichtbar wiederkehren die regionale C-Evidenzlücke vom 28.09. sowie Vorbehalte gegenüber Skalierung und der Wirkungskette von Bleiregulierung. Das sind inhaltliche Anschlüsse; eine unabhängige Bestätigung derselben Aussage ist anhand der zugrunde liegenden Daten nicht nachgewiesen. Die 0 % Scout-Überschneidung bezeichnet lediglich unterschiedliche Topic-/Source-Tupel, keinen Widerspruch. Fehlende Datierungen, begrenzte Recherchebelege und der Ausfall von Scout 1 mindern die Sicherheit des Lagebilds. Gemäß Demut-Kanon verbleiben die Funde bei der regulären Sitzung.",
+  "content_md": "## Scout 2: Sonar Pro · Regionale Ergänzung (perplexity/sonar-pro)\n\nDie verfügbare Recherche liefert einen belastbaren Fund zu **B** und teilweise **D**: Geldtransfers, gekoppelt mit verlässlichem Zugang zu Gesundheits- und Ernährungsleistungen, zeigen in Brasilien positive Wirkungen. Für **A** und **C** bleibt die Evidenz in den vorliegenden Treffern unzureichend; insbesondere ist kein interventionsspezifischer Zusammenhang mit einem existenziellen Risiko belegt. Die regionale Ergänzung umfasst Primärquellen aus **Brasilien (Portugiesisch)** und **Mexiko (Spanisch)**; die mexikanischen Treffer belegen jedoch überwiegend Evaluationsmethodik, nicht die Wirksamkeit einer konkreten Intervention.\n\n```json\n{\"search_queries\":[\"site:gov.br transferência de renda avaliação impacto pobreza saúde\",\"site:unam.mx intervención salud pública evaluación impacto español\",\"site:gov.za social protection evaluation impact isiXhosa Afrikaans\"],\"findings\":[{\"pillar\":\"B\",\"topic\":\"Bolsa Família: Geldtransfers mit Gesundheitsauflagen\",\"summary\":\"Brasiliens Rechnungshof fasst Evaluationen zusammen, nach denen Bolsa Família beziehungsweise vergleichbare Transfers Armut mindern; eine ENAP-Evidenzsynthese berichtet zusätzlich niedrigere Kindersterblichkeit und bessere Schulindikatoren. Eine Regierungsmitteilung verweist auf eine Lancet-Public-Health-Studie: Für 2004–2019 wurden dem Programm zugeschriebene vermiedene Todesfälle und Hospitalisierungen berichtet. Tragender Mechanismus: Einkommen verbessert Ernährung und Zugang; Gesundheitsauflagen können Versorgung fördern. Quelle: Brasilien, Portugiesisch; Primär-/Behördenzusammenfassung, nicht unabhängige Volltextprüfung. Zahlen und Kausalität sollten am Originalartikel geprüft werden.\",\"source\":\"https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html\",\"source_date\":\"2023\",\"event_date\":\"2004–2019\",\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"staatlicher Evaluationsbericht und zusammengefasste Wirkungsevidenz\",\"uncertainty\":\"Der vorliegende Behördeneintrag nennt keine vollständige Studiemethodik, Konfidenzintervalle oder Kosten-Wirksamkeitsanalyse; die Gesundheitszahlen stammen aus einer sekundären Regierungsdarstellung.\",\"counterevidence\":\"Ein IPEA-bezogener Behördeneintrag von 2022 berichtet, dass wachsende Ernährungsunsicherheit damals nicht in entsprechenden Hunger-Gesundheitsindikatoren sichtbar wurde; das begrenzt die Übertragbarkeit einzelner Wirkungsbehauptungen.\"},{\"pillar\":\"D\",\"topic\":\"Ländliche Zisternen als übersehener Wasser- und Gesundheitsengpass\",\"summary\":\"Das brasilianische Sozialministerium führt eine Evaluation des Programms zur Wasserversorgung ländlicher Haushalte an: Zisternen wurden mit geringerer Abhängigkeit von Transfers, höherem formellem Einkommen und weniger kindlichen Hospitalisierungen wegen wasserbezogener Erkrankungen verbunden. Das ist ein konkret unterstützbarer Engpass—verlässliches Wasser—mit plausibler Verbindung zu Gesundheit und ökonomischer Stabilität. Quelle: Brasilien, Portugiesisch; staatliche Evaluationsübersicht. Die Angaben sind vorläufig zu behandeln, weil das zugrunde liegende Paper im Treffer nicht geöffnet vorlag.\",\"source\":\"https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes\",\"source_date\":\"2026-07-15\",\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"staatliche Zusammenfassung einer Evaluation\",\"uncertainty\":\"Keine Angaben zu Vergleichsgruppe, Stichprobe, Unsicherheitsintervallen oder möglicher Selektionsverzerrung im verfügbaren Auszug; exakte Prozentwerte sind daher nicht unabhängig bewertbar.\",\"counterevidence\":\"Die Quelle selbst liefert im verfügbaren Auszug keine Gegenanalyse; ohne Primärstudie bleibt offen, wie stark Klima, Standortwahl oder parallele Programme die Ergebnisse erklären.\"},{\"pillar\":\"A\",\"topic\":\"Evidenzlücke bei langfristigen Zukunftsinvestitionen\",\"summary\":\"Die gefundenen Quellen behandeln vor allem kurzfristige Armuts-, Gesundheits- und Wasserwirkungen. Der mexikanische UNAM-Treffer beschreibt Wirkungsevaluation als Methode zur Messung kausaler Programmfolgen, belegt aber keine konkrete langfristige Intervention. Damit ist eine zentrale Lücke dokumentiert: Es liegt hier kein belastbarer, interventionsspezifischer Nachweis zu langfristigen Bildungs-, Produktivitäts- oder Resilienzrenditen vor. Quelle: Mexiko, Spanisch; universitäre Lehr-/Abschlussquelle.\",\"source\":\"https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content\",\"source_date\":\"2025-10-26\",\"event_date\":null,\"source_language\":\"Spanisch (Mexiko)\",\"evidence_type\":\"universitäre methodische Darstellung, keine Wirksamkeitsevaluation einer konkreten Maßnahme\",\"uncertainty\":\"Die Quelle ist keine Primärstudie zu einer Intervention; aus ihr lässt sich weder Effektgröße noch Priorität ableiten.\",\"counterevidence\":\"Die brasilianische ENAP-Synthese nennt positive Bildungswirkungen von Transfers, liefert im verfügbaren Treffer jedoch keine hinreichende Evidenz für langfristige Renditen oder Übertragbarkeit.\"},{\"pillar\":\"C\",\"topic\":\"Keine ausreichende Evidenz für Existenzrisiko-Mitigation\",\"summary\":\"Die vorliegenden Treffer belegen weder eine konkrete Intervention gegen ein globales oder zivilisatorisches Existenzrisiko noch deren Wirkung. Die brasilianischen Quellen zu Impfungen, Transfers, Wasser und Gesundheit sind wichtig, erfüllen aber allein nicht die geforderte Schwelle: Gewöhnliche Gesundheits- oder Hitzeschutzmaßnahmen sind nicht automatisch Existenzrisiko-Mitigation. Dieser Befund ist eine offen benannte Evidenzlücke.\",\"source\":\"https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/\",\"source_date\":\"2026-10-03\",\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"staatliche Evidenzkommunikation; keine Existenzrisiko-Wirkungsstudie\",\"uncertainty\":\"Es wurde kein geeigneter Primärnachweis zu Schwellenrisiken, globaler Reichweite, zusätzlicherity oder Wirkungskette gefunden.\",\"counterevidence\":\"Die Quelle berichtet, dass extreme Klimaereignisse arme Kinder stärker treffen; das stützt Vulnerabilitätsrelevanz, beweist aber keine Existenzrisiko-Mitigation durch eine bestimmte Intervention.\"}],\"rejected_findings\":[\"Ein Treffer zur UNAM beschreibt lediglich allgemeine Impact-Evaluation und wurde nicht als Beleg für eine konkrete Gesundheitsintervention gewertet.\",\"Die behaupteten Bolsa-Família-Wirkungszahlen aus einer Regierungsmitteilung wurden nicht als präzise eigene Schätzung weiterverwendet, weil der zugrunde liegende Lancet-Originalartikel im verfügbaren Recherchematerial nicht geöffnet war.\"],\"delta_assessment\":\"Die heutige Evidenz ist am stärksten für soziale Transfers und ländliche Wasserversorgung in Brasilien, aber die vorliegenden Auszüge erlauben nur begrenzte Kausalitäts- und Kostenbewertungen. Für A fehlt eine belastbare langfristige Interventionsbewertung; für C fehlt ein Nachweis der geforderten Existenzrisiko-Verbindung. Ein älterer ENAP-Treffer von 2022 erschien mit einem späteren Aktualisierungsdatum; deshalb wurde sein Veröffentlichungsjahr getrennt ausgewiesen.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 3: Claude Opus 5 · Gegenbelege (anthropic/claude-opus-5)\n\n**Kurzprosa.** Mein Auftrag war Gegenbelege. Ich habe vier Felder geprüft: Entwurmung (Säule B), Skalierung erfolgreicher Pilotprogramme (A), Far-UVC-Luftentkeimung als Pandemie-Härtung (C) und Bleifarben-Regulierung (D). In allen vier Feldern fand ich belegte Nullresultate, Umsetzungsbrüche oder ungedeckte Wirkungsketten. Dabei bin ich unvermeidlich auf Material effektiv-altruistischer Evaluatoren (GiveWell-Blog, Rethink Priorities, Happier Lives Institute) gestoßen; diese Exposition benenne ich offen, nutze sie aber nur als Hinweis auf Primärstudien, nicht als Empfehlung. Zu Säule C ist die existenzielle Begründung nur indirekt tragfähig: Far-UVC adressiert potenziell pandemische (auch gezielt erzeugte) Atemwegserreger, die zu den wenigen plausiblen Zivilisationsrisiken zählen — gewöhnliche Infektionsprävention allein wäre kein Existenzrisiko-Argument. Belastbare Feldwirksamkeit auf Übertragung fehlt jedoch. Keine Spendenempfehlung.\n\n```json\n{\"search_queries\": [\"deworming long-run effects replication null\", \"RCT null result scale-up implementation failure education developing country 2025\", \"far-UVC 222 nm safety efficacy real-world limitations evidence gaps\", \"lead paint elimination low-income countries blood lead evidence limits evaluation\"], \"findings\": [{\"pillar\": \"B\", \"topic\": \"Massenentwurmung: Wirkungskette nicht gedeckt\", \"summary\": \"Netzwerk-Metaanalyse findet keine Stützung der kausalen Annahmen zu Wachstum, Kognition, Schulbesuch; Langzeiteffekte sehr geringe Evidenzsicherheit. Nachanalysen der Kenia-Kohorte zeigen abklingende bzw. nicht signifikante Langzeitnutzen.\", \"source\": \"https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Systematische Übersicht/Netzwerk-Metaanalyse\", \"uncertainty\": \"Gegenargument: Reviews sind für Wachstumseffekte evtl. unterpowert.\", \"counterevidence\": \"Replikationen bestätigen Infektionsrückgang und teils Anwesenheitseffekte.\"}, {\"pillar\": \"A\", \"topic\": \"Skalierung: Pilot-Wirkung verschwindet\", \"summary\": \"Telefonbasiertes Elternprogramm in Indien wurde planmäßig umgesetzt, hatte aber präzise geschätzte Nulleffekte auf kindliche Entwicklung und senkte Selbstwirksamkeit der Betreuenden (−0,11 SD), erhöhte Angst (+0,10 SD). Zeigt, dass kostengünstige Technologie-Skalierung wirksamer Präsenzprogramme scheitern kann.\", \"source\": \"https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2450318\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"präregistrierte RCT\", \"uncertainty\": \"Ein Kontext, ein Curriculum; Übertragbarkeit offen.\", \"counterevidence\": \"Andere Elternprogramme wirken, abhängig von Bildungsniveau.\"}, {\"pillar\": \"C\", \"topic\": \"Far-UVC: Laborwirkung ohne Übertragungsnachweis\", \"summary\": \"Far-UVC könnte Innenraumübertragung pandemischer, auch gezielt erzeugter Erreger dämpfen. Belegt sind Kammerexperimente; die Autoren betonen, Laborinaktivierung übersetze sich nicht automatisch in geringere Krankheitsübertragung, Feldevaluationen fehlten.\", \"source\": \"https://www.nature.com/articles/s41598-022-08462-z\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Kammerexperiment\", \"uncertainty\": \"Ozonbildung, Lampenhaltbarkeit, Dosisgrenzen ungeklärt.\", \"counterevidence\": \"Reviews berichten inkonsistente Wirksamkeit und technisch begrenzte Dauerbetriebsreife.\"}, {\"pillar\": \"D\", \"topic\": \"Bleifarbe: Expositionsanteil unsicher\", \"summary\": \"In 478 Studien aus Niedrigeinkommensländern war Batterieherstellung/-recycling häufigste Hauptquelle (118 Studien), Bleifarbe nur in 7 Studien. Regulierungserfolge werden meist an Farbproben, nicht an Blutbleiwerten gemessen; Wirkungskette Gesetz→Blutblei bleibt unbelegt.\", \"source\": \"https://rethinkpriorities.org/research-area/global-lead-exposure-report/\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Sekundäranalyse eines Reviews\", \"uncertainty\": \"Review erfasst nur Primärquellen; Farbe kann kumulativ beitragen.\", \"counterevidence\": \"Marktstudien zeigen reale Bleigehalte weit über Grenzwerten.\"}], \"rejected_findings\": [\"Ausbildungs-RCT-Kritik allgemein: zu unspezifisch, keine förderbare Intervention.\", \"Far-UVC-Lebensmittelanwendung: thematisch abseits der Pandemiehärtung.\"], \"delta_assessment\": \"Heutige Lage: In allen vier Säulen dominieren Wirkungsketten-Annahmen über direkte Endpunktbelege. Stärkste Gegenbelege bei Entwurmung und Technologie-Skalierung (RCTs). Bei Far-UVC und Bleifarbe ist die Lücke eher Messung als widerlegte Wirkung. Datumsangaben vieler Quellen konnte ich nicht belastbar verifizieren; deshalb null. Evidenzlücke: keine Feldstudie zu Far-UVC und Übertragung.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 1: ausgefallen\n\nModell: x-ai/grok-4.6 · Grund: Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag. · Rohpfad: journal/2026-10-05/raw/scout-1\n\n---\n\n## Maschineller Divergenz-Ausweis\n\n{\n  \"method\": \"exact_structured_finding_keys\",\n  \"overlap_percent\": 0.0,\n  \"shared\": [],\n  \"only_a\": [\n    [\n      \"A\",\n      \"evidenzlücke bei langfristigen zukunftsinvestitionen\",\n      \"https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content\"\n    ],\n    [\n      \"B\",\n      \"bolsa família: geldtransfers mit gesundheitsauflagen\",\n      \"https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html\"\n    ],\n    [\n      \"C\",\n      \"keine ausreichende evidenz für existenzrisiko-mitigation\",\n      \"https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/\"\n    ],\n    [\n      \"D\",\n      \"ländliche zisternen als übersehener wasser- und gesundheitsengpass\",\n      \"https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes\"\n    ]\n  ],\n  \"only_b\": [\n    [\n      \"A\",\n      \"skalierung: pilot-wirkung verschwindet\",\n      \"https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2450318\"\n    ],\n    [\n      \"B\",\n      \"massenentwurmung: wirkungskette nicht gedeckt\",\n      \"https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext\"\n    ],\n    [\n      \"C\",\n      \"far-uvc: laborwirkung ohne übertragungsnachweis\",\n      \"https://www.nature.com/articles/s41598-022-08462-z\"\n    ],\n    [\n      \"D\",\n      \"bleifarbe: expositionsanteil unsicher\",\n      \"https://rethinkpriorities.org/research-area/global-lead-exposure-report/\"\n    ]\n  ],\n  \"report_scout_indices\": [\n    2,\n    3\n  ]\n}",
+  "costs": {
+    "currency": "EUR",
+    "total": 0.9542,
+    "fx_rate_usd_eur": 0.85,
+    "components": {
+      "scouts": [
+        {
+          "currency": "EUR",
+          "total": 0.1931523,
+          "fx_rate_usd_eur": 0.85,
+          "model": "x-ai/grok-4.6",
+          "cost_basis": "billed",
+          "input_tokens": 113603,
+          "output_tokens": 5300,
+          "web_search_requests": 13,
+          "usd_total": 0.227238
+        },
+        {
+          "currency": "EUR",
+          "total": 0.0332775,
+          "fx_rate_usd_eur": 0.85,
+          "model": "perplexity/sonar-pro",
+          "cost_basis": "billed",
+          "input_tokens": 964,
+          "output_tokens": 2017,
+          "web_search_requests": null,
+          "usd_total": 0.03915
+        },
+        {
+          "currency": "EUR",
+          "total": 0.3422355,
+          "fx_rate_usd_eur": 0.85,
+          "model": "anthropic/claude-opus-5",
+          "cost_basis": "billed",
+          "input_tokens": 55991,
+          "output_tokens": 3307,
+          "web_search_requests": 4,
+          "usd_total": 0.40263
+        }
+      ],
+      "wart": {
+        "currency": "EUR",
+        "total": 0.38552855,
+        "fx_rate_usd_eur": 0.85,
+        "model": "openai/gpt-6-astra",
+        "cost_basis": "billed",
+        "input_tokens": 30687,
+        "output_tokens": 575,
+        "web_search_requests": null,
+        "usd_total": 0.453563
+      }
+    }
+  },
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/37312727469",
+  "scouts": [
+    {
+      "family": "perplexity",
+      "model": "perplexity/sonar-pro",
+      "label": "Sonar Pro · Regionale Ergänzung",
+      "research_role": "regional",
+      "content_md": "Die verfügbare Recherche liefert einen belastbaren Fund zu **B** und teilweise **D**: Geldtransfers, gekoppelt mit verlässlichem Zugang zu Gesundheits- und Ernährungsleistungen, zeigen in Brasilien positive Wirkungen. Für **A** und **C** bleibt die Evidenz in den vorliegenden Treffern unzureichend; insbesondere ist kein interventionsspezifischer Zusammenhang mit einem existenziellen Risiko belegt. Die regionale Ergänzung umfasst Primärquellen aus **Brasilien (Portugiesisch)** und **Mexiko (Spanisch)**; die mexikanischen Treffer belegen jedoch überwiegend Evaluationsmethodik, nicht die Wirksamkeit einer konkreten Intervention.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "site:gov.br transferência de renda avaliação impacto pobreza saúde",
+        "site:unam.mx intervención salud pública evaluación impacto español",
+        "site:gov.za social protection evaluation impact isiXhosa Afrikaans"
+      ],
+      "findings": [
+        {
+          "pillar": "B",
+          "topic": "Bolsa Família: Geldtransfers mit Gesundheitsauflagen",
+          "summary": "Brasiliens Rechnungshof fasst Evaluationen zusammen, nach denen Bolsa Família beziehungsweise vergleichbare Transfers Armut mindern; eine ENAP-Evidenzsynthese berichtet zusätzlich niedrigere Kindersterblichkeit und bessere Schulindikatoren. Eine Regierungsmitteilung verweist auf eine Lancet-Public-Health-Studie: Für 2004–2019 wurden dem Programm zugeschriebene vermiedene Todesfälle und Hospitalisierungen berichtet. Tragender Mechanismus: Einkommen verbessert Ernährung und Zugang; Gesundheitsauflagen können Versorgung fördern. Quelle: Brasilien, Portugiesisch; Primär-/Behördenzusammenfassung, nicht unabhängige Volltextprüfung. Zahlen und Kausalität sollten am Originalartikel geprüft werden.",
+          "source": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+          "source_date": "2023",
+          "event_date": "2004–2019",
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "staatlicher Evaluationsbericht und zusammengefasste Wirkungsevidenz",
+          "uncertainty": "Der vorliegende Behördeneintrag nennt keine vollständige Studiemethodik, Konfidenzintervalle oder Kosten-Wirksamkeitsanalyse; die Gesundheitszahlen stammen aus einer sekundären Regierungsdarstellung.",
+          "counterevidence": "Ein IPEA-bezogener Behördeneintrag von 2022 berichtet, dass wachsende Ernährungsunsicherheit damals nicht in entsprechenden Hunger-Gesundheitsindikatoren sichtbar wurde; das begrenzt die Übertragbarkeit einzelner Wirkungsbehauptungen."
+        },
+        {
+          "pillar": "D",
+          "topic": "Ländliche Zisternen als übersehener Wasser- und Gesundheitsengpass",
+          "summary": "Das brasilianische Sozialministerium führt eine Evaluation des Programms zur Wasserversorgung ländlicher Haushalte an: Zisternen wurden mit geringerer Abhängigkeit von Transfers, höherem formellem Einkommen und weniger kindlichen Hospitalisierungen wegen wasserbezogener Erkrankungen verbunden. Das ist ein konkret unterstützbarer Engpass—verlässliches Wasser—mit plausibler Verbindung zu Gesundheit und ökonomischer Stabilität. Quelle: Brasilien, Portugiesisch; staatliche Evaluationsübersicht. Die Angaben sind vorläufig zu behandeln, weil das zugrunde liegende Paper im Treffer nicht geöffnet vorlag.",
+          "source": "https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes",
+          "source_date": "2026-07-15",
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "staatliche Zusammenfassung einer Evaluation",
+          "uncertainty": "Keine Angaben zu Vergleichsgruppe, Stichprobe, Unsicherheitsintervallen oder möglicher Selektionsverzerrung im verfügbaren Auszug; exakte Prozentwerte sind daher nicht unabhängig bewertbar.",
+          "counterevidence": "Die Quelle selbst liefert im verfügbaren Auszug keine Gegenanalyse; ohne Primärstudie bleibt offen, wie stark Klima, Standortwahl oder parallele Programme die Ergebnisse erklären."
+        },
+        {
+          "pillar": "A",
+          "topic": "Evidenzlücke bei langfristigen Zukunftsinvestitionen",
+          "summary": "Die gefundenen Quellen behandeln vor allem kurzfristige Armuts-, Gesundheits- und Wasserwirkungen. Der mexikanische UNAM-Treffer beschreibt Wirkungsevaluation als Methode zur Messung kausaler Programmfolgen, belegt aber keine konkrete langfristige Intervention. Damit ist eine zentrale Lücke dokumentiert: Es liegt hier kein belastbarer, interventionsspezifischer Nachweis zu langfristigen Bildungs-, Produktivitäts- oder Resilienzrenditen vor. Quelle: Mexiko, Spanisch; universitäre Lehr-/Abschlussquelle.",
+          "source": "https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content",
+          "source_date": "2025-10-26",
+          "event_date": null,
+          "source_language": "Spanisch (Mexiko)",
+          "evidence_type": "universitäre methodische Darstellung, keine Wirksamkeitsevaluation einer konkreten Maßnahme",
+          "uncertainty": "Die Quelle ist keine Primärstudie zu einer Intervention; aus ihr lässt sich weder Effektgröße noch Priorität ableiten.",
+          "counterevidence": "Die brasilianische ENAP-Synthese nennt positive Bildungswirkungen von Transfers, liefert im verfügbaren Treffer jedoch keine hinreichende Evidenz für langfristige Renditen oder Übertragbarkeit."
+        },
+        {
+          "pillar": "C",
+          "topic": "Keine ausreichende Evidenz für Existenzrisiko-Mitigation",
+          "summary": "Die vorliegenden Treffer belegen weder eine konkrete Intervention gegen ein globales oder zivilisatorisches Existenzrisiko noch deren Wirkung. Die brasilianischen Quellen zu Impfungen, Transfers, Wasser und Gesundheit sind wichtig, erfüllen aber allein nicht die geforderte Schwelle: Gewöhnliche Gesundheits- oder Hitzeschutzmaßnahmen sind nicht automatisch Existenzrisiko-Mitigation. Dieser Befund ist eine offen benannte Evidenzlücke.",
+          "source": "https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/",
+          "source_date": "2026-10-03",
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "staatliche Evidenzkommunikation; keine Existenzrisiko-Wirkungsstudie",
+          "uncertainty": "Es wurde kein geeigneter Primärnachweis zu Schwellenrisiken, globaler Reichweite, zusätzlicherity oder Wirkungskette gefunden.",
+          "counterevidence": "Die Quelle berichtet, dass extreme Klimaereignisse arme Kinder stärker treffen; das stützt Vulnerabilitätsrelevanz, beweist aber keine Existenzrisiko-Mitigation durch eine bestimmte Intervention."
+        }
+      ],
+      "rejected_findings": [
+        "Ein Treffer zur UNAM beschreibt lediglich allgemeine Impact-Evaluation und wurde nicht als Beleg für eine konkrete Gesundheitsintervention gewertet.",
+        "Die behaupteten Bolsa-Família-Wirkungszahlen aus einer Regierungsmitteilung wurden nicht als präzise eigene Schätzung weiterverwendet, weil der zugrunde liegende Lancet-Originalartikel im verfügbaren Recherchematerial nicht geöffnet war."
+      ],
+      "delta_assessment": "Die heutige Evidenz ist am stärksten für soziale Transfers und ländliche Wasserversorgung in Brasilien, aber die vorliegenden Auszüge erlauben nur begrenzte Kausalitäts- und Kostenbewertungen. Für A fehlt eine belastbare langfristige Interventionsbewertung; für C fehlt ein Nachweis der geforderten Existenzrisiko-Verbindung. Ein älterer ENAP-Treffer von 2022 erschien mit einem späteren Aktualisierungsdatum; deshalb wurde sein Veröffentlichungsjahr getrennt ausgewiesen.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1791204996-I1sJYrUGTgyqUCepyEi7",
+        "requested_model": "perplexity/sonar-pro",
+        "reported_model": "perplexity/sonar-pro",
+        "generation_model": "perplexity/sonar-pro",
+        "provider": "Perplexity",
+        "endpoint": "perplexity",
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "cost_basis": "billed",
+        "billed_usd": "0.03915",
+        "search_engine_requested": "intrinsic",
+        "search_engine_reported": null,
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": null,
+        "citations": [
+          {
+            "url": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+            "title": "Relatório de fiscalizações em políticas e programas de ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://repositorio.enap.gov.br/jspui/bitstream/1/7374/1/2022.11.03%20-%20Programas%20de%20transfer%C3%AAncia%20de%20renda%20e%20promo%C3%A7%C3%A3o%20de%20capacidade%20parental%20-%20P3.pdf",
+            "title": "2022.11.03 - Programas de transferência de renda e ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/secom/pt-br/acompanhe-a-secom/noticias/2025/05/bolsa-familia-evitou-mais-de-700-mil-mortes-e-oito-milhoes-de-internacoes",
+            "title": "Bolsa Família evitou mais de 700 mil mortes e oito milhões ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/pt-br/noticias/assistencia-social/2022/08/ipea-divulga-analise-sobre-combate-a-extrema-pobreza-no-pais",
+            "title": "Ipea divulga análise sobre combate à extrema pobreza no país",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/",
+            "title": "bvsms.saude.gov.br · grandes-bases-de-dados-emGrandes bases de dados em saúde permitem construir políticas ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.documentador.pr.gov.br/documentador/pub.do?action=d&uuid=@gtf-escriba-sesa@c56c361d-76ed-4c9e-b7d8-5cd528cf2463&emPg=true",
+            "title": "SEI/MS - 0048688573 - Nota Técnica",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/planejamento/pt-br/assuntos/avaliacao-de-politicas-publicas/conselho-de-monitoramento-e-avaliacao-de-politicas-publicas-cmap/avaliacoes/programa-bolsa-familia-pbf",
+            "title": "Programa Bolsa Família (PBF) - Governo Federal",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://agenciadenoticias.ibge.gov.br/media/com_mediaibge/arquivos/00519957d12982f96a3101bff0234ffe.pdf",
+            "title": "[PDF] Uma análise das condições de vida da população brasileira",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/mds/pt-br/noticias-e-conteudos/desenvolvimento-social/noticias-desenvolvimento-social/bolsa-familia-reforca-combate-a-pobreza-e-melhora-seguranca-alimentar-aponta-estudo",
+            "title": "Bolsa Família reforça combate à pobreza e melhora segurança ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://ru.dgb.unam.mx/server/api/core/bitstreams/04716d59-f341-4e85-b817-a3e00907b550/content",
+            "title": "TESIS: ADMINISTRACIÓN DE PROGRAMAS DE EDUCACIÓN PARA LA SALUD",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes",
+            "title": "Estudos e Avaliações - Portal Gov.br",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content",
+            "title": "Campo Disciplinario en Gestión y Políticas de Salud",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/gestao/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/cmap/politicas/2020/gastos-diretos/relatorio_avaliacao-cmag-2020-pbf.pdf",
+            "title": "www.gov.br › gestao › pt-brRelatório de Avaliação Transferência de Renda Diretamente às ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/planejamento/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/cmap/politicas/2020/gastos-diretos/relatorio_avaliacao-cmag-2020-pbf.pdf",
+            "title": "[PDF] Relatório de Avaliação Transferência de Renda Diretamente às ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/mds/pt-br/servicos/sagi/microdados",
+            "title": "Microdados - Portal Gov.br",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-05T12:56:36.732829+00:00",
+        "finished_at": "2026-10-05T12:57:27.909741+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-3.json"
+      }
+    },
+    {
+      "family": "anthropic",
+      "model": "anthropic/claude-opus-5",
+      "label": "Claude Opus 5 · Gegenbelege",
+      "research_role": "counterevidence",
+      "content_md": "**Kurzprosa.** Mein Auftrag war Gegenbelege. Ich habe vier Felder geprüft: Entwurmung (Säule B), Skalierung erfolgreicher Pilotprogramme (A), Far-UVC-Luftentkeimung als Pandemie-Härtung (C) und Bleifarben-Regulierung (D). In allen vier Feldern fand ich belegte Nullresultate, Umsetzungsbrüche oder ungedeckte Wirkungsketten. Dabei bin ich unvermeidlich auf Material effektiv-altruistischer Evaluatoren (GiveWell-Blog, Rethink Priorities, Happier Lives Institute) gestoßen; diese Exposition benenne ich offen, nutze sie aber nur als Hinweis auf Primärstudien, nicht als Empfehlung. Zu Säule C ist die existenzielle Begründung nur indirekt tragfähig: Far-UVC adressiert potenziell pandemische (auch gezielt erzeugte) Atemwegserreger, die zu den wenigen plausiblen Zivilisationsrisiken zählen — gewöhnliche Infektionsprävention allein wäre kein Existenzrisiko-Argument. Belastbare Feldwirksamkeit auf Übertragung fehlt jedoch. Keine Spendenempfehlung.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "deworming long-run effects replication null",
+        "RCT null result scale-up implementation failure education developing country 2025",
+        "far-UVC 222 nm safety efficacy real-world limitations evidence gaps",
+        "lead paint elimination low-income countries blood lead evidence limits evaluation"
+      ],
+      "findings": [
+        {
+          "pillar": "B",
+          "topic": "Massenentwurmung: Wirkungskette nicht gedeckt",
+          "summary": "Netzwerk-Metaanalyse findet keine Stützung der kausalen Annahmen zu Wachstum, Kognition, Schulbesuch; Langzeiteffekte sehr geringe Evidenzsicherheit. Nachanalysen der Kenia-Kohorte zeigen abklingende bzw. nicht signifikante Langzeitnutzen.",
+          "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+          "uncertainty": "Gegenargument: Reviews sind für Wachstumseffekte evtl. unterpowert.",
+          "counterevidence": "Replikationen bestätigen Infektionsrückgang und teils Anwesenheitseffekte."
+        },
+        {
+          "pillar": "A",
+          "topic": "Skalierung: Pilot-Wirkung verschwindet",
+          "summary": "Telefonbasiertes Elternprogramm in Indien wurde planmäßig umgesetzt, hatte aber präzise geschätzte Nulleffekte auf kindliche Entwicklung und senkte Selbstwirksamkeit der Betreuenden (−0,11 SD), erhöhte Angst (+0,10 SD). Zeigt, dass kostengünstige Technologie-Skalierung wirksamer Präsenzprogramme scheitern kann.",
+          "source": "https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2450318",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "präregistrierte RCT",
+          "uncertainty": "Ein Kontext, ein Curriculum; Übertragbarkeit offen.",
+          "counterevidence": "Andere Elternprogramme wirken, abhängig von Bildungsniveau."
+        },
+        {
+          "pillar": "C",
+          "topic": "Far-UVC: Laborwirkung ohne Übertragungsnachweis",
+          "summary": "Far-UVC könnte Innenraumübertragung pandemischer, auch gezielt erzeugter Erreger dämpfen. Belegt sind Kammerexperimente; die Autoren betonen, Laborinaktivierung übersetze sich nicht automatisch in geringere Krankheitsübertragung, Feldevaluationen fehlten.",
+          "source": "https://www.nature.com/articles/s41598-022-08462-z",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Kammerexperiment",
+          "uncertainty": "Ozonbildung, Lampenhaltbarkeit, Dosisgrenzen ungeklärt.",
+          "counterevidence": "Reviews berichten inkonsistente Wirksamkeit und technisch begrenzte Dauerbetriebsreife."
+        },
+        {
+          "pillar": "D",
+          "topic": "Bleifarbe: Expositionsanteil unsicher",
+          "summary": "In 478 Studien aus Niedrigeinkommensländern war Batterieherstellung/-recycling häufigste Hauptquelle (118 Studien), Bleifarbe nur in 7 Studien. Regulierungserfolge werden meist an Farbproben, nicht an Blutbleiwerten gemessen; Wirkungskette Gesetz→Blutblei bleibt unbelegt.",
+          "source": "https://rethinkpriorities.org/research-area/global-lead-exposure-report/",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Sekundäranalyse eines Reviews",
+          "uncertainty": "Review erfasst nur Primärquellen; Farbe kann kumulativ beitragen.",
+          "counterevidence": "Marktstudien zeigen reale Bleigehalte weit über Grenzwerten."
+        }
+      ],
+      "rejected_findings": [
+        "Ausbildungs-RCT-Kritik allgemein: zu unspezifisch, keine förderbare Intervention.",
+        "Far-UVC-Lebensmittelanwendung: thematisch abseits der Pandemiehärtung."
+      ],
+      "delta_assessment": "Heutige Lage: In allen vier Säulen dominieren Wirkungsketten-Annahmen über direkte Endpunktbelege. Stärkste Gegenbelege bei Entwurmung und Technologie-Skalierung (RCTs). Bei Far-UVC und Bleifarbe ist die Lücke eher Messung als widerlegte Wirkung. Datumsangaben vieler Quellen konnte ich nicht belastbar verifizieren; deshalb null. Evidenzlücke: keine Feldstudie zu Far-UVC und Übertragung.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1791205048-UQ0AuVZTzFu4jgQlcQOK",
+        "requested_model": "anthropic/claude-opus-5",
+        "reported_model": "anthropic/claude-opus-5",
+        "generation_model": "anthropic/claude-opus-5-20260723",
+        "provider": "Anthropic",
+        "endpoint": "anthropic",
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "cost_basis": "billed",
+        "billed_usd": "0.40263",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 4,
+        "citations": [],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-05T12:57:28.360219+00:00",
+        "finished_at": "2026-10-05T12:58:46.044210+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-3.json"
+      }
+    }
+  ],
+  "scout_failures": [
+    {
+      "index": 1,
+      "model": "x-ai/grok-4.6",
+      "family": "spacexai",
+      "reason": "Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag.",
+      "stop_reason": "end_turn",
+      "raw_artifact_dir": "journal/2026-10-05/raw/scout-1",
+      "search_queries": []
+    }
+  ],
+  "scout_divergence": {
+    "method": "exact_structured_finding_keys",
+    "overlap_percent": 0.0,
+    "shared": [],
+    "only_a": [
+      [
+        "A",
+        "evidenzlücke bei langfristigen zukunftsinvestitionen",
+        "https://ru.dgb.unam.mx/server/api/core/bitstreams/6391fd00-6e5b-438b-a4f1-669735ee93e1/content"
+      ],
+      [
+        "B",
+        "bolsa família: geldtransfers mit gesundheitsauflagen",
+        "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html"
+      ],
+      [
+        "C",
+        "keine ausreichende evidenz für existenzrisiko-mitigation",
+        "https://bvsms.saude.gov.br/grandes-bases-de-dados-em-saude-permitem-construir-politicas-publicas-baseadas-em-evidencias/"
+      ],
+      [
+        "D",
+        "ländliche zisternen als übersehener wasser- und gesundheitsengpass",
+        "https://www.gov.br/mds/pt-br/acoes-e-programas/acesso-a-alimentos-e-a-agua/programa-cisternas/original/resultados-e-avaliacoes/estudos-e-avaliacoes"
+      ]
+    ],
+    "only_b": [
+      [
+        "A",
+        "skalierung: pilot-wirkung verschwindet",
+        "https://www.tandfonline.com/doi/full/10.1080/19345747.2025.2450318"
+      ],
+      [
+        "B",
+        "massenentwurmung: wirkungskette nicht gedeckt",
+        "https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext"
+      ],
+      [
+        "C",
+        "far-uvc: laborwirkung ohne übertragungsnachweis",
+        "https://www.nature.com/articles/s41598-022-08462-z"
+      ],
+      [
+        "D",
+        "bleifarbe: expositionsanteil unsicher",
+        "https://rethinkpriorities.org/research-area/global-lead-exposure-report/"
+      ]
+    ],
+    "report_scout_indices": [
+      2,
+      3
+    ]
+  },
+  "research_mode": "blind_then_compare",
+  "procedure_version": "0.6",
+  "decision_role": "weekly_chair",
+  "rotation_index": 1,
+  "decision_provenance": {
+    "transport": "openrouter_api",
+    "identity_source": "api",
+    "gateway": "openrouter",
+    "requested_model": "openai/gpt-6-astra",
+    "reported_model": "openai/gpt-6-astra",
+    "generation_model": "openai/gpt-6-astra-20260903",
+    "upstream_provider": "Azure",
+    "endpoint": "azure/us",
+    "quantization": "unknown",
+    "generation_id": "gen-1791205126-elpTp5HMIRekJlg45my6",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "usage": {
+      "prompt_tokens": 30687,
+      "completion_tokens": 575,
+      "total_tokens": 31262,
+      "cost": 0.453563,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 30684,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.453563,
+        "upstream_inference_prompt_cost": 0.421938,
+        "upstream_inference_completions_cost": 0.031625
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 76,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "cost": 0.453563,
+    "cost_basis": "billed",
+    "raw_artifact": "raw/chair-weekly-openai-response.json",
+    "generation_artifact": "raw/chair-weekly-openai-generation.json"
+  },
+  "cost_mode": "observe"
+}
