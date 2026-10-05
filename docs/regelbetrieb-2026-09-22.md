@@ -147,3 +147,40 @@ direkt im Protokoll. Neue Preflight-Alarme beschreiben die kostenlose
 Anschlussprüfung und behaupten nicht mehr pauschal einen Key- oder
 Erreichbarkeitsfehler. Die Tarifprüfung wird mit aufgezeichneten Preiswerten
 ohne HTTP-Inferenz getestet; der Produktionscheck erfolgt ebenfalls kostenlos.
+
+## Stiller Anschlussstatus ab 05.10.2026
+
+Der Steward hat die wiederkehrenden Failure-E-Mails der täglichen Preflights
+ausdrücklich abgelehnt. Auslöser am 05.10. war erneut der Kimi-Ausgabetarif:
+14 statt 13 USD pro Million Tokens am unveränderten Endpunkt `inference-net/fp4`.
+Der Anbieter war verfügbar; der aktuelle Eingabetarif betrug 0.67 USD pro
+Million Tokens. Die frühere Änderung der Tarifgrenze hatte die Ursache der
+wiederkehrenden E-Mails nicht behoben: Ein diagnostischer Tagescheck wurde als
+fehlgeschlagener Ausführungsjob behandelt und erzeugte zusätzlich ein Issue.
+
+Die weiterhin kostenlose tägliche Anschlussabfrage ist jetzt ein stiller
+Statusbericht. `preflight.yml` hat ausschließlich Leserechte und erzeugt weder
+Issues noch Kommentare. Job und Prüf-Schritt verwenden `continue-on-error`:
+[GitHub dokumentiert](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idcontinue-on-error),
+dass ein solcher Job den Workflow nicht fehlschlagen lässt. Der ursprüngliche
+Prüfstatus aus `steps.preflight.outcome` wird ausdrücklich erhalten, nicht durch
+die tolerierte Schritt-Conclusion ersetzt. Die Zusammenfassung und das
+30 Tage aufbewahrte Artefakt unterscheiden `ready`, `not_ready` und
+`not_checked`; fehlende oder gescheiterte Prüfungen sind niemals bereit.
+Der Workflow-Abschluss bestätigt nur die Verarbeitung des Statusberichts.
+
+Die Ausführungsprüfungen in `regular-operation.yml` und den Modelladaptern
+bleiben strikt. Ohne passende Endpunkte, Preise und verfügbares Budget wird
+keine Zahlung gestartet. Die dauerhafte Sperre nach unvollständigen bezahlten
+Läufen bleibt erhalten. Eine Budgetwarnung unter zehn Credits wird nun bei
+der Anschlussprüfung des eigentlichen Regelbetriebs einmalig gemeldet,
+anstatt vom stillen Tagesmonitor. Echte Betriebsfehler werden weiter gemeldet.
+Das Key-Limit beträgt unverändert 40 Credits.
+
+Der Recherchelauf vom 05.10. wurde unabhängig von dieser Meldung abgeschlossen
+und veröffentlicht: 1.122581 Credits für drei Scout-Aufrufe und Astra. Groks
+erneut fehlendes strukturiertes Dossier ist als Ausfall dokumentiert, Sonar und
+Opus lieferten verwertbare Dossiers. Es ist weiterhin kein vollständiges
+Drei-Scout-Dossier für eine Ratssitzung. Der nächste Research ist am 12.10., die
+reguläre Sitzung am 21.10.2026 vorgesehen. Für die Monitoränderung werden keine
+bezahlten Aufrufe wiederholt.

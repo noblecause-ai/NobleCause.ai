@@ -52,6 +52,7 @@ jobs:
           python3 gremium/regular_operation.py --kind "$OPERATION_KIND" --plan-only 2>&1 | tee run.log
 
       - name: Anschlussprüfung ohne Inferenz
+        id: preflight
         if: steps.plan.outputs.ready == 'true' || inputs.check_only
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -61,6 +62,26 @@ jobs:
           ARGS=()
           if [ "$OPERATION_KIND" = 'research' ]; then ARGS+=(--weekly); fi
           python3 gremium/preflight.py "${ARGS[@]}" 2>&1 | tee -a run.log
+
+      - name: Niedriges Budget einmalig melden
+        continue-on-error: true
+        if: steps.preflight.outputs.low_budget == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REMAINING_CREDITS: ${{ steps.preflight.outputs.remaining }}
+        run: |
+          gh label create 'budget:openrouter' --color D4C5F9 --description 'OpenRouter-Budget wird knapp' 2>/dev/null || true
+          NUMBER=$(gh issue list --label 'budget:openrouter' --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$NUMBER" ]; then exit 0; fi
+          printf 'Unter dem bestehenden OpenRouter-Key-Limit bleiben %s Credits. Der Betrieb erhöht dieses Limit nicht. Beim Erreichen stoppt er weitere Modellaufrufe.\n' "$REMAINING_CREDITS" > budget-notice.md
+          gh issue create --title 'OpenRouter: weniger als 10 Credits verfügbar' --label 'budget:openrouter' --body-file budget-notice.md
+
+      - name: Behobenen Budgethinweis schließen
+        continue-on-error: true
+        if: steps.preflight.outputs.low_budget == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/resolve-ci-failure.sh 'budget:openrouter' "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
       - name: Vorhandener SSH-Zugang
         if: (steps.plan.outputs.ready == 'true' && inputs.kind == 'session') || inputs.check_only
