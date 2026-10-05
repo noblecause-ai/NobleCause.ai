@@ -184,3 +184,14 @@ Opus lieferten verwertbare Dossiers. Es ist weiterhin kein vollständiges
 Drei-Scout-Dossier für eine Ratssitzung. Der nächste Research ist am 12.10., die
 reguläre Sitzung am 21.10.2026 vorgesehen. Für die Monitoränderung werden keine
 bezahlten Aufrufe wiederholt.
+
+Der [reale Fehlerpfad-Test](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/37322404142)
+mit der noch bestehenden Kimi-Preisabweichung schloss als Status-Workflow
+erfolgreich ab. Das Artefakt `openrouter-status-37322404142` hielt dabei korrekt
+`check_status: not_ready`, `probe_outcome: failure` und `inference_calls: 0`
+fest. Issue 24 blieb unverändert und ohne Kommentare; der Job hatte nur
+`contents: read`. Damit ist nicht nur der Erfolgsfall, sondern gerade der
+bisher E-Mails auslösende Fehlerfall geprüft. Anschließend wurde die Kimi-
+Ausgabe-Preisgrenze beim gleichen Anbieter auf den verifizierten Tarif 14
+USD pro Million Tokens aktualisiert. Weitere Preisgrenzen werden weiterhin
+nicht automatisch erhöht.

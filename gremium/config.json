@@ -259,7 +259,7 @@
 					"max_output_tokens": 32768,
 					"max_price": {
 						"prompt": 2.1,
-						"completion": 13
+						"completion": 14
 					},
 					"token_parameter": "max_tokens"
 				},
