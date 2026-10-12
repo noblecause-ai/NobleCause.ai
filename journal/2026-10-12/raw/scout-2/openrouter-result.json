@@ -1,0 +1,124 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 964,
+  "output_tokens": 1640,
+  "billed_usd": "0.03349",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1791812928-BAeF6UfnzbAjSt3wqklE",
+    "requested_model": "perplexity/sonar-pro",
+    "reported_model": "perplexity/sonar-pro",
+    "generation_model": "perplexity/sonar-pro",
+    "provider": "Perplexity",
+    "endpoint": "perplexity",
+    "finish_reason": "stop",
+    "native_finish_reason": "stop",
+    "cost_basis": "billed",
+    "billed_usd": "0.03349",
+    "search_engine_requested": "intrinsic",
+    "search_engine_reported": null,
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": null,
+    "citations": [
+      {
+        "url": "https://nidm.gov.in/journal/PDF/Journal/NIDMJOURNAL_JanJun2025/NIDMJOURNAL_JanJun20252.pdf",
+        "title": "Enhancing Pandemic and Climate Resilience",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2226589&reg=48&lang=2",
+        "title": "मौसम संबंधी संकटों के प्रभाव का आकलन करने के लिए अध्ययन - PIB",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.imdpune.gov.in/library/public/DWE_2024.pdf",
+        "title": "[PDF] DWE 2024 - IMD Pune",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2085210",
+        "title": "भारत के लिए जिला स्तरीय जलवायु जोखिम आकलन: बाढ़ और सूखे के ... - PIB",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.pib.gov.in/PressReleseDetail.aspx?PRID=2239234&reg=3&lang=2",
+        "title": "संसदीय प्रश्न: चरम मौसम की घटनाएं - PIB",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://nidm.gov.in/documentations.asp",
+        "title": "nidm.gov.in › documentationsNIDM - Documentations",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/mds/pt-br/acoes-e-programas/brasil-sem-fome/balanco/2024/apresentacao_balanco_pt.pdf",
+        "title": "[PDF] Balanço - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ipea.gov.br/ods/publicacoes.html",
+        "title": "Publicações",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/conselho-nacional-de-saude/pt-br/atos-normativos/resolucoes/2025/reso776-dispoe-sobre-a-aprovacao-com-ressalvas-do-relatorio-anual-de-gestao-2024-do-ministerio-da-saude-com-anexos.pdf",
+        "title": "resolução nº 776, de 12 de junho de 2025. - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/saude/pt-br/acesso-a-informacao/auditorias/2025/relatorio-de-gestao-integrado/@@download/file",
+        "title": "Relatório de Gestão Integrado 2025",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/saude/pt-br/assuntos/brasil-saudavel",
+        "title": "Brasil Saudável — Ministério da Saúde - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://nidm.gov.in/PDF/TrgReports/2024/November/Report_28November2024ga.pdf",
+        "title": "nidm.gov.in › PDF › TrgReportsNational Communities of Practice (CoP) on Enabling Cities on ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "http://www.rebrats.saude.gov.br/images/Documentos/2025/Diretriz_de_Avaliacao_Economica_3a_ed_2025.pdf",
+        "title": "www.rebrats.saude.gov.br › images › DocumentosDIRETRIZ DE AVALIAÇÃO ECONÔMICA EM SAÚDE 3ª edição: revisada ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/mds/pt-br/acesso-a-informacao/auditorias/2024/relatorio_gestao_2024_defeso.pdf/@@download/file",
+        "title": "www.gov.br › mds › pt-brRelatório de Gestão - Exercício 2024 Ministério do ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/mds/pt-br/acesso-a-informacao/auditorias/2024-1/RELATORIO_GESTAO_2024_defeso.pdf",
+        "title": "Relatório de Gestão - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+    ],
+    "started_at": "2026-10-12T13:48:48.534902+00:00",
+    "finished_at": "2026-10-12T13:49:14.367638+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  }
+}

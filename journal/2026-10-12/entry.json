@@ -1,0 +1,534 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "session_ref": "2026-09-21-live",
+  "model": "x-ai/grok-4.6",
+  "model_label": "Grok 4.6",
+  "decision_model": "openai/gpt-6-astra",
+  "search_queries": [
+    "effective interventions global health poverty alleviation primary studies 2024 2025 2026",
+    "existential risk mitigation interventions AI biosecurity nuclear primary evidence bottlenecks",
+    "overlooked neglected interventions lead poisoning mental health micronutrients cost-effectiveness",
+    "future investment education R&D climate adaptation long-term impact studies",
+    "operational bottlenecks implementation challenges charity interventions global development 2025",
+    "cash transfer programmes limitations mixed evidence health outcomes LMICs 2025 2026",
+    "climate adaptation investment limitations evidence gaps implementation bottlenecks",
+    "deworming long-run evidence null results replication",
+    "cash transfer long-term null effects RCT 2025",
+    "far-UVC 222 nm room efficacy limitations ozone byproducts real-world study",
+    "lead paint regulation low-income countries enforcement gap evidence blood lead reduction evaluation"
+  ],
+  "findings": [
+    {
+      "pillar": "A",
+      "topic": "Klimaanpassung als Zukunftsinvestition",
+      "summary": "WRI: 320 Projekte, 1 USD bringt 10,50 USD/10 J. (Triple Dividend). 27% Rendite. Engpass: 359 Mrd. USD/J Lücke, Eligibility, Due Diligence, private Returns.",
+      "source": "https://www.wri.org/insights/climate-adaptation-investment-case",
+      "source_date": "2025-06-03",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Projektanalyse",
+      "uncertainty": "Benefits unterschätzt; Datenlücken LMICs.",
+      "counterevidence": "Finanzhürden, wenige bankable Projekte."
+    },
+    {
+      "pillar": "B",
+      "topic": "Staatliche Cash-Transfers",
+      "summary": "Lancet DiD 37 LMIC, 2 Mio. Geburten: +5-14pp ANC/Geburten/Stillen/Impfungen, -6pp Durchfall. Kein sig. Stunting. Engpass: Timing transitorisch, Skalierung.",
+      "source": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(25)01437-0/abstract",
+      "source_date": "2025-12-06",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "DiD-Primärstudie",
+      "uncertainty": "Observational, gemischte Outcomes.",
+      "counterevidence": "Effekte zeitabhängig, keine Stunting-Wirkung."
+    },
+    {
+      "pillar": "C",
+      "topic": "Schichtweise KI-Biosicherheit",
+      "summary": "RAND: 9 Mitigationen (Info-/Materialzugang, Detektion, Abschreckung) gegen KI-Biowaffen. Existentiell: novel Pathogene ermöglichen Pandemien/Extinktion (Lancet). Engpass: Koordination, Sharing, Circumvention.",
+      "source": "https://www.rand.org/pubs/research_reports/RRA4999-1.html",
+      "source_date": "2026-08-18",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Pfadanalyse",
+      "uncertainty": "Zukünftige KI-Fähigkeiten unsicher.",
+      "counterevidence": "Einzelne Controls umgehbar."
+    },
+    {
+      "pillar": "D",
+      "topic": "Eisen-/Kalzium gegen Blei",
+      "summary": "CGD-Meta 4 RCTs: Eisen -0,31 µg/dL BLL. Fortifizierung billig, BCR ~6. Engpass: wenige Studien Hochlast-Settings, Malaria-Risiko, Prävention vorrangig.",
+      "source": "https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning",
+      "source_date": "2026-05-14",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Meta-RCTs",
+      "uncertainty": "Kleine N, Bias, sehr niedrige Evidenz.",
+      "counterevidence": "Prävention (Regulierung) effektiver."
+    },
+    {
+      "pillar": "A",
+      "topic": "Massenentwurmung als Humankapital-Investition",
+      "summary": "Campbell-Netzwerk-Metaanalyse über 52 Studien, ~1,3 Mio. Kinder: wenig bis kein Effekt auf Wachstum, Hämoglobin, Kognition, Schulbesuch; Langzeit-Produktivität sehr niedrige Evidenzsicherheit. Die positive Langfristevidenz hängt an wenigen Kohorten.",
+      "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+      "uncertainty": "Kein Nachweis der Null; Heterogenität nach Prävalenz möglich.",
+      "counterevidence": "Kritiker werfen Schwellenwert-Fetischismus vor; Uganda-Langzeitstudie zeigt nichtsignifikante, aber positive Punktschätzer."
+    },
+    {
+      "pillar": "B",
+      "topic": "Unbedingte Geldtransfers, Dauerhaftigkeit",
+      "summary": "US-RCT (1000 USD/Monat, 3 Jahre): Konsum steigt, aber Vermögen, Kreditzugang, Delinquenzen weitgehend unverändert; finanzielle Resilienz steigt im ersten Jahr und fällt bis Jahr drei auf null zurück.",
+      "source": "https://www.nber.org/system/files/working_papers/w32784/w32784.pdf",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "RCT (Arbeitspapier)",
+      "uncertainty": "US-Kontext; Übertragbarkeit auf Niedrigeinkommensländer offen.",
+      "counterevidence": "Uganda-12-Jahres-Follow-up findet wieder auftretende Einkommenseffekte in Krisenzeiten, nur bei Männern."
+    },
+    {
+      "pillar": "C",
+      "topic": "Far-UVC gegen pandemische Luftübertragung",
+      "summary": "Relevanz: breite Luftdesinfektion könnte auch gezielt erzeugte Pandemieerreger dämpfen. Doch Kammerergebnisse übertragen sich nicht automatisch; Autoren selbst nennen fehlende Real-World-Evaluationen zu tatsächlich reduzierter Krankheitsübertragung.",
+      "source": "https://www.nature.com/articles/s41598-022-08462-z",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Experimentelle Kammerstudie",
+      "uncertainty": "Keine Studie mit Infektionsendpunkt; Ozon/Sekundäraerosole lampenabhängig.",
+      "counterevidence": "Konferenzraumstudie: Einzellampe ohne signifikanten Ozon-/Feinstaubanstieg."
+    },
+    {
+      "pillar": "D",
+      "topic": "Bleifarben-Regulierung in LMIC",
+      "summary": "Lancet-Review (520 Studien): Bleifarbe erscheint trotz fehlender Verbote nicht als Hauptexpositionsquelle in LMIC; Batterierecycling dominiert. Die Kette Farbverbot → Blutbleisenkung ist damit nicht direkt belegt.",
+      "source": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(20)30278-3/fulltext",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Systematische Übersicht",
+      "uncertainty": "Review erfasst nur Primärquellen; Mehrfachexposition unterschätzt.",
+      "counterevidence": "Hausmessungen und Nigeria-Stichproben zeigen hohe Bleigehalte trotz Grenzwerten, also Vollzugs-, nicht Gesetzeslücke."
+    }
+  ],
+  "rejected_findings": [
+    {
+      "reason": "Boden-Remediation Blei: geringe Kosteneffektivität."
+    },
+    {
+      "reason": "Komplexe Gesundheitsreformen: gemischte Outcomes."
+    },
+    {
+      "topic": "Bedingte Geldtransfers (Progresa/Bolsa) als Langzeitbeleg",
+      "reason": "Überwiegend quasi-experimentell mit uneinheitlichen Beschäftigungs- und Bildungseffekten; als Gegenbeleg zu unscharf."
+    },
+    {
+      "topic": "Far-UVC-Herstellerseiten mit 99-%-Angaben",
+      "reason": "Kommerzielle Sekundärquelle, keine unabhängige Primärevidenz."
+    }
+  ],
+  "delta_assessment": "Scout 1 (x-ai/grok-4.6): Starke Evidenz Cash/Ernährung (B), hohe Adaptation-Returns (A), emergente C-Analyse, unsichere D-Effekte. Unsicherheiten: Kausalität, Skalierung, Timing, Daten LMICs.\n\nScout 3 (anthropic/claude-opus-5): Die geprüften Säulen stützen sich auf wenige tragende Studien. Robust sind Kurzfristeffekte (Konsum, Pathogeninaktivierung im Labor); schwach belegt sind Langfristketten (Entwurmung→Einkommen, Transfer→Vermögen, Farbverbot→Blutblei, Far-UVC→Übertragung). Offene Lücke: keine Interventionsstudie mit Infektionsendpunkt für C. Zahlen stammen jeweils aus den verlinkten Primärquellen; Publikationsdaten konnte ich nicht durchgängig verifizieren.",
+  "convene": false,
+  "convene_rationale": "Keiner der drei Einberufungsgründe ist hinreichend belegt. Die einzige bestehende Empfehlung vom 21.09. betrifft AMF-Netze; kein Scout-Fund widerspricht ihr substantiell. A, C und D blieben Prüfaufträge ohne Förderempfehlung. Eine wesentliche neu geöffnete oder geschlossene Finanzierungslücke ist nicht dokumentiert; die allgemeine Klimaanpassungslücke belegt keine Veränderung gegenüber dem bisherigen Stand.\n\nIm Archivvergleich sind Scouts 3 Befunde zu Entwurmung und Far-UVC Wiederentdeckungen derselben Ursprungsquellen vom 05.10., trotz anderer Säulenzuordnung der Entwurmung. Das zeigt Reproduzierbarkeit der Suche, nicht unabhängige Bestätigung. Der Bleifarbenbefund entspricht inhaltlich der damaligen Sekundäranalyse; ob beide auf denselben Reviewdaten beruhen, bleibt zu prüfen. Er präzisiert die bereits bekannte Lücke zwischen Farbproben und Blutbleiwirkung, widerlegt aber nicht die dokumentierten Marktveränderungen.\n\nScouts 1 Cash-Transfer-Studie ergänzt möglicherweise den Bolsa-Família-Befund vom 05.10.; Datenunabhängigkeit ist nicht belegt. Scouts 3 US-RCT ist wegen anderer Bevölkerung und Endpunkte kein unmittelbarer Gegenbeleg zu Gesundheitswirkungen in LMICs. Klimaanpassungsrenditen, Eisensupplementierung und dieser US-RCT sind im ausgewiesenen Bestand möglicherweise neue Funde, aber keine hinreichend belegte neu aufgetretene Chance von Rang. RAND vertieft ein bereits beratenes KI-Biosicherheitsrisiko; die genaue Quellenidentität mit der Sitzungsgrundlage ist offen.\n\nDie datierten Quellen von Scout 1 liegen vor der jüngsten Sitzung; bei Scout 3 fehlen verifizierte Publikationsdaten. Neu gefunden ist nicht notwendig neu eingetreten. Die 0-%-Überschneidung misst lediglich Topic-/Source-Tupel, weder Widerspruch noch fehlende unabhängige Bestätigung. Scout 2 fehlt, Suchprotokolle sind unvollständig. Nach dem Demut-Kanon genügt dieser Stand für die reguläre Monatssitzung, nicht für eine vorzeitige Einberufung.",
+  "content_md": "## Scout 1: Grok 4.6 · Entdeckung (x-ai/grok-4.6)\n\n[[1]](https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author)[[2]](https://www.wri.org/insights/climate-adaptation-investment-case)[[3]](https://www.rand.org/pubs/research_reports/RRA4999-1.html)[[4]](https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning)Regierungsgesteuerte Cash-Transfers verbessern zahlreiche Gesundheitsindikatoren in LMICs laut DiD-Studie.[[1]](https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author) Klimaanpassungsprojekte erzielen hohe Nutzen-Kosten-Verhältnisse.[[2]](https://www.wri.org/insights/climate-adaptation-investment-case) Eine RAND-Analyse schlägt neun Mitigationen gegen KI-ermöglichte Biowaffen vor, relevant für existenzielle Risiken durch novel Pathogene.[[3]](https://www.rand.org/pubs/research_reports/RRA4999-1.html) Eisen-Supplemente reduzieren Blutblei geringfügig.[[4]](https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning)\n\n```json\n{\"search_queries\": [\"effective interventions global health poverty alleviation primary studies 2024 2025 2026\", \"existential risk mitigation interventions AI biosecurity nuclear primary evidence bottlenecks\", \"overlooked neglected interventions lead poisoning mental health micronutrients cost-effectiveness\", \"future investment education R&D climate adaptation long-term impact studies\", \"operational bottlenecks implementation challenges charity interventions global development 2025\", \"cash transfer programmes limitations mixed evidence health outcomes LMICs 2025 2026\", \"climate adaptation investment limitations evidence gaps implementation bottlenecks\"], \"findings\": [{\"pillar\": \"A\", \"topic\": \"Klimaanpassung als Zukunftsinvestition\", \"summary\": \"WRI: 320 Projekte, 1 USD bringt 10,50 USD/10 J. (Triple Dividend). 27% Rendite. Engpass: 359 Mrd. USD/J Lücke, Eligibility, Due Diligence, private Returns.\", \"source\": \"https://www.wri.org/insights/climate-adaptation-investment-case\", \"source_date\": \"2025-06-03\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Projektanalyse\", \"uncertainty\": \"Benefits unterschätzt; Datenlücken LMICs.\", \"counterevidence\": \"Finanzhürden, wenige bankable Projekte.\"}, {\"pillar\": \"B\", \"topic\": \"Staatliche Cash-Transfers\", \"summary\": \"Lancet DiD 37 LMIC, 2 Mio. Geburten: +5-14pp ANC/Geburten/Stillen/Impfungen, -6pp Durchfall. Kein sig. Stunting. Engpass: Timing transitorisch, Skalierung.\", \"source\": \"https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(25)01437-0/abstract\", \"source_date\": \"2025-12-06\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"DiD-Primärstudie\", \"uncertainty\": \"Observational, gemischte Outcomes.\", \"counterevidence\": \"Effekte zeitabhängig, keine Stunting-Wirkung.\"}, {\"pillar\": \"C\", \"topic\": \"Schichtweise KI-Biosicherheit\", \"summary\": \"RAND: 9 Mitigationen (Info-/Materialzugang, Detektion, Abschreckung) gegen KI-Biowaffen. Existentiell: novel Pathogene ermöglichen Pandemien/Extinktion (Lancet). Engpass: Koordination, Sharing, Circumvention.\", \"source\": \"https://www.rand.org/pubs/research_reports/RRA4999-1.html\", \"source_date\": \"2026-08-18\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Pfadanalyse\", \"uncertainty\": \"Zukünftige KI-Fähigkeiten unsicher.\", \"counterevidence\": \"Einzelne Controls umgehbar.\"}, {\"pillar\": \"D\", \"topic\": \"Eisen-/Kalzium gegen Blei\", \"summary\": \"CGD-Meta 4 RCTs: Eisen -0,31 µg/dL BLL. Fortifizierung billig, BCR ~6. Engpass: wenige Studien Hochlast-Settings, Malaria-Risiko, Prävention vorrangig.\", \"source\": \"https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning\", \"source_date\": \"2026-05-14\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Meta-RCTs\", \"uncertainty\": \"Kleine N, Bias, sehr niedrige Evidenz.\", \"counterevidence\": \"Prävention (Regulierung) effektiver.\"}], \"rejected_findings\": [{\"reason\": \"Boden-Remediation Blei: geringe Kosteneffektivität.\"}, {\"reason\": \"Komplexe Gesundheitsreformen: gemischte Outcomes.\"}], \"delta_assessment\": \"Starke Evidenz Cash/Ernährung (B), hohe Adaptation-Returns (A), emergente C-Analyse, unsichere D-Effekte. Unsicherheiten: Kausalität, Skalierung, Timing, Daten LMICs.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft. Der Anbieter hat mehr Suchen ausgeführt als angefordert.\n\n---\n\n## Scout 3: Claude Opus 5 · Gegenbelege (anthropic/claude-opus-5)\n\n**Kurzbefund (Gegenbelege-Perspektive).** Ich habe vier verbreitete Interventionslinien gegen ihre eigene Primärliteratur geprüft. Dabei bin ich zufällig auf Effektiv-Altruismus-nahe Quellen gestoßen (GiveWell-Blog, Happier Lives Institute, Rethink Priorities); diese Exposition benenne ich offen, sie ersetzt keine Archivkenntnis und ich behaupte keine Neuheit. Kein Fund ist eine Förderempfehlung; jeder zeigt, wo die Wirkungskette dünner ist als der Abstract suggeriert. Zur Säule C: Luftdesinfektion ist nur dann existenzrisikorelevant, wenn sie Transmission pandemischer Erreger (inkl. gezielt erzeugter) breit senkt — genau dieser Nachweis fehlt bislang.\n\n```json\n{\"search_queries\": [\"deworming long-run evidence null results replication\", \"cash transfer long-term null effects RCT 2025\", \"far-UVC 222 nm room efficacy limitations ozone byproducts real-world study\", \"lead paint regulation low-income countries enforcement gap evidence blood lead reduction evaluation\"],\n\"findings\": [\n{\"pillar\": \"A\", \"topic\": \"Massenentwurmung als Humankapital-Investition\", \"summary\": \"Campbell-Netzwerk-Metaanalyse über 52 Studien, ~1,3 Mio. Kinder: wenig bis kein Effekt auf Wachstum, Hämoglobin, Kognition, Schulbesuch; Langzeit-Produktivität sehr niedrige Evidenzsicherheit. Die positive Langfristevidenz hängt an wenigen Kohorten.\", \"source\": \"https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Systematische Übersicht/Netzwerk-Metaanalyse\", \"uncertainty\": \"Kein Nachweis der Null; Heterogenität nach Prävalenz möglich.\", \"counterevidence\": \"Kritiker werfen Schwellenwert-Fetischismus vor; Uganda-Langzeitstudie zeigt nichtsignifikante, aber positive Punktschätzer.\"},\n{\"pillar\": \"B\", \"topic\": \"Unbedingte Geldtransfers, Dauerhaftigkeit\", \"summary\": \"US-RCT (1000 USD/Monat, 3 Jahre): Konsum steigt, aber Vermögen, Kreditzugang, Delinquenzen weitgehend unverändert; finanzielle Resilienz steigt im ersten Jahr und fällt bis Jahr drei auf null zurück.\", \"source\": \"https://www.nber.org/system/files/working_papers/w32784/w32784.pdf\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"RCT (Arbeitspapier)\", \"uncertainty\": \"US-Kontext; Übertragbarkeit auf Niedrigeinkommensländer offen.\", \"counterevidence\": \"Uganda-12-Jahres-Follow-up findet wieder auftretende Einkommenseffekte in Krisenzeiten, nur bei Männern.\"},\n{\"pillar\": \"C\", \"topic\": \"Far-UVC gegen pandemische Luftübertragung\", \"summary\": \"Relevanz: breite Luftdesinfektion könnte auch gezielt erzeugte Pandemieerreger dämpfen. Doch Kammerergebnisse übertragen sich nicht automatisch; Autoren selbst nennen fehlende Real-World-Evaluationen zu tatsächlich reduzierter Krankheitsübertragung.\", \"source\": \"https://www.nature.com/articles/s41598-022-08462-z\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Experimentelle Kammerstudie\", \"uncertainty\": \"Keine Studie mit Infektionsendpunkt; Ozon/Sekundäraerosole lampenabhängig.\", \"counterevidence\": \"Konferenzraumstudie: Einzellampe ohne signifikanten Ozon-/Feinstaubanstieg.\"},\n{\"pillar\": \"D\", \"topic\": \"Bleifarben-Regulierung in LMIC\", \"summary\": \"Lancet-Review (520 Studien): Bleifarbe erscheint trotz fehlender Verbote nicht als Hauptexpositionsquelle in LMIC; Batterierecycling dominiert. Die Kette Farbverbot → Blutbleisenkung ist damit nicht direkt belegt.\", \"source\": \"https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(20)30278-3/fulltext\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Systematische Übersicht\", \"uncertainty\": \"Review erfasst nur Primärquellen; Mehrfachexposition unterschätzt.\", \"counterevidence\": \"Hausmessungen und Nigeria-Stichproben zeigen hohe Bleigehalte trotz Grenzwerten, also Vollzugs-, nicht Gesetzeslücke.\"}\n],\n\"rejected_findings\": [\n{\"topic\": \"Bedingte Geldtransfers (Progresa/Bolsa) als Langzeitbeleg\", \"reason\": \"Überwiegend quasi-experimentell mit uneinheitlichen Beschäftigungs- und Bildungseffekten; als Gegenbeleg zu unscharf.\"},\n{\"topic\": \"Far-UVC-Herstellerseiten mit 99-%-Angaben\", \"reason\": \"Kommerzielle Sekundärquelle, keine unabhängige Primärevidenz.\"}\n],\n\"delta_assessment\": \"Die geprüften Säulen stützen sich auf wenige tragende Studien. Robust sind Kurzfristeffekte (Konsum, Pathogeninaktivierung im Labor); schwach belegt sind Langfristketten (Entwurmung→Einkommen, Transfer→Vermögen, Farbverbot→Blutblei, Far-UVC→Übertragung). Offene Lücke: keine Interventionsstudie mit Infektionsendpunkt für C. Zahlen stammen jeweils aus den verlinkten Primärquellen; Publikationsdaten konnte ich nicht durchgängig verifizieren.\"\n}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 2: ausgefallen\n\nModell: perplexity/sonar-pro · Grund: Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag. · Rohpfad: journal/2026-10-12/raw/scout-2\n\n---\n\n## Maschineller Divergenz-Ausweis\n\n{\n  \"method\": \"exact_structured_finding_keys\",\n  \"overlap_percent\": 0.0,\n  \"shared\": [],\n  \"only_a\": [\n    [\n      \"A\",\n      \"klimaanpassung als zukunftsinvestition\",\n      \"https://www.wri.org/insights/climate-adaptation-investment-case\"\n    ],\n    [\n      \"B\",\n      \"staatliche cash-transfers\",\n      \"https://www.thelancet.com/journals/lancet/article/piis0140-6736(25)01437-0/abstract\"\n    ],\n    [\n      \"C\",\n      \"schichtweise ki-biosicherheit\",\n      \"https://www.rand.org/pubs/research_reports/rra4999-1.html\"\n    ],\n    [\n      \"D\",\n      \"eisen-/kalzium gegen blei\",\n      \"https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning\"\n    ]\n  ],\n  \"only_b\": [\n    [\n      \"A\",\n      \"massenentwurmung als humankapital-investition\",\n      \"https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext\"\n    ],\n    [\n      \"B\",\n      \"unbedingte geldtransfers, dauerhaftigkeit\",\n      \"https://www.nber.org/system/files/working_papers/w32784/w32784.pdf\"\n    ],\n    [\n      \"C\",\n      \"far-uvc gegen pandemische luftübertragung\",\n      \"https://www.nature.com/articles/s41598-022-08462-z\"\n    ],\n    [\n      \"D\",\n      \"bleifarben-regulierung in lmic\",\n      \"https://www.thelancet.com/journals/lanplh/article/piis2542-5196(20)30278-3/fulltext\"\n    ]\n  ],\n  \"report_scout_indices\": [\n    1,\n    3\n  ]\n}",
+  "costs": {
+    "currency": "EUR",
+    "total": 1.0032,
+    "fx_rate_usd_eur": 0.85,
+    "components": {
+      "scouts": [
+        {
+          "currency": "EUR",
+          "total": 0.2124405,
+          "fx_rate_usd_eur": 0.85,
+          "model": "x-ai/grok-4.6",
+          "cost_basis": "billed",
+          "input_tokens": 131555,
+          "output_tokens": 6298,
+          "web_search_requests": 13,
+          "usd_total": 0.24993
+        },
+        {
+          "currency": "EUR",
+          "total": 0.0284665,
+          "fx_rate_usd_eur": 0.85,
+          "model": "perplexity/sonar-pro",
+          "cost_basis": "billed",
+          "input_tokens": 964,
+          "output_tokens": 1640,
+          "web_search_requests": null,
+          "usd_total": 0.03349
+        },
+        {
+          "currency": "EUR",
+          "total": 0.3567875,
+          "fx_rate_usd_eur": 0.85,
+          "model": "anthropic/claude-opus-5",
+          "cost_basis": "billed",
+          "input_tokens": 61000,
+          "output_tokens": 2990,
+          "web_search_requests": 4,
+          "usd_total": 0.41975
+        }
+      ],
+      "wart": {
+        "currency": "EUR",
+        "total": 0.4054908,
+        "fx_rate_usd_eur": 0.85,
+        "model": "openai/gpt-6-astra",
+        "cost_basis": "billed",
+        "input_tokens": 32479,
+        "output_tokens": 554,
+        "web_search_requests": null,
+        "usd_total": 0.477048
+      }
+    }
+  },
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/38257959823",
+  "scouts": [
+    {
+      "family": "spacexai",
+      "model": "x-ai/grok-4.6",
+      "label": "Grok 4.6 · Entdeckung",
+      "research_role": "discovery",
+      "content_md": "[[1]](https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author)[[2]](https://www.wri.org/insights/climate-adaptation-investment-case)[[3]](https://www.rand.org/pubs/research_reports/RRA4999-1.html)[[4]](https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning)Regierungsgesteuerte Cash-Transfers verbessern zahlreiche Gesundheitsindikatoren in LMICs laut DiD-Studie.[[1]](https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author) Klimaanpassungsprojekte erzielen hohe Nutzen-Kosten-Verhältnisse.[[2]](https://www.wri.org/insights/climate-adaptation-investment-case) Eine RAND-Analyse schlägt neun Mitigationen gegen KI-ermöglichte Biowaffen vor, relevant für existenzielle Risiken durch novel Pathogene.[[3]](https://www.rand.org/pubs/research_reports/RRA4999-1.html) Eisen-Supplemente reduzieren Blutblei geringfügig.[[4]](https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning)\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft. Der Anbieter hat mehr Suchen ausgeführt als angefordert.",
+      "search_queries": [
+        "effective interventions global health poverty alleviation primary studies 2024 2025 2026",
+        "existential risk mitigation interventions AI biosecurity nuclear primary evidence bottlenecks",
+        "overlooked neglected interventions lead poisoning mental health micronutrients cost-effectiveness",
+        "future investment education R&D climate adaptation long-term impact studies",
+        "operational bottlenecks implementation challenges charity interventions global development 2025",
+        "cash transfer programmes limitations mixed evidence health outcomes LMICs 2025 2026",
+        "climate adaptation investment limitations evidence gaps implementation bottlenecks"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Klimaanpassung als Zukunftsinvestition",
+          "summary": "WRI: 320 Projekte, 1 USD bringt 10,50 USD/10 J. (Triple Dividend). 27% Rendite. Engpass: 359 Mrd. USD/J Lücke, Eligibility, Due Diligence, private Returns.",
+          "source": "https://www.wri.org/insights/climate-adaptation-investment-case",
+          "source_date": "2025-06-03",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Projektanalyse",
+          "uncertainty": "Benefits unterschätzt; Datenlücken LMICs.",
+          "counterevidence": "Finanzhürden, wenige bankable Projekte."
+        },
+        {
+          "pillar": "B",
+          "topic": "Staatliche Cash-Transfers",
+          "summary": "Lancet DiD 37 LMIC, 2 Mio. Geburten: +5-14pp ANC/Geburten/Stillen/Impfungen, -6pp Durchfall. Kein sig. Stunting. Engpass: Timing transitorisch, Skalierung.",
+          "source": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(25)01437-0/abstract",
+          "source_date": "2025-12-06",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "DiD-Primärstudie",
+          "uncertainty": "Observational, gemischte Outcomes.",
+          "counterevidence": "Effekte zeitabhängig, keine Stunting-Wirkung."
+        },
+        {
+          "pillar": "C",
+          "topic": "Schichtweise KI-Biosicherheit",
+          "summary": "RAND: 9 Mitigationen (Info-/Materialzugang, Detektion, Abschreckung) gegen KI-Biowaffen. Existentiell: novel Pathogene ermöglichen Pandemien/Extinktion (Lancet). Engpass: Koordination, Sharing, Circumvention.",
+          "source": "https://www.rand.org/pubs/research_reports/RRA4999-1.html",
+          "source_date": "2026-08-18",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Pfadanalyse",
+          "uncertainty": "Zukünftige KI-Fähigkeiten unsicher.",
+          "counterevidence": "Einzelne Controls umgehbar."
+        },
+        {
+          "pillar": "D",
+          "topic": "Eisen-/Kalzium gegen Blei",
+          "summary": "CGD-Meta 4 RCTs: Eisen -0,31 µg/dL BLL. Fortifizierung billig, BCR ~6. Engpass: wenige Studien Hochlast-Settings, Malaria-Risiko, Prävention vorrangig.",
+          "source": "https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning",
+          "source_date": "2026-05-14",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Meta-RCTs",
+          "uncertainty": "Kleine N, Bias, sehr niedrige Evidenz.",
+          "counterevidence": "Prävention (Regulierung) effektiver."
+        }
+      ],
+      "rejected_findings": [
+        {
+          "reason": "Boden-Remediation Blei: geringe Kosteneffektivität."
+        },
+        {
+          "reason": "Komplexe Gesundheitsreformen: gemischte Outcomes."
+        }
+      ],
+      "delta_assessment": "Starke Evidenz Cash/Ernährung (B), hohe Adaptation-Returns (A), emergente C-Analyse, unsichere D-Effekte. Unsicherheiten: Kausalität, Skalierung, Timing, Daten LMICs.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1791812782-GjboJ1omFkCfDZnfvxW2",
+        "requested_model": "x-ai/grok-4.6",
+        "reported_model": "x-ai/grok-4.6",
+        "generation_model": "x-ai/grok-4.6-20260810",
+        "provider": "xAI",
+        "endpoint": "xai/zdr",
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "cost_basis": "billed",
+        "billed_usd": "0.24993",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 13,
+        "citations": [
+          {
+            "url": "https://www.sciencedirect.com/science/article/abs/pii/S0140673625014370?dgcid=author",
+            "title": "1",
+            "start_index": 0,
+            "end_index": 91
+          },
+          {
+            "url": "https://www.wri.org/insights/climate-adaptation-investment-case",
+            "title": "2",
+            "start_index": 91,
+            "end_index": 161
+          },
+          {
+            "url": "https://www.rand.org/pubs/research_reports/RRA4999-1.html",
+            "title": "3",
+            "start_index": 161,
+            "end_index": 225
+          },
+          {
+            "url": "https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning",
+            "title": "4",
+            "start_index": 225,
+            "end_index": 308
+          }
+        ],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+          "Der Anbieter hat mehr Suchen ausgeführt als angefordert."
+        ],
+        "started_at": "2026-10-12T13:46:22.960851+00:00",
+        "finished_at": "2026-10-12T13:48:48.007564+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    },
+    {
+      "family": "anthropic",
+      "model": "anthropic/claude-opus-5",
+      "label": "Claude Opus 5 · Gegenbelege",
+      "research_role": "counterevidence",
+      "content_md": "**Kurzbefund (Gegenbelege-Perspektive).** Ich habe vier verbreitete Interventionslinien gegen ihre eigene Primärliteratur geprüft. Dabei bin ich zufällig auf Effektiv-Altruismus-nahe Quellen gestoßen (GiveWell-Blog, Happier Lives Institute, Rethink Priorities); diese Exposition benenne ich offen, sie ersetzt keine Archivkenntnis und ich behaupte keine Neuheit. Kein Fund ist eine Förderempfehlung; jeder zeigt, wo die Wirkungskette dünner ist als der Abstract suggeriert. Zur Säule C: Luftdesinfektion ist nur dann existenzrisikorelevant, wenn sie Transmission pandemischer Erreger (inkl. gezielt erzeugter) breit senkt — genau dieser Nachweis fehlt bislang.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "deworming long-run evidence null results replication",
+        "cash transfer long-term null effects RCT 2025",
+        "far-UVC 222 nm room efficacy limitations ozone byproducts real-world study",
+        "lead paint regulation low-income countries enforcement gap evidence blood lead reduction evaluation"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Massenentwurmung als Humankapital-Investition",
+          "summary": "Campbell-Netzwerk-Metaanalyse über 52 Studien, ~1,3 Mio. Kinder: wenig bis kein Effekt auf Wachstum, Hämoglobin, Kognition, Schulbesuch; Langzeit-Produktivität sehr niedrige Evidenzsicherheit. Die positive Langfristevidenz hängt an wenigen Kohorten.",
+          "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+          "uncertainty": "Kein Nachweis der Null; Heterogenität nach Prävalenz möglich.",
+          "counterevidence": "Kritiker werfen Schwellenwert-Fetischismus vor; Uganda-Langzeitstudie zeigt nichtsignifikante, aber positive Punktschätzer."
+        },
+        {
+          "pillar": "B",
+          "topic": "Unbedingte Geldtransfers, Dauerhaftigkeit",
+          "summary": "US-RCT (1000 USD/Monat, 3 Jahre): Konsum steigt, aber Vermögen, Kreditzugang, Delinquenzen weitgehend unverändert; finanzielle Resilienz steigt im ersten Jahr und fällt bis Jahr drei auf null zurück.",
+          "source": "https://www.nber.org/system/files/working_papers/w32784/w32784.pdf",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "RCT (Arbeitspapier)",
+          "uncertainty": "US-Kontext; Übertragbarkeit auf Niedrigeinkommensländer offen.",
+          "counterevidence": "Uganda-12-Jahres-Follow-up findet wieder auftretende Einkommenseffekte in Krisenzeiten, nur bei Männern."
+        },
+        {
+          "pillar": "C",
+          "topic": "Far-UVC gegen pandemische Luftübertragung",
+          "summary": "Relevanz: breite Luftdesinfektion könnte auch gezielt erzeugte Pandemieerreger dämpfen. Doch Kammerergebnisse übertragen sich nicht automatisch; Autoren selbst nennen fehlende Real-World-Evaluationen zu tatsächlich reduzierter Krankheitsübertragung.",
+          "source": "https://www.nature.com/articles/s41598-022-08462-z",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Experimentelle Kammerstudie",
+          "uncertainty": "Keine Studie mit Infektionsendpunkt; Ozon/Sekundäraerosole lampenabhängig.",
+          "counterevidence": "Konferenzraumstudie: Einzellampe ohne signifikanten Ozon-/Feinstaubanstieg."
+        },
+        {
+          "pillar": "D",
+          "topic": "Bleifarben-Regulierung in LMIC",
+          "summary": "Lancet-Review (520 Studien): Bleifarbe erscheint trotz fehlender Verbote nicht als Hauptexpositionsquelle in LMIC; Batterierecycling dominiert. Die Kette Farbverbot → Blutbleisenkung ist damit nicht direkt belegt.",
+          "source": "https://www.thelancet.com/journals/lanplh/article/PIIS2542-5196(20)30278-3/fulltext",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Systematische Übersicht",
+          "uncertainty": "Review erfasst nur Primärquellen; Mehrfachexposition unterschätzt.",
+          "counterevidence": "Hausmessungen und Nigeria-Stichproben zeigen hohe Bleigehalte trotz Grenzwerten, also Vollzugs-, nicht Gesetzeslücke."
+        }
+      ],
+      "rejected_findings": [
+        {
+          "topic": "Bedingte Geldtransfers (Progresa/Bolsa) als Langzeitbeleg",
+          "reason": "Überwiegend quasi-experimentell mit uneinheitlichen Beschäftigungs- und Bildungseffekten; als Gegenbeleg zu unscharf."
+        },
+        {
+          "topic": "Far-UVC-Herstellerseiten mit 99-%-Angaben",
+          "reason": "Kommerzielle Sekundärquelle, keine unabhängige Primärevidenz."
+        }
+      ],
+      "delta_assessment": "Die geprüften Säulen stützen sich auf wenige tragende Studien. Robust sind Kurzfristeffekte (Konsum, Pathogeninaktivierung im Labor); schwach belegt sind Langfristketten (Entwurmung→Einkommen, Transfer→Vermögen, Farbverbot→Blutblei, Far-UVC→Übertragung). Offene Lücke: keine Interventionsstudie mit Infektionsendpunkt für C. Zahlen stammen jeweils aus den verlinkten Primärquellen; Publikationsdaten konnte ich nicht durchgängig verifizieren.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1791812954-jkuQf2hNVO7c3OL6w9cu",
+        "requested_model": "anthropic/claude-opus-5",
+        "reported_model": "anthropic/claude-opus-5",
+        "generation_model": "anthropic/claude-opus-5-20260723",
+        "provider": "Anthropic",
+        "endpoint": "anthropic",
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "cost_basis": "billed",
+        "billed_usd": "0.41975",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 4,
+        "citations": [],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-12T13:49:14.727891+00:00",
+        "finished_at": "2026-10-12T13:50:06.642257+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    }
+  ],
+  "scout_failures": [
+    {
+      "index": 2,
+      "model": "perplexity/sonar-pro",
+      "family": "perplexity",
+      "reason": "Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag.",
+      "stop_reason": "end_turn",
+      "raw_artifact_dir": "journal/2026-10-12/raw/scout-2",
+      "search_queries": []
+    }
+  ],
+  "scout_divergence": {
+    "method": "exact_structured_finding_keys",
+    "overlap_percent": 0.0,
+    "shared": [],
+    "only_a": [
+      [
+        "A",
+        "klimaanpassung als zukunftsinvestition",
+        "https://www.wri.org/insights/climate-adaptation-investment-case"
+      ],
+      [
+        "B",
+        "staatliche cash-transfers",
+        "https://www.thelancet.com/journals/lancet/article/piis0140-6736(25)01437-0/abstract"
+      ],
+      [
+        "C",
+        "schichtweise ki-biosicherheit",
+        "https://www.rand.org/pubs/research_reports/rra4999-1.html"
+      ],
+      [
+        "D",
+        "eisen-/kalzium gegen blei",
+        "https://www.cgdev.org/blog/can-nutritional-supplements-reduce-lead-poisoning"
+      ]
+    ],
+    "only_b": [
+      [
+        "A",
+        "massenentwurmung als humankapital-investition",
+        "https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext"
+      ],
+      [
+        "B",
+        "unbedingte geldtransfers, dauerhaftigkeit",
+        "https://www.nber.org/system/files/working_papers/w32784/w32784.pdf"
+      ],
+      [
+        "C",
+        "far-uvc gegen pandemische luftübertragung",
+        "https://www.nature.com/articles/s41598-022-08462-z"
+      ],
+      [
+        "D",
+        "bleifarben-regulierung in lmic",
+        "https://www.thelancet.com/journals/lanplh/article/piis2542-5196(20)30278-3/fulltext"
+      ]
+    ],
+    "report_scout_indices": [
+      1,
+      3
+    ]
+  },
+  "research_mode": "blind_then_compare",
+  "procedure_version": "0.6",
+  "decision_role": "weekly_chair",
+  "rotation_index": 1,
+  "decision_provenance": {
+    "transport": "openrouter_api",
+    "identity_source": "api",
+    "gateway": "openrouter",
+    "requested_model": "openai/gpt-6-astra",
+    "reported_model": "openai/gpt-6-astra",
+    "generation_model": "openai/gpt-6-astra-20260903",
+    "upstream_provider": "Azure",
+    "endpoint": "azure/us",
+    "quantization": "unknown",
+    "generation_id": "gen-1791813007-Qlz05O4FMUAxi3HJnHkh",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "usage": {
+      "prompt_tokens": 32479,
+      "completion_tokens": 554,
+      "total_tokens": 33033,
+      "cost": 0.477048,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 32476,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.477048,
+        "upstream_inference_prompt_cost": 0.446578,
+        "upstream_inference_completions_cost": 0.03047
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 50,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "cost": 0.477048,
+    "cost_basis": "billed",
+    "raw_artifact": "raw/chair-weekly-openai-response.json",
+    "generation_artifact": "raw/chair-weekly-openai-generation.json"
+  },
+  "cost_mode": "observe"
+}
