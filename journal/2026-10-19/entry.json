@@ -1,0 +1,796 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-19",
+  "session_ref": "2026-09-21-live",
+  "model": "x-ai/grok-4.6",
+  "model_label": "Grok 4.6",
+  "decision_model": "openai/gpt-6-astra",
+  "search_queries": [
+    "wirksame Interventionen globales Gesundheitswesen Evidenz 2025 2026",
+    "effective interventions existential risk AI biosecurity 2025 2026 evidence",
+    "overlooked bottlenecks effective altruism animal welfare poverty 2025",
+    "primary studies cash transfers malaria nets deworming cost-effectiveness 2024 2025",
+    "Lancet Commission 21st Century Global Threats to Health 2026",
+    "GiveWell insecticide-treated nets cost-effectiveness 2026",
+    "shrimp welfare intervention evidence 2025 2026",
+    "counterevidence malaria nets insecticide resistance 2026",
+    "WHO Global benefits and costs of prioritized actions on climate change and health 2026",
+    "site:gov.br avaliação impacto intervenção saúde pobreza português Brasil",
+    "site:gob.mx evaluación impacto intervención pobreza salud español México",
+    "site:gov.za evaluation intervention poverty health isiZulu Afrikaans",
+    "deworming long-term evidence null result replication",
+    "cash transfer RCT null effect replication 2025",
+    "far-UVC 222nm limitations ozone byproducts real-world efficacy critique",
+    "Teaching at the Right Level scale-up weaker effects government implementation evidence"
+  ],
+  "findings": [
+    {
+      "pillar": "A",
+      "topic": "Klima-Gesundheitsaktionen",
+      "summary": "Skalierung von Hitzewarnsystemen, Wasser/Sanitär, sauberer Energie und Fossilbesteuerung könnte 1,6 Mio. Tode/Jahr und 17 Mrd. t CO2e vermeiden; Nutzen 24:1. Engpass: Finanzierung/Umsetzung.",
+      "source": "https://iris.who.int/handle/10665/387875",
+      "source_date": "2026-10-15",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Wohlfahrtsökonomische Modellierung",
+      "uncertainty": "Langfristprojektionen unsicher; voller Bericht embargoed.",
+      "counterevidence": "Klimamodell-Unsicherheiten allgemein."
+    },
+    {
+      "pillar": "B",
+      "topic": "ITN-Malaria-Kampagnen",
+      "summary": "GiveWell-Grant 276 Mio. USD für 92 Mio. Netze DRC 2027-2029 soll 67.000 Tode verhindern. Engpässe: Fund-Cap, schnelle Degradation, Delays.",
+      "source": "https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/",
+      "source_date": "2026-08-27",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "CEA plus DHS-Analyse",
+      "uncertainty": "Mortalitätsdaten ungenau.",
+      "counterevidence": "Resistenz mindert Wirksamkeit 2026-Studien."
+    },
+    {
+      "pillar": "C",
+      "topic": "Malicious AI/Biowaffen",
+      "summary": "Lancet: Extinktionspotenzial; Prävention 10,4 Mrd. DALYs bis 2100. RAND: 9-schichtige Abwehr nötig. Zusammenhang: Pandemie-Extinktion möglich.",
+      "source": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)01714-9/abstract",
+      "source_date": "2026-10-10",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Kommissionsmodellierung",
+      "uncertainty": "Expertenurteile, große Ranges.",
+      "counterevidence": "Niedrige Wahrscheinlichkeit."
+    },
+    {
+      "pillar": "D",
+      "topic": "Humane Garnelenschlachtung",
+      "summary": "Stirling 2026: elektrische Betäubung schneller unempfindlich als Kälte. Engpass: Science-to-Practice, kommerzielle Lücke. ASC-Projekt zur Brücke.",
+      "source": "https://www.shrimpwelfareproject.org/stirling-study",
+      "source_date": "2026-08-17",
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Laborexperiment EEG",
+      "uncertainty": "Nur Laborbedingungen.",
+      "counterevidence": "Reviews: unzureichende Evidenz Humanität."
+    },
+    {
+      "pillar": "A",
+      "topic": "Bedingte Geldtransfers und Gesundheitszugang in Brasilien",
+      "summary": "Eine brasilianische Regierungsquelle berichtet positive Zusammenhänge von Bolsa Família mit Zugang zur Primärversorgung, Nutzung von Gesundheitsdiensten und geringerer Unterernährung. Das ist relevante Evidenz für langfristige menschliche Entwicklung, aber kein hier unabhängig geprüfter kausaler Primärnachweis; operative Engpässe und Kostenwirksamkeit bleiben offen.",
+      "source": "https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf",
+      "source_date": "2026-05-24",
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "Regierungsbericht mit Zusammenfassung früherer Wirkungsbefunde",
+      "uncertainty": "Die zugrunde liegenden Studien wurden nicht geöffnet und ihre Designs, Stichproben und Effektgrößen sind unbekannt; das angegebene Aktualisierungsdatum liegt nach dem Recherche-Stichtag.",
+      "counterevidence": "Keine gegenteilige Evidenz in den verfügbaren Treffern; fehlende Effektgrößen verhindern eine belastbare Wirksamkeitsbewertung."
+    },
+    {
+      "pillar": "B",
+      "topic": "Gesundheitsversorgung und finanzielle Absicherung",
+      "summary": "Eine mexikanische Gesundheitsbehörde beschreibt als Evaluationsziele bessere Gesundheit, angemessene Behandlung und finanziellen Schutz. Das belegt eine plausible Linderungsrichtung, aber nicht, dass eine konkrete Intervention diese Ziele wirksam erreicht. Die Evidenzlücke betrifft gemessene Endpunkte, Vergleichsgruppen und Versorgungshürden.",
+      "source": "https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf",
+      "source_date": "2026-06-16",
+      "event_date": null,
+      "source_language": "Spanisch (Mexiko)",
+      "evidence_type": "Behördliche Evaluationsstrategie",
+      "uncertainty": "Normative Ziele sind kein Wirksamkeitsnachweis; der Originaltext wurde in diesem Durchlauf nicht geprüft. Das Suchergebnis datiert nach dem Stichtag.",
+      "counterevidence": "Keine belastbare Gegenquelle verfügbar; die fehlenden Ergebnismessungen sind selbst eine wesentliche Einschränkung."
+    },
+    {
+      "pillar": "C",
+      "topic": "Evidenzlücke bei existenzrisikorelevanten Interventionen",
+      "summary": "Die verfügbaren regionalen Quellen behandeln Armut, Gesundheit und Evaluation, liefern aber keinen belegten Zusammenhang mit einem existenziellen Risiko wie nuklearem Krieg, pandemischem Kollaps oder dauerhaftem Verlust globaler Steuerungsfähigkeit. Gewöhnliche Gesundheits- und Hitzeminderung genügt für Säule C nicht; daher bleibt hier ein ausdrücklich unbelegter Suchbefund.",
+      "source": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+      "source_date": "2026-09-21",
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "Behördliches Evaluations- und Logikmodell; indirekte Evidenz für die Identifikation von Lücken",
+      "uncertainty": "Die Quelle beschreibt Evaluationsmethoden, nicht eine existenzrisikomindernde Intervention; Aktualisierungsdatum liegt nach dem Stichtag.",
+      "counterevidence": "Keine geeignete Primärquelle zu einem existenziellen Risiko gefunden."
+    },
+    {
+      "pillar": "D",
+      "topic": "Messung und Implementierung als übersehener Engpass",
+      "summary": "Brasilianische Behördenmaterialien betonen, dass Evaluation Interventionen nach Relevanz, Effizienz, Wirksamkeit, Nachhaltigkeit und Wirkung beurteilen sowie Informationsverfügbarkeit und institutionellen Kontext prüfen soll. Daraus folgt ein plausibler Engpass: Ohne verlässliche Outcome-Daten und Implementationsmessung lassen sich wirksame lokale Maßnahmen schwer priorisieren. Das ist methodische, nicht direkte Wirkungs-Evidenz.",
+      "source": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+      "source_date": "2026-09-21",
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "Behördliches Evaluationsframework",
+      "uncertainty": "Der Engpass wird aus dem Framework abgeleitet und nicht durch eine konkrete Fehlversorgung quantifiziert; Datum nach Stichtag.",
+      "counterevidence": "Keine Gegenquelle in den verfügbaren Treffern; die Übertragbarkeit auf globale Förderentscheidungen ist ungeprüft."
+    },
+    {
+      "pillar": "A",
+      "topic": "Skalierungsbruch bei Teaching at the Right Level",
+      "summary": "Die NGO-Pilotwirkung übertrug sich nicht automatisch: In Bihar und Uttarakhand übernahmen staatliche Lehrkräfte die Methode trotz gut angenommener Schulungen nicht; erst angepasste Modelle wirkten, mit sehr ungleichen Effekten (0,15 vs. 0,70 SD).",
+      "source": "https://www.nber.org/papers/w22746",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Serie randomisierter Evaluationen",
+      "uncertainty": "Effekte kontextabhängig; Übertragbarkeit nach Afrika offen.",
+      "counterevidence": "Mentoring-Modelle erzielten Lerngewinne."
+    },
+    {
+      "pillar": "B",
+      "topic": "Entwurmung: Nullbefunde in Synthesen",
+      "summary": "Eine Campbell-Netzwerk-Metaanalyse über 52 Studien und rund 1,3 Mio. Kinder findet für Massenentwurmung wenig bis keinen Effekt auf Wachstum, Hämoglobin, Kognition und Schulbesuch; Produktivitätseffekte sind sehr unsicher.",
+      "source": "https://www.sciencedirect.com/science/article/pii/S2214109X16302893",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Kommentar zu systematischem Review",
+      "uncertainty": "Kommentar der Review-Autoren, nicht neutral.",
+      "counterevidence": "Langzeit-Quasiexperimente zeigen Einkommenseffekte; Einschlusskriterien umstritten."
+    },
+    {
+      "pillar": "C",
+      "topic": "Far-UVC gegen Pandemierisiko: Wirknachweis fehlt",
+      "summary": "Luftdesinfektion adressiert pandemische Katastrophenrisiken. Ein Review 2025 bescheinigt hohe Abtötung und Sicherheit, fordert aber Forschung zu Langzeitexposition und realen Szenarien; Ozon- und Folgechemie entstehen nachweislich auch in realen Räumen.",
+      "source": "https://en.wikipedia.org/wiki/Far-UVC",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Enzyklopädische Sekundärdarstellung",
+      "uncertainty": "Schwache Quellenart; Primärreview nicht geöffnet.",
+      "counterevidence": "Brenner 2024: Ozon unter 10 ppb, Partikelbildung unwahrscheinlich."
+    },
+    {
+      "pillar": "D",
+      "topic": "Offen benannte Evidenzlücke",
+      "summary": "Zu übersehenen Essentials habe ich keinen belastbaren Fund. Mein Suchbudget war nach vier Abfragen erschöpft; ich habe keine Originalquelle geöffnet und ergänze keine Zahlen.",
+      "source": null,
+      "source_date": null,
+      "event_date": null,
+      "source_language": null,
+      "evidence_type": "keine",
+      "uncertainty": "Vollständig offen.",
+      "counterevidence": "Nicht anwendbar."
+    }
+  ],
+  "rejected_findings": [
+    {
+      "topic": "WHO-Vollbericht Klima-Gesundheit",
+      "reason": "Embargo bis nach Stichtag."
+    },
+    {
+      "topic": "Massendeworming",
+      "reason": "Widersprüchliche Metaanalysen."
+    },
+    "Brasilianische Ausgaben für Bildung und Gesundheit als armutsmindernde Intervention: Suchtreffer mit statistischen Ergebnissen wurden nicht als Finding verwendet, weil der Originalartikel nicht geöffnet und die Kausalinterpretation nicht geprüft werden konnte.",
+    "Mexikanische Armutsreduktion anhand aggregierter Armutsindikatoren: verworfen, weil der Treffer keine eindeutig identifizierte Intervention mit belastbarer Wirkungsschätzung ausweist.",
+    "Unbedingte Geldtransfers als B-Fund: widersprüchliche Lage (deutsche RCT positiv, US-RCT-2 null) ohne geöffnete Primärquelle.",
+    "Far-UVC-Ozon als eigenständiger Fund: Herstellerseiten und Laienportale als Quellen zu schwach."
+  ],
+  "delta_assessment": "Scout 1 (x-ai/grok-4.6): Evidenz 2026 stützt ITNs und Klima-Aktionen trotz Resistenz/Unsicherheit; x-Risiken expertenbasiert hochunsicher. Tierschutz-Labordaten lückenhaft. Engpässe: Funding, Validierung, Skalierung. Keine Neuheit behauptet.\n\nScout 2 (perplexity/sonar-pro): Die verfügbare Evidenz ist regional und methodisch unvollständig: Brasilianische Quellen stützen vorläufige Hinweise zu Geldtransfers und Evaluationskapazität, mexikanische Quellen vor allem Evaluationsziele. Für Säule C fehlt ein belastbarer existenzieller Bezug. Mehrere Treffer tragen Aktualisierungsdaten nach dem Stichtag; ihre rechtzeitige Verfügbarkeit ist ungeklärt.\n\nScout 3 (anthropic/claude-opus-5): Die Evidenzlage belohnt Umsetzungstreue stärker als Interventionsauswahl: Pilot-Effekte brechen im Staatsbetrieb ein, Metaanalysen relativieren populäre Massenmaßnahmen, und technische Schutzmaßnahmen haben Labor-, aber kaum Feldnachweise. Hauptunsicherheiten: wenige geöffnete Primärquellen, fehlende Datumsangaben, keine D-Evidenz.",
+  "convene": false,
+  "convene_rationale": "Keiner der drei Einberufungsgründe ist hinreichend belegt. Wiederentdeckung ist nützlich, doch nicht jede neue Fundstelle bezeichnet eine veränderte Lage. (1) Kein substantieller Widerspruch zur bestehenden AMF-Empfehlung: Scout 1 nennt Resistenz und Netzhaltbarkeit ohne konkret belegten neuen Gegenbefund; diese Einschränkungen stehen bereits im Archiv und sind im September-Vorbehalt zur lokalen Resistenzlage und zum Nutzungsmonitoring berücksichtigt. Scouts 3s TaRL-Skalierungsprobleme entsprechen inhaltlich dem Journal vom 28.09.; sie widersprechen keiner Bildungsempfehlung, denn Säule A blieb ohne Empfehlung. Entwurmungs- und Far-UVC-Vorbehalte sind seit 05./12.10. dokumentiert. Der Entwurmungskommentar behandelt dieselbe Metaanalyse und ist keine unabhängige Replikation; bei TaRL und Far-UVC ist zusätzliche Datenunabhängigkeit nicht belegt. (2) Keine neu veränderte wesentliche Finanzierungslücke: Der Zuschuss von 276 Mio. USD für DRK-Netze ist bereits am 31.08. und 21.09. archiviert. Scout 1 findet denselben Vorgang über einen anderen GiveWell-Beitrag wieder, nicht eine weitere Finanzierung oder unabhängige Bestätigung. Aktuelle Restlücken werden nicht nachgewiesen. (3) Kein ausreichend belegtes neu aufgetretenes Risiko oder eine Chance von Rang: KI-Biorisiken und die RAND-Abwehrschichten sind bereits am 12.10. erfasst; die Lancet-Modellierung belegt hier keinen konkreten Lagewechsel. Die WHO-Klima-Gesundheitsmodellierung ist möglicherweise eine neue Fundstelle gegenüber dem Bestand, bleibt aber wegen ungeprüfter Modellannahmen und des Embargovorbehalts unzureichend abgesichert. Die Garnelen-Laborstudie fehlt im Vergleichsbestand; Feldwirkung und Bezug zur menschheitsbezogenen Leitdirektive bleiben offen. Scouts 2s Bolsa-Família-Aussage ist thematisch wiedergefunden, ihre Datenunabhängigkeit ungeklärt. Die übrigen regionalen Methodenquellen belegen keine neue Intervention von Rang. Seine Behauptung, Mai-, Juni- und Septemberdaten lägen nach dem Stichtag 19.10.2026, ist zudem widersprüchlich. Die maschinellen 0 % messen nur fehlende identische Topic-/Source-Tupel, weder Widerspruch noch Unabhängigkeit. Die Wiederfunde bleiben sichtbar; die offenen Prüfungen gehören gemäß Demut-Kanon in die reguläre Sitzung.",
+  "content_md": "## Scout 1: Grok 4.6 · Entdeckung (x-ai/grok-4.6)\n\nDie Evidenzlage bis 19.10.2026 stützt skalierbare Maßnahmen gegen aktuelles Leid und Zukunftsrisiken, bei klaren Umsetzungsengpässen. ITN-Kampagnen bleiben hochwirksam, Klima-Gesundheitsaktionen bieten starke Renditen, malicious AI birgt Extinktionspotenzial und humane Garnelenschlachtung hat Laborbelege, aber Feldlücken. Resistenz und Evidenzmängel wurden als Gegeninformation geprüft. Offene Fragen betreffen Skalierung und Validierung.[[1]](https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/)\n\n```json\n{\"search_queries\": [\"wirksame Interventionen globales Gesundheitswesen Evidenz 2025 2026\", \"effective interventions existential risk AI biosecurity 2025 2026 evidence\", \"overlooked bottlenecks effective altruism animal welfare poverty 2025\", \"primary studies cash transfers malaria nets deworming cost-effectiveness 2024 2025\", \"Lancet Commission 21st Century Global Threats to Health 2026\", \"GiveWell insecticide-treated nets cost-effectiveness 2026\", \"shrimp welfare intervention evidence 2025 2026\", \"counterevidence malaria nets insecticide resistance 2026\", \"WHO Global benefits and costs of prioritized actions on climate change and health 2026\"], \"findings\": [{\"pillar\": \"A\", \"topic\": \"Klima-Gesundheitsaktionen\", \"summary\": \"Skalierung von Hitzewarnsystemen, Wasser/Sanitär, sauberer Energie und Fossilbesteuerung könnte 1,6 Mio. Tode/Jahr und 17 Mrd. t CO2e vermeiden; Nutzen 24:1. Engpass: Finanzierung/Umsetzung.\", \"source\": \"https://iris.who.int/handle/10665/387875\", \"source_date\": \"2026-10-15\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Wohlfahrtsökonomische Modellierung\", \"uncertainty\": \"Langfristprojektionen unsicher; voller Bericht embargoed.\", \"counterevidence\": \"Klimamodell-Unsicherheiten allgemein.\"}, {\"pillar\": \"B\", \"topic\": \"ITN-Malaria-Kampagnen\", \"summary\": \"GiveWell-Grant 276 Mio. USD für 92 Mio. Netze DRC 2027-2029 soll 67.000 Tode verhindern. Engpässe: Fund-Cap, schnelle Degradation, Delays.\", \"source\": \"https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/\", \"source_date\": \"2026-08-27\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"CEA plus DHS-Analyse\", \"uncertainty\": \"Mortalitätsdaten ungenau.\", \"counterevidence\": \"Resistenz mindert Wirksamkeit 2026-Studien.\"}, {\"pillar\": \"C\", \"topic\": \"Malicious AI/Biowaffen\", \"summary\": \"Lancet: Extinktionspotenzial; Prävention 10,4 Mrd. DALYs bis 2100. RAND: 9-schichtige Abwehr nötig. Zusammenhang: Pandemie-Extinktion möglich.\", \"source\": \"https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)01714-9/abstract\", \"source_date\": \"2026-10-10\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Kommissionsmodellierung\", \"uncertainty\": \"Expertenurteile, große Ranges.\", \"counterevidence\": \"Niedrige Wahrscheinlichkeit.\"}, {\"pillar\": \"D\", \"topic\": \"Humane Garnelenschlachtung\", \"summary\": \"Stirling 2026: elektrische Betäubung schneller unempfindlich als Kälte. Engpass: Science-to-Practice, kommerzielle Lücke. ASC-Projekt zur Brücke.\", \"source\": \"https://www.shrimpwelfareproject.org/stirling-study\", \"source_date\": \"2026-08-17\", \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Laborexperiment EEG\", \"uncertainty\": \"Nur Laborbedingungen.\", \"counterevidence\": \"Reviews: unzureichende Evidenz Humanität.\"}], \"rejected_findings\": [{\"topic\": \"WHO-Vollbericht Klima-Gesundheit\", \"reason\": \"Embargo bis nach Stichtag.\"}, {\"topic\": \"Massendeworming\", \"reason\": \"Widersprüchliche Metaanalysen.\"}], \"delta_assessment\": \"Evidenz 2026 stützt ITNs und Klima-Aktionen trotz Resistenz/Unsicherheit; x-Risiken expertenbasiert hochunsicher. Tierschutz-Labordaten lückenhaft. Engpässe: Funding, Validierung, Skalierung. Keine Neuheit behauptet.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft. Der Anbieter hat mehr Suchen ausgeführt als angefordert. Abgerechnete Outputtokens einschließlich Suchablauf überschreiten das angeforderte Limit.\n\n---\n\n## Scout 2: Sonar Pro · Regionale Ergänzung (perplexity/sonar-pro)\n\nDie verfügbare Recherche liefert **keinen belastbaren Interventionsnachweis für alle vier Säulen**. Sie enthält jedoch regionale Primärquellen aus **Brasilien (Portugiesisch)** und **Mexiko (Spanisch)**; die Suchausgabe weist teils Aktualisierungsdaten nach dem Stichtag aus, weshalb diese Quellen nicht als zum Stichtag sicher verfügbar behandelt werden. Eine Prüfung der Originaltexte war in diesem Durchlauf nicht möglich; Aussagen bleiben daher vorläufig.\n\n```json\n{\"search_queries\":[\"site:gov.br avaliação impacto intervenção saúde pobreza português Brasil\",\"site:gob.mx evaluación impacto intervención pobreza salud español México\",\"site:gov.za evaluation intervention poverty health isiZulu Afrikaans\"],\"findings\":[{\"pillar\":\"A\",\"topic\":\"Bedingte Geldtransfers und Gesundheitszugang in Brasilien\",\"summary\":\"Eine brasilianische Regierungsquelle berichtet positive Zusammenhänge von Bolsa Família mit Zugang zur Primärversorgung, Nutzung von Gesundheitsdiensten und geringerer Unterernährung. Das ist relevante Evidenz für langfristige menschliche Entwicklung, aber kein hier unabhängig geprüfter kausaler Primärnachweis; operative Engpässe und Kostenwirksamkeit bleiben offen.\",\"source\":\"https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf\",\"source_date\":\"2026-05-24\",\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"Regierungsbericht mit Zusammenfassung früherer Wirkungsbefunde\",\"uncertainty\":\"Die zugrunde liegenden Studien wurden nicht geöffnet und ihre Designs, Stichproben und Effektgrößen sind unbekannt; das angegebene Aktualisierungsdatum liegt nach dem Recherche-Stichtag.\",\"counterevidence\":\"Keine gegenteilige Evidenz in den verfügbaren Treffern; fehlende Effektgrößen verhindern eine belastbare Wirksamkeitsbewertung.\"},{\"pillar\":\"B\",\"topic\":\"Gesundheitsversorgung und finanzielle Absicherung\",\"summary\":\"Eine mexikanische Gesundheitsbehörde beschreibt als Evaluationsziele bessere Gesundheit, angemessene Behandlung und finanziellen Schutz. Das belegt eine plausible Linderungsrichtung, aber nicht, dass eine konkrete Intervention diese Ziele wirksam erreicht. Die Evidenzlücke betrifft gemessene Endpunkte, Vergleichsgruppen und Versorgungshürden.\",\"source\":\"https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf\",\"source_date\":\"2026-06-16\",\"event_date\":null,\"source_language\":\"Spanisch (Mexiko)\",\"evidence_type\":\"Behördliche Evaluationsstrategie\",\"uncertainty\":\"Normative Ziele sind kein Wirksamkeitsnachweis; der Originaltext wurde in diesem Durchlauf nicht geprüft. Das Suchergebnis datiert nach dem Stichtag.\",\"counterevidence\":\"Keine belastbare Gegenquelle verfügbar; die fehlenden Ergebnismessungen sind selbst eine wesentliche Einschränkung.\"},{\"pillar\":\"C\",\"topic\":\"Evidenzlücke bei existenzrisikorelevanten Interventionen\",\"summary\":\"Die verfügbaren regionalen Quellen behandeln Armut, Gesundheit und Evaluation, liefern aber keinen belegten Zusammenhang mit einem existenziellen Risiko wie nuklearem Krieg, pandemischem Kollaps oder dauerhaftem Verlust globaler Steuerungsfähigkeit. Gewöhnliche Gesundheits- und Hitzeminderung genügt für Säule C nicht; daher bleibt hier ein ausdrücklich unbelegter Suchbefund.\",\"source\":\"https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file\",\"source_date\":\"2026-09-21\",\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"Behördliches Evaluations- und Logikmodell; indirekte Evidenz für die Identifikation von Lücken\",\"uncertainty\":\"Die Quelle beschreibt Evaluationsmethoden, nicht eine existenzrisikomindernde Intervention; Aktualisierungsdatum liegt nach dem Stichtag.\",\"counterevidence\":\"Keine geeignete Primärquelle zu einem existenziellen Risiko gefunden.\"},{\"pillar\":\"D\",\"topic\":\"Messung und Implementierung als übersehener Engpass\",\"summary\":\"Brasilianische Behördenmaterialien betonen, dass Evaluation Interventionen nach Relevanz, Effizienz, Wirksamkeit, Nachhaltigkeit und Wirkung beurteilen sowie Informationsverfügbarkeit und institutionellen Kontext prüfen soll. Daraus folgt ein plausibler Engpass: Ohne verlässliche Outcome-Daten und Implementationsmessung lassen sich wirksame lokale Maßnahmen schwer priorisieren. Das ist methodische, nicht direkte Wirkungs-Evidenz.\",\"source\":\"https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file\",\"source_date\":\"2026-09-21\",\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"Behördliches Evaluationsframework\",\"uncertainty\":\"Der Engpass wird aus dem Framework abgeleitet und nicht durch eine konkrete Fehlversorgung quantifiziert; Datum nach Stichtag.\",\"counterevidence\":\"Keine Gegenquelle in den verfügbaren Treffern; die Übertragbarkeit auf globale Förderentscheidungen ist ungeprüft.\"}],\"rejected_findings\":[\"Brasilianische Ausgaben für Bildung und Gesundheit als armutsmindernde Intervention: Suchtreffer mit statistischen Ergebnissen wurden nicht als Finding verwendet, weil der Originalartikel nicht geöffnet und die Kausalinterpretation nicht geprüft werden konnte.\",\"Mexikanische Armutsreduktion anhand aggregierter Armutsindikatoren: verworfen, weil der Treffer keine eindeutig identifizierte Intervention mit belastbarer Wirkungsschätzung ausweist.\"],\"delta_assessment\":\"Die verfügbare Evidenz ist regional und methodisch unvollständig: Brasilianische Quellen stützen vorläufige Hinweise zu Geldtransfers und Evaluationskapazität, mexikanische Quellen vor allem Evaluationsziele. Für Säule C fehlt ein belastbarer existenzieller Bezug. Mehrere Treffer tragen Aktualisierungsdaten nach dem Stichtag; ihre rechtzeitige Verfügbarkeit ist ungeklärt.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 3: Claude Opus 5 · Gegenbelege (anthropic/claude-opus-5)\n\n**Kurzbefund (Gegenbelege, Stichtag 19.10.2026).** Ich habe vier Suchen ausgeführt und bewusst nach Nullresultaten und Skalierungsbrüchen gesucht, nicht nach Erfolgsmeldungen. Drei Muster sind belegt: (1) Wirksame Pilotprogramme verlieren im Regierungssystem ihre Wirkung, wenn die Umsetzung nicht erzwungen wird (TaRL); (2) etablierte Massenmaßnahmen wie Entwurmung zeigen in großen Synthesen kaum Effekte, während Langzeitnutzen auf wenigen, umstrittenen Studien ruht; (3) bei Far-UVC ist die Laborwirksamkeit gut, der epidemiologische Infektionsnutzen und die Innenraumchemie dagegen offen. Für Säule D benenne ich eine Evidenzlücke, da mein Suchbudget erschöpft war, bevor ich eine tragfähige Originalquelle öffnen konnte — ich ergänze keine ungeprüften Zahlen. Früheren NobleCause-Journalen bin ich nicht begegnet; eine EA-Forum-Diskussion zu Entwurmung war in den Ergebnissen sichtbar und wird hier offengelegt. Keine Spendenempfehlung.\n\n```json\n{\"search_queries\": [\"deworming long-term evidence null result replication\", \"cash transfer RCT null effect replication 2025\", \"far-UVC 222nm limitations ozone byproducts real-world efficacy critique\", \"Teaching at the Right Level scale-up weaker effects government implementation evidence\"],\n\"findings\": [\n{\"pillar\": \"A\", \"topic\": \"Skalierungsbruch bei Teaching at the Right Level\", \"summary\": \"Die NGO-Pilotwirkung übertrug sich nicht automatisch: In Bihar und Uttarakhand übernahmen staatliche Lehrkräfte die Methode trotz gut angenommener Schulungen nicht; erst angepasste Modelle wirkten, mit sehr ungleichen Effekten (0,15 vs. 0,70 SD).\", \"source\": \"https://www.nber.org/papers/w22746\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Serie randomisierter Evaluationen\", \"uncertainty\": \"Effekte kontextabhängig; Übertragbarkeit nach Afrika offen.\", \"counterevidence\": \"Mentoring-Modelle erzielten Lerngewinne.\"},\n{\"pillar\": \"B\", \"topic\": \"Entwurmung: Nullbefunde in Synthesen\", \"summary\": \"Eine Campbell-Netzwerk-Metaanalyse über 52 Studien und rund 1,3 Mio. Kinder findet für Massenentwurmung wenig bis keinen Effekt auf Wachstum, Hämoglobin, Kognition und Schulbesuch; Produktivitätseffekte sind sehr unsicher.\", \"source\": \"https://www.sciencedirect.com/science/article/pii/S2214109X16302893\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Kommentar zu systematischem Review\", \"uncertainty\": \"Kommentar der Review-Autoren, nicht neutral.\", \"counterevidence\": \"Langzeit-Quasiexperimente zeigen Einkommenseffekte; Einschlusskriterien umstritten.\"},\n{\"pillar\": \"C\", \"topic\": \"Far-UVC gegen Pandemierisiko: Wirknachweis fehlt\", \"summary\": \"Luftdesinfektion adressiert pandemische Katastrophenrisiken. Ein Review 2025 bescheinigt hohe Abtötung und Sicherheit, fordert aber Forschung zu Langzeitexposition und realen Szenarien; Ozon- und Folgechemie entstehen nachweislich auch in realen Räumen.\", \"source\": \"https://en.wikipedia.org/wiki/Far-UVC\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Enzyklopädische Sekundärdarstellung\", \"uncertainty\": \"Schwache Quellenart; Primärreview nicht geöffnet.\", \"counterevidence\": \"Brenner 2024: Ozon unter 10 ppb, Partikelbildung unwahrscheinlich.\"},\n{\"pillar\": \"D\", \"topic\": \"Offen benannte Evidenzlücke\", \"summary\": \"Zu übersehenen Essentials habe ich keinen belastbaren Fund. Mein Suchbudget war nach vier Abfragen erschöpft; ich habe keine Originalquelle geöffnet und ergänze keine Zahlen.\", \"source\": null, \"source_date\": null, \"event_date\": null, \"source_language\": null, \"evidence_type\": \"keine\", \"uncertainty\": \"Vollständig offen.\", \"counterevidence\": \"Nicht anwendbar.\"}],\n\"rejected_findings\": [\"Unbedingte Geldtransfers als B-Fund: widersprüchliche Lage (deutsche RCT positiv, US-RCT-2 null) ohne geöffnete Primärquelle.\", \"Far-UVC-Ozon als eigenständiger Fund: Herstellerseiten und Laienportale als Quellen zu schwach.\"],\n\"delta_assessment\": \"Die Evidenzlage belohnt Umsetzungstreue stärker als Interventionsauswahl: Pilot-Effekte brechen im Staatsbetrieb ein, Metaanalysen relativieren populäre Massenmaßnahmen, und technische Schutzmaßnahmen haben Labor-, aber kaum Feldnachweise. Hauptunsicherheiten: wenige geöffnete Primärquellen, fehlende Datumsangaben, keine D-Evidenz.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Maschineller Divergenz-Ausweis\n\n{\n  \"method\": \"exact_structured_finding_keys_three_scouts\",\n  \"report_count\": 3,\n  \"overlap_percent\": 0.0,\n  \"shared\": [],\n  \"pairwise\": [\n    {\n      \"report_a\": 1,\n      \"report_b\": 2,\n      \"overlap_percent\": 0.0,\n      \"shared\": []\n    },\n    {\n      \"report_a\": 1,\n      \"report_b\": 3,\n      \"overlap_percent\": 0.0,\n      \"shared\": []\n    },\n    {\n      \"report_a\": 2,\n      \"report_b\": 3,\n      \"overlap_percent\": 0.0,\n      \"shared\": []\n    }\n  ],\n  \"unique_by_report\": [\n    {\n      \"report_index\": 1,\n      \"findings\": [\n        [\n          \"A\",\n          \"klima-gesundheitsaktionen\",\n          \"https://iris.who.int/handle/10665/387875\"\n        ],\n        [\n          \"B\",\n          \"itn-malaria-kampagnen\",\n          \"https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/\"\n        ],\n        [\n          \"C\",\n          \"malicious ai/biowaffen\",\n          \"https://www.thelancet.com/journals/lancet/article/piis0140-6736(26)01714-9/abstract\"\n        ],\n        [\n          \"D\",\n          \"humane garnelenschlachtung\",\n          \"https://www.shrimpwelfareproject.org/stirling-study\"\n        ]\n      ]\n    },\n    {\n      \"report_index\": 2,\n      \"findings\": [\n        [\n          \"A\",\n          \"bedingte geldtransfers und gesundheitszugang in brasilien\",\n          \"https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf\"\n        ],\n        [\n          \"B\",\n          \"gesundheitsversorgung und finanzielle absicherung\",\n          \"https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf\"\n        ],\n        [\n          \"C\",\n          \"evidenzlücke bei existenzrisikorelevanten interventionen\",\n          \"https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file\"\n        ],\n        [\n          \"D\",\n          \"messung und implementierung als übersehener engpass\",\n          \"https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file\"\n        ]\n      ]\n    },\n    {\n      \"report_index\": 3,\n      \"findings\": [\n        [\n          \"A\",\n          \"skalierungsbruch bei teaching at the right level\",\n          \"https://www.nber.org/papers/w22746\"\n        ],\n        [\n          \"B\",\n          \"entwurmung: nullbefunde in synthesen\",\n          \"https://www.sciencedirect.com/science/article/pii/s2214109x16302893\"\n        ],\n        [\n          \"C\",\n          \"far-uvc gegen pandemierisiko: wirknachweis fehlt\",\n          \"https://en.wikipedia.org/wiki/far-uvc\"\n        ],\n        [\n          \"D\",\n          \"offen benannte evidenzlücke\",\n          \"\"\n        ]\n      ]\n    }\n  ],\n  \"report_scout_indices\": [\n    1,\n    2,\n    3\n  ]\n}",
+  "costs": {
+    "currency": "EUR",
+    "total": 1.047,
+    "fx_rate_usd_eur": 0.85,
+    "components": {
+      "scouts": [
+        {
+          "currency": "EUR",
+          "total": 0.2394025,
+          "fx_rate_usd_eur": 0.85,
+          "model": "x-ai/grok-4.6",
+          "cost_basis": "billed",
+          "input_tokens": 158887,
+          "output_tokens": 9994,
+          "web_search_requests": 13,
+          "usd_total": 0.28165
+        },
+        {
+          "currency": "EUR",
+          "total": 0.0277015,
+          "fx_rate_usd_eur": 0.85,
+          "model": "perplexity/sonar-pro",
+          "cost_basis": "billed",
+          "input_tokens": 964,
+          "output_tokens": 1580,
+          "web_search_requests": null,
+          "usd_total": 0.03259
+        },
+        {
+          "currency": "EUR",
+          "total": 0.33190375,
+          "fx_rate_usd_eur": 0.85,
+          "model": "anthropic/claude-opus-5",
+          "cost_basis": "billed",
+          "input_tokens": 57005,
+          "output_tokens": 2618,
+          "web_search_requests": 4,
+          "usd_total": 0.390475
+        }
+      ],
+      "wart": {
+        "currency": "EUR",
+        "total": 0.4479514875,
+        "fx_rate_usd_eur": 0.85,
+        "model": "openai/gpt-6-astra",
+        "cost_basis": "billed",
+        "input_tokens": 35572,
+        "output_tokens": 689,
+        "web_search_requests": null,
+        "usd_total": 0.52700175
+      }
+    }
+  },
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/39244714569",
+  "scouts": [
+    {
+      "family": "spacexai",
+      "model": "x-ai/grok-4.6",
+      "label": "Grok 4.6 · Entdeckung",
+      "research_role": "discovery",
+      "content_md": "Die Evidenzlage bis 19.10.2026 stützt skalierbare Maßnahmen gegen aktuelles Leid und Zukunftsrisiken, bei klaren Umsetzungsengpässen. ITN-Kampagnen bleiben hochwirksam, Klima-Gesundheitsaktionen bieten starke Renditen, malicious AI birgt Extinktionspotenzial und humane Garnelenschlachtung hat Laborbelege, aber Feldlücken. Resistenz und Evidenzmängel wurden als Gegeninformation geprüft. Offene Fragen betreffen Skalierung und Validierung.[[1]](https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/)\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft. Der Anbieter hat mehr Suchen ausgeführt als angefordert. Abgerechnete Outputtokens einschließlich Suchablauf überschreiten das angeforderte Limit.",
+      "search_queries": [
+        "wirksame Interventionen globales Gesundheitswesen Evidenz 2025 2026",
+        "effective interventions existential risk AI biosecurity 2025 2026 evidence",
+        "overlooked bottlenecks effective altruism animal welfare poverty 2025",
+        "primary studies cash transfers malaria nets deworming cost-effectiveness 2024 2025",
+        "Lancet Commission 21st Century Global Threats to Health 2026",
+        "GiveWell insecticide-treated nets cost-effectiveness 2026",
+        "shrimp welfare intervention evidence 2025 2026",
+        "counterevidence malaria nets insecticide resistance 2026",
+        "WHO Global benefits and costs of prioritized actions on climate change and health 2026"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Klima-Gesundheitsaktionen",
+          "summary": "Skalierung von Hitzewarnsystemen, Wasser/Sanitär, sauberer Energie und Fossilbesteuerung könnte 1,6 Mio. Tode/Jahr und 17 Mrd. t CO2e vermeiden; Nutzen 24:1. Engpass: Finanzierung/Umsetzung.",
+          "source": "https://iris.who.int/handle/10665/387875",
+          "source_date": "2026-10-15",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Wohlfahrtsökonomische Modellierung",
+          "uncertainty": "Langfristprojektionen unsicher; voller Bericht embargoed.",
+          "counterevidence": "Klimamodell-Unsicherheiten allgemein."
+        },
+        {
+          "pillar": "B",
+          "topic": "ITN-Malaria-Kampagnen",
+          "summary": "GiveWell-Grant 276 Mio. USD für 92 Mio. Netze DRC 2027-2029 soll 67.000 Tode verhindern. Engpässe: Fund-Cap, schnelle Degradation, Delays.",
+          "source": "https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/",
+          "source_date": "2026-08-27",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "CEA plus DHS-Analyse",
+          "uncertainty": "Mortalitätsdaten ungenau.",
+          "counterevidence": "Resistenz mindert Wirksamkeit 2026-Studien."
+        },
+        {
+          "pillar": "C",
+          "topic": "Malicious AI/Biowaffen",
+          "summary": "Lancet: Extinktionspotenzial; Prävention 10,4 Mrd. DALYs bis 2100. RAND: 9-schichtige Abwehr nötig. Zusammenhang: Pandemie-Extinktion möglich.",
+          "source": "https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(26)01714-9/abstract",
+          "source_date": "2026-10-10",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Kommissionsmodellierung",
+          "uncertainty": "Expertenurteile, große Ranges.",
+          "counterevidence": "Niedrige Wahrscheinlichkeit."
+        },
+        {
+          "pillar": "D",
+          "topic": "Humane Garnelenschlachtung",
+          "summary": "Stirling 2026: elektrische Betäubung schneller unempfindlich als Kälte. Engpass: Science-to-Practice, kommerzielle Lücke. ASC-Projekt zur Brücke.",
+          "source": "https://www.shrimpwelfareproject.org/stirling-study",
+          "source_date": "2026-08-17",
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Laborexperiment EEG",
+          "uncertainty": "Nur Laborbedingungen.",
+          "counterevidence": "Reviews: unzureichende Evidenz Humanität."
+        }
+      ],
+      "rejected_findings": [
+        {
+          "topic": "WHO-Vollbericht Klima-Gesundheit",
+          "reason": "Embargo bis nach Stichtag."
+        },
+        {
+          "topic": "Massendeworming",
+          "reason": "Widersprüchliche Metaanalysen."
+        }
+      ],
+      "delta_assessment": "Evidenz 2026 stützt ITNs und Klima-Aktionen trotz Resistenz/Unsicherheit; x-Risiken expertenbasiert hochunsicher. Tierschutz-Labordaten lückenhaft. Engpässe: Funding, Validierung, Skalierung. Keine Neuheit behauptet.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1792409263-K9yTZuII3Ghy0iL1QfIs",
+        "requested_model": "x-ai/grok-4.6",
+        "reported_model": "x-ai/grok-4.6",
+        "generation_model": "x-ai/grok-4.6-20260810",
+        "provider": "xAI",
+        "endpoint": "xai/zdr",
+        "finish_reason": "stop",
+        "native_finish_reason": "completed",
+        "cost_basis": "billed",
+        "billed_usd": "0.28165",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 13,
+        "citations": [
+          {
+            "url": "https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/",
+            "title": "1",
+            "start_index": 440,
+            "end_index": 550
+          }
+        ],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+          "Der Anbieter hat mehr Suchen ausgeführt als angefordert.",
+          "Abgerechnete Outputtokens einschließlich Suchablauf überschreiten das angeforderte Limit."
+        ],
+        "started_at": "2026-10-19T11:27:43.701183+00:00",
+        "finished_at": "2026-10-19T11:31:13.201919+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    },
+    {
+      "family": "perplexity",
+      "model": "perplexity/sonar-pro",
+      "label": "Sonar Pro · Regionale Ergänzung",
+      "research_role": "regional",
+      "content_md": "Die verfügbare Recherche liefert **keinen belastbaren Interventionsnachweis für alle vier Säulen**. Sie enthält jedoch regionale Primärquellen aus **Brasilien (Portugiesisch)** und **Mexiko (Spanisch)**; die Suchausgabe weist teils Aktualisierungsdaten nach dem Stichtag aus, weshalb diese Quellen nicht als zum Stichtag sicher verfügbar behandelt werden. Eine Prüfung der Originaltexte war in diesem Durchlauf nicht möglich; Aussagen bleiben daher vorläufig.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "site:gov.br avaliação impacto intervenção saúde pobreza português Brasil",
+        "site:gob.mx evaluación impacto intervención pobreza salud español México",
+        "site:gov.za evaluation intervention poverty health isiZulu Afrikaans"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Bedingte Geldtransfers und Gesundheitszugang in Brasilien",
+          "summary": "Eine brasilianische Regierungsquelle berichtet positive Zusammenhänge von Bolsa Família mit Zugang zur Primärversorgung, Nutzung von Gesundheitsdiensten und geringerer Unterernährung. Das ist relevante Evidenz für langfristige menschliche Entwicklung, aber kein hier unabhängig geprüfter kausaler Primärnachweis; operative Engpässe und Kostenwirksamkeit bleiben offen.",
+          "source": "https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf",
+          "source_date": "2026-05-24",
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "Regierungsbericht mit Zusammenfassung früherer Wirkungsbefunde",
+          "uncertainty": "Die zugrunde liegenden Studien wurden nicht geöffnet und ihre Designs, Stichproben und Effektgrößen sind unbekannt; das angegebene Aktualisierungsdatum liegt nach dem Recherche-Stichtag.",
+          "counterevidence": "Keine gegenteilige Evidenz in den verfügbaren Treffern; fehlende Effektgrößen verhindern eine belastbare Wirksamkeitsbewertung."
+        },
+        {
+          "pillar": "B",
+          "topic": "Gesundheitsversorgung und finanzielle Absicherung",
+          "summary": "Eine mexikanische Gesundheitsbehörde beschreibt als Evaluationsziele bessere Gesundheit, angemessene Behandlung und finanziellen Schutz. Das belegt eine plausible Linderungsrichtung, aber nicht, dass eine konkrete Intervention diese Ziele wirksam erreicht. Die Evidenzlücke betrifft gemessene Endpunkte, Vergleichsgruppen und Versorgungshürden.",
+          "source": "https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf",
+          "source_date": "2026-06-16",
+          "event_date": null,
+          "source_language": "Spanisch (Mexiko)",
+          "evidence_type": "Behördliche Evaluationsstrategie",
+          "uncertainty": "Normative Ziele sind kein Wirksamkeitsnachweis; der Originaltext wurde in diesem Durchlauf nicht geprüft. Das Suchergebnis datiert nach dem Stichtag.",
+          "counterevidence": "Keine belastbare Gegenquelle verfügbar; die fehlenden Ergebnismessungen sind selbst eine wesentliche Einschränkung."
+        },
+        {
+          "pillar": "C",
+          "topic": "Evidenzlücke bei existenzrisikorelevanten Interventionen",
+          "summary": "Die verfügbaren regionalen Quellen behandeln Armut, Gesundheit und Evaluation, liefern aber keinen belegten Zusammenhang mit einem existenziellen Risiko wie nuklearem Krieg, pandemischem Kollaps oder dauerhaftem Verlust globaler Steuerungsfähigkeit. Gewöhnliche Gesundheits- und Hitzeminderung genügt für Säule C nicht; daher bleibt hier ein ausdrücklich unbelegter Suchbefund.",
+          "source": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+          "source_date": "2026-09-21",
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "Behördliches Evaluations- und Logikmodell; indirekte Evidenz für die Identifikation von Lücken",
+          "uncertainty": "Die Quelle beschreibt Evaluationsmethoden, nicht eine existenzrisikomindernde Intervention; Aktualisierungsdatum liegt nach dem Stichtag.",
+          "counterevidence": "Keine geeignete Primärquelle zu einem existenziellen Risiko gefunden."
+        },
+        {
+          "pillar": "D",
+          "topic": "Messung und Implementierung als übersehener Engpass",
+          "summary": "Brasilianische Behördenmaterialien betonen, dass Evaluation Interventionen nach Relevanz, Effizienz, Wirksamkeit, Nachhaltigkeit und Wirkung beurteilen sowie Informationsverfügbarkeit und institutionellen Kontext prüfen soll. Daraus folgt ein plausibler Engpass: Ohne verlässliche Outcome-Daten und Implementationsmessung lassen sich wirksame lokale Maßnahmen schwer priorisieren. Das ist methodische, nicht direkte Wirkungs-Evidenz.",
+          "source": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+          "source_date": "2026-09-21",
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "Behördliches Evaluationsframework",
+          "uncertainty": "Der Engpass wird aus dem Framework abgeleitet und nicht durch eine konkrete Fehlversorgung quantifiziert; Datum nach Stichtag.",
+          "counterevidence": "Keine Gegenquelle in den verfügbaren Treffern; die Übertragbarkeit auf globale Förderentscheidungen ist ungeprüft."
+        }
+      ],
+      "rejected_findings": [
+        "Brasilianische Ausgaben für Bildung und Gesundheit als armutsmindernde Intervention: Suchtreffer mit statistischen Ergebnissen wurden nicht als Finding verwendet, weil der Originalartikel nicht geöffnet und die Kausalinterpretation nicht geprüft werden konnte.",
+        "Mexikanische Armutsreduktion anhand aggregierter Armutsindikatoren: verworfen, weil der Treffer keine eindeutig identifizierte Intervention mit belastbarer Wirkungsschätzung ausweist."
+      ],
+      "delta_assessment": "Die verfügbare Evidenz ist regional und methodisch unvollständig: Brasilianische Quellen stützen vorläufige Hinweise zu Geldtransfers und Evaluationskapazität, mexikanische Quellen vor allem Evaluationsziele. Für Säule C fehlt ein belastbarer existenzieller Bezug. Mehrere Treffer tragen Aktualisierungsdaten nach dem Stichtag; ihre rechtzeitige Verfügbarkeit ist ungeklärt.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1792409473-wmYc7JsCMPAgLUpn0FZ2",
+        "requested_model": "perplexity/sonar-pro",
+        "reported_model": "perplexity/sonar-pro",
+        "generation_model": "perplexity/sonar-pro",
+        "provider": "Perplexity",
+        "endpoint": "perplexity",
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "cost_basis": "billed",
+        "billed_usd": "0.03259",
+        "search_engine_requested": "intrinsic",
+        "search_engine_reported": null,
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": null,
+        "citations": [
+          {
+            "url": "https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf",
+            "title": "Estrategia de Evaluación - Secretaría de Salud | Gobierno",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.diputados.gob.mx/bibliot/publica/inveyana/polisoc/pdf/0403.pdf",
+            "title": "Los indicadores en la evaluación del impacto de programas.",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://gobierno.cdmx.gob.mx/noticias/informe-de-reduccion-de-la-pobreza-en-la-ciudad-de-mexico/",
+            "title": "Informe de reducción de la pobreza en la Ciudad de México",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/participamaisbrasil/diretrizes-nacionais-do-programa-brasil-saudavel",
+            "title": "Governo Federal - Participa + Brasil - Diretrizes Nacionais do Programa Brasil Saudável",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/saude/pt-br/composicao/seidigi/demas/publicacoes/glossario-tematico-monitoramento-e-avaliacao.pdf",
+            "title": "[PDF] Monitoramento e Avaliação - Portal Gov.br",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://bvsms.saude.gov.br/bvs/publicacoes/avaliacao_economica_desafios_gestao_sus.pdf",
+            "title": "[PDF] Avaliação Econômica em Saúde",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.salud.gob.mx/unidades/cdi/documentos/DOCSAL7830.pdf",
+            "title": "onu - salud.gob.mx",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "http://dged.salud.gob.mx/contenidos/dged/descargas/1_RNED/Acceso_Efectivo.pdf",
+            "title": "PDF Evaluación de desempeño en salud",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf",
+            "title": "[PDF] AÇÕES DE SAÚDE NO PLANO BRASIL SEM MISÉRIA",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://ipea.gov.br/ppp/index.php/PPP/article/download/1837/714",
+            "title": "os gastos com educação e saúde reduzem a pobreza e ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gob.mx/cms/uploads/attachment/file/149606/Reducci_n_Estrat_gica_de_la_Pobreza_en_M_xico.pdf",
+            "title": "REDUCCIÓN ESTRATÉGICA DE LA POBREZA EN MÉXICO",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+            "title": "[PDF] Modelagem de intervenções para o monitoramento e avaliação na ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://revista.enap.gov.br/index.php/RSP/article/download/368/374/1387",
+            "title": "Metodologias de avaliação de programas e projetos sociais",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.gov.br/cnpq/pt-br/chamadas/todas-as-chamadas/chamadas-2023/chamada-ndeg-22-2023/Chamada_222023.pdf",
+            "title": "Chamada nº 22/2023 - Evidências em Saúde - Plataforma Lattes",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://bvsms.saude.gov.br/avaliacao-em-saude-doencas-cronicas-nao-transmissiveis-planos-e-programas-de-saude-aprendizagem-educacao-em-saude/",
+            "title": "bvsms.saude.gov.br › avaliacao-em-saude-doencasAVALIAÇÃO EM SAÚDE; DOENÇAS CRÔNICAS NÃO TRANSMISSÍVEIS ...",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-19T11:31:13.758370+00:00",
+        "finished_at": "2026-10-19T11:31:37.442153+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    },
+    {
+      "family": "anthropic",
+      "model": "anthropic/claude-opus-5",
+      "label": "Claude Opus 5 · Gegenbelege",
+      "research_role": "counterevidence",
+      "content_md": "**Kurzbefund (Gegenbelege, Stichtag 19.10.2026).** Ich habe vier Suchen ausgeführt und bewusst nach Nullresultaten und Skalierungsbrüchen gesucht, nicht nach Erfolgsmeldungen. Drei Muster sind belegt: (1) Wirksame Pilotprogramme verlieren im Regierungssystem ihre Wirkung, wenn die Umsetzung nicht erzwungen wird (TaRL); (2) etablierte Massenmaßnahmen wie Entwurmung zeigen in großen Synthesen kaum Effekte, während Langzeitnutzen auf wenigen, umstrittenen Studien ruht; (3) bei Far-UVC ist die Laborwirksamkeit gut, der epidemiologische Infektionsnutzen und die Innenraumchemie dagegen offen. Für Säule D benenne ich eine Evidenzlücke, da mein Suchbudget erschöpft war, bevor ich eine tragfähige Originalquelle öffnen konnte — ich ergänze keine ungeprüften Zahlen. Früheren NobleCause-Journalen bin ich nicht begegnet; eine EA-Forum-Diskussion zu Entwurmung war in den Ergebnissen sichtbar und wird hier offengelegt. Keine Spendenempfehlung.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "deworming long-term evidence null result replication",
+        "cash transfer RCT null effect replication 2025",
+        "far-UVC 222nm limitations ozone byproducts real-world efficacy critique",
+        "Teaching at the Right Level scale-up weaker effects government implementation evidence"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Skalierungsbruch bei Teaching at the Right Level",
+          "summary": "Die NGO-Pilotwirkung übertrug sich nicht automatisch: In Bihar und Uttarakhand übernahmen staatliche Lehrkräfte die Methode trotz gut angenommener Schulungen nicht; erst angepasste Modelle wirkten, mit sehr ungleichen Effekten (0,15 vs. 0,70 SD).",
+          "source": "https://www.nber.org/papers/w22746",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Serie randomisierter Evaluationen",
+          "uncertainty": "Effekte kontextabhängig; Übertragbarkeit nach Afrika offen.",
+          "counterevidence": "Mentoring-Modelle erzielten Lerngewinne."
+        },
+        {
+          "pillar": "B",
+          "topic": "Entwurmung: Nullbefunde in Synthesen",
+          "summary": "Eine Campbell-Netzwerk-Metaanalyse über 52 Studien und rund 1,3 Mio. Kinder findet für Massenentwurmung wenig bis keinen Effekt auf Wachstum, Hämoglobin, Kognition und Schulbesuch; Produktivitätseffekte sind sehr unsicher.",
+          "source": "https://www.sciencedirect.com/science/article/pii/S2214109X16302893",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Kommentar zu systematischem Review",
+          "uncertainty": "Kommentar der Review-Autoren, nicht neutral.",
+          "counterevidence": "Langzeit-Quasiexperimente zeigen Einkommenseffekte; Einschlusskriterien umstritten."
+        },
+        {
+          "pillar": "C",
+          "topic": "Far-UVC gegen Pandemierisiko: Wirknachweis fehlt",
+          "summary": "Luftdesinfektion adressiert pandemische Katastrophenrisiken. Ein Review 2025 bescheinigt hohe Abtötung und Sicherheit, fordert aber Forschung zu Langzeitexposition und realen Szenarien; Ozon- und Folgechemie entstehen nachweislich auch in realen Räumen.",
+          "source": "https://en.wikipedia.org/wiki/Far-UVC",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Enzyklopädische Sekundärdarstellung",
+          "uncertainty": "Schwache Quellenart; Primärreview nicht geöffnet.",
+          "counterevidence": "Brenner 2024: Ozon unter 10 ppb, Partikelbildung unwahrscheinlich."
+        },
+        {
+          "pillar": "D",
+          "topic": "Offen benannte Evidenzlücke",
+          "summary": "Zu übersehenen Essentials habe ich keinen belastbaren Fund. Mein Suchbudget war nach vier Abfragen erschöpft; ich habe keine Originalquelle geöffnet und ergänze keine Zahlen.",
+          "source": null,
+          "source_date": null,
+          "event_date": null,
+          "source_language": null,
+          "evidence_type": "keine",
+          "uncertainty": "Vollständig offen.",
+          "counterevidence": "Nicht anwendbar."
+        }
+      ],
+      "rejected_findings": [
+        "Unbedingte Geldtransfers als B-Fund: widersprüchliche Lage (deutsche RCT positiv, US-RCT-2 null) ohne geöffnete Primärquelle.",
+        "Far-UVC-Ozon als eigenständiger Fund: Herstellerseiten und Laienportale als Quellen zu schwach."
+      ],
+      "delta_assessment": "Die Evidenzlage belohnt Umsetzungstreue stärker als Interventionsauswahl: Pilot-Effekte brechen im Staatsbetrieb ein, Metaanalysen relativieren populäre Massenmaßnahmen, und technische Schutzmaßnahmen haben Labor-, aber kaum Feldnachweise. Hauptunsicherheiten: wenige geöffnete Primärquellen, fehlende Datumsangaben, keine D-Evidenz.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1792409498-dAPKMns46vTxn8HCEcpt",
+        "requested_model": "anthropic/claude-opus-5",
+        "reported_model": "anthropic/claude-opus-5",
+        "generation_model": "anthropic/claude-opus-5-20260723",
+        "provider": "Anthropic",
+        "endpoint": "anthropic",
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "cost_basis": "billed",
+        "billed_usd": "0.390475",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 4,
+        "citations": [],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-19T11:31:38.301470+00:00",
+        "finished_at": "2026-10-19T11:32:28.405781+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    }
+  ],
+  "scout_failures": [],
+  "scout_divergence": {
+    "method": "exact_structured_finding_keys_three_scouts",
+    "report_count": 3,
+    "overlap_percent": 0.0,
+    "shared": [],
+    "pairwise": [
+      {
+        "report_a": 1,
+        "report_b": 2,
+        "overlap_percent": 0.0,
+        "shared": []
+      },
+      {
+        "report_a": 1,
+        "report_b": 3,
+        "overlap_percent": 0.0,
+        "shared": []
+      },
+      {
+        "report_a": 2,
+        "report_b": 3,
+        "overlap_percent": 0.0,
+        "shared": []
+      }
+    ],
+    "unique_by_report": [
+      {
+        "report_index": 1,
+        "findings": [
+          [
+            "A",
+            "klima-gesundheitsaktionen",
+            "https://iris.who.int/handle/10665/387875"
+          ],
+          [
+            "B",
+            "itn-malaria-kampagnen",
+            "https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/"
+          ],
+          [
+            "C",
+            "malicious ai/biowaffen",
+            "https://www.thelancet.com/journals/lancet/article/piis0140-6736(26)01714-9/abstract"
+          ],
+          [
+            "D",
+            "humane garnelenschlachtung",
+            "https://www.shrimpwelfareproject.org/stirling-study"
+          ]
+        ]
+      },
+      {
+        "report_index": 2,
+        "findings": [
+          [
+            "A",
+            "bedingte geldtransfers und gesundheitszugang in brasilien",
+            "https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf"
+          ],
+          [
+            "B",
+            "gesundheitsversorgung und finanzielle absicherung",
+            "https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf"
+          ],
+          [
+            "C",
+            "evidenzlücke bei existenzrisikorelevanten interventionen",
+            "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file"
+          ],
+          [
+            "D",
+            "messung und implementierung als übersehener engpass",
+            "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file"
+          ]
+        ]
+      },
+      {
+        "report_index": 3,
+        "findings": [
+          [
+            "A",
+            "skalierungsbruch bei teaching at the right level",
+            "https://www.nber.org/papers/w22746"
+          ],
+          [
+            "B",
+            "entwurmung: nullbefunde in synthesen",
+            "https://www.sciencedirect.com/science/article/pii/s2214109x16302893"
+          ],
+          [
+            "C",
+            "far-uvc gegen pandemierisiko: wirknachweis fehlt",
+            "https://en.wikipedia.org/wiki/far-uvc"
+          ],
+          [
+            "D",
+            "offen benannte evidenzlücke",
+            ""
+          ]
+        ]
+      }
+    ],
+    "report_scout_indices": [
+      1,
+      2,
+      3
+    ]
+  },
+  "research_mode": "blind_then_compare",
+  "procedure_version": "0.6",
+  "decision_role": "weekly_chair",
+  "rotation_index": 1,
+  "decision_provenance": {
+    "transport": "openrouter_api",
+    "identity_source": "api",
+    "gateway": "openrouter",
+    "requested_model": "openai/gpt-6-astra",
+    "reported_model": "openai/gpt-6-astra",
+    "generation_model": "openai/gpt-6-astra-20260903",
+    "upstream_provider": "Azure",
+    "endpoint": "azure/us",
+    "quantization": "unknown",
+    "generation_id": "gen-1792409551-RwdB7tyFpD2rcjoLfubw",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "usage": {
+      "prompt_tokens": 35572,
+      "completion_tokens": 689,
+      "total_tokens": 36261,
+      "cost": 0.52700175,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 35569,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.52700175,
+        "upstream_inference_prompt_cost": 0.48910675,
+        "upstream_inference_completions_cost": 0.037895
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 109,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "cost": 0.52700175,
+    "cost_basis": "billed",
+    "raw_artifact": "raw/chair-weekly-openai-response.json",
+    "generation_artifact": "raw/chair-weekly-openai-generation.json"
+  },
+  "cost_mode": "observe"
+}

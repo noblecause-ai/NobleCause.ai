@@ -1,0 +1,43 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 158887,
+  "output_tokens": 9994,
+  "billed_usd": "0.28165",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1792409263-K9yTZuII3Ghy0iL1QfIs",
+    "requested_model": "x-ai/grok-4.6",
+    "reported_model": "x-ai/grok-4.6",
+    "generation_model": "x-ai/grok-4.6-20260810",
+    "provider": "xAI",
+    "endpoint": "xai/zdr",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "cost_basis": "billed",
+    "billed_usd": "0.28165",
+    "search_engine_requested": "native",
+    "search_engine_reported": "native",
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": 13,
+    "citations": [
+      {
+        "url": "https://blog.givewell.org/2026/08/27/the-research-behind-our-276-million-grant-for-malaria-nets-in-drc/",
+        "title": "1",
+        "start_index": 440,
+        "end_index": 550
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "Der Anbieter hat mehr Suchen ausgeführt als angefordert.",
+      "Abgerechnete Outputtokens einschließlich Suchablauf überschreiten das angeforderte Limit."
+    ],
+    "started_at": "2026-10-19T11:27:43.701183+00:00",
+    "finished_at": "2026-10-19T11:31:13.201919+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  },
+  "web_search_requests": 13
+}
