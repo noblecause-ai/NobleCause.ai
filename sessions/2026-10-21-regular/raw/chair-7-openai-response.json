@@ -1,0 +1,5 @@
+
+         
+
+         
+{"id":"gen-1792602354-MakT7hdvrLYk46SLZ8cL","object":"chat.completion","created":1792602354,"model":"openai/gpt-6-astra","provider":"Azure","system_fingerprint":null,"service_tier":"default","choices":[{"index":0,"logprobs":null,"finish_reason":"stop","native_finish_reason":"completed","message":{"role":"assistant","content":"{\"next_model_id\":\"z-ai/glm-5.3\",\"question\":\"Welche konkreten Prüfaufträge sollten wir für A, C und D festhalten, damit aus den Enthaltungen bei einer späteren Sitzung begründete Förderempfehlungen werden können?\"}","refusal":null,"reasoning":null}}],"usage":{"prompt_tokens":16346,"completion_tokens":65,"total_tokens":16411,"cost":0.22832425,"is_byok":false,"prompt_tokens_details":{"cached_tokens":0,"cache_write_tokens":16343,"audio_tokens":0,"video_tokens":0},"cost_details":{"upstream_inference_cost":0.22832425,"upstream_inference_prompt_cost":0.22474925,"upstream_inference_completions_cost":0.003575},"completion_tokens_details":{"reasoning_tokens":0,"image_tokens":0,"audio_tokens":0}}}

@@ -1,0 +1,124 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 964,
+  "output_tokens": 1580,
+  "billed_usd": "0.03259",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1792409473-wmYc7JsCMPAgLUpn0FZ2",
+    "requested_model": "perplexity/sonar-pro",
+    "reported_model": "perplexity/sonar-pro",
+    "generation_model": "perplexity/sonar-pro",
+    "provider": "Perplexity",
+    "endpoint": "perplexity",
+    "finish_reason": "stop",
+    "native_finish_reason": "stop",
+    "cost_basis": "billed",
+    "billed_usd": "0.03259",
+    "search_engine_requested": "intrinsic",
+    "search_engine_reported": null,
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": null,
+    "citations": [
+      {
+        "url": "https://salud.gob.mx/unidades/evaluacion/seguropopular/estrategia_evaluac.pdf",
+        "title": "Estrategia de Evaluación - Secretaría de Salud | Gobierno",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.diputados.gob.mx/bibliot/publica/inveyana/polisoc/pdf/0403.pdf",
+        "title": "Los indicadores en la evaluación del impacto de programas.",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://gobierno.cdmx.gob.mx/noticias/informe-de-reduccion-de-la-pobreza-en-la-ciudad-de-mexico/",
+        "title": "Informe de reducción de la pobreza en la Ciudad de México",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/participamaisbrasil/diretrizes-nacionais-do-programa-brasil-saudavel",
+        "title": "Governo Federal - Participa + Brasil - Diretrizes Nacionais do Programa Brasil Saudável",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/saude/pt-br/composicao/seidigi/demas/publicacoes/glossario-tematico-monitoramento-e-avaliacao.pdf",
+        "title": "[PDF] Monitoramento e Avaliação - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://bvsms.saude.gov.br/bvs/publicacoes/avaliacao_economica_desafios_gestao_sus.pdf",
+        "title": "[PDF] Avaliação Econômica em Saúde",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.salud.gob.mx/unidades/cdi/documentos/DOCSAL7830.pdf",
+        "title": "onu - salud.gob.mx",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "http://dged.salud.gob.mx/contenidos/dged/descargas/1_RNED/Acceso_Efectivo.pdf",
+        "title": "PDF Evaluación de desempeño en salud",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://mds.gov.br/webarquivos/publicacao/brasil_sem_miseria/livro_o_brasil_sem_miseria/artigo_23.pdf",
+        "title": "[PDF] AÇÕES DE SAÚDE NO PLANO BRASIL SEM MISÉRIA",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ipea.gov.br/ppp/index.php/PPP/article/download/1837/714",
+        "title": "os gastos com educação e saúde reduzem a pobreza e ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gob.mx/cms/uploads/attachment/file/149606/Reducci_n_Estrat_gica_de_la_Pobreza_en_M_xico.pdf",
+        "title": "REDUCCIÓN ESTRATÉGICA DE LA POBREZA EN MÉXICO",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/anvisa/pt-br/assuntos/snvs/projetos/praticas-avaliativas/apresentacoes/a03-modelo-logico_.pdf/@@download/file",
+        "title": "[PDF] Modelagem de intervenções para o monitoramento e avaliação na ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://revista.enap.gov.br/index.php/RSP/article/download/368/374/1387",
+        "title": "Metodologias de avaliação de programas e projetos sociais",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/cnpq/pt-br/chamadas/todas-as-chamadas/chamadas-2023/chamada-ndeg-22-2023/Chamada_222023.pdf",
+        "title": "Chamada nº 22/2023 - Evidências em Saúde - Plataforma Lattes",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://bvsms.saude.gov.br/avaliacao-em-saude-doencas-cronicas-nao-transmissiveis-planos-e-programas-de-saude-aprendizagem-educacao-em-saude/",
+        "title": "bvsms.saude.gov.br › avaliacao-em-saude-doencasAVALIAÇÃO EM SAÚDE; DOENÇAS CRÔNICAS NÃO TRANSMISSÍVEIS ...",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+    ],
+    "started_at": "2026-10-19T11:31:13.758370+00:00",
+    "finished_at": "2026-10-19T11:31:37.442153+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  }
+}
