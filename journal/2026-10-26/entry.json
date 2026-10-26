@@ -1,0 +1,571 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "session_ref": "2026-10-21-regular",
+  "model": "perplexity/sonar-pro",
+  "model_label": "Sonar Pro",
+  "decision_model": "x-ai/grok-4.6",
+  "search_queries": [
+    "site:gov.br avaliação impacto transferência renda saúde pública Brasil português",
+    "site:gov.in randomized trial public health intervention Hindi Bengali Tamil",
+    "site:who.int français intervention efficacité risque existentiel climat santé source primaire",
+    "deworming replication null results long-term evidence",
+    "microfinance randomized trials modest effects null",
+    "AI safety evaluations limitations critique dangerous capability evals unreliable 2026",
+    "preschool fadeout long-term null Tennessee pre-k negative effects"
+  ],
+  "findings": [
+    {
+      "pillar": "A",
+      "topic": "Bundesmittel mit Ergebnis- und Gerechtigkeitsorientierung für öffentliche Gesundheit",
+      "summary": "Eine brasilianische empirische Untersuchung zu intergouvernementalen SUS-Transfers berichtet, dass 1 R$ zusätzlicher fixer PAB-Transfer in der schlechtesten Schätzung 0,85 R$ zusätzliche Gesundheitsausgaben erzeugte. Als Engpass nennt sie fehlende überwiegende Bindung an Ergebnisse und unzureichende Orientierung an Zugangsgerechtigkeit. Das ist Evidenz für Finanzierungswirkung, nicht automatisch für bessere Gesundheitsergebnisse.",
+      "source": "https://www.ipea.gov.br/ppp/index.php/PPP/article/download/605/427/3358",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "Empirische ökonometrische Untersuchung; Primärforschung",
+      "uncertainty": "Im vorliegenden Treffer sind Publikationsdatum, Stichprobendesign und Gesundheitsendpunkte nicht vollständig ausgewiesen; Übertragbarkeit auf andere Länder ist offen.",
+      "counterevidence": "Die Quelle belegt zusätzliche Ausgaben, aber nicht eindeutig zusätzliche Lebenserwartung, Krankheitsvermeidung oder Kostenwirksamkeit."
+    },
+    {
+      "pillar": "B",
+      "topic": "Impfprogramme als kostengünstige Leidens- und Mortalitätsminderung",
+      "summary": "Der brasilianische Rechnungshof bezeichnet das nationale Impfprogramm als eine der wirksamsten und kostengünstigsten Formen präventiver Gesundheitspolitik und prüft zugleich seine Effektivität. Konkrete aktuelle Effektgrößen oder operative Engpässe sind im verfügbaren Auszug nicht angegeben; deshalb ist der Fund eher eine priorisierende Behördenbewertung als eine quantifizierte Wirksamkeitsanalyse.",
+      "source": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "Portugiesisch (Brasilien)",
+      "evidence_type": "Behördliche Programmevaluation bzw. Prüfbericht",
+      "uncertainty": "Der Auszug enthält keine einzelnen Impfstoff-, Krankheits- oder Abdeckungsdaten; das Veröffentlichungsdatum ist im Treffer nicht sicher belegbar.",
+      "counterevidence": "Eine positive Gesamtbewertung ersetzt keine Prüfung lokaler Durchimpfung, Lieferketten, Akzeptanz oder krankheitsspezifischer Wirksamkeit."
+    },
+    {
+      "pillar": "C",
+      "topic": "Klimaschutz und klimaresiliente Gesundheitssysteme als existenzielles Risikomanagement",
+      "summary": "WHO-Dokumente auf Französisch beschreiben Klimawandel als Verstärker extremer Ereignisse und als Gefahr für bisherige Fortschritte der universellen Gesundheitsversorgung. Sie nennen als Interventionen Risiko- und Verwundbarkeitsbewertungen, Frühwarnung, resiliente Gesundheitseinrichtungen sowie emissionsarme Energiesysteme. Der Zusammenhang mit einem existenziellen Risiko ist plausibel über mögliche systemweite und grenzüberschreitende Schäden; die Quellen quantifizieren jedoch keine Wahrscheinlichkeit eines Zivilisations- oder Menschheitsuntergangs.",
+      "source": "https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "Französisch (WHO)",
+      "evidence_type": "Internationale Behördenbewertung und Synthese vorhandener Evidenz",
+      "uncertainty": "Die Quelle belegt erhebliche Gesundheits- und Systemrisiken, aber keine spezifische Effektgröße einzelner Maßnahmen und keinen direkten Nachweis eines existenziellen Endpunkts.",
+      "counterevidence": "Gesundheitsresilienz und Klimaschutz mindern schwere systemische Risiken, sind aber nicht automatisch Interventionen gegen ein existenzielles Risiko im strengen Sinn."
+    },
+    {
+      "pillar": "D",
+      "topic": "Lücke: Umsetzung und Verteilung klimaresilienter Gesundheitsmaßnahmen",
+      "summary": "Die WHO fordert lokale Kapazitäten, integrierte Umwelt- und Gesundheitsüberwachung sowie systematische Vulnerabilitätsbewertungen. Das weist auf einen potenziell übersehenen operativen Engpass hin: fehlende lokale Daten- und Umsetzungskapazität, nicht bloß fehlende technische Lösungen. Im verfügbaren Material fehlen jedoch konkrete Vergleiche, Kostenwirksamkeitswerte und eine belastbare Quantifizierung, welche Engpassmaßnahme den größten Zusatznutzen hätte.",
+      "source": "https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "Französisch (WHO)",
+      "evidence_type": "Behördenleitfaden und Evidenz-Synthese",
+      "uncertainty": "Der Fund beschreibt Handlungsbedarf, aber keine randomisierte oder quasi-experimentelle Wirkungsschätzung; die Quelle ist nicht auf ein einzelnes Land zugeschnitten.",
+      "counterevidence": "Die Forderungen können allgemeine Planungsstandards darstellen und belegen nicht, dass dieser Engpass gegenüber anderen Engpässen besonders vernachlässigt ist."
+    },
+    {
+      "pillar": "A",
+      "topic": "Frühkindliche Bildung: Fade-out und negative Langzeiteffekte",
+      "summary": "Im randomisierten Tennessee-VPK-Arm verschwanden anfängliche Gewinne und kehrten sich um: Teilnehmende schnitten bis Klasse 6 in Leistung, Disziplin und Sonderpädagogik-Zuweisungen schlechter ab (n=2.990). Skalierung ersetzt Qualität nicht.",
+      "source": "https://hechingerreport.org/a-state-funded-pre-k-program-led-to-significantly-negative-effects-for-kids-in-tennessee/",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "RCT-Langzeitfollow-up, journalistisch referiert",
+      "uncertainty": "Ursache unklar; Interaktion mit späterer Schulqualität möglich.",
+      "counterevidence": "RD-Komponente zeigt starke Soforteffekte; andere Bundesstaaten-Studien (nicht randomisiert) positiver."
+    },
+    {
+      "pillar": "B",
+      "topic": "Massenentwurmung: fehlende Kausalkette",
+      "summary": "Netzwerk-Metaanalyse (Lancet Global Health) findet wenig bis keinen Effekt auf Wachstum, Kognition, Anwesenheit, Mortalität; Spillover auf Unbehandelte nicht belegt. Langzeitannahmen stützen sich auf sehr niedrige Evidenzsicherheit.",
+      "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+      "uncertainty": "Langzeiteffekte bleiben offen, nicht widerlegt.",
+      "counterevidence": "Quasi-experimentelle Historie (Bleakley) und KLPS-Follow-ups zeigen Einkommenseffekte; Nebenwirkungen minimal."
+    },
+    {
+      "pillar": "C",
+      "topic": "Evaluationslücke bei Frontier-KI",
+      "summary": "Der International AI Safety Report 2026 benennt eine 'evaluation gap': Tests sind kontaminiert, kontextabhängig, und Modelle unterscheiden zunehmend Test- von Einsatzumgebung. Damit können gefährliche Bio-/Cyber-Fähigkeiten – der existenzrisikorelevante Pfad – vor Deployment unentdeckt bleiben; Nichtvorhandensein ist nicht nachweisbar.",
+      "source": "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Expertenbericht/Synthese",
+      "uncertainty": "Keine quantifizierte Risikohöhe; Katastrophenpfad bleibt modelliert, nicht beobachtet.",
+      "counterevidence": "Evaluationsergebnisse als untere Schranke mit Sicherheitsmargen nutzbar."
+    },
+    {
+      "pillar": "D",
+      "topic": "Statistische Power als übersehener Engpass",
+      "summary": "Review der acht Mikrofinanz-RCTs: Ergebnisse überwiegend null, aber jede einzelne Studie war unterpowert, oft wegen geringer Produktaufnahme; Koeffizienten blieben ökonomisch groß. 'Kein Effekt' und 'nicht messbar' werden routinemäßig verwechselt.",
+      "source": "https://www.sciencedirect.com/science/article/abs/pii/S0305750X1930422X",
+      "source_date": null,
+      "event_date": null,
+      "source_language": "en",
+      "evidence_type": "Methodenreview publizierter RCTs",
+      "uncertainty": "Autoren sind Mikrofinanz-nah; Interessenkonflikt möglich.",
+      "counterevidence": "Meager-Metaanalysen finden gepoolt weiterhin nahe null."
+    }
+  ],
+  "rejected_findings": [
+    "Indische Primärquellen in Hindi, Bengali oder Tamil konnten im verfügbaren Suchlauf nicht verifiziert werden.",
+    "Brasilianische und WHO-Treffer mit ausschließlichem Aktualisierungsdatum nach dem Stichtag wurden nicht als Nachweis einer nach dem Stichtag veröffentlichten Quelle verwendet.",
+    "Positive Mikrokredit-Abstracts ohne Power-Angabe – Aussagekraft zu gering.",
+    "AI-Safety-Index-Rankings – Panelurteile ohne überprüfbare Messgrundlage."
+  ],
+  "delta_assessment": "Scout 2 (perplexity/sonar-pro): Die Evidenz stützt öffentliche Gesundheitsfinanzierung, Impfprogramme und klimaresiliente Systeme, ist aber bei direkten Gesundheitsendpunkten, Kostenwirksamkeit und streng definierten existenziellen Risiken lückenhaft. Die stärkste offene Frage betrifft lokale Umsetzungskapazität und faire Verteilung, nicht die bloße Verfügbarkeit technischer Maßnahmen.\n\nScout 3 (anthropic/claude-opus-5): Evidenzlage heute: In allen vier Säulen dominieren Messgrenzen, nicht klare Wirksamkeitsnachweise. Fade-out und Nullresultate sind gut belegt; Langzeitkausalketten meist nicht. Zentrale Unsicherheit: Unterscheidung zwischen tatsächlicher Wirkungslosigkeit und unzureichender statistischer Auflösung. Für Säule D fehlt mir unabhängige Primärevidenz.",
+  "convene": false,
+  "convene_rationale": "Am 21.10.2026 lag in keiner Saeule eine Ratsempfehlung vor; Kriterium 1 greift daher nicht. Die Scout-Funde schliessen oder oeffnen keine wesentliche Funding-Luecke und benennen keinen Traeger mit geprueftem Restbedarf. Die KI-Evaluationsluecke ist Wiederentdeckung des International AI Safety Report 2026 (Journal 07.07.). Die Entwurmungs-Nullkette ist Wiederentdeckung derselben Lancet-Synthese (Journale 05./12./19.10.). Klima-Gesundheit war bereits Sitzungsthema (WHO-Bericht embargoed) und im Journal 19.10. IPEA-PAB-Transfers und die TCU-Impfbewertung fehlen so im Archiv, bleiben aber Ausgaben- bzw. Priorisierungsbelege ohne Outcome, Kostenwirksamkeit oder Foerderluecke. Tennessee-VPK und Mikrofinanz-Power fehlen so im Bestand; sie sind methodische Warnungen, keine Chance von Rang. Scout 1 fiel aus; 0 Prozent Scout-Ueberlapp ist kein Archivwiderspruch. Im Zweifel keine Sondereinberufung.",
+  "content_md": "## Scout 2: Sonar Pro · Regionale Ergänzung (perplexity/sonar-pro)\n\nDie verfügbare Recherche liefert belastbare Hinweise auf zwei unterstützbare Ansätze: **gezielte öffentliche Gesundheitsfinanzierung** und **klimaresiliente Gesundheitssysteme**. Für Armutsprogramme, andere Zukunftsinvestitionen und die meisten übersehenen Essentials bleibt die Evidenz in diesem Durchlauf unvollständig. Die lokale Quellenprüfung erfolgte auf **Portugiesisch (Brasilien)** und **Französisch (WHO/französischsprachige Primärdokumente)**; einige Suchtreffer tragen Aktualisierungsdaten nach dem Stichtag und wurden deshalb nicht als Veröffentlichungsdatum übernommen.\n\n```json\n{\"search_queries\":[\"site:gov.br avaliação impacto transferência renda saúde pública Brasil português\",\"site:gov.in randomized trial public health intervention Hindi Bengali Tamil\",\"site:who.int français intervention efficacité risque existentiel climat santé source primaire\"],\"findings\":[{\"pillar\":\"A\",\"topic\":\"Bundesmittel mit Ergebnis- und Gerechtigkeitsorientierung für öffentliche Gesundheit\",\"summary\":\"Eine brasilianische empirische Untersuchung zu intergouvernementalen SUS-Transfers berichtet, dass 1 R$ zusätzlicher fixer PAB-Transfer in der schlechtesten Schätzung 0,85 R$ zusätzliche Gesundheitsausgaben erzeugte. Als Engpass nennt sie fehlende überwiegende Bindung an Ergebnisse und unzureichende Orientierung an Zugangsgerechtigkeit. Das ist Evidenz für Finanzierungswirkung, nicht automatisch für bessere Gesundheitsergebnisse.\",\"source\":\"https://www.ipea.gov.br/ppp/index.php/PPP/article/download/605/427/3358\",\"source_date\":null,\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"Empirische ökonometrische Untersuchung; Primärforschung\",\"uncertainty\":\"Im vorliegenden Treffer sind Publikationsdatum, Stichprobendesign und Gesundheitsendpunkte nicht vollständig ausgewiesen; Übertragbarkeit auf andere Länder ist offen.\",\"counterevidence\":\"Die Quelle belegt zusätzliche Ausgaben, aber nicht eindeutig zusätzliche Lebenserwartung, Krankheitsvermeidung oder Kostenwirksamkeit.\"},{\"pillar\":\"B\",\"topic\":\"Impfprogramme als kostengünstige Leidens- und Mortalitätsminderung\",\"summary\":\"Der brasilianische Rechnungshof bezeichnet das nationale Impfprogramm als eine der wirksamsten und kostengünstigsten Formen präventiver Gesundheitspolitik und prüft zugleich seine Effektivität. Konkrete aktuelle Effektgrößen oder operative Engpässe sind im verfügbaren Auszug nicht angegeben; deshalb ist der Fund eher eine priorisierende Behördenbewertung als eine quantifizierte Wirksamkeitsanalyse.\",\"source\":\"https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html\",\"source_date\":null,\"event_date\":null,\"source_language\":\"Portugiesisch (Brasilien)\",\"evidence_type\":\"Behördliche Programmevaluation bzw. Prüfbericht\",\"uncertainty\":\"Der Auszug enthält keine einzelnen Impfstoff-, Krankheits- oder Abdeckungsdaten; das Veröffentlichungsdatum ist im Treffer nicht sicher belegbar.\",\"counterevidence\":\"Eine positive Gesamtbewertung ersetzt keine Prüfung lokaler Durchimpfung, Lieferketten, Akzeptanz oder krankheitsspezifischer Wirksamkeit.\"},{\"pillar\":\"C\",\"topic\":\"Klimaschutz und klimaresiliente Gesundheitssysteme als existenzielles Risikomanagement\",\"summary\":\"WHO-Dokumente auf Französisch beschreiben Klimawandel als Verstärker extremer Ereignisse und als Gefahr für bisherige Fortschritte der universellen Gesundheitsversorgung. Sie nennen als Interventionen Risiko- und Verwundbarkeitsbewertungen, Frühwarnung, resiliente Gesundheitseinrichtungen sowie emissionsarme Energiesysteme. Der Zusammenhang mit einem existenziellen Risiko ist plausibel über mögliche systemweite und grenzüberschreitende Schäden; die Quellen quantifizieren jedoch keine Wahrscheinlichkeit eines Zivilisations- oder Menschheitsuntergangs.\",\"source\":\"https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2\",\"source_date\":null,\"event_date\":null,\"source_language\":\"Französisch (WHO)\",\"evidence_type\":\"Internationale Behördenbewertung und Synthese vorhandener Evidenz\",\"uncertainty\":\"Die Quelle belegt erhebliche Gesundheits- und Systemrisiken, aber keine spezifische Effektgröße einzelner Maßnahmen und keinen direkten Nachweis eines existenziellen Endpunkts.\",\"counterevidence\":\"Gesundheitsresilienz und Klimaschutz mindern schwere systemische Risiken, sind aber nicht automatisch Interventionen gegen ein existenzielles Risiko im strengen Sinn.\"},{\"pillar\":\"D\",\"topic\":\"Lücke: Umsetzung und Verteilung klimaresilienter Gesundheitsmaßnahmen\",\"summary\":\"Die WHO fordert lokale Kapazitäten, integrierte Umwelt- und Gesundheitsüberwachung sowie systematische Vulnerabilitätsbewertungen. Das weist auf einen potenziell übersehenen operativen Engpass hin: fehlende lokale Daten- und Umsetzungskapazität, nicht bloß fehlende technische Lösungen. Im verfügbaren Material fehlen jedoch konkrete Vergleiche, Kostenwirksamkeitswerte und eine belastbare Quantifizierung, welche Engpassmaßnahme den größten Zusatznutzen hätte.\",\"source\":\"https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true\",\"source_date\":null,\"event_date\":null,\"source_language\":\"Französisch (WHO)\",\"evidence_type\":\"Behördenleitfaden und Evidenz-Synthese\",\"uncertainty\":\"Der Fund beschreibt Handlungsbedarf, aber keine randomisierte oder quasi-experimentelle Wirkungsschätzung; die Quelle ist nicht auf ein einzelnes Land zugeschnitten.\",\"counterevidence\":\"Die Forderungen können allgemeine Planungsstandards darstellen und belegen nicht, dass dieser Engpass gegenüber anderen Engpässen besonders vernachlässigt ist.\"}],\"rejected_findings\":[\"Indische Primärquellen in Hindi, Bengali oder Tamil konnten im verfügbaren Suchlauf nicht verifiziert werden.\",\"Brasilianische und WHO-Treffer mit ausschließlichem Aktualisierungsdatum nach dem Stichtag wurden nicht als Nachweis einer nach dem Stichtag veröffentlichten Quelle verwendet.\"],\"delta_assessment\":\"Die Evidenz stützt öffentliche Gesundheitsfinanzierung, Impfprogramme und klimaresiliente Systeme, ist aber bei direkten Gesundheitsendpunkten, Kostenwirksamkeit und streng definierten existenziellen Risiken lückenhaft. Die stärkste offene Frage betrifft lokale Umsetzungskapazität und faire Verteilung, nicht die bloße Verfügbarkeit technischer Maßnahmen.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 3: Claude Opus 5 · Gegenbelege (anthropic/claude-opus-5)\n\nIch suche gezielt nach Nullresultaten und Replikationsproblemen in typischen Interventionsfeldern.Ich habe gezielt nach Gegenbelegen gesucht, nicht nach Erfolgsgeschichten. Vier Felder zeigen belastbare Nullbefunde oder Messgrenzen: frühkindliche Bildung (Fade-out bis zu negativen Langzeiteffekten im einzigen großen RCT), Entwurmung (schwache Kausalkette, Langzeitevidenz an einer Studienfamilie hängend), Mikrokredit (konsistente Nullen, aber oft unterpowert – ein Messproblem, kein Beweis von Wirkungslosigkeit) und die Evaluationslücke bei Frontier-KI. Mir begegneten dabei GiveWell- und HLI-Seiten; diese Exposition nenne ich offen, ohne sie als Empfehlung zu werten. Keine Förderempfehlung. Eine Lücke bleibt: zu Säule D fand ich keine unabhängige Primärquelle zu operativen Engpässen jenseits der Statistik-Power-Debatte.\n\n```json\n{\"search_queries\": [\"deworming replication null results long-term evidence\", \"microfinance randomized trials modest effects null\", \"AI safety evaluations limitations critique dangerous capability evals unreliable 2026\", \"preschool fadeout long-term null Tennessee pre-k negative effects\"], \"findings\": [{\"pillar\": \"A\", \"topic\": \"Frühkindliche Bildung: Fade-out und negative Langzeiteffekte\", \"summary\": \"Im randomisierten Tennessee-VPK-Arm verschwanden anfängliche Gewinne und kehrten sich um: Teilnehmende schnitten bis Klasse 6 in Leistung, Disziplin und Sonderpädagogik-Zuweisungen schlechter ab (n=2.990). Skalierung ersetzt Qualität nicht.\", \"source\": \"https://hechingerreport.org/a-state-funded-pre-k-program-led-to-significantly-negative-effects-for-kids-in-tennessee/\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"RCT-Langzeitfollow-up, journalistisch referiert\", \"uncertainty\": \"Ursache unklar; Interaktion mit späterer Schulqualität möglich.\", \"counterevidence\": \"RD-Komponente zeigt starke Soforteffekte; andere Bundesstaaten-Studien (nicht randomisiert) positiver.\"}, {\"pillar\": \"B\", \"topic\": \"Massenentwurmung: fehlende Kausalkette\", \"summary\": \"Netzwerk-Metaanalyse (Lancet Global Health) findet wenig bis keinen Effekt auf Wachstum, Kognition, Anwesenheit, Mortalität; Spillover auf Unbehandelte nicht belegt. Langzeitannahmen stützen sich auf sehr niedrige Evidenzsicherheit.\", \"source\": \"https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Systematische Übersicht/Netzwerk-Metaanalyse\", \"uncertainty\": \"Langzeiteffekte bleiben offen, nicht widerlegt.\", \"counterevidence\": \"Quasi-experimentelle Historie (Bleakley) und KLPS-Follow-ups zeigen Einkommenseffekte; Nebenwirkungen minimal.\"}, {\"pillar\": \"C\", \"topic\": \"Evaluationslücke bei Frontier-KI\", \"summary\": \"Der International AI Safety Report 2026 benennt eine 'evaluation gap': Tests sind kontaminiert, kontextabhängig, und Modelle unterscheiden zunehmend Test- von Einsatzumgebung. Damit können gefährliche Bio-/Cyber-Fähigkeiten – der existenzrisikorelevante Pfad – vor Deployment unentdeckt bleiben; Nichtvorhandensein ist nicht nachweisbar.\", \"source\": \"https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Expertenbericht/Synthese\", \"uncertainty\": \"Keine quantifizierte Risikohöhe; Katastrophenpfad bleibt modelliert, nicht beobachtet.\", \"counterevidence\": \"Evaluationsergebnisse als untere Schranke mit Sicherheitsmargen nutzbar.\"}, {\"pillar\": \"D\", \"topic\": \"Statistische Power als übersehener Engpass\", \"summary\": \"Review der acht Mikrofinanz-RCTs: Ergebnisse überwiegend null, aber jede einzelne Studie war unterpowert, oft wegen geringer Produktaufnahme; Koeffizienten blieben ökonomisch groß. 'Kein Effekt' und 'nicht messbar' werden routinemäßig verwechselt.\", \"source\": \"https://www.sciencedirect.com/science/article/abs/pii/S0305750X1930422X\", \"source_date\": null, \"event_date\": null, \"source_language\": \"en\", \"evidence_type\": \"Methodenreview publizierter RCTs\", \"uncertainty\": \"Autoren sind Mikrofinanz-nah; Interessenkonflikt möglich.\", \"counterevidence\": \"Meager-Metaanalysen finden gepoolt weiterhin nahe null.\"}], \"rejected_findings\": [\"Positive Mikrokredit-Abstracts ohne Power-Angabe – Aussagekraft zu gering.\", \"AI-Safety-Index-Rankings – Panelurteile ohne überprüfbare Messgrundlage.\"], \"delta_assessment\": \"Evidenzlage heute: In allen vier Säulen dominieren Messgrenzen, nicht klare Wirksamkeitsnachweise. Fade-out und Nullresultate sind gut belegt; Langzeitkausalketten meist nicht. Zentrale Unsicherheit: Unterscheidung zwischen tatsächlicher Wirkungslosigkeit und unzureichender statistischer Auflösung. Für Säule D fehlt mir unabhängige Primärevidenz.\"}\n```\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.\n\n---\n\n## Scout 1: ausgefallen\n\nModell: x-ai/grok-4.6 · Grund: Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag. · Rohpfad: journal/2026-10-26/raw/scout-1\n\n---\n\n## Maschineller Divergenz-Ausweis\n\n{\n  \"method\": \"exact_structured_finding_keys\",\n  \"overlap_percent\": 0.0,\n  \"shared\": [],\n  \"only_a\": [\n    [\n      \"A\",\n      \"bundesmittel mit ergebnis- und gerechtigkeitsorientierung für öffentliche gesundheit\",\n      \"https://www.ipea.gov.br/ppp/index.php/ppp/article/download/605/427/3358\"\n    ],\n    [\n      \"B\",\n      \"impfprogramme als kostengünstige leidens- und mortalitätsminderung\",\n      \"https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html\"\n    ],\n    [\n      \"C\",\n      \"klimaschutz und klimaresiliente gesundheitssysteme als existenzielles risikomanagement\",\n      \"https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2\"\n    ],\n    [\n      \"D\",\n      \"lücke: umsetzung und verteilung klimaresilienter gesundheitsmassnahmen\",\n      \"https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true\"\n    ]\n  ],\n  \"only_b\": [\n    [\n      \"A\",\n      \"frühkindliche bildung: fade-out und negative langzeiteffekte\",\n      \"https://hechingerreport.org/a-state-funded-pre-k-program-led-to-significantly-negative-effects-for-kids-in-tennessee/\"\n    ],\n    [\n      \"B\",\n      \"massenentwurmung: fehlende kausalkette\",\n      \"https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext\"\n    ],\n    [\n      \"C\",\n      \"evaluationslücke bei frontier-ki\",\n      \"https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026\"\n    ],\n    [\n      \"D\",\n      \"statistische power als übersehener engpass\",\n      \"https://www.sciencedirect.com/science/article/abs/pii/s0305750x1930422x\"\n    ]\n  ],\n  \"report_scout_indices\": [\n    2,\n    3\n  ]\n}",
+  "costs": {
+    "currency": "EUR",
+    "total": 0.6356,
+    "fx_rate_usd_eur": 0.85,
+    "components": {
+      "scouts": [
+        {
+          "currency": "EUR",
+          "total": 0.1915339,
+          "fx_rate_usd_eur": 0.85,
+          "model": "x-ai/grok-4.6",
+          "cost_basis": "billed",
+          "input_tokens": 107645,
+          "output_tokens": 4982,
+          "web_search_requests": 15,
+          "usd_total": 0.225334
+        },
+        {
+          "currency": "EUR",
+          "total": 0.03009,
+          "fx_rate_usd_eur": 0.85,
+          "model": "perplexity/sonar-pro",
+          "cost_basis": "billed",
+          "input_tokens": 964,
+          "output_tokens": 1767,
+          "web_search_requests": null,
+          "usd_total": 0.0354
+        },
+        {
+          "currency": "EUR",
+          "total": 0.3386145,
+          "fx_rate_usd_eur": 0.85,
+          "model": "anthropic/claude-opus-5",
+          "cost_basis": "billed",
+          "input_tokens": 55369,
+          "output_tokens": 3261,
+          "web_search_requests": 4,
+          "usd_total": 0.39837
+        }
+      ],
+      "wart": {
+        "currency": "EUR",
+        "total": 0.0753933,
+        "fx_rate_usd_eur": 0.85,
+        "model": "x-ai/grok-4.6",
+        "cost_basis": "billed",
+        "input_tokens": 38250,
+        "output_tokens": 2065,
+        "web_search_requests": null,
+        "usd_total": 0.088698
+      }
+    }
+  },
+  "actions_run_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/40317437975",
+  "scouts": [
+    {
+      "family": "perplexity",
+      "model": "perplexity/sonar-pro",
+      "label": "Sonar Pro · Regionale Ergänzung",
+      "research_role": "regional",
+      "content_md": "Die verfügbare Recherche liefert belastbare Hinweise auf zwei unterstützbare Ansätze: **gezielte öffentliche Gesundheitsfinanzierung** und **klimaresiliente Gesundheitssysteme**. Für Armutsprogramme, andere Zukunftsinvestitionen und die meisten übersehenen Essentials bleibt die Evidenz in diesem Durchlauf unvollständig. Die lokale Quellenprüfung erfolgte auf **Portugiesisch (Brasilien)** und **Französisch (WHO/französischsprachige Primärdokumente)**; einige Suchtreffer tragen Aktualisierungsdaten nach dem Stichtag und wurden deshalb nicht als Veröffentlichungsdatum übernommen.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "site:gov.br avaliação impacto transferência renda saúde pública Brasil português",
+        "site:gov.in randomized trial public health intervention Hindi Bengali Tamil",
+        "site:who.int français intervention efficacité risque existentiel climat santé source primaire"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Bundesmittel mit Ergebnis- und Gerechtigkeitsorientierung für öffentliche Gesundheit",
+          "summary": "Eine brasilianische empirische Untersuchung zu intergouvernementalen SUS-Transfers berichtet, dass 1 R$ zusätzlicher fixer PAB-Transfer in der schlechtesten Schätzung 0,85 R$ zusätzliche Gesundheitsausgaben erzeugte. Als Engpass nennt sie fehlende überwiegende Bindung an Ergebnisse und unzureichende Orientierung an Zugangsgerechtigkeit. Das ist Evidenz für Finanzierungswirkung, nicht automatisch für bessere Gesundheitsergebnisse.",
+          "source": "https://www.ipea.gov.br/ppp/index.php/PPP/article/download/605/427/3358",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "Empirische ökonometrische Untersuchung; Primärforschung",
+          "uncertainty": "Im vorliegenden Treffer sind Publikationsdatum, Stichprobendesign und Gesundheitsendpunkte nicht vollständig ausgewiesen; Übertragbarkeit auf andere Länder ist offen.",
+          "counterevidence": "Die Quelle belegt zusätzliche Ausgaben, aber nicht eindeutig zusätzliche Lebenserwartung, Krankheitsvermeidung oder Kostenwirksamkeit."
+        },
+        {
+          "pillar": "B",
+          "topic": "Impfprogramme als kostengünstige Leidens- und Mortalitätsminderung",
+          "summary": "Der brasilianische Rechnungshof bezeichnet das nationale Impfprogramm als eine der wirksamsten und kostengünstigsten Formen präventiver Gesundheitspolitik und prüft zugleich seine Effektivität. Konkrete aktuelle Effektgrößen oder operative Engpässe sind im verfügbaren Auszug nicht angegeben; deshalb ist der Fund eher eine priorisierende Behördenbewertung als eine quantifizierte Wirksamkeitsanalyse.",
+          "source": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "Portugiesisch (Brasilien)",
+          "evidence_type": "Behördliche Programmevaluation bzw. Prüfbericht",
+          "uncertainty": "Der Auszug enthält keine einzelnen Impfstoff-, Krankheits- oder Abdeckungsdaten; das Veröffentlichungsdatum ist im Treffer nicht sicher belegbar.",
+          "counterevidence": "Eine positive Gesamtbewertung ersetzt keine Prüfung lokaler Durchimpfung, Lieferketten, Akzeptanz oder krankheitsspezifischer Wirksamkeit."
+        },
+        {
+          "pillar": "C",
+          "topic": "Klimaschutz und klimaresiliente Gesundheitssysteme als existenzielles Risikomanagement",
+          "summary": "WHO-Dokumente auf Französisch beschreiben Klimawandel als Verstärker extremer Ereignisse und als Gefahr für bisherige Fortschritte der universellen Gesundheitsversorgung. Sie nennen als Interventionen Risiko- und Verwundbarkeitsbewertungen, Frühwarnung, resiliente Gesundheitseinrichtungen sowie emissionsarme Energiesysteme. Der Zusammenhang mit einem existenziellen Risiko ist plausibel über mögliche systemweite und grenzüberschreitende Schäden; die Quellen quantifizieren jedoch keine Wahrscheinlichkeit eines Zivilisations- oder Menschheitsuntergangs.",
+          "source": "https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "Französisch (WHO)",
+          "evidence_type": "Internationale Behördenbewertung und Synthese vorhandener Evidenz",
+          "uncertainty": "Die Quelle belegt erhebliche Gesundheits- und Systemrisiken, aber keine spezifische Effektgröße einzelner Maßnahmen und keinen direkten Nachweis eines existenziellen Endpunkts.",
+          "counterevidence": "Gesundheitsresilienz und Klimaschutz mindern schwere systemische Risiken, sind aber nicht automatisch Interventionen gegen ein existenzielles Risiko im strengen Sinn."
+        },
+        {
+          "pillar": "D",
+          "topic": "Lücke: Umsetzung und Verteilung klimaresilienter Gesundheitsmaßnahmen",
+          "summary": "Die WHO fordert lokale Kapazitäten, integrierte Umwelt- und Gesundheitsüberwachung sowie systematische Vulnerabilitätsbewertungen. Das weist auf einen potenziell übersehenen operativen Engpass hin: fehlende lokale Daten- und Umsetzungskapazität, nicht bloß fehlende technische Lösungen. Im verfügbaren Material fehlen jedoch konkrete Vergleiche, Kostenwirksamkeitswerte und eine belastbare Quantifizierung, welche Engpassmaßnahme den größten Zusatznutzen hätte.",
+          "source": "https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "Französisch (WHO)",
+          "evidence_type": "Behördenleitfaden und Evidenz-Synthese",
+          "uncertainty": "Der Fund beschreibt Handlungsbedarf, aber keine randomisierte oder quasi-experimentelle Wirkungsschätzung; die Quelle ist nicht auf ein einzelnes Land zugeschnitten.",
+          "counterevidence": "Die Forderungen können allgemeine Planungsstandards darstellen und belegen nicht, dass dieser Engpass gegenüber anderen Engpässen besonders vernachlässigt ist."
+        }
+      ],
+      "rejected_findings": [
+        "Indische Primärquellen in Hindi, Bengali oder Tamil konnten im verfügbaren Suchlauf nicht verifiziert werden.",
+        "Brasilianische und WHO-Treffer mit ausschließlichem Aktualisierungsdatum nach dem Stichtag wurden nicht als Nachweis einer nach dem Stichtag veröffentlichten Quelle verwendet."
+      ],
+      "delta_assessment": "Die Evidenz stützt öffentliche Gesundheitsfinanzierung, Impfprogramme und klimaresiliente Systeme, ist aber bei direkten Gesundheitsendpunkten, Kostenwirksamkeit und streng definierten existenziellen Risiken lückenhaft. Die stärkste offene Frage betrifft lokale Umsetzungskapazität und faire Verteilung, nicht die bloße Verfügbarkeit technischer Maßnahmen.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1793015269-yLhWY5eoK1a4J8w4vGO8",
+        "requested_model": "perplexity/sonar-pro",
+        "reported_model": "perplexity/sonar-pro",
+        "generation_model": "perplexity/sonar-pro",
+        "provider": "Perplexity",
+        "endpoint": "perplexity",
+        "finish_reason": "stop",
+        "native_finish_reason": "stop",
+        "cost_basis": "billed",
+        "billed_usd": "0.0354",
+        "search_engine_requested": "intrinsic",
+        "search_engine_reported": null,
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": null,
+        "citations": [
+          {
+            "url": "https://www.ipea.gov.br/ppp/index.php/PPP/article/download/605/427/3358",
+            "title": "TRANSFERÊNCIAS DO SUS: SUBSTITUIÇÃO DE GASTOS OU",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html",
+            "title": "sites.tcu.gov.br › relatorio-de-politicas › 2023Relatório de fiscalizações em políticas e programas de governo",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2",
+            "title": "Microsoft Word - French-health-commitment2_-_finance_final_(1)-ch.docx",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://repositorio.ipea.gov.br/handle/11058/2580",
+            "title": "Transferências fiscais intergovernamentais no Brasil: uma avaliação das transferências federais, com ênfase no Sistema Único de Saúde",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://apps.who.int/gb/ebwha/pdf_files/WHA72/A72_15-fr.pdf",
+            "title": "A72/15 Santé, environnement et changements climatiques",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.who.int/docs/default-source/wpro---documents/regional-committee/session-69/fr/references/rc-draft-who-global-strategy-fr.pdf",
+            "title": "DOCUMENT D’INFORMATION",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://repositorio.ipea.gov.br/server/api/core/bitstreams/98dc5934-f135-4214-9774-68dfd95bf7af/content",
+            "title": "SAÚDE",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "http://www.gov.br/conitec/pt-br/midias/artigos_publicacoes/diretrizes/diretrizes_metodologicas_analise_impacto-1.pdf",
+            "title": "Diretriz Metodológica: Análise de Impacto Orçamentário ...",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.who.int/fr/health-topics/environmental-health",
+            "title": "www.who.int · fr · health-topicsSanté environnementale - World Health Organization (WHO)",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://portalantigo.ipea.gov.br/agencia/images/stories/PDFs/TDs/td_1451.pdf",
+            "title": "TD_1451.pdf",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://bvsms.saude.gov.br/bvs/publicacoes/ipea_relatorio_final_1.pdf",
+            "title": "Relatório Final-1 - Ministério da Saúde",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://sites.tcu.gov.br/listadealtorisco/sistema_unico_de_saude_acesso_e_sustentabilidade.html",
+            "title": "Acesso e Sustentabilidade",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://apps.who.int/gb/ebwha/pdf_files/EB156/B156_25-fr.pdf",
+            "title": "[PDF] Changements climatiques et santé",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true",
+            "title": "Page",
+            "start_index": 0,
+            "end_index": 0
+          },
+          {
+            "url": "https://www.planalto.gov.br/ccivil_03/leis/lcp/lcp141.htm",
+            "title": "Lcp 141 - Planalto",
+            "start_index": 0,
+            "end_index": 0
+          }
+        ],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-26T11:47:49.760994+00:00",
+        "finished_at": "2026-10-26T11:48:20.894744+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    },
+    {
+      "family": "anthropic",
+      "model": "anthropic/claude-opus-5",
+      "label": "Claude Opus 5 · Gegenbelege",
+      "research_role": "counterevidence",
+      "content_md": "Ich suche gezielt nach Nullresultaten und Replikationsproblemen in typischen Interventionsfeldern.Ich habe gezielt nach Gegenbelegen gesucht, nicht nach Erfolgsgeschichten. Vier Felder zeigen belastbare Nullbefunde oder Messgrenzen: frühkindliche Bildung (Fade-out bis zu negativen Langzeiteffekten im einzigen großen RCT), Entwurmung (schwache Kausalkette, Langzeitevidenz an einer Studienfamilie hängend), Mikrokredit (konsistente Nullen, aber oft unterpowert – ein Messproblem, kein Beweis von Wirkungslosigkeit) und die Evaluationslücke bei Frontier-KI. Mir begegneten dabei GiveWell- und HLI-Seiten; diese Exposition nenne ich offen, ohne sie als Empfehlung zu werten. Keine Förderempfehlung. Eine Lücke bleibt: zu Säule D fand ich keine unabhängige Primärquelle zu operativen Engpässen jenseits der Statistik-Power-Debatte.\n\n**Recherchebelege:** Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.",
+      "search_queries": [
+        "deworming replication null results long-term evidence",
+        "microfinance randomized trials modest effects null",
+        "AI safety evaluations limitations critique dangerous capability evals unreliable 2026",
+        "preschool fadeout long-term null Tennessee pre-k negative effects"
+      ],
+      "findings": [
+        {
+          "pillar": "A",
+          "topic": "Frühkindliche Bildung: Fade-out und negative Langzeiteffekte",
+          "summary": "Im randomisierten Tennessee-VPK-Arm verschwanden anfängliche Gewinne und kehrten sich um: Teilnehmende schnitten bis Klasse 6 in Leistung, Disziplin und Sonderpädagogik-Zuweisungen schlechter ab (n=2.990). Skalierung ersetzt Qualität nicht.",
+          "source": "https://hechingerreport.org/a-state-funded-pre-k-program-led-to-significantly-negative-effects-for-kids-in-tennessee/",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "RCT-Langzeitfollow-up, journalistisch referiert",
+          "uncertainty": "Ursache unklar; Interaktion mit späterer Schulqualität möglich.",
+          "counterevidence": "RD-Komponente zeigt starke Soforteffekte; andere Bundesstaaten-Studien (nicht randomisiert) positiver."
+        },
+        {
+          "pillar": "B",
+          "topic": "Massenentwurmung: fehlende Kausalkette",
+          "summary": "Netzwerk-Metaanalyse (Lancet Global Health) findet wenig bis keinen Effekt auf Wachstum, Kognition, Anwesenheit, Mortalität; Spillover auf Unbehandelte nicht belegt. Langzeitannahmen stützen sich auf sehr niedrige Evidenzsicherheit.",
+          "source": "https://www.thelancet.com/journals/langlo/article/PIIS2214-109X(16)30242-X/fulltext",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Systematische Übersicht/Netzwerk-Metaanalyse",
+          "uncertainty": "Langzeiteffekte bleiben offen, nicht widerlegt.",
+          "counterevidence": "Quasi-experimentelle Historie (Bleakley) und KLPS-Follow-ups zeigen Einkommenseffekte; Nebenwirkungen minimal."
+        },
+        {
+          "pillar": "C",
+          "topic": "Evaluationslücke bei Frontier-KI",
+          "summary": "Der International AI Safety Report 2026 benennt eine 'evaluation gap': Tests sind kontaminiert, kontextabhängig, und Modelle unterscheiden zunehmend Test- von Einsatzumgebung. Damit können gefährliche Bio-/Cyber-Fähigkeiten – der existenzrisikorelevante Pfad – vor Deployment unentdeckt bleiben; Nichtvorhandensein ist nicht nachweisbar.",
+          "source": "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Expertenbericht/Synthese",
+          "uncertainty": "Keine quantifizierte Risikohöhe; Katastrophenpfad bleibt modelliert, nicht beobachtet.",
+          "counterevidence": "Evaluationsergebnisse als untere Schranke mit Sicherheitsmargen nutzbar."
+        },
+        {
+          "pillar": "D",
+          "topic": "Statistische Power als übersehener Engpass",
+          "summary": "Review der acht Mikrofinanz-RCTs: Ergebnisse überwiegend null, aber jede einzelne Studie war unterpowert, oft wegen geringer Produktaufnahme; Koeffizienten blieben ökonomisch groß. 'Kein Effekt' und 'nicht messbar' werden routinemäßig verwechselt.",
+          "source": "https://www.sciencedirect.com/science/article/abs/pii/S0305750X1930422X",
+          "source_date": null,
+          "event_date": null,
+          "source_language": "en",
+          "evidence_type": "Methodenreview publizierter RCTs",
+          "uncertainty": "Autoren sind Mikrofinanz-nah; Interessenkonflikt möglich.",
+          "counterevidence": "Meager-Metaanalysen finden gepoolt weiterhin nahe null."
+        }
+      ],
+      "rejected_findings": [
+        "Positive Mikrokredit-Abstracts ohne Power-Angabe – Aussagekraft zu gering.",
+        "AI-Safety-Index-Rankings – Panelurteile ohne überprüfbare Messgrundlage."
+      ],
+      "delta_assessment": "Evidenzlage heute: In allen vier Säulen dominieren Messgrenzen, nicht klare Wirksamkeitsnachweise. Fade-out und Nullresultate sind gut belegt; Langzeitkausalketten meist nicht. Zentrale Unsicherheit: Unterscheidung zwischen tatsächlicher Wirkungslosigkeit und unzureichender statistischer Auflösung. Für Säule D fehlt mir unabhängige Primärevidenz.",
+      "research_provenance": {
+        "transport": "openrouter_api",
+        "generation_id": "gen-1793015301-7kcO1L1S1twiyDQyErvi",
+        "requested_model": "anthropic/claude-opus-5",
+        "reported_model": "anthropic/claude-opus-5",
+        "generation_model": "anthropic/claude-opus-5-20260723",
+        "provider": "Anthropic",
+        "endpoint": "anthropic",
+        "finish_reason": "stop",
+        "native_finish_reason": "end_turn",
+        "cost_basis": "billed",
+        "billed_usd": "0.39837",
+        "search_engine_requested": "native",
+        "search_engine_reported": "native",
+        "search_queries_source": "model_self_report",
+        "query_log_complete": false,
+        "api_search_queries": null,
+        "web_search_requests": 4,
+        "citations": [],
+        "warnings": [
+          "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+        ],
+        "started_at": "2026-10-26T11:48:21.497733+00:00",
+        "finished_at": "2026-10-26T11:49:17.460084+00:00",
+        "response_artifact": "openrouter-response.json",
+        "generation_artifact": "openrouter-generation-2.json"
+      }
+    }
+  ],
+  "scout_failures": [
+    {
+      "index": 1,
+      "model": "x-ai/grok-4.6",
+      "family": "spacexai",
+      "reason": "Abbruch: kein strukturierter JSON-Block in der Scout-Antwort — Rohartefakte gesichert, kein Journal-Eintrag.",
+      "stop_reason": "end_turn",
+      "raw_artifact_dir": "journal/2026-10-26/raw/scout-1",
+      "search_queries": []
+    }
+  ],
+  "scout_divergence": {
+    "method": "exact_structured_finding_keys",
+    "overlap_percent": 0.0,
+    "shared": [],
+    "only_a": [
+      [
+        "A",
+        "bundesmittel mit ergebnis- und gerechtigkeitsorientierung für öffentliche gesundheit",
+        "https://www.ipea.gov.br/ppp/index.php/ppp/article/download/605/427/3358"
+      ],
+      [
+        "B",
+        "impfprogramme als kostengünstige leidens- und mortalitätsminderung",
+        "https://sites.tcu.gov.br/relatorio-de-politicas/2023/conclusao.html"
+      ],
+      [
+        "C",
+        "klimaschutz und klimaresiliente gesundheitssysteme als existenzielles risikomanagement",
+        "https://cdn.who.int/media/docs/default-source/climate-change/health-commitment-2-french.pdf?sfvrsn=9c9e13bd_2"
+      ],
+      [
+        "D",
+        "lücke: umsetzung und verteilung klimaresilienter gesundheitsmassnahmen",
+        "https://cdn.who.int/media/docs/default-source/climate-change/who-country-support-on-climate-change-and-health4f3808775ba44dee82d8b4bd149babf7.pdf?sfvrsn=6f36fb7f_25&download=true"
+      ]
+    ],
+    "only_b": [
+      [
+        "A",
+        "frühkindliche bildung: fade-out und negative langzeiteffekte",
+        "https://hechingerreport.org/a-state-funded-pre-k-program-led-to-significantly-negative-effects-for-kids-in-tennessee/"
+      ],
+      [
+        "B",
+        "massenentwurmung: fehlende kausalkette",
+        "https://www.thelancet.com/journals/langlo/article/piis2214-109x(16)30242-x/fulltext"
+      ],
+      [
+        "C",
+        "evaluationslücke bei frontier-ki",
+        "https://internationalaisafetyreport.org/publication/international-ai-safety-report-2026"
+      ],
+      [
+        "D",
+        "statistische power als übersehener engpass",
+        "https://www.sciencedirect.com/science/article/abs/pii/s0305750x1930422x"
+      ]
+    ],
+    "report_scout_indices": [
+      2,
+      3
+    ]
+  },
+  "research_mode": "blind_then_compare",
+  "procedure_version": "0.6",
+  "decision_role": "weekly_chair",
+  "rotation_index": 2,
+  "decision_provenance": {
+    "transport": "openrouter_api",
+    "identity_source": "api",
+    "gateway": "openrouter",
+    "requested_model": "x-ai/grok-4.6",
+    "reported_model": "x-ai/grok-4.6",
+    "generation_model": "x-ai/grok-4.6-20260810",
+    "upstream_provider": "xAI",
+    "endpoint": "xai/zdr",
+    "quantization": "unknown",
+    "generation_id": "gen-1793015357-GvnyMdgaltaqIkrs5QJx",
+    "finish_reason": "stop",
+    "native_finish_reason": "completed",
+    "usage": {
+      "prompt_tokens": 38250,
+      "completion_tokens": 2065,
+      "total_tokens": 40315,
+      "cost": 0.088698,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 128,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.088698,
+        "upstream_inference_prompt_cost": 0.076308,
+        "upstream_inference_completions_cost": 0.01239
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 1792,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "cost": 0.088698,
+    "cost_basis": "billed",
+    "raw_artifact": "raw/chair-weekly-spacexai-response.json",
+    "generation_artifact": "raw/chair-weekly-spacexai-generation.json"
+  },
+  "cost_mode": "observe"
+}
