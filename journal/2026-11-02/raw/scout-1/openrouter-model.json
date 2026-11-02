@@ -1,0 +1,216 @@
+{
+  "id": "x-ai/grok-4.6",
+  "canonical_slug": "x-ai/grok-4.6-20260810",
+  "hugging_face_id": null,
+  "name": "SpaceXAI: Grok 4.6",
+  "created": 1786548957,
+  "description": "Grok 4.6 is a model from SpaceXAI with frontier performance on coding, knowledge work, and STEM. It is succeeded by [Grok 4.7](/x-ai/grok-4.7).",
+  "context_length": 500000,
+  "architecture": {
+    "modality": "text+image+file->text",
+    "input_modalities": [
+      "text",
+      "image",
+      "file"
+    ],
+    "output_modalities": [
+      "text"
+    ],
+    "tokenizer": "Grok",
+    "instruct_type": null
+  },
+  "pricing": {
+    "prompt": "0.000002",
+    "completion": "0.000006",
+    "web_search": "0.005",
+    "input_cache_read": "0.0000005",
+    "overrides": [
+      {
+        "min_prompt_tokens": 200000,
+        "prompt": "0.000004",
+        "completion": "0.000012",
+        "input_cache_read": "0.000001"
+      }
+    ]
+  },
+  "top_provider": {
+    "context_length": 500000,
+    "max_completion_tokens": 450000,
+    "is_moderated": false
+  },
+  "per_request_limits": null,
+  "supported_parameters": [
+    "include_reasoning",
+    "logprobs",
+    "max_tokens",
+    "reasoning",
+    "reasoning_effort",
+    "response_format",
+    "seed",
+    "structured_outputs",
+    "temperature",
+    "tool_choice",
+    "tools",
+    "top_logprobs",
+    "top_p"
+  ],
+  "default_parameters": {},
+  "supported_voices": null,
+  "knowledge_cutoff": null,
+  "expiration_date": null,
+  "links": {
+    "details": "/api/v1/models/x-ai/grok-4.6-20260810/endpoints"
+  },
+  "endpoints": [
+    "/api/v1/chat/completions",
+    "/api/v1/completions",
+    "/api/v1/messages",
+    "/api/v1/responses"
+  ],
+  "benchmarks": {
+    "design_arena": [
+      {
+        "arena": "agents",
+        "category": "agenticgamedev",
+        "elo": 1161,
+        "win_rate": "47.1",
+        "rank": 9
+      },
+      {
+        "arena": "agents",
+        "category": "androidnative",
+        "elo": 1294,
+        "win_rate": 62,
+        "rank": 1
+      },
+      {
+        "arena": "agents",
+        "category": "blender3d",
+        "elo": 1147,
+        "win_rate": "48.6",
+        "rank": 10
+      },
+      {
+        "arena": "agents",
+        "category": "fullstack",
+        "elo": 1264,
+        "win_rate": "54.9",
+        "rank": 7
+      },
+      {
+        "arena": "agents",
+        "category": "godotgamedev",
+        "elo": 1276,
+        "win_rate": 53,
+        "rank": 4
+      },
+      {
+        "arena": "agents",
+        "category": "htmlslides",
+        "elo": 1146,
+        "win_rate": "60.1",
+        "rank": 6
+      },
+      {
+        "arena": "agents",
+        "category": "mobileapps",
+        "elo": 1232,
+        "win_rate": "55.3",
+        "rank": 11
+      },
+      {
+        "arena": "agents",
+        "category": "pdf",
+        "elo": 1251,
+        "win_rate": 60,
+        "rank": 8
+      },
+      {
+        "arena": "agents",
+        "category": "python-pptxslides",
+        "elo": 1197,
+        "win_rate": "52.9",
+        "rank": 11
+      },
+      {
+        "arena": "agents",
+        "category": "webapps",
+        "elo": 1233,
+        "win_rate": "55.8",
+        "rank": 12
+      },
+      {
+        "arena": "models",
+        "category": "3d",
+        "elo": 1273,
+        "win_rate": "52.4",
+        "rank": 23
+      },
+      {
+        "arena": "models",
+        "category": "asciiart",
+        "elo": 1272,
+        "win_rate": "57.1",
+        "rank": 12
+      },
+      {
+        "arena": "models",
+        "category": "codecategories",
+        "elo": 1290,
+        "win_rate": "52.5",
+        "rank": 20
+      },
+      {
+        "arena": "models",
+        "category": "dataviz",
+        "elo": 1283,
+        "win_rate": "51.4",
+        "rank": 20
+      },
+      {
+        "arena": "models",
+        "category": "gamedev",
+        "elo": 1294,
+        "win_rate": 54,
+        "rank": 20
+      },
+      {
+        "arena": "models",
+        "category": "svg",
+        "elo": 1234,
+        "win_rate": "48.7",
+        "rank": 18
+      },
+      {
+        "arena": "models",
+        "category": "uicomponent",
+        "elo": 1290,
+        "win_rate": "53.2",
+        "rank": 24
+      },
+      {
+        "arena": "models",
+        "category": "website",
+        "elo": 1287,
+        "win_rate": "52.2",
+        "rank": 22
+      }
+    ],
+    "artificial_analysis": {
+      "intelligence_index": null,
+      "coding_index": "76.8",
+      "agentic_index": 53
+    }
+  },
+  "reasoning": {
+    "mandatory": true,
+    "default_enabled": true,
+    "supported_efforts": [
+      "xhigh",
+      "high",
+      "medium",
+      "low"
+    ],
+    "default_effort": "high"
+  }
+}
