@@ -17,7 +17,7 @@ APPROVED = {
     'anthropic/claude-opus-5': ('anthropic', 'anthropic', 'Anthropic', 'native', 'end_turn'),
     # Candidate transport only; config.scouts remains unchanged until a paid
     # acceptance test confirms billing, native search and the dossier contract.
-    'google/gemini-4-argon': ('google', 'google-ai-studio', 'Google AI Studio', 'native', 'STOP'),
+    'google/gemini-4-argon': ('google', 'google-vertex/us', 'Google', 'native', 'STOP'),
 }
 WART_MODEL = 'anthropic/claude-fable-5'
 WART_ENDPOINT = ('anthropic', 'anthropic', 'Anthropic', 'none', 'end_turn')

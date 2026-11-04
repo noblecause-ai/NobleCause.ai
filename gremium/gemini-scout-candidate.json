@@ -11,10 +11,13 @@
   "max_output_tokens": 8000,
   "max_web_search_uses": 8,
   "openrouter": {
-    "endpoint": "google-ai-studio",
-    "provider_name": "Google AI Studio",
+    "endpoint": "google-vertex/us",
+    "provider_name": "Google",
     "quantization": "unknown",
-    "max_price": {"prompt": 2, "completion": 10},
+    "max_price": {
+      "prompt": 2.2,
+      "completion": 11
+    },
     "allow_fallbacks": false,
     "search_engine": "native",
     "max_search_price_usd": 0.014,

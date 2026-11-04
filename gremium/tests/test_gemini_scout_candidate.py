@@ -17,7 +17,7 @@ def test_google_candidate_uses_only_native_search_and_pinned_provider():
     ep['native_tools'] = {'openrouter:web_search': {'type': 'google_search'}}
     adapter.endpoint_check(CANDIDATE, {'data': [model]}, {'data': {'endpoints': [ep]}})
     request = adapter.request_for(CANDIDATE, 'BLIND_SYSTEM', 'BLIND_USER')
-    assert request['provider']['only'] == ['google-ai-studio']
+    assert request['provider']['only'] == ['google-vertex/us']
     assert request['provider']['allow_fallbacks'] is False
     assert request['tools'][0]['parameters']['engine'] == 'native'
     text, usage, raw, _ = adapter.assess(CANDIDATE, response, receipt, model['canonical_slug'])
