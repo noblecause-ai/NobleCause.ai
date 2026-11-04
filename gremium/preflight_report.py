@@ -35,4 +35,25 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if (os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
+            and os.environ.get('GITHUB_REF') == 'refs/heads/codex/receipt-recheck-20261104'
+            and os.environ.get('GITHUB_REPOSITORY') == 'noblecause-ai/NobleCause.ai'):
+        # A receipt lookup is never a production readiness check.
+        path = Path('gremium/.probe-raw/receipt-recheck/reconciliation.json')
+        receipt = json.loads(path.read_text()) if path.exists() else {}
+        data = {'purpose': 'receipt_reconciliation',
+                'receipt_status': receipt.get('status', 'not_checked'),
+                'production_readiness': 'not_checked', 'inference_calls': 0,
+                'generation_id': receipt.get('generation_id'),
+                'billed_usd': receipt.get('billed_usd'),
+                'receipt_error_code': receipt.get('receipt_error_code'),
+                'originals_unchanged': receipt.get('originals_unchanged'),
+                'key_after': receipt.get('key_after'),
+                'checked_at': receipt.get('checked_at')}
+        Path('preflight-status.json').write_text(json.dumps(data, indent=2, default=str)+'\n')
+        if os.environ.get('GITHUB_STEP_SUMMARY'):
+            with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a') as stream:
+                stream.write('## Einmaliger Abrechnungsabruf\n\nNur GET; kein Modellaufruf, keine Produktionsfreigabe.\n\n```json\n' + json.dumps(data, indent=2, default=str) + '\n```\n')
+        print(json.dumps(data, default=str))
+    else:
+        main()

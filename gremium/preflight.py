@@ -142,4 +142,13 @@ def main():
 
 
 if __name__ == "__main__":
+    # One-off audit branch only. The scheduled production monitor is unchanged.
+    if (os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
+            and os.environ.get('GITHUB_REF') == 'refs/heads/codex/receipt-recheck-20261104'
+            and os.environ.get('GITHUB_REPOSITORY') == 'noblecause-ai/NobleCause.ai'):
+        from reconcile_scout import main as reconcile_main
+        raise SystemExit(reconcile_main([
+            '--raw-dir', str(HERE.parent / 'journal/2026-11-02/raw/scout-1'),
+            '--output-dir', str(HERE / '.probe-raw/receipt-recheck'),
+        ]))
     main()
