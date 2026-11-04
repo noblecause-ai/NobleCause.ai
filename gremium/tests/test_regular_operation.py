@@ -113,6 +113,35 @@ def test_failure_hold_and_success_preserve_unknown_schedule_and_rotation(root,co
     assert state['council_rotation']['next_index']==1
 
 
+def test_known_hold_is_non_ready_in_inspection_but_still_blocks_execution(root, config):
+    operation.reserve(root, {'kind': 'research', 'due': '2026-09-21T06:00:00Z'})
+    operation.block(root, 'research', 'TransportError')
+    before = (root / 'schedule.json').read_bytes()
+    result = operation.inspect_plan(root, config, 'research')
+    assert result['ready'] is False and result['status'] == 'held'
+    assert result['blocked']['error_type'] == 'TransportError'
+    assert result['inflight']['owner'] == '123.1'
+    with pytest.raises(RuntimeError, match='angehalten'):
+        operation.plan(root, config, 'research', NOW, reserved=True)
+    assert (root / 'schedule.json').read_bytes() == before
+
+
+def test_plan_only_exports_hold_without_reserving_or_executing(root, config, monkeypatch):
+    here = root / 'gremium'
+    here.mkdir()
+    (here / 'config.json').write_text(json.dumps(config))
+    operation.block(root, 'research', 'TransportError')
+    before = (root / 'schedule.json').read_bytes()
+    monkeypatch.setattr(operation, 'ROOT', root)
+    monkeypatch.setattr(operation, 'execute', lambda *args: pytest.fail('Known hold executed'))
+    monkeypatch.setenv('GITHUB_OUTPUT', str(root / 'outputs'))
+    monkeypatch.setenv('GITHUB_STEP_SUMMARY', str(root / 'summary'))
+    operation.main(['--kind', 'research', '--plan-only'])
+    assert (root / 'outputs').read_text() == 'ready=false\n'
+    assert 'weiterhin angehalten' in (root / 'summary').read_text()
+    assert (root / 'schedule.json').read_bytes() == before
+
+
 def test_session_dispatch_uses_approved_question_not_steward_preparation(root,config,monkeypatch):
     path=dossier(root)
     (root/'next-session.json').write_text('{"question":"MUST NOT BE USED"}')

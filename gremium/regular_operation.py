@@ -97,6 +97,20 @@ def plan(root, config, kind, now=None, *, reserved=False):
     return result
 
 
+def inspect_plan(root, config, kind):
+    """A known hold is an explicit non-ready status, not a new failed run.
+
+    Actual reservation/execution still uses the strict plan() gate. No hold is
+    cleared here, and all other configuration/planning failures still raise.
+    """
+    configuration(config)
+    state = json.loads((Path(root) / 'schedule.json').read_text()).get('regular_operation') or {}
+    if state.get('blocked') or state.get('inflight'):
+        return {'kind': kind, 'ready': False, 'status': 'held',
+                'blocked': state.get('blocked'), 'inflight': state.get('inflight')}
+    return plan(root, config, kind)
+
+
 def reserve(root, task):
     path = Path(root)/'schedule.json'
     schedule = json.loads(path.read_text())
@@ -161,8 +175,15 @@ def main(argv=None):
     parser.add_argument('--reserved', action='store_true')
     args = parser.parse_args(argv)
     config = json.loads((ROOT/'gremium/config.json').read_text())
-    task = plan(ROOT, config, args.kind, reserved=args.reserved)
+    task = (inspect_plan(ROOT, config, args.kind) if args.plan_only or args.check_only
+            else plan(ROOT, config, args.kind, reserved=args.reserved))
     print(json.dumps(task,ensure_ascii=False),flush=True)
+    if task.get('status') == 'held' and os.environ.get('GITHUB_STEP_SUMMARY'):
+        with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
+            stream.write('## Regelbetrieb weiterhin angehalten\n\n'
+                         'Die bestehende Laufreservierung oder Betriebssperre bleibt aktiv. '
+                         'Dieser Fälligkeitscheck startet keine Modelle und erteilt keine '
+                         'Produktionsfreigabe. Der ursprüngliche Betriebsalarm bleibt offen.\n')
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'],'a') as stream:
             stream.write('ready=' + str(task['ready']).lower() + '\n')

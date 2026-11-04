@@ -1,0 +1,108 @@
+{
+  "checked_at": "2026-11-04T18:54:11.766618+00:00",
+  "authorization": "Steward: reconcile old charge, test Gemini with small budget, replace discovery Scout only on success; confirmed 2026-11-04",
+  "original_run": {
+    "actions_run_id": 41458146389,
+    "generation_id": "gen-1793628163-0NBTF5fbd9oa479Uhdd0",
+    "accounting_status": "charge_verified",
+    "billed_usd": "0.208472",
+    "dossier_valid": false,
+    "originals_unchanged": true,
+    "receipt_recheck_run_id": 41887333266,
+    "receipt_recheck_url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/41887333266",
+    "receipt_recheck_commit": "0bce01d919192f88bfb163f65b3c88649ef6e8f6",
+    "new_inference_calls": 0
+  },
+  "gemini_test": {
+    "model": "google/gemini-4-argon",
+    "reasoning_effort": "high",
+    "first_attempt": {
+      "endpoint": "google-ai-studio",
+      "actions_run_id": 41889388753,
+      "status": "rejected_429",
+      "generation_id": null,
+      "key_usage_unchanged": true
+    },
+    "charged_attempt": {
+      "endpoint": "google-vertex/us",
+      "actions_run_id": 41889909614,
+      "url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/41889909614",
+      "generation_id": "gen-1793817824-3mb0wkwzdbnE0Q6QRNjM",
+      "status": "failed",
+      "reason": "MAX_TOKENS; truncated prose without structured dossier",
+      "billed_usd": "0.855914",
+      "requested_max_output_tokens": 8000,
+      "billed_output_tokens": 13966,
+      "billed_reasoning_tokens": 12665,
+      "requested_searches": 8,
+      "reported_searches": 50,
+      "generation_receipt_fields": {
+        "id": "gen-1793817824-3mb0wkwzdbnE0Q6QRNjM",
+        "model": "google/gemini-4-argon-20261013",
+        "provider_name": "Google",
+        "cancelled": false,
+        "is_byok": false,
+        "total_cost": 0.855914,
+        "usage": 0.855914,
+        "native_tokens_prompt": 1040,
+        "native_tokens_completion": 13966,
+        "finish_reason": "length",
+        "native_finish_reason": "MAX_TOKENS",
+        "web_search_engine": "native"
+      },
+      "raw_sha256": {
+        "canary-status.json": "79f48ff6537161b93c390464f809bd5eff6ad35a3edeb0b10a679e72d7fa3f6b",
+        "openrouter-endpoint.json": "5986fa9a8c5fcfb37a7b6bd0ad8de17faaa0dcd99d8b0e2621dab558b003e382",
+        "openrouter-generation-0.json": "1497c66d1566f836186e48cc46aa8edc15e116e24baeb30f3e37706e15fd1c2a",
+        "openrouter-generation-1.json": "1497c66d1566f836186e48cc46aa8edc15e116e24baeb30f3e37706e15fd1c2a",
+        "openrouter-generation-2.json": "9fa815c5e55765e8d0dd2de360ff8d92edd69dc94fff76d37e60230352cc91e9",
+        "openrouter-key-before.json": "fd1302715353be0bce4c61635b8267955512c642ba6d24e9919e0b60aafd55c9",
+        "openrouter-model.json": "2581fd6d7fcdfd75d5ff06176eeeb225fbcbf906eca07519dd4e3830846e068f",
+        "openrouter-request.json": "1d2294af157a82849ca7c55fb46370f7bf9d5823b24ed80e04c7324ac71ac530",
+        "openrouter-response.json": "5dfade2124253a1b1c5d190775607bf304b60d2f4af15465b3bc55db756656f8",
+        "openrouter-result.json": "3c934bcea25a7098c397640d01ed8d5d755a56bf8d852c5e9ad0ba22b141c8ed",
+        "prompt-system.txt": "84787b89b7aa540e6a31b1132bec8a44d6e68b9f58ca39fd80a1cf6619b75748",
+        "prompt-user.txt": "9aabec41922953c38bd4315a758187c10ebcfdb71e0301ee334dfbea374ea98b"
+      }
+    },
+    "test_budget_credits": "1",
+    "temporary_total_key_limit": "33.87",
+    "original_total_key_limit_restored": 40,
+    "acceptance_passed": false,
+    "scout_replacement_activated": false,
+    "council_changed": false
+  },
+  "operation": {
+    "status": "held",
+    "reason": "No accepted discovery Scout replacement; no automatic replay of the aborted research",
+    "known_hold_check_returns_ready": false,
+    "original_alarm_retained": true,
+    "paid_inference_retries": 0,
+    "metadata_polling_wait_seconds": [
+      2,
+      8,
+      20,
+      30,
+      60
+    ]
+  },
+  "other_observed_blocker": {
+    "model": "moonshotai/kimi-k3",
+    "endpoint": "inference-net/fp4",
+    "reported_completion_usd_per_million": "16.5",
+    "configured_cap": "14",
+    "automatically_changed": false,
+    "source_actions_run_id": 41835602218
+  },
+  "closing_key_verification": {
+    "actions_run_id": 41891679738,
+    "url": "https://github.com/noblecause-ai/NobleCause.ai/actions/runs/41891679738",
+    "key": {
+      "limit": 40,
+      "limit_reset": null,
+      "limit_remaining": "6.273400692999999",
+      "usage": "33.726599307"
+    },
+    "test_debit_verified": "0.855914"
+  }
+}

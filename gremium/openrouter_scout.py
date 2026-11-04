@@ -18,6 +18,9 @@ APPROVED = {
 }
 WART_MODEL = 'anthropic/claude-fable-5'
 WART_ENDPOINT = ('anthropic', 'anthropic', 'Anthropic', 'none', 'end_turn')
+# Read-only metadata may arrive after the original 30-second window. Never
+# repeat inference; stop with the unresolved charge if these reads still fail.
+RECEIPT_WAITS = (2, 8, 20, 30, 60)
 
 
 def expected_endpoint(spec):
@@ -206,9 +209,9 @@ def call_scout(spec, system, user, raw_dir):
         if response.get('error') or not isinstance(gid, str) or not gid.startswith('gen-'):
             raise ScoutAccountingError('No usable generation; stop before any further paid call')
         generation = {}
-        for attempt in range(4):
+        for attempt in range(len(RECEIPT_WAITS) + 1):
             if attempt:
-                time.sleep((2, 8, 20)[attempt - 1])
+                time.sleep(RECEIPT_WAITS[attempt - 1])
             generation_raw = http('GET', '/generation?id=' + quote(gid, safe=''))
             save(f'openrouter-generation-{attempt}.json', generation_raw)
             generation = decode(generation_raw)

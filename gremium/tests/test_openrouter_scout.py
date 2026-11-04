@@ -98,6 +98,22 @@ def test_generation_polling_never_repeats_inference(tmp_path, monkeypatch):
     assert (tmp_path / 'openrouter-generation-1.json').exists()
 
 
+def test_late_receipt_beyond_original_window_uses_reads_not_new_inference(tmp_path, monkeypatch):
+    calls = stub(monkeypatch, SPECS[0])
+    original = adapter.http
+    reads = []
+    def delayed(method, path, payload=None):
+        if path.startswith('/generation?'):
+            reads.append(path)
+            if len(reads) <= 4:
+                return json.dumps({'error': {'code': 404}}).encode()
+        return original(method, path, payload)
+    monkeypatch.setattr(adapter, 'http', delayed)
+    adapter.call_scout(SPECS[0], 's', 'u', tmp_path)
+    assert len(reads) == 5 and sum(c[0] == 'POST' for c in calls) == 1
+    assert (tmp_path / 'openrouter-generation-4.json').exists()
+
+
 @pytest.mark.parametrize('mutation', [
     lambda r, g: g['data'].update(total_cost=.003),
     lambda r, g: g['data'].update(model='unapproved-model'),
