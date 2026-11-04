@@ -15,6 +15,9 @@ APPROVED = {
     'x-ai/grok-4.6': ('spacexai', 'xai/zdr', 'xAI', 'native', 'completed'),
     'perplexity/sonar-pro': ('perplexity', 'perplexity', 'Perplexity', 'intrinsic', 'stop'),
     'anthropic/claude-opus-5': ('anthropic', 'anthropic', 'Anthropic', 'native', 'end_turn'),
+    # Candidate transport only; config.scouts remains unchanged until a paid
+    # acceptance test confirms billing, native search and the dossier contract.
+    'google/gemini-4-argon': ('google', 'google-ai-studio', 'Google AI Studio', 'native', 'STOP'),
 }
 WART_MODEL = 'anthropic/claude-fable-5'
 WART_ENDPOINT = ('anthropic', 'anthropic', 'Anthropic', 'none', 'end_turn')
@@ -87,6 +90,9 @@ def endpoint_check(spec, catalog, endpoints):
     if len(models) != 1 or len(matches) != 1:
         raise ValueError('Scout model or pinned endpoint missing/ambiguous')
     model, ep = models[0], matches[0]
+    if (spec['model'] == 'google/gemini-4-argon'
+            and (ep.get('native_tools') or {}).get('openrouter:web_search') != {'type': 'google_search'}):
+        raise ValueError('Gemini native Google Search unavailable; no engine fallback')
     if (model.get('alias_target') or ep.get('status') != 0 or ep.get('model_id') != spec['model']
             or ep.get('provider_name') != cfg['provider_name'] or ep.get('quantization') != cfg['quantization']):
         raise ValueError('Scout endpoint identity/availability changed')

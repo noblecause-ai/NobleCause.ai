@@ -35,4 +35,17 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    if (os.environ.get('GITHUB_EVENT_NAME') == 'workflow_dispatch'
+            and os.environ.get('GITHUB_REF') == 'refs/heads/codex/gemini-scout-canary-20261104'
+            and os.environ.get('GITHUB_REPOSITORY') == 'noblecause-ai/NobleCause.ai'):
+        path = Path('gremium/.probe-raw/gemini-canary/canary-status.json')
+        result = json.loads(path.read_text()) if path.exists() else {'status': 'not_started', 'inference_calls': 0}
+        result['purpose'] = 'scout_canary'
+        result['production_readiness'] = 'not_checked'
+        Path('preflight-status.json').write_text(json.dumps(result, indent=2, default=str)+'\n')
+        if os.environ.get('GITHUB_STEP_SUMMARY'):
+            with Path(os.environ['GITHUB_STEP_SUMMARY']).open('a') as stream:
+                stream.write('## Begrenzter Gemini-Scout-Test\n\nKein Rat, kein Deploy, keine automatische Wiederholung. Quellenprüfung und aktive Umstellung folgen getrennt.\n\n```json\n' + json.dumps(result, indent=2, default=str) + '\n```\n')
+        print(json.dumps(result, default=str))
+    else:
+        main()
