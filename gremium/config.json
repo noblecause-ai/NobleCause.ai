@@ -24,8 +24,8 @@
 			"enabled": true,
 			"selection_status": "approved",
 			"approved_on": "2026-09-20",
-			"adapter_status": "tested_native_search",
-			"search_provenance_policy": "native_observations_with_disclosed_gaps"
+			"adapter_status": "tested_exa_and_native_search",
+			"search_provenance_policy": "exa_request_log_and_native_observations_with_disclosed_gaps"
 		},
 		"live_council": {
 			"enabled": true
@@ -95,56 +95,30 @@
 			"usd_per_1m_output": 3.75
 		}
 	],
-	"exa_discovery_candidate": {
-		"family": "qwen",
-		"model": "qwen/qwen3.6-35b-a3b",
-		"label": "Qwen3.6 35B A3B · Entdeckung mit Exa",
-		"model_label": "Qwen3.6 35B A3B",
-		"transport": "openrouter_api",
-		"research_role": "discovery",
-		"research_context": "blind",
-		"source_search": "exa",
-		"max_findings": 4,
-		"max_words_per_finding": 100,
-		"max_output_tokens": 2400,
-		"openrouter": {
-			"endpoint": "primeintellect/fp8",
-			"provider_name": "PrimeIntellect",
-			"quantization": "fp8",
-			"max_price": {
-				"prompt": 0.02,
-				"completion": 0.20
-			},
-			"allow_fallbacks": false,
-			"search_engine": "none",
-			"max_search_price_usd": 0
-		}
-	},
 	"scouts": [
 		{
-			"family": "spacexai",
-			"model": "x-ai/grok-4.6",
-			"label": "Grok 4.6 · Entdeckung",
-			"model_label": "Grok 4.6",
+			"family": "qwen",
+			"model": "qwen/qwen3.6-35b-a3b",
+			"label": "Qwen3.6 35B A3B · Entdeckung mit Exa",
+			"model_label": "Qwen3.6 35B A3B",
 			"transport": "openrouter_api",
 			"research_role": "discovery",
 			"research_context": "blind",
+			"source_search": "exa",
 			"max_findings": 4,
 			"max_words_per_finding": 100,
-			"max_output_tokens": 8000,
-			"max_web_search_uses": 8,
+			"max_output_tokens": 2400,
 			"openrouter": {
-				"endpoint": "xai/zdr",
-				"provider_name": "xAI",
-				"quantization": "unknown",
+				"endpoint": "primeintellect/fp8",
+				"provider_name": "PrimeIntellect",
+				"quantization": "fp8",
 				"max_price": {
-					"prompt": 2.0,
-					"completion": 6.0
+					"prompt": 0.02,
+					"completion": 0.2
 				},
 				"allow_fallbacks": false,
-				"search_engine": "native",
-				"max_search_price_usd": 0.005,
-				"reasoning_effort": "high"
+				"search_engine": "none",
+				"max_search_price_usd": 0
 			}
 		},
 		{

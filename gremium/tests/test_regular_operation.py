@@ -37,10 +37,11 @@ def reschedule(root, **fields):
     data=json.loads(p.read_text());data.update(fields);p.write_text(json.dumps(data))
 
 
-def dossier(root, date='2026-09-21'):
+def dossier(root, config, date='2026-09-21'):
     path=root/'journal'/date/'entry.json';path.parent.mkdir()
-    data=json.loads((REPO/'sessions/2026-09-21-live/research.json').read_text())
-    data['date']=date
+    data={'date': date, 'research_mode': 'blind_then_compare',
+          'scouts': [{'model': scout['model'], 'findings': [{'topic': 'Evidence'}],
+                      'research_provenance': {'query_log_complete': False}} for scout in config['scouts']]}
     path.write_text(json.dumps(data))
     (path.parent/'raw').mkdir()
     (path.parent/'raw/original.json').write_bytes(b'{"unchanged":true}\n')
@@ -62,7 +63,7 @@ def test_due_research_catches_up_after_monday_without_rotating(root,config):
 
 
 def test_council_tariff_hold_does_not_block_weekly_research(root, config):
-    config['scouts'][0] = config['exa_discovery_candidate']
+    config['scouts'][0] = config.get('exa_discovery_candidate', config['scouts'][0])
     hold = {'reason': 'Tarif und Abschlussreserve ungeprüft'}
     reschedule(root, next_research='2026-09-21T06:00:00Z',
                regular_operation={'session_hold': hold})
@@ -75,7 +76,7 @@ def test_council_tariff_hold_does_not_block_weekly_research(root, config):
 
 
 def test_due_session_reuses_current_dossier_and_stable_id(root,config):
-    dossier(root)
+    dossier(root, config)
     reschedule(root,next_session='2026-09-21T12:00:00Z')
     p=operation.plan(root,config,'session',NOW)
     assert p['session_id']=='2026-09-21-regular' and p['dossier']=='journal/2026-09-21/entry.json'
@@ -84,7 +85,7 @@ def test_due_session_reuses_current_dossier_and_stable_id(root,config):
 
 @pytest.mark.parametrize('age',[8,-1])
 def test_stale_and_future_dossiers_cannot_trigger_session(root,config,age):
-    dossier(root,(NOW.date()-dt.timedelta(days=age)).isoformat())
+    dossier(root, config, (NOW.date()-dt.timedelta(days=age)).isoformat())
     reschedule(root,next_session='2026-09-22T12:00:00Z')
     with pytest.raises(RuntimeError,match='Drei-Scout'):
         operation.plan(root,config,'session',NOW)
@@ -156,7 +157,7 @@ def test_plan_only_exports_hold_without_reserving_or_executing(root, config, mon
 
 
 def test_session_dispatch_uses_approved_question_not_steward_preparation(root,config,monkeypatch):
-    path=dossier(root)
+    path=dossier(root, config)
     (root/'next-session.json').write_text('{"question":"MUST NOT BE USED"}')
     calls=[]
     def run(command,**kwargs):

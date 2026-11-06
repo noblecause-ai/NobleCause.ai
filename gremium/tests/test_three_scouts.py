@@ -14,10 +14,12 @@ import prompts
 import run_session
 import run_wart
 from scout_context import historical_comparison
+from test_openrouter_scout import GROK_DISCOVERY
 
 
 def config():
     cfg = json.loads((ROOT / "gremium/config.json").read_text())
+    cfg["scouts"][0] = copy.deepcopy(GROK_DISCOVERY)
     cfg["features"]["three_scouts"]["enabled"] = False
     cfg["features"]["live_council"]["enabled"] = False
     return cfg

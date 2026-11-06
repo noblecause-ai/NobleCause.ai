@@ -304,6 +304,10 @@ def setup_run(tmp_path,monkeypatch):
     (tmp_path/'gremium').mkdir()
     for name in ['manifest.md','schedule.json','organizations.json']:
         shutil.copyfile(ROOT/name,tmp_path/name)
+    path = tmp_path / 'schedule.json'
+    schedule = json.loads(path.read_text())
+    (schedule.get('regular_operation') or {}).pop('session_hold', None)
+    path.write_text(json.dumps(schedule))
     (tmp_path/'gremium/sources.md').write_text('Öffentliche Belege')
     (tmp_path/'sessions').mkdir()
     cfg['live_council']['input_bounds']=synthetic_policies(tmp_path)
@@ -662,7 +666,7 @@ def test_weekly_runner_chair_result_and_refusal_record(tmp_path,monkeypatch,mode
     previous=tmp_path/'sessions/previous';previous.mkdir(parents=True)
     (previous/'session.json').write_text(json.dumps({'id':'previous','number':1,'date':'2026-09-14','question':'historical','recommendations':[]}))
     (tmp_path/'schedule.json').write_text(json.dumps({'custom':'keep','next_session':'2026-10-14T12:00:00Z'}))
-    def scout(spec,system,user,directory):
+    def scout(spec,system,user,directory, *, as_of=None):
         return (fenced({'findings':[{'pillar':'A','topic':'finding','source':'https://example.test'}],
                         'rejected_findings':[],'search_queries':[],'delta_assessment':'Current evidence'}),
                 {'input_tokens':1,'output_tokens':1,'billed_usd':'0.002'}, {'stop_reason':'end_turn'}, [])

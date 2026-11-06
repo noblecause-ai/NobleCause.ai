@@ -12,7 +12,19 @@ import openrouter_scout as adapter
 import run_session
 import run_wart
 
-SPECS = json.loads((ROOT / 'gremium/config.json').read_text())['scouts']
+# Historical native-search contract, independent of the active discovery seat.
+GROK_DISCOVERY = {
+    'family': 'spacexai', 'model': 'x-ai/grok-4.6', 'transport': 'openrouter_api',
+    'research_role': 'discovery', 'research_context': 'blind',
+    'max_findings': 4, 'max_words_per_finding': 100,
+    'max_output_tokens': 8000, 'max_web_search_uses': 8,
+    'openrouter': {
+        'endpoint': 'xai/zdr', 'provider_name': 'xAI', 'quantization': 'unknown',
+        'max_price': {'prompt': 2, 'completion': 6}, 'allow_fallbacks': False,
+        'search_engine': 'native', 'max_search_price_usd': .005, 'reasoning_effort': 'high',
+    },
+}
+SPECS = [GROK_DISCOVERY, *json.loads((ROOT / 'gremium/config.json').read_text())['scouts'][1:]]
 
 
 def fixture(spec):
@@ -183,6 +195,7 @@ def test_missing_or_exhausted_key_limit_blocks_inference(monkeypatch, data):
 
 def test_weekly_record_persists_search_limitations_and_billed_costs(tmp_path, monkeypatch):
     cfg = json.loads((ROOT / 'gremium/config.json').read_text())
+    cfg['scouts'] = SPECS
     cfg['features']['three_scouts']['enabled'] = True
     cfg['features']['live_council']['enabled'] = False
     here = tmp_path / 'gremium'
