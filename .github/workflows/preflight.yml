@@ -1,19 +1,26 @@
 name: OpenRouter-Statusbericht — ohne Modellaufrufe
+run-name: ${{ inputs.exa_scout && 'Exa-Scout einmalig' || 'OpenRouter-Statusbericht — ohne Modellaufrufe' }}
 
 # Tägliche kostenlose Metadatenprüfung der fünf Ratssitze und drei Scouts.
 # Auf Steward-Wunsch nur Statusbericht, ohne Failure-Mail oder Issue-Kommentar.
-# Strikte Ausführungsgates bleiben in regular-operation.yml unverändert.
+# Der ausdrücklich ausgelöste Einmaltest hat einen eigenen Job.
 
 on:
   schedule:
     - cron: '30 5 * * *'
   workflow_dispatch:
+    inputs:
+      exa_scout:
+        description: Einmaliger Test des Exa-Scouts bis 0,15 Credits
+        type: boolean
+        default: false
 
 permissions:
   contents: read
 
 jobs:
   canary:
+    if: ${{ !inputs.exa_scout }}
     name: Anschlussstatus protokollieren (ohne Alarm)
     # Auch Infrastrukturfehler dieses reinen Monitors lösen keinen Workflow-Alarm aus.
     continue-on-error: true
@@ -56,4 +63,53 @@ jobs:
             preflight-status.json
             run.log
           retention-days: 30
+          if-no-files-found: warn
+
+  exa-scout:
+    if: github.event_name == 'workflow_dispatch' && inputs.exa_scout && github.ref_name == 'codex/exa-scout-20261106' && github.run_attempt == '1'
+    permissions:
+      actions: read
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    concurrency:
+      group: gremium-records
+      cancel-in-progress: false
+    steps:
+      - name: Genau einen Testlauf zulassen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          FIRST_RUN=$(gh api --method GET --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/preflight.yml/runs" \
+            -f branch="$GITHUB_REF_NAME" -f event=workflow_dispatch -f per_page=100 \
+            --jq '.workflow_runs[] | select(.display_title == "Exa-Scout einmalig") | .id' | sort -n | sed -n '1p')
+          test "$FIRST_RUN" = "$GITHUB_RUN_ID"
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - name: Abhängigkeiten
+        run: pip install -r gremium/requirements.txt
+      - name: Exa-Suche und eine Modellauswertung
+        id: test
+        continue-on-error: true
+        env:
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python3 gremium/exa_scout.py
+      - name: Ergebnis festhalten
+        if: always()
+        env:
+          SCOUT_OUTCOME: ${{ steps.test.outcome }}
+        run: printf 'Exa-Scout-Test **%s**\n' "$SCOUT_OUTCOME" >> "$GITHUB_STEP_SUMMARY"
+      - name: Quellennachweise und Abrechnungsbelege sichern
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exa-scout-${{ github.run_id }}
+          path: exa-scout-canary/
+          retention-days: 90
           if-no-files-found: warn

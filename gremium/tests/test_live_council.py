@@ -319,6 +319,20 @@ def setup_run(tmp_path,monkeypatch):
     return cfg,args
 
 
+def test_public_session_cannot_bypass_tariff_hold(tmp_path, monkeypatch):
+    cfg, args = setup_run(tmp_path, monkeypatch)
+    path = tmp_path / 'schedule.json'
+    schedule = json.loads(path.read_text())
+    schedule['regular_operation']['session_hold'] = {'reason': 'pending_tariff_and_budget'}
+    path.write_text(json.dumps(schedule))
+    args.public_session = True
+    args.output_dir = None
+    args.live_feed_dir = tmp_path / 'feed'
+    with pytest.raises(RuntimeError, match='Tarif- und Budgetfreigabe'):
+        live_session.run(tmp_path, cfg, args)
+    assert not list((tmp_path / 'sessions').iterdir())
+
+
 def test_full_backend_record_byte_equality_rotation_and_resume(tmp_path,monkeypatch):
     cfg,args=setup_run(tmp_path,monkeypatch)
     schedule=json.loads((tmp_path/'schedule.json').read_text())

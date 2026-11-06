@@ -125,7 +125,11 @@
 {#if e.search_queries?.length}
 	<h2>Suchanfragen</h2>
 	{#if e.scouts?.some((s) => s.research_provenance?.query_log_complete === false)}
-		<p class="muted small">Die Suchanfragen sind Modellangaben. Ein vollständiges Suchprotokoll der Anbieter liegt nicht vor.</p>
+		{#if e.scouts?.some((s) => s.research_provenance?.search_queries_source === 'exa_request_log')}
+			<p class="muted small">Die Exa-Suchen wurden protokolliert. Bei den übrigen Scouts stammen Suchanfragen aus den Modellberichten.</p>
+		{:else}
+			<p class="muted small">Die Suchanfragen sind Modellangaben. Ein vollständiges Suchprotokoll der Anbieter liegt nicht vor.</p>
+		{/if}
 	{/if}
 	<ul class="queries">
 		{#each e.search_queries as q (q)}<li><code>{q}</code></li>{/each}

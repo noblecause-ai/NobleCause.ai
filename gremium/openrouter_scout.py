@@ -9,12 +9,13 @@ import json
 import time
 from urllib.parse import quote
 
-from openrouter import OpenRouterError, amount, decode, http, integer
+from openrouter import OpenRouterError, amount, decode, http, integer, structured_format
 
 APPROVED = {
     'x-ai/grok-4.6': ('spacexai', 'xai/zdr', 'xAI', 'native', 'completed'),
     'perplexity/sonar-pro': ('perplexity', 'perplexity', 'Perplexity', 'intrinsic', 'stop'),
     'anthropic/claude-opus-5': ('anthropic', 'anthropic', 'Anthropic', 'native', 'end_turn'),
+    'qwen/qwen3.6-35b-a3b': ('qwen', 'primeintellect/fp8', 'PrimeIntellect', 'none', None),
 }
 WART_MODEL = 'anthropic/claude-fable-5'
 WART_ENDPOINT = ('anthropic', 'anthropic', 'Anthropic', 'none', 'end_turn')
@@ -40,6 +41,11 @@ def contract(spec):
             or (spec.get('family'), cfg.get('endpoint'), cfg.get('provider_name'), cfg.get('search_engine')) != expected[:4]
             or cfg.get('allow_fallbacks') is not False):
         raise ValueError('Unapproved Scout model/provider/search configuration')
+    exa = spec.get('source_search') == 'exa'
+    if exa != (expected[0] == 'qwen') or (exa and (
+            spec.get('research_role') != 'discovery' or spec.get('research_context') != 'blind'
+            or spec.get('max_web_search_uses') is not None or cfg.get('reasoning_effort'))):
+        raise ValueError('Exa requires the blind discovery contract without model search')
     if not integer(spec.get('max_output_tokens')) or (cfg.get('search_engine') != 'none' and not integer(spec.get('max_web_search_uses'))):
         raise ValueError('Positive Scout output/search limits required')
     for field in ('prompt', 'completion'):
@@ -80,6 +86,14 @@ def request_for(spec, system, user):
             'max_total_results': n * 5, 'max_characters': 2000,
         }}]
         request['max_tool_calls'] = n
+    elif spec.get('source_search') == 'exa':
+        fmt = structured_format(spec)
+        if not fmt:
+            raise ValueError('Exa evaluation requires a strict response schema')
+        request.update(response_format=fmt, reasoning={'enabled': False}, tool_choice='none',
+                       plugins=[{'id': name, 'enabled': False} for name in (
+                           'web', 'response-healing', 'file-parser', 'alignment', 'armor', 'pareto-router')],
+                       transforms=[])
     return request
 
 
@@ -96,6 +110,12 @@ def endpoint_check(spec, catalog, endpoints):
     required = {'max_tokens'}
     if cfg['search_engine'] != 'none':
         required.add('web_search_options' if cfg['search_engine'] == 'intrinsic' else 'tools')
+    if spec.get('source_search') == 'exa':
+        from exa_scout import endpoint_bound
+        endpoint_bound(spec, ep)
+        required.update(('response_format', 'structured_outputs', 'reasoning', 'tool_choice'))
+        if model.get('reasoning', {}).get('mandatory') is not False:
+            raise ValueError('Exa evaluation requires optional reasoning')
     if cfg.get('reasoning_effort'):
         required.add('reasoning')
         if cfg['reasoning_effort'] not in (model.get('reasoning') or {}).get('supported_efforts', []):
@@ -142,7 +162,11 @@ def assess(spec, response, generation, canonical_model):
     if message.get('tool_calls') or message.get('role') != 'assistant':
         raise ScoutAccountingError('Unexpected client tool request/response role')
     expected = expected_endpoint(spec)[4]
-    stop = 'end_turn' if native == expected and choice.get('finish_reason') == 'stop' else (native or 'unknown')
+    finish = choice.get('finish_reason')
+    if expected is None:
+        stop = 'end_turn' if finish == 'stop' else (finish or 'unknown')
+    else:
+        stop = 'end_turn' if native == expected and finish == 'stop' else (native or 'unknown')
     if message.get('refusal') or native in ('refusal', 'content_filter'):
         stop = 'refusal'
     text = message.get('content') or ''
@@ -154,6 +178,10 @@ def assess(spec, response, generation, canonical_model):
     annotations = message.get('annotations') or []
     # Keep provider fields verbatim; none constitutes a complete query timeline.
     citations = [a['url_citation'] for a in annotations if a.get('type') == 'url_citation' and isinstance(a.get('url_citation'), dict)]
+    if spec.get('source_search') == 'exa' and (
+            counter or data.get('web_search_engine') or citations
+            or (data.get('num_search_results') or 0) or usage['completion_tokens'] > spec['max_output_tokens']):
+        raise ScoutAccountingError('Tool-free evaluation exceeded its search/output contract')
     researching = cfg['search_engine'] != 'none'
     warnings = ['Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft.'] if researching else []
     if counter is not None and counter > spec.get('max_web_search_uses', 0):
@@ -182,7 +210,15 @@ def assess(spec, response, generation, canonical_model):
     return text, result_usage, {'stop_reason': stop}, []
 
 
-def call_scout(spec, system, user, raw_dir):
+def preflight_scout(spec):
+    key = key_state()
+    catalog = decode(http('GET', '/models'))
+    endpoint_raw = http('GET', '/models/' + spec['model'] + '/endpoints')
+    model = endpoint_check(spec, catalog, decode(endpoint_raw))
+    return key, model, endpoint_raw
+
+
+def call_scout(spec, system, user, raw_dir, *, preflight=None):
     """One paid request. Only generation metadata may be polled (read-only)."""
     request = request_for(spec, system, user)
     def save(name, data):
@@ -192,10 +228,7 @@ def call_scout(spec, system, user, raw_dir):
     # Directory creation and prompt recording belong to the existing runners.
     if (raw_dir / 'openrouter-request.json').exists():
         raise ScoutAccountingError('Scout request already exists; no repeat')
-    key = key_state()
-    catalog = decode(http('GET', '/models'))
-    endpoint_raw = http('GET', '/models/' + spec['model'] + '/endpoints')
-    model = endpoint_check(spec, catalog, decode(endpoint_raw))
+    key, model, endpoint_raw = preflight or preflight_scout(spec)
     save('openrouter-model.json', model)
     save('openrouter-endpoint.json', endpoint_raw)
     save('openrouter-key-before.json', key)

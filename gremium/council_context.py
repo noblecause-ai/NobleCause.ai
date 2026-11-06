@@ -14,7 +14,9 @@ def compact_context(entry, prior):
         scouts.append({
             **{k:report[k] for k in ('model','label','research_role','content_md','findings',
                                     'rejected_findings','delta_assessment') if k in report},
-            'search_queries_self_reported': report.get('search_queries', []),
+            **({} if provenance.get('query_log_complete') is True else {
+                'search_queries_self_reported': report.get('search_queries', []),
+            }),
             'source_disclosure': {
                 'query_log_complete':provenance.get('query_log_complete'),
                 'api_search_queries':provenance.get('api_search_queries'),

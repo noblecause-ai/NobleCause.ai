@@ -217,8 +217,13 @@ def actions_run_url():
     return None
 
 
-def call_scout(scout_cfg, system, user, raw_dir):
+def call_scout(scout_cfg, system, user, raw_dir, *, as_of=None):
     validate_scout_transport(scout_cfg)
+    if scout_cfg.get("source_search") == "exa":
+        from exa_scout import call_scout as call_exa_scout
+        if as_of is None:
+            raise ValueError("Exa-Suche braucht einen expliziten Recherche-Stichtag")
+        return call_exa_scout(scout_cfg, raw_dir, as_of)
     if scout_cfg.get("transport") == "openrouter_api":
         return openrouter_scout.call_scout(scout_cfg, system, user, raw_dir)
     if scout_cfg.get("family") == "google":
@@ -292,6 +297,7 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
     geraten oder aus dem anderen ergänzt.
     """
     caller = caller or call_scout
+    complete_required = any(s.get("source_search") == "exa" for s in scouts)
     reports = []
     failures = []
     for index, scout_cfg in enumerate(scouts, start=1):
@@ -316,6 +322,8 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
                 raise RuntimeError(str(exc)) from exc
             if "max_findings" in scout_cfg and len(parsed["findings"]) > scout_cfg["max_findings"]:
                 raise RuntimeError("Scout überschreitet max_findings — Dossier nicht übernommen")
+            if complete_required and not parsed["findings"]:
+                raise RuntimeError("Scout-Dossier ohne Findings")
             reports.append(
                 {
                     "index": index,
@@ -330,6 +338,8 @@ def collect_scout_reports(scouts, system, user, raw_dir, caller=None):
         except openrouter_scout.ScoutAccountingError:
             raise  # Unresolved charges/identity abort all further paid steps.
         except Exception as exc:  # noqa: BLE001
+            if complete_required:
+                raise RuntimeError(f"Scout {index} unvollständig. Keine weiteren Modellaufrufe.") from exc
             if len(scouts) == 1 and stop_reason != "refusal":
                 raise
             failures.append(
@@ -412,11 +422,14 @@ def call_wart_decision(wart_cfg, system, user, raw_dir):
 
 def compute_role_costs(usage, cfg, fx):
     if "billed_usd" in usage:
-        usd = openrouter_scout.amount(usage["billed_usd"])
+        model_usd = openrouter_scout.amount(usage["billed_usd"])
+        search_usd = openrouter_scout.amount(usage.get("exa_billed_usd", 0))
+        usd = model_usd + search_usd
         return {"currency": "EUR", "total": float(usd * openrouter_scout.amount(fx)),
                 "fx_rate_usd_eur": fx, "model": cfg["model"], "cost_basis": "billed",
                 "input_tokens": usage["input_tokens"], "output_tokens": usage["output_tokens"],
-                "web_search_requests": usage.get("web_search_requests"), "usd_total": float(usd)}
+                "web_search_requests": usage.get("web_search_requests"), "usd_total": float(usd),
+                **({"usd_model": float(model_usd), "usd_exa": float(search_usd)} if "exa_billed_usd" in usage else {})}
     token_usd = (
         usage["input_tokens"] / 1e6 * cfg["usd_per_1m_input"]
         + usage["output_tokens"] / 1e6 * cfg["usd_per_1m_output"]
@@ -598,6 +611,8 @@ def _main():
         required_keys.append("OPENROUTER_API_KEY")
     if any(s["family"] == "google" for s in scouts):
         required_keys.append("GEMINI_API_KEY")
+    if any(s.get("source_search") == "exa" for s in scouts):
+        required_keys.append("EXA_API_KEY")
     require_keys(*required_keys)
     if args.observe_costs and wart_cfg.get('role') != 'weekly_chair':
         parser.error('--observe-costs benötigt den rotierenden Wochenvorsitz')
@@ -648,11 +663,14 @@ def _main():
             nonlocal spent
             if args.observe_costs:
                 openrouter_scout.key_state()
-            result = call_scout(spec, system, user, directory)
-            if 'billed_usd' in result[1]:
-                spent += openrouter_scout.amount(result[1]['billed_usd']) * openrouter_scout.amount(config['fx_rate_usd_eur'])
+            date = {"as_of": datetime.date.fromisoformat(entry_date)} if spec.get("source_search") == "exa" else {}
+            result = call_scout(spec, system, user, directory, **date)
+            usage = result[1]
+            if 'billed_usd' in usage:
+                usd = openrouter_scout.amount(usage['billed_usd']) + openrouter_scout.amount(usage.get('exa_billed_usd', 0))
+                spent += usd * openrouter_scout.amount(config['fx_rate_usd_eur'])
             else:
-                spent += openrouter_scout.amount(compute_role_costs(result[1], spec, config["fx_rate_usd_eur"])["total"])
+                spent += openrouter_scout.amount(compute_role_costs(usage, spec, config['fx_rate_usd_eur'])['total'])
             if any(s.get("transport") == "openrouter_api" for s in scouts) and openrouter_scout.amount(spent) >= cap:
                 raise openrouter_scout.ScoutAccountingError("Recherche-Budget erreicht; Rohantwort erhalten, kein weiterer Aufruf")
             return result

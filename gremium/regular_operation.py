@@ -54,10 +54,13 @@ def plan(root, config, kind, now=None, *, reserved=False):
     root = Path(root)
     configuration(config)
     schedule = json.loads((root/'schedule.json').read_text())
-    blocked = (schedule.get('regular_operation') or {}).get('blocked')
+    state = schedule.get('regular_operation') or {}
+    if kind == 'session' and state.get('session_hold'):
+        raise RuntimeError('Ratssitzungen bleiben bis zur Tarif- und Budgetfreigabe gesperrt')
+    blocked = state.get('blocked')
     if blocked:
         raise RuntimeError('Regelbetrieb nach unvollständigem Lauf angehalten; Belege und Betriebsalarm prüfen')
-    inflight = (schedule.get('regular_operation') or {}).get('inflight')
+    inflight = state.get('inflight')
     if inflight and (not reserved or inflight.get('owner') != owner() or inflight.get('kind') != kind):
         raise RuntimeError('Ein begonnener Lauf ist noch nicht abgeschlossen; keine bezahlte Wiederholung')
     if reserved and not inflight:
@@ -108,6 +111,8 @@ def inspect_plan(root, config, kind):
     if state.get('blocked') or state.get('inflight'):
         return {'kind': kind, 'ready': False, 'status': 'held',
                 'blocked': state.get('blocked'), 'inflight': state.get('inflight')}
+    if kind == 'session' and state.get('session_hold'):
+        return {'kind': kind, 'ready': False, 'status': 'held', 'session_hold': state['session_hold']}
     return plan(root, config, kind)
 
 
@@ -115,7 +120,8 @@ def reserve(root, task):
     path = Path(root)/'schedule.json'
     schedule = json.loads(path.read_text())
     state = schedule.setdefault('regular_operation', {})
-    if state.get('inflight') or state.get('blocked'):
+    if (state.get('inflight') or state.get('blocked')
+            or (task['kind'] == 'session' and state.get('session_hold'))):
         raise RuntimeError('Regelbetrieb bereits reserviert oder gesperrt')
     state['inflight'] = {'owner':owner(), 'kind':task['kind'], 'due':task['due']}
     atomic_write(path, encoded(schedule))

@@ -18,6 +18,18 @@ OpenRouter und den SSH-Publisher, ohne Inferenz. Bezahlte automatische Läufe
 reservieren ihren GitHub-Laufversuch vorab im Repository. Der Modus
 `--observe-costs` ist freigegeben; das vorhandene OpenRouter-Key-Limit bleibt.
 
+Der Exa-Entdeckungs-Scout braucht das Actions-Secret `EXA_API_KEY` eines
+Exa-Starter-Kontos. Er führt je Lauf höchstens sechs Lite-Suchen mit je drei
+Treffern aus. Die Suchanfragen und Quellen bleiben im Rohrekord. Qwen wertet
+die Ausschnitte in einem einzigen strukturierten Modellaufruf ohne Suchwerkzeug
+aus. Die Quellen-IDs werden vor der Übernahme geprüft.
+
+Der Einmaltest nutzt denselben Adapter auf dem Review-Branch. Die Besetzung
+unter `exa_discovery_candidate` wird erst nach akzeptiertem Test in `scouts`
+übernommen. Wochenrecherche und Ratssitzung können getrennt freigegeben werden.
+`schedule.json` kann den Rat über `regular_operation.session_hold` bis zur
+Tarif- und Budgetfreigabe zurückhalten.
+
 Die folgenden Abschnitte dokumentieren weiterhin die historischen Batch-Verfahren.
 
 ## Ablauf eines Laufs

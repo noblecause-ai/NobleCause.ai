@@ -61,6 +61,19 @@ def test_due_research_catches_up_after_monday_without_rotating(root,config):
     assert p['ready'] and p['date']=='2026-09-22' and p['rotation_index']==1
 
 
+def test_council_tariff_hold_does_not_block_weekly_research(root, config):
+    config['scouts'][0] = config['exa_discovery_candidate']
+    hold = {'reason': 'Tarif und Abschlussreserve ungeprüft'}
+    reschedule(root, next_research='2026-09-21T06:00:00Z',
+               regular_operation={'session_hold': hold})
+    assert operation.inspect_plan(root, config, 'session')['session_hold'] == hold
+    assert operation.plan(root, config, 'research', NOW)['ready'] is True
+    with pytest.raises(RuntimeError, match='Tarif- und Budgetfreigabe'):
+        operation.plan(root, config, 'session', NOW)
+    with pytest.raises(RuntimeError, match='gesperrt'):
+        operation.reserve(root, {'kind': 'session', 'due': '2026-09-21T06:00:00Z'})
+
+
 def test_due_session_reuses_current_dossier_and_stable_id(root,config):
     dossier(root)
     reschedule(root,next_session='2026-09-21T12:00:00Z')

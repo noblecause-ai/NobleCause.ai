@@ -104,6 +104,8 @@ def main():
         catalog = openrouter.decode(openrouter.http('GET','/models'))
         from urllib.parse import quote
         for scout in configured_scouts(config):
+            if weekly and scout.get('source_search') == 'exa':
+                require_keys('EXA_API_KEY')
             endpoints = openrouter.decode(openrouter.http('GET','/models/'+quote(scout['model'],safe='/')+'/endpoints'))
             try:
                 openrouter_scout.endpoint_check(scout,catalog,endpoints)

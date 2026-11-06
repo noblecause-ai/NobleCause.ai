@@ -262,6 +262,8 @@ def run(root, config, args):
     openrouter.preflight(cfg['models'])
     with process_lock(root):
         schedule = json.loads((root / 'schedule.json').read_text())
+        if public and (schedule.get('regular_operation') or {}).get('session_hold'):
+            raise RuntimeError('Ratssitzungen bleiben bis zur Tarif- und Budgetfreigabe gesperrt')
         chair, index = chair_for(config, schedule)
         moderation_format = chair_response_format([m['model'] for m in cfg['models']])
         openrouter.preflight([{**chair, 'response_format':moderation_format,

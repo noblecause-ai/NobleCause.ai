@@ -95,6 +95,31 @@
 			"usd_per_1m_output": 3.75
 		}
 	],
+	"exa_discovery_candidate": {
+		"family": "qwen",
+		"model": "qwen/qwen3.6-35b-a3b",
+		"label": "Qwen3.6 35B A3B · Entdeckung mit Exa",
+		"model_label": "Qwen3.6 35B A3B",
+		"transport": "openrouter_api",
+		"research_role": "discovery",
+		"research_context": "blind",
+		"source_search": "exa",
+		"max_findings": 4,
+		"max_words_per_finding": 100,
+		"max_output_tokens": 2400,
+		"openrouter": {
+			"endpoint": "primeintellect/fp8",
+			"provider_name": "PrimeIntellect",
+			"quantization": "fp8",
+			"max_price": {
+				"prompt": 0.02,
+				"completion": 0.20
+			},
+			"allow_fallbacks": false,
+			"search_engine": "none",
+			"max_search_price_usd": 0
+		}
+	},
 	"scouts": [
 		{
 			"family": "spacexai",
