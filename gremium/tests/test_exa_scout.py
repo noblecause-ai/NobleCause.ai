@@ -95,8 +95,11 @@ def test_discovery_replays_weekly_entrypoint_with_exact_sources_and_one_inferenc
     request, = [payload for method, _, payload in calls if method == 'POST']
     assert request['provider']['only'] == ['primeintellect/fp8']
     assert request['provider']['allow_fallbacks'] is False
+    assert request['provider']['max_price'] == {'prompt': '0.02', 'completion': '0.2'}
     assert request['tool_choice'] == 'none' and 'tools' not in request and 'web_search_options' not in request
-    assert all(plugin['enabled'] is False for plugin in request['plugins'])
+    assert {plugin['id']: plugin['enabled'] for plugin in request['plugins']} == dict.fromkeys(
+        ('web', 'response-healing', 'file-parser', 'armor', 'pareto-router', 'auto-router'), False,
+    )
     assert request['response_format']['json_schema']['strict'] is True
     assert 'history A' not in str(request) and 'history B' not in str(request)
     assert 'noblecause.ai/journal' not in str(request)
@@ -123,6 +126,13 @@ def test_budget_drift_stops_before_search_or_inference(tmp_path, replay, changed
     endpoint.update(changed)
     with pytest.raises(ValueError):
         scout.call_scout(SPEC, tmp_path, TODAY)
+    assert not searches and all(c[0] == 'GET' for c in calls)
+
+
+def test_replay_budget_applies_before_any_paid_call(tmp_path, replay):
+    calls, searches, _, _, _, _ = replay
+    with pytest.raises(scout.ExaScoutError, match='authorized budget'):
+        scout.evaluation_preflight(SPEC, tmp_path, limit=scout.Decimal('0.060'), search_bound=scout.Decimal(0))
     assert not searches and all(c[0] == 'GET' for c in calls)
 
 

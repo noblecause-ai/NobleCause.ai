@@ -90,9 +90,11 @@ def request_for(spec, system, user):
         fmt = structured_format(spec)
         if not fmt:
             raise ValueError('Exa evaluation requires a strict response schema')
+        request['provider']['max_price'] = {key: str(amount(value)) for key, value in cfg['max_price'].items()}
+        # Alignment has no enabled flag and requires rules even on a disable entry.
         request.update(response_format=fmt, reasoning={'enabled': False}, tool_choice='none',
                        plugins=[{'id': name, 'enabled': False} for name in (
-                           'web', 'response-healing', 'file-parser', 'alignment', 'armor', 'pareto-router')],
+                           'web', 'response-healing', 'file-parser', 'armor', 'pareto-router', 'auto-router')],
                        transforms=[])
     return request
 

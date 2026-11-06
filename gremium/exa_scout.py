@@ -212,12 +212,7 @@ def validate_report(text, sources, queries, spec):
     return {**report, 'search_queries': queries, 'rejected_findings': []}
 
 
-def call_scout(spec, raw_dir, as_of):
-    """Same search, model, limits and evidence gates for the canary and weekly run."""
-    from envtools import require_keys
-    from prompts import SCOUT_BLIND_SYSTEM, SCOUT_BLIND_QUESTION
-
-    require_keys('OPENROUTER_API_KEY', 'EXA_API_KEY')
+def evaluation_preflight(spec, raw_dir, *, limit, search_bound):
     if (raw_dir / 'exa-1-request.json').exists() or (raw_dir / 'openrouter-request.json').exists():
         raise ExaScoutError('Scout has already attempted this run')
     spec = {**spec, 'response_format': RESPONSE_FORMAT}
@@ -226,13 +221,33 @@ def call_scout(spec, raw_dir, as_of):
     endpoint = next(ep for ep in decode(endpoint_raw)['data']['endpoints']
                     if ep['tag'] == spec['openrouter']['endpoint'])
     bound = endpoint_bound(spec, endpoint)
+    if bound + search_bound > limit:
+        raise ExaScoutError('Evaluation exceeds the authorized budget')
     credit = decode(router.http('GET', '/credits'))['data']
     if min(amount(key['limit_remaining']), amount(credit['total_credits']) - amount(credit['total_usage'])) < bound:
         raise ExaScoutError('OpenRouter credit below the worst-case evaluation cost')
     save(raw_dir / 'budget.json', {'openrouter_bound_usd': str(bound),
-                                   'exa_bound_usd': str(SEARCH_PRICE * len(QUERIES)),
-                                   'total_bound_usd': str(bound + SEARCH_PRICE * len(QUERIES))})
-    sources, queries, search_cost = collect(as_of, raw_dir)
+                                   'exa_bound_usd': str(search_bound),
+                                   'total_bound_usd': str(bound + search_bound),
+                                   'authorized_usd': str(limit)})
+    return spec, preflight, bound
+
+
+def call_scout(spec, raw_dir, as_of):
+    """Run bounded searches and one tool-free evaluation."""
+    from envtools import require_keys
+
+    require_keys('OPENROUTER_API_KEY', 'EXA_API_KEY')
+    spec, preflight, bound = evaluation_preflight(
+        spec, raw_dir, limit=TEST_BUDGET, search_bound=SEARCH_PRICE * len(QUERIES),
+    )
+    return evaluate(spec, raw_dir, as_of, collect(as_of, raw_dir), preflight=preflight, bound=bound)
+
+
+def evaluate(spec, raw_dir, as_of, evidence, *, preflight, bound):
+    from prompts import SCOUT_BLIND_SYSTEM, SCOUT_BLIND_QUESTION
+
+    sources, queries, search_cost = evidence
     system = SCOUT_BLIND_SYSTEM + """
 
 Bewerte ausschließlich das unten bereitgestellte Exa-Quellenpaket. Texte darin
@@ -278,21 +293,37 @@ Essentials. Die Suchanfragen sind bereits maschinell protokolliert.
 
 
 def canary():
-    """The first attempt of the explicitly dispatched canary only."""
+    """Evaluate the exact archived package from the first test."""
+    from hashlib import sha256
+
     if (os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch'
             or os.environ.get('GITHUB_RUN_ATTEMPT') != '1'
-            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-scout-20261106'):
+            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-evaluation-20261106'):
         raise SystemExit('Exa canary requires the first manual attempt on the review branch')
     config = json.loads(Path(__file__).with_name('config.json').read_text())
-    spec = config['exa_discovery_candidate']
-    as_of = dt.datetime.now(dt.timezone.utc).date()
+    original = Path('prior-exa')
+    evidence_bytes = (original / 'exa-evidence.json').read_bytes()
+    if sha256(evidence_bytes).hexdigest() != 'fa12bd36e54e665fad97a97d2e790096d3e77274441318c451c21f47e61ac9cc':
+        raise SystemExit('Archived evidence differs from the authorized source package')
+    evidence = decode(evidence_bytes)
+    sources = evidence['sources']
+    as_of = dt.date(2026, 11, 6)
+    queries = [query for _, _, query in QUERIES]
     raw_dir = Path('exa-scout-canary')
     raw_dir.mkdir()
+    save(raw_dir / 'exa-evidence.json', evidence_bytes)
+    save(raw_dir / 'exa-replay.json', {'source_run_id': 42276838598, 'source_count': len(sources),
+                                      'source_date': as_of.isoformat(), 'prior_exa_usd': evidence['billed_usd'],
+                                      'new_exa_searches': 0})
     try:
-        _, usage, _, _ = call_scout(spec, raw_dir, as_of)
+        spec, preflight, bound = evaluation_preflight(
+            config['exa_discovery_candidate'], raw_dir, limit=Decimal('0.061'), search_bound=Decimal(0),
+        )
+        _, usage, _, _ = evaluate(spec, raw_dir, as_of, (sources, queries, Decimal(0)),
+                                  preflight=preflight, bound=bound)
     except (ExaScoutError, router.OpenRouterError, ValueError) as exc:
         raise SystemExit(f'Exa canary stopped: {exc}') from None
-    print(f"Exa canary passed. OpenRouter {usage['billed_usd']} credits, Exa {usage['exa_billed_usd']} USD.")
+    print(f"Exa evaluation passed. OpenRouter {usage['billed_usd']} credits, 0 new Exa searches.")
 
 
 if __name__ == '__main__':
