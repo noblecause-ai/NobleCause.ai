@@ -37,8 +37,7 @@ def replay(monkeypatch):
          'evidence_type': 'Feldstudie', 'uncertainty': 'Kleine Stichprobe.',
          'counterevidence': 'Zwei Standorte.'}
         for pillar, source in [('A', 'S1'), ('B', 'S2')]
-    ], 'gaps': {'A': None, 'B': None, 'C': 'Keine Primärquelle.', 'D': 'Fehlende Daten.'},
-        'delta_assessment': 'Begrenzte Evidenz in zwei Säulen.'}
+    ]}
     choice = {'finish_reason': 'stop', 'native_finish_reason': 'eos',
               'message': {'role': 'assistant'}}
     usage = {'prompt_tokens': 2400, 'completion_tokens': 600, 'total_tokens': 3000, 'cost': .00008}
@@ -107,6 +106,9 @@ def test_discovery_replays_weekly_entrypoint_with_exact_sources_and_one_inferenc
     assert parsed['search_queries'] == queries
     assert [f['source'] for f in parsed['findings']] == ['https://uni.example/study', 'https://health.example/report']
     assert all(f['summary'] == f['evidence_excerpt'] == EXCERPT for f in parsed['findings'])
+    assert {p for p, gap in parsed['gaps'].items() if gap} == {'C', 'D'}
+    assert "A, B" in parsed['delta_assessment'] and "C, D" in parsed['delta_assessment']
+    assert 1 <= len(parsed['delta_assessment'].split()) <= 60
     provenance = usage['research_provenance']
     assert provenance['query_log_complete'] is True and provenance['api_search_queries'] == queries
     assert provenance['billed_usd'] == '0.00008' and provenance['exa_billed_usd'] == '0.024'
@@ -158,7 +160,7 @@ def test_invalid_evaluation_retains_receipt_and_cannot_pass(tmp_path, replay, fa
     elif failure == 'generated summary':
         report['findings'][0]['summary'] = 'Die Intervention dauerte vier Stunden.'
     elif failure == 'contradictory gap':
-        report['gaps']['A'] = 'Keine Evidenz gefunden.'
+        report['gaps'] = {'A': 'Keine Evidenz gefunden.'}
     else:
         generation['num_search_results'] = 1
     with pytest.raises((scout.ExaScoutError, ScoutAccountingError)):

@@ -1,5 +1,5 @@
 name: OpenRouter-Statusbericht — ohne Modellaufrufe
-run-name: ${{ inputs.exa_scout && 'Exa-Originalpassagen einmalig auswerten' || 'OpenRouter-Statusbericht — ohne Modellaufrufe' }}
+run-name: ${{ inputs.exa_scout && 'Exa-Fundliste einmalig auswerten' || 'OpenRouter-Statusbericht — ohne Modellaufrufe' }}
 
 # Tägliche kostenlose Metadatenprüfung der fünf Ratssitze und drei Scouts.
 # Auf Steward-Wunsch nur Statusbericht, ohne Failure-Mail oder Issue-Kommentar.
@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       exa_scout:
-        description: Gesicherte Exa-Originalpassagen einmalig auswerten, bis 0,061 Credits
+        description: Gesicherte Exa-Fundliste einmalig auswerten, bis 0,061 Credits
         type: boolean
         default: false
 
@@ -66,7 +66,7 @@ jobs:
           if-no-files-found: warn
 
   exa-scout:
-    if: github.event_name == 'workflow_dispatch' && inputs.exa_scout && github.ref_name == 'codex/exa-passage-20261106' && github.run_attempt == '1'
+    if: github.event_name == 'workflow_dispatch' && inputs.exa_scout && github.ref_name == 'codex/exa-coverage-20261106' && github.run_attempt == '1'
     permissions:
       actions: read
       contents: read
@@ -83,7 +83,7 @@ jobs:
           set -o pipefail
           FIRST_RUN=$(gh api --method GET --paginate "repos/$GITHUB_REPOSITORY/actions/workflows/preflight.yml/runs" \
             -f branch="$GITHUB_REF_NAME" -f event=workflow_dispatch -f per_page=100 \
-            --jq '.workflow_runs[] | select(.display_title == "Exa-Originalpassagen einmalig auswerten") | .id' | sort -n | sed -n '1p')
+            --jq '.workflow_runs[] | select(.display_title == "Exa-Fundliste einmalig auswerten") | .id' | sort -n | sed -n '1p')
           test "$FIRST_RUN" = "$GITHUB_RUN_ID"
       - uses: actions/checkout@v5
         with:

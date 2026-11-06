@@ -51,8 +51,6 @@ REPORT_SCHEMA = object_schema({
         'source_language': TEXT, 'evidence_type': TEXT, 'uncertainty': TEXT,
         'counterevidence': TEXT,
     })},
-    'gaps': object_schema({pillar: {'type': ['string', 'null']} for pillar in 'ABCD'}),
-    'delta_assessment': TEXT,
 })
 RESPONSE_FORMAT = {
     'type': 'json_schema',
@@ -220,12 +218,18 @@ def validate_report(text, sources, queries, spec):
                        summary=excerpt, evidence_excerpt=excerpt)
         pillars.add(finding['pillar'])
         hosts.add(source['host'])
-    if (len(pillars) < 2 or len(hosts) < 2
-            or any(report['gaps'][pillar] is not None for pillar in pillars)
-            or any(not (report['gaps'][pillar] or '').strip() for pillar in set('ABCD') - pillars)
-            or not 1 <= len(report['delta_assessment'].split()) <= 60):
-        raise ExaScoutError('Evaluation needs two distinct pillars and source domains, with any gaps identified')
-    return {**report, 'search_queries': queries, 'rejected_findings': []}
+    if len(pillars) < 2 or len(hosts) < 2:
+        raise ExaScoutError('Evaluation needs two distinct pillars and source domains')
+    missing = sorted(set('ABCD') - pillars)
+    gaps = dict.fromkeys('ABCD')
+    for pillar in missing:
+        gaps[pillar] = 'Für diese Säule enthält die Fundliste keinen belegten Fund.'
+    # Only bounded counts and pillar labels enter the summary.
+    summary = f"Die Fundliste enthält {len(findings)} Funde in den Säulen {', '.join(sorted(pillars))}."
+    if missing:
+        summary += f" Ohne belegten Fund in dieser Liste: {', '.join(missing)}."
+    return {**report, 'gaps': gaps, 'delta_assessment': summary,
+            'search_queries': queries, 'rejected_findings': []}
 
 
 def evaluation_preflight(spec, raw_dir, *, limit, search_bound):
@@ -279,8 +283,7 @@ das Material das trägt. Wähle je Fund eine source_id und die passage_id eines
 Abschnitts, der den Fund direkt belegt. Die Originalpassage wird als Sachbeleg
 übernommen. Titel, Unsicherheit und Gegenbelege bleiben qualitativ. Ergänze
 keine Zahlen, Maßeinheiten oder Wirkungsbehauptungen, die der Abschnitt nicht
-trägt. Gib für jede Säule ohne Fund eine Beleglücke an und setze sie für jede
-Säule mit Fund auf null. Fasse die Evidenzlage in maximal 60 Wörtern zusammen.
+trägt. Der Scout leitet Säulenlücken und Zusammenfassung aus der Fundliste ab.
 Antworte ausschließlich im vorgegebenen JSON-Schema."""
     user = f"""{SCOUT_BLIND_QUESTION}
 
@@ -318,7 +321,7 @@ def canary():
 
     if (os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch'
             or os.environ.get('GITHUB_RUN_ATTEMPT') != '1'
-            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-passage-20261106'):
+            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-coverage-20261106'):
         raise SystemExit('Exa canary requires the first manual attempt on the review branch')
     config = json.loads(Path(__file__).with_name('config.json').read_text())
     original = Path('prior-exa')
