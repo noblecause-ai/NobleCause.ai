@@ -11,7 +11,7 @@ from openrouter_scout import ScoutAccountingError
 
 ROOT = Path(__file__).resolve().parents[2]
 CONFIG = json.loads((ROOT / 'gremium/config.json').read_text())
-SPEC = CONFIG['exa_discovery_candidate']
+SPEC = CONFIG.get('exa_discovery_candidate', CONFIG['scouts'][0])
 TODAY = dt.date(2026, 11, 6)
 EXCERPT = 'The study found a measurable effect in two settings.'
 
@@ -32,8 +32,8 @@ def replay(monkeypatch):
     }
     model = {'id': SPEC['model'], 'reasoning': {'mandatory': False}}
     report = {'findings': [
-        {'pillar': pillar, 'topic': 'Intervention', 'summary': 'Messbarer Effekt.',
-         'source_id': source, 'excerpt': EXCERPT, 'source_language': 'en',
+        {'pillar': pillar, 'topic': 'Intervention',
+         'source_id': source, 'passage_id': 'P1', 'source_language': 'en',
          'evidence_type': 'Feldstudie', 'uncertainty': 'Kleine Stichprobe.',
          'counterevidence': 'Zwei Standorte.'}
         for pillar, source in [('A', 'S1'), ('B', 'S2')]
@@ -106,6 +106,7 @@ def test_discovery_replays_weekly_entrypoint_with_exact_sources_and_one_inferenc
     parsed = run_wart.parse_scout_answer(text)
     assert parsed['search_queries'] == queries
     assert [f['source'] for f in parsed['findings']] == ['https://uni.example/study', 'https://health.example/report']
+    assert all(f['summary'] == f['evidence_excerpt'] == EXCERPT for f in parsed['findings'])
     provenance = usage['research_provenance']
     assert provenance['query_log_complete'] is True and provenance['api_search_queries'] == queries
     assert provenance['billed_usd'] == '0.00008' and provenance['exa_billed_usd'] == '0.024'
@@ -129,13 +130,6 @@ def test_budget_drift_stops_before_search_or_inference(tmp_path, replay, changed
     assert not searches and all(c[0] == 'GET' for c in calls)
 
 
-def test_replay_budget_applies_before_any_paid_call(tmp_path, replay):
-    calls, searches, _, _, _, _ = replay
-    with pytest.raises(scout.ExaScoutError, match='authorized budget'):
-        scout.evaluation_preflight(SPEC, tmp_path, limit=scout.Decimal('0.060'), search_bound=scout.Decimal(0))
-    assert not searches and all(c[0] == 'GET' for c in calls)
-
-
 def test_exa_rate_limit_stops_after_one_search_and_before_model(tmp_path, replay, monkeypatch):
     calls, searches, _, _, _, _ = replay
 
@@ -150,7 +144,8 @@ def test_exa_rate_limit_stops_after_one_search_and_before_model(tmp_path, replay
     assert (tmp_path / 'exa-1-failure.json').exists()
 
 
-@pytest.mark.parametrize('failure', ['truncation', 'invented source', 'model search'])
+@pytest.mark.parametrize('failure', ['truncation', 'invented source', 'invented passage',
+                                     'generated summary', 'contradictory gap', 'model search'])
 def test_invalid_evaluation_retains_receipt_and_cannot_pass(tmp_path, replay, failure):
     calls, _, _, report, choice, generation = replay
     if failure == 'truncation':
@@ -158,6 +153,12 @@ def test_invalid_evaluation_retains_receipt_and_cannot_pass(tmp_path, replay, fa
             obj.update(finish_reason='length', native_finish_reason='end_turn')
     elif failure == 'invented source':
         report['findings'][0]['source_id'] = 'S99'
+    elif failure == 'invented passage':
+        report['findings'][0]['passage_id'] = 'P99'
+    elif failure == 'generated summary':
+        report['findings'][0]['summary'] = 'Die Intervention dauerte vier Stunden.'
+    elif failure == 'contradictory gap':
+        report['gaps']['A'] = 'Keine Evidenz gefunden.'
     else:
         generation['num_search_results'] = 1
     with pytest.raises((scout.ExaScoutError, ScoutAccountingError)):

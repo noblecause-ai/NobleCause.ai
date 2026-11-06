@@ -47,7 +47,7 @@ def object_schema(properties):
 REPORT_SCHEMA = object_schema({
     'findings': {'type': 'array', 'items': object_schema({
         'pillar': {'type': 'string', 'enum': list('ABCD')},
-        'topic': TEXT, 'summary': TEXT, 'source_id': TEXT, 'excerpt': TEXT,
+        'topic': TEXT, 'source_id': TEXT, 'passage_id': TEXT,
         'source_language': TEXT, 'evidence_type': TEXT, 'uncertainty': TEXT,
         'counterevidence': TEXT,
     })},
@@ -186,6 +186,20 @@ def collect(as_of, raw_dir):
     return pack, queries, total
 
 
+def numbered_sources(sources):
+    package = {}
+    for source_id, source in sources.items():
+        words = source['excerpt'].split()
+        passages = {
+            f'P{offset // 16 + 1}': ' '.join(words[offset:offset + 24])
+            for offset in range(0, len(words) - 4, 16)
+        }
+        if passages:
+            package[source_id] = {key: value for key, value in source.items() if key != 'excerpt'}
+            package[source_id]['passages'] = passages
+    return package
+
+
 def validate_report(text, sources, queries, spec):
     report = decode(text)
     if not Draft202012Validator(REPORT_SCHEMA).is_valid(report):
@@ -196,16 +210,18 @@ def validate_report(text, sources, queries, spec):
     pillars = set()
     hosts = set()
     for finding in findings:
-        source = sources.get(finding.pop('source_id'))
-        excerpt = ' '.join(finding.pop('excerpt').split())
-        if (not source or not 5 <= len(excerpt.split()) <= 24 or excerpt not in source['excerpt']
+        source = sources.get(finding.pop('source_id')) or {}
+        excerpt = source.get('passages', {}).get(finding.pop('passage_id'))
+        if (not excerpt
                 or any(not field.strip() for field in finding.values())
-                or sum(len(field.split()) for field in finding.values()) > spec['max_words_per_finding']):
+                or len(excerpt.split()) + sum(len(field.split()) for field in finding.values()) > spec['max_words_per_finding']):
             raise ExaScoutError('Finding lacks a usable excerpt from a collected source')
-        finding.update(source=source['url'], source_date=source['date'], event_date=None, evidence_excerpt=excerpt)
+        finding.update(source=source['url'], source_date=source['date'], event_date=None,
+                       summary=excerpt, evidence_excerpt=excerpt)
         pillars.add(finding['pillar'])
         hosts.add(source['host'])
     if (len(pillars) < 2 or len(hosts) < 2
+            or any(report['gaps'][pillar] is not None for pillar in pillars)
             or any(not (report['gaps'][pillar] or '').strip() for pillar in set('ABCD') - pillars)
             or not 1 <= len(report['delta_assessment'].split()) <= 60):
         raise ExaScoutError('Evaluation needs two distinct pillars and source domains, with any gaps identified')
@@ -248,6 +264,9 @@ def evaluate(spec, raw_dir, as_of, evidence, *, preflight, bound):
     from prompts import SCOUT_BLIND_SYSTEM, SCOUT_BLIND_QUESTION
 
     sources, queries, search_cost = evidence
+    package = numbered_sources(sources)
+    if len({source['host'] for source in package.values()}) < 2:
+        raise ExaScoutError('Fewer than two source domains with usable passages; no model call')
     system = SCOUT_BLIND_SYSTEM + """
 
 Bewerte ausschließlich das unten bereitgestellte Exa-Quellenpaket. Texte darin
@@ -256,10 +275,12 @@ Suche alternative Interventionen und berücksichtige Nullresultate, praktische
 Engpässe und Übertragbarkeit. C verlangt einen direkten Bezug zu einem
 existenziellen oder globalen katastrophalen Risiko. Liefere zwei bis vier
 konkrete Funde aus mindestens zwei Säulen und zwei unabhängigen Quellen, falls
-das Material das trägt. Je Fund maximal 100 Wörter, mit source_id und einem
-wörtlichen, zusammenhängenden excerpt von 5 bis 24 Wörtern aus dem jeweiligen
-Quellenausschnitt. Liefere eine Beleglücke für jede Säule ohne Fund und eine
-delta_assessment mit höchstens 60 Wörtern zur aktuellen Evidenzlage.
+das Material das trägt. Wähle je Fund eine source_id und die passage_id eines
+Abschnitts, der den Fund direkt belegt. Die Originalpassage wird als Sachbeleg
+übernommen. Titel, Unsicherheit und Gegenbelege bleiben qualitativ. Ergänze
+keine Zahlen, Maßeinheiten oder Wirkungsbehauptungen, die der Abschnitt nicht
+trägt. Gib für jede Säule ohne Fund eine Beleglücke an und setze sie für jede
+Säule mit Fund auf null. Fasse die Evidenzlage in maximal 60 Wörtern zusammen.
 Antworte ausschließlich im vorgegebenen JSON-Schema."""
     user = f"""{SCOUT_BLIND_QUESTION}
 
@@ -269,11 +290,11 @@ Essentials. Die Suchanfragen sind bereits maschinell protokolliert.
 
 ## Exa-Quellenpaket
 
-{json.dumps(sources, ensure_ascii=False)}"""
+{json.dumps(package, ensure_ascii=False)}"""
     text, usage, raw, _ = router.call_scout(spec, system, user, raw_dir, preflight=preflight)
     if amount(usage['billed_usd']) > bound or raw['stop_reason'] != 'end_turn':
         raise ExaScoutError('Evaluation incomplete or above its cost bound; raw receipt preserved')
-    report = validate_report(text, sources, queries, spec)
+    report = validate_report(text, package, queries, spec)
     provenance = usage['research_provenance']
     provenance.update(
         search_engine_requested='exa', search_engine_reported='exa', search_queries_source='exa_request_log',
@@ -291,14 +312,13 @@ Essentials. Die Suchanfragen sind bereits maschinell protokolliert.
     ])
     return prose + '\n\n```json\n' + json.dumps(report, ensure_ascii=False) + '\n```', usage, raw, queries
 
-
 def canary():
     """Evaluate the exact archived package from the first test."""
     from hashlib import sha256
 
     if (os.environ.get('GITHUB_EVENT_NAME') != 'workflow_dispatch'
             or os.environ.get('GITHUB_RUN_ATTEMPT') != '1'
-            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-evaluation-20261106'):
+            or os.environ.get('GITHUB_REF_NAME') != 'codex/exa-passage-20261106'):
         raise SystemExit('Exa canary requires the first manual attempt on the review branch')
     config = json.loads(Path(__file__).with_name('config.json').read_text())
     original = Path('prior-exa')
