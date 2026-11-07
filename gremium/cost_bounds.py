@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 from council_state import digest, encoded
-from openrouter import OpenRouterError, amount, integer, worst_case_usd
+from openrouter import MODELS, OpenRouterError, amount, integer, worst_case_usd
 
 
 class MissingBound(OpenRouterError):
@@ -42,6 +42,10 @@ class InputBounds:
         expected = {**rule, 'model': spec['model']}
         if any(contract.get(k) != expected[k] for k in fields) or contract.get('covers_message_framing') is not True:
             raise MissingBound('B4: Beleg deckt Request-Hülle nicht ab')
+        if spec['model'] == MODELS['spacexai']:
+            output_limits = rule.get('verified_billed_output_limits', [])
+            if contract.get('verified_billed_output_limits', []) != output_limits:
+                raise MissingBound('B4: Groks Abrechnungsgrenzen passen nicht zum Beleg')
         if not integer(rule['max_request_bytes']) or not integer(rule['input_tokens']):
             raise MissingBound('B4: positive endliche Grenzen erforderlich')
         return rule
@@ -53,7 +57,13 @@ class InputBounds:
         return rule['input_tokens']
 
     def ceiling(self, spec, max_tokens):
-        return worst_case_usd(spec, max_tokens, self.policy(spec)['input_tokens'])
+        rule = self.policy(spec)
+        # Grok previously billed past max_tokens on this route, including reasoning.
+        if spec['model'] == MODELS['spacexai']:
+            limit = min(max_tokens, spec['openrouter']['max_output_tokens'])
+            if limit not in rule.get('verified_billed_output_limits', []):
+                raise MissingBound('B4: Groks Ausgabegrenze einschließlich Reasoning nicht belegt')
+        return worst_case_usd(spec, max_tokens, rule['input_tokens'])
 
 
 class Budget:

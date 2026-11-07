@@ -48,6 +48,8 @@ def synthetic_policies(tmp_path, specs=SPECS):
         proof = {'model':spec['model'], 'endpoint':spec['openrouter']['endpoint'],
                  'quantization':spec['openrouter']['quantization'], 'max_request_bytes':200000,
                  'input_tokens':20000, 'review_reference':'SYNTHETIC TEST ONLY', 'covers_message_framing':True}
+        if spec['model'] == openrouter.MODELS['spacexai']:
+            proof['verified_billed_output_limits'] = [4096, 16384]
         p=tmp_path/f"synthetic-{spec['family']}.json"
         p.write_bytes(state.encoded(proof))
         policies[spec['model']]={**proof,'basis':'reviewed_provider_envelope','evidence_path':p.name,
@@ -259,6 +261,21 @@ def test_missing_bound_and_changed_evidence_block_before_call(tmp_path):
     with pytest.raises(cost_bounds.MissingBound):bound.tokens(SPECS[0],request)
 
 
+def test_debate_cannot_spend_closure_credit_from_account(tmp_path, monkeypatch):
+    spec = SPECS[0]
+    raw = tmp_path / 'raw'
+    raw.mkdir()
+    bounds = cost_bounds.InputBounds(synthetic_policies(tmp_path), tmp_path)
+    calls = stub_http(monkeypatch, spec)
+    monkeypatch.setattr(openrouter, 'account_credit_remaining', lambda: openrouter.amount('.50'))
+    runner = live_session.Calls(raw, state.Events(tmp_path/'events.json', 'reserve'),
+                                cost_bounds.Budget(10, bounds), openrouter.amount('.85'))
+    with pytest.raises(cost_bounds.InsufficientBudget, match='Abschlussreserve'):
+        runner.run(spec, 's', 'u', 'debate', 'speech-0', 2000, [(spec, 2000)])
+    assert all(method != 'POST' for method, *_ in calls)
+    assert not list(raw.iterdir())
+
+
 def test_cached_calls_never_repeat_inference_and_reject_changed_request(tmp_path,monkeypatch):
     policies=synthetic_policies(tmp_path)
     bound=cost_bounds.InputBounds(policies,tmp_path)
@@ -318,7 +335,10 @@ def setup_run(tmp_path,monkeypatch):
                          question='Testfrage',title='Testtitel',budget_cap=15)
     monkeypatch.setattr(live_session,'load_env',lambda *a:None)
     monkeypatch.setattr(live_session,'require_keys',lambda *a:None)
-    monkeypatch.setattr(openrouter,'preflight',lambda *a:None)
+    monkeypatch.setattr(openrouter,'preflight',lambda *a,**kw:None)
+    import openrouter_scout
+    monkeypatch.setattr(openrouter_scout, 'key_state', lambda: {'limit_remaining': '50'})
+    monkeypatch.setattr(openrouter, 'account_credit_remaining', lambda: openrouter.amount('50'))
     monkeypatch.setattr(live_session,'Calls',FakeCalls)
     return cfg,args
 
@@ -382,6 +402,18 @@ def test_regular_policy_is_archived_in_start_event_without_changing_prompt(tmp_p
     assert '180 Wörter' in record['prompts']['speech']
     args.resume=True
     assert live_session.run(tmp_path,cfg,args)==record
+
+
+@pytest.mark.parametrize('observe', [False, True])
+def test_regular_session_rejects_insufficient_budget_or_observe_before_network(tmp_path, monkeypatch, observe):
+    cfg, args = setup_run(tmp_path, monkeypatch)
+    args.regular_operation = True
+    args.observe_costs = observe
+    args.budget_cap = 1
+    monkeypatch.setattr(openrouter, 'preflight', lambda *a, **kw: pytest.fail('Network reached'))
+    with pytest.raises((cost_bounds.InsufficientBudget, ValueError), match='[Bb]udget'):
+        live_session.run(tmp_path, cfg, args)
+    assert not (tmp_path / 'runs/test').exists()
 
 
 def test_failed_final_validation_never_writes_success_record(tmp_path,monkeypatch):
@@ -457,7 +489,7 @@ def test_complete_transport_resume_after_paid_reply_without_double_charge(tmp_pa
     if observe:
         cfg['live_council']['input_bounds']={}
     monkeypatch.setattr(live_session,'Calls',real_calls)
-    monkeypatch.setattr(openrouter,'endpoint_preflight',metadata)
+    monkeypatch.setattr(openrouter,'endpoint_preflight',lambda spec, **kw: metadata(spec))
     generator=FakeCalls(); generations={}; posted=[]; counters={}
     def http(method,path,payload=None):
         if path=='/key':return b'{"data":{"limit":10,"limit_remaining":10,"limit_reset":null}}'

@@ -6,6 +6,8 @@ import prompts
 from ballot_status import CONTRACT, read_decision
 from cost_bounds import InsufficientBudget
 
+CONTRIBUTIONS_PER_MEMBER = 2
+
 CHAIR_SYSTEM = prompts.SYSTEM + '''\n\n## Dein Auftrag: Vorsitz und Wortvergabe
 
 Du führst als stimmberechtigtes Ratsmitglied den Vorsitz. Wähle aus der
@@ -95,11 +97,27 @@ def transcript(events):
     )
 
 
+def closure_calls(models, chair, limits):
+    return [(m, limits['final']) for m in models] + [(chair, limits['summary'])]
+
+
+def session_budget(models, chair, limits, bounds):
+    """Quote the full agenda at the reviewed limits, including its protected closure."""
+    initial = sum(bounds.ceiling(m, limits['initial']) for m in models)
+    closure = sum(bounds.ceiling(m, n) for m, n in closure_calls(models, chair, limits))
+    debate = CONTRIBUTIONS_PER_MEMBER * (
+        len(models) * bounds.ceiling(chair, limits['chair'])
+        + sum(bounds.ceiling(m, limits['debate']) for m in models)
+    )
+    return {'initial_usd': initial, 'debate_usd': debate, 'closure_usd': closure,
+            'total_usd': initial + debate + closure}
+
+
 def conduct(models, chair, context, system, caller, events, limits, *, stop_after_first=False, speech_amendment=None):
     """caller.run performs/replays one evidenced call and records actual cost."""
     import run_session as session
     ids = [m['model'] for m in models]
-    closure = [(m, limits['final']) for m in models] + [(chair, limits['summary'])]
+    closure = closure_calls(models, chair, limits)
     initial_prompt = context + '\n\n' + prompts.LIVE_INITIAL_TASK
     initial = []
     for i, spec in enumerate(models):
@@ -121,7 +139,7 @@ def conduct(models, chair, context, system, caller, events, limits, *, stop_afte
     counts = dict.fromkeys(ids, 0)
     contributions = []
     closed_reason = 'ten_contributions'
-    for turn in range(10):
+    for turn in range(CONTRIBUTIONS_PER_MEMBER * len(models)):
         allowed = [m for m in ids if counts[m] == min(counts.values())]
         prompt = context + '\n\n## Gespräch\n' + transcript(visible)
         prompt += '\n\nZulässige nächste Redner: ' + json.dumps(allowed, ensure_ascii=False)

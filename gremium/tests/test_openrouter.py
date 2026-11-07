@@ -207,6 +207,23 @@ def test_price_increase_and_no_budget_are_write_free(tmp_path,monkeypatch):
     assert not any(c[0]=='POST' for c in calls)
 
 
+@pytest.mark.parametrize(('prices', 'message'), [
+    ({'input_cache_write': '0.000014'}, 'outside the bounded billing contract'),
+    ({'overrides': [{'min_prompt_tokens': 10000}]}, 'unbudgeted long-context tariff'),
+])
+def test_bounded_astra_checks_cache_and_tariff_tiers_before_inference(tmp_path, monkeypatch, prices, message):
+    spec = SPECS[1]
+    ep = metadata(spec)
+    ep['pricing'].update(prices)
+    calls = stub_http(monkeypatch, spec, endpoint=ep)
+    assert adapter.worst_case_usd(spec, 100, 10000) == adapter.amount('0.143')
+    with pytest.raises(adapter.OpenRouterError, match=message):
+        adapter.call(spec, 's', 'u', 100, tmp_path, 'r1',
+                     spent_eur=0, cap_eur=15, fx=.85, input_bound=10000)
+    assert not any(c[0] == 'POST' for c in calls)
+    assert not list(tmp_path.iterdir())
+
+
 @pytest.mark.parametrize('old_completion', [10.95, 13, 14])
 def test_kimi_tariff_change_reports_exact_reason_without_inference(tmp_path, monkeypatch, old_completion):
     config = json.loads((ROOT/'gremium/config.json').read_text())

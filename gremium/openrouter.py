@@ -156,7 +156,7 @@ def structured_format(spec):
     return fmt
 
 
-def endpoint_preflight(spec):
+def endpoint_preflight(spec, *, input_bound=None):
     cfg = contract(spec)
     model = spec['model']
     catalog = decode(http('GET', '/models'))['data']
@@ -198,21 +198,39 @@ def endpoint_preflight(spec):
     # No additional per-call/tool/media charge may escape our bound.
     if any(amount(prices[k]) for k in ('request', 'image', 'audio') if k in prices):
         raise OpenRouterError('Unsupported additional charge')
+    if input_bound is not None:
+        prompt_max = ep.get('max_prompt_tokens')
+        if prompt_max is not None and input_bound > integer(prompt_max):
+            raise OpenRouterError('Proven input envelope exceeds endpoint input limit')
+        if any(input_bound >= integer(tier.get('min_prompt_tokens')) for tier in (prices.get('overrides') or [])):
+            raise OpenRouterError('Proven input envelope reaches an unbudgeted long-context tariff')
+        # Anthropic cache writes are opt-in and this text-only route sets no breakpoint.
+        auto_write = prices.get('input_cache_write', 0) if spec['family'] != 'anthropic' else 0
+        if (max(amount(auto_write), amount(prices.get('input_cache_read', 0))) * 1_000_000 > bounded_input_rate(spec)
+                or amount(prices.get('internal_reasoning', 0))):
+            raise OpenRouterError('Endpoint has a tariff outside the bounded billing contract')
     return {**ep, 'canonical_model': candidates[0].get('canonical_slug') or model}
 
 
-def preflight(specs):
+def account_credit_remaining():
+    credit = decode(http('GET', '/credits'))['data']
+    return amount(credit['total_credits']) - amount(credit['total_usage'])
+
+
+def preflight(specs, *, input_bounds=None):
     active = [s for s in specs if s.get('transport') == 'openrouter_api']
     if not active:
         return
     key = decode(http('GET', '/key'))['data']
-    credit = decode(http('GET', '/credits'))['data']
-    if amount(credit['total_credits']) <= amount(credit['total_usage']):
+    if account_credit_remaining() <= 0:
         raise OpenRouterError('No account credit')
     if key.get('limit') is not None and amount(key.get('limit_remaining')) <= 0:
         raise OpenRouterError('No key credit remaining')
     for spec in active:
-        endpoint_preflight(spec)
+        if input_bounds is None:
+            endpoint_preflight(spec)
+        else:
+            endpoint_preflight(spec, input_bound=input_bounds.policy(spec)['input_tokens'])
 
 
 def request_for(spec, system, user, max_tokens):
@@ -239,16 +257,23 @@ def request_for(spec, system, user, max_tokens):
     return request
 
 
+def bounded_input_rate(spec):
+    rate = amount(contract(spec)['max_price']['prompt'])
+    # Astra's automatic cache writes can bill a prompt token at 1.25x the base rate.
+    return rate * Decimal('1.25') if spec['model'] == MODELS['openai'] else rate
+
+
 def worst_case_usd(spec, max_tokens, input_bound=None):
     cfg = contract(spec)
     # Reserve the FULL advertised context: no guessed local tokenizer or char/token
     # estimate can silently under-reserve. This is deliberately conservative.
     # max_price rejects expensive long-context tiers instead of widening the cap.
     tokens = cfg['context_length'] if input_bound is None else integer(input_bound)
-    if tokens > cfg['context_length']:
-        raise OpenRouterError('Input bound exceeds context contract')
-    return (Decimal(tokens) * amount(cfg['max_price']['prompt']) +
-            Decimal(min(max_tokens, cfg['max_output_tokens'])) * amount(cfg['max_price']['completion'])) / 1_000_000
+    output = min(max_tokens, cfg['max_output_tokens'])
+    if input_bound is not None and tokens + output > cfg['context_length']:
+        raise OpenRouterError('Input and output bounds exceed context contract')
+    rate = bounded_input_rate(spec) if input_bound is not None else amount(cfg['max_price']['prompt'])
+    return (Decimal(tokens) * rate + Decimal(output) * amount(cfg['max_price']['completion'])) / 1_000_000
 
 
 def reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound=None):
@@ -362,7 +387,7 @@ def call(spec, system, user, max_tokens, raw_dir, tag, *, spent_eur, cap_eur, fx
             raise OpenRouterError('Abgerechnetes Testbudget erreicht; kein Folgeaufruf')
     else:
         reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound)
-    endpoint = endpoint_preflight(spec)
+    endpoint = endpoint_preflight(spec) if input_bound is None else endpoint_preflight(spec, input_bound=input_bound)
     stem = f'{tag}-{spec["family"]}'
     paths = {k: raw_dir / f'{stem}-{k}.json' for k in ('request', 'response', 'generation', 'endpoint', 'result')}
     if any(p.exists() for p in paths.values()):
@@ -400,11 +425,11 @@ def call(spec, system, user, max_tokens, raw_dir, tag, *, spent_eur, cap_eur, fx
         save('generation', generation_raw)
         text, usage = validate_response(spec, response, decode(generation_raw), endpoint.get('canonical_model'))
         if (input_bound is not None and usage['input_tokens'] > input_bound) or (not observe_costs and usage['output_tokens'] > min(max_tokens, spec['openrouter']['max_output_tokens'])):
-            raise OpenRouterError('Billed tokens exceeded proven bound; stop')
+            raise OpenRouterError('Billed tokens exceeded proven bound; stop', usage=usage)
         if observe_costs and usage['output_tokens'] > min(max_tokens, spec['openrouter']['max_output_tokens']):
             usage['provenance']['output_limit_observation'] = {'requested': max_tokens, 'billed': usage['output_tokens']}
         if not observe_costs and amount(usage['billed_usd']) > worst_case_usd(spec, max_tokens, input_bound):
-            raise OpenRouterError('Billed cost exceeded reserved bound; stop')
+            raise OpenRouterError('Billed cost exceeded reserved bound; stop', usage=usage)
         usage['provenance']['raw_artifact'] = 'raw/' + paths['response'].name
         usage['provenance']['generation_artifact'] = 'raw/' + paths['generation'].name
         save('result', json.dumps({'outcome': 'valid', **usage}, ensure_ascii=False, default=float).encode())

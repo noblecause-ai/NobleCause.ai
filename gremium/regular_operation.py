@@ -15,6 +15,7 @@ import subprocess
 import sys
 
 from council_state import atomic_write, chair_for, encoded
+from cost_bounds import InputBounds, InsufficientBudget, MissingBound
 from process_config import configured_scouts, feature_enabled
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -82,8 +83,12 @@ def plan(root, config, kind, now=None, *, reserved=False):
         sid = timestamp(due).date().isoformat() + '-regular'
         if (root/'sessions'/sid).exists():
             raise RuntimeError('Fällige Sitzung hat bereits Artefakte; keine automatische Wiederholung')
+        from live_debate import session_budget
+        from live_session import dossier_context, settings
+        cfg = settings(config)
+        bounds = InputBounds(cfg.get('input_bounds', {}), root)
+        budget = session_budget(cfg['models'], chair, cfg['output_limits'], bounds)
         candidates = []
-        from live_session import dossier_context
         for path in (root/'journal').glob('*/entry.json'):
             entry = json.loads(path.read_text())
             if entry.get('research_mode') != 'blind_then_compare':
@@ -96,7 +101,8 @@ def plan(root, config, kind, now=None, *, reserved=False):
         if not candidates:
             raise RuntimeError('Kein höchstens sieben Tage altes, vollständiges Drei-Scout-Dossier verfügbar')
         date, dossier = max(candidates, key=lambda row:(row[0],str(row[1])))
-        result.update(session_id=sid, dossier=str(dossier.relative_to(root)), research_date=date)
+        result.update(session_id=sid, dossier=str(dossier.relative_to(root)), research_date=date,
+                      budget={name: str(value) for name, value in budget.items()})
     return result
 
 
@@ -113,7 +119,10 @@ def inspect_plan(root, config, kind):
                 'blocked': state.get('blocked'), 'inflight': state.get('inflight')}
     if kind == 'session' and state.get('session_hold'):
         return {'kind': kind, 'ready': False, 'status': 'held', 'session_hold': state['session_hold']}
-    return plan(root, config, kind)
+    try:
+        return plan(root, config, kind)
+    except MissingBound as exc:
+        return {'kind': kind, 'ready': False, 'status': 'held', 'budget_hold': str(exc)}
 
 
 def reserve(root, task):
@@ -149,16 +158,21 @@ def block(root, kind, error_type):
 
 def execute(root, config, task):
     """Existing adapters remain the only route to paid calls."""
+    import openrouter
     import openrouter_scout
     root = Path(root)
     policy = configuration(config)
-    cap = openrouter_scout.amount(openrouter_scout.key_state()['limit_remaining']) * openrouter_scout.amount(config['fx_rate_usd_eur'])
+    remaining = openrouter.amount(openrouter_scout.key_state()['limit_remaining'])
+    fx = openrouter.amount(config['fx_rate_usd_eur'])
     base = [sys.executable]
     if task['kind'] == 'research':
-        command = base + [str(root/'gremium/run_wart.py'), '--date', task['date'], '--observe-costs', '--budget-cap', str(cap)]
+        command = base + [str(root/'gremium/run_wart.py'), '--date', task['date'], '--observe-costs', '--budget-cap', str(remaining * fx)]
     else:
+        required = openrouter.amount(task['budget']['total_usd'])
+        if required > min(remaining, openrouter.account_credit_remaining()):
+            raise InsufficientBudget('Verfügbares Guthaben deckt die vollständige Sitzung nicht')
         command = base + [str(root/'gremium/run_session.py'), '--live-council', '--public-session',
-            '--regular-operation', '--observe-costs', '--budget-cap',str(cap),
+            '--regular-operation', '--budget-cap',str(required * fx),
             '--question',policy['question'],'--title',policy['title'], '--session-id',task['session_id'],
             '--dossier-json',str(root/task['dossier']), '--live-feed-dir',str(root/'.automation/live'),
             '--live-feed-ssh','noblecause@185.143.100.222']
@@ -186,10 +200,12 @@ def main(argv=None):
     print(json.dumps(task,ensure_ascii=False),flush=True)
     if task.get('status') == 'held' and os.environ.get('GITHUB_STEP_SUMMARY'):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
-            stream.write('## Regelbetrieb weiterhin angehalten\n\n'
-                         'Die bestehende Laufreservierung oder Betriebssperre bleibt aktiv. '
-                         'Dieser Fälligkeitscheck startet keine Modelle und erteilt keine '
-                         'Produktionsfreigabe. Der ursprüngliche Betriebsalarm bleibt offen.\n')
+            if task.get('budget_hold'):
+                stream.write('## Sitzungsbudget noch nicht belegt\n\n' + task['budget_hold'] + '\n')
+            else:
+                stream.write('## Regelbetrieb weiterhin angehalten\n\n'
+                             'Die bestehende Laufreservierung oder Betriebssperre bleibt aktiv. '
+                             'Der ursprüngliche Betriebsalarm bleibt offen.\n')
     if os.environ.get('GITHUB_OUTPUT'):
         with open(os.environ['GITHUB_OUTPUT'],'a') as stream:
             stream.write('ready=' + str(task['ready']).lower() + '\n')

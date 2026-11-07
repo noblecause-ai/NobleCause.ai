@@ -68,36 +68,46 @@ def main():
     if '--live-council' in sys.argv or feature_enabled(config, 'live_council'):
         import openrouter
         from cost_bounds import InputBounds
+        from council_state import chair_for
         from envtools import load_env, require_keys
+        from live_debate import chair_response_format, session_budget
         from live_session import settings
         cfg = settings(config)
-        observe = (config.get('regular_operation') or {}).get('cost_mode') == 'observe'
+        weekly = '--weekly' in sys.argv
+        bounded_session = '--session-budget' in sys.argv
+        if weekly and bounded_session:
+            sys.exit('Sitzungsbudget und Wochenlauf benötigen getrennte Prüfungen.')
+        observe = not bounded_session and (config.get('regular_operation') or {}).get('cost_mode') == 'observe'
+        bounds = None
         if not observe:
             bounds = InputBounds(cfg.get('input_bounds', {}), HERE.parent)
             for spec in cfg['models']:
                 bounds.policy(spec)
+        chair = None
+        if weekly or bounded_session:
+            chair, _ = chair_for(config, json.loads((HERE.parent/'schedule.json').read_text()))
+        budget = session_budget(cfg['models'], chair, cfg['output_limits'], bounds) if bounded_session else None
+        seats = [chair] if weekly else cfg['models']
         load_env(HERE, HERE.parent)
         require_keys('OPENROUTER_API_KEY')
-        from council_state import chair_for
-        weekly = '--weekly' in sys.argv
-        seats = [chair_for(config,json.loads((HERE.parent/'schedule.json').read_text()))[0]] if weekly else cfg['models']
         import openrouter_scout
         from process_config import configured_scouts
-        from live_debate import chair_response_format
         key = openrouter_scout.key_state()
         print(f"OpenRouter-Key: {key['limit_remaining']} Credits verbleiben; Limit {key['limit']}, ohne Rücksetzung.")
         if os.environ.get('GITHUB_OUTPUT'):
             with open(os.environ['GITHUB_OUTPUT'],'a') as output:
                 output.write(f"remaining={key['limit_remaining']}\nlow_budget={'true' if openrouter.amount(key['limit_remaining']) < 10 else 'false'}\n")
-        credit = openrouter.decode(openrouter.http('GET','/credits'))['data']
-        if openrouter.amount(credit['total_credits']) <= openrouter.amount(credit['total_usage']):
+        credit = openrouter.account_credit_remaining()
+        if credit <= 0:
             raise openrouter.OpenRouterError('Kein Kontoguthaben')
         errors = []
         for spec in seats:
             try:
-                openrouter.endpoint_preflight(spec)
+                input_bound = bounds.policy(spec)['input_tokens'] if bounds else None
+                openrouter.endpoint_preflight(spec, input_bound=input_bound)
                 openrouter.endpoint_preflight({**spec, 'response_format':chair_response_format([m['model'] for m in cfg['models']]),
-                    'openrouter':{**spec['openrouter'],'reasoning_effort':spec['chair_reasoning_effort']}})
+                    'openrouter':{**spec['openrouter'],'reasoning_effort':spec['chair_reasoning_effort']}},
+                    input_bound=input_bound)
                 print(f"Rat/Vorsitz: {spec['model']} · {spec['openrouter']['endpoint']} OK")
             except openrouter.OpenRouterError as exc:
                 errors.append(f"{spec['model']} · {spec['openrouter']['endpoint']}: {exc}")
@@ -113,12 +123,20 @@ def main():
             except ValueError as exc:
                 errors.append(f"Scout {scout['model']}: {exc}")
         print('Anschlussprüfung abgeschlossen; keine Inferenz.')
-        if observe:
-            print('Kostenbeobachtung aktiv: kein belegter Input-Bound und keine Abschlussreserve; Key-Limit bleibt unverändert.')
+        if weekly and observe:
+            print('Wochenrecherche im Modus Kostenbeobachtung. Das Key-Limit bleibt unverändert.')
         if openrouter.amount(key['limit_remaining']) < 10:
             print('::warning::Weniger als 10 Credits verfügbar; Budget vor dem nächsten Sitzungszyklus prüfen.')
         if errors:
             sys.exit('\n'.join(errors))
+        if budget:
+            funded = min(openrouter.amount(key['limit_remaining']), credit) >= budget['total_usd']
+            print(f"Sitzung {budget['total_usd']} Credits einschließlich {budget['closure_usd']} Abschlussreserve.")
+            if not funded:
+                print('::warning::Verfügbares Guthaben deckt die vollständige Sitzung nicht. Keine Reservierung.')
+            if os.environ.get('GITHUB_OUTPUT'):
+                with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+                    output.write(f"session_budget_ready={str(funded).lower()}\n")
         return
     results = {}
     for name, key_env, ping in PROVIDERS:

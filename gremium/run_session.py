@@ -971,7 +971,7 @@ def main():
         action="store_true",
         help="Gründungssitzung: Wart eröffnet, moderiert, schreibt Kurzfassung (impliziert --with-dossier)",
     )
-    parser.add_argument("--budget-cap", type=float, default=15.0)
+    parser.add_argument("--budget-cap", default="15.0")
     parser.add_argument('--live-council', action='store_true', help='Verfahren 0.6; ohne --public-session bleibt der Lauf ein Pilot')
     parser.add_argument('--observe-costs', action='store_true', help='Belegte Ist-Kosten beobachten, ohne Input-Bound/Abschlussreserve; Key-Limit bleibt')
     parser.add_argument('--stop-after-first', action='store_true', help='Pilot nach erstem gültigen Erstvotum pausieren; mit --resume weiterverwenden')
@@ -985,7 +985,12 @@ def main():
     parser.add_argument('--speech-limit-amendment', help='Sitzungsgebundener Verfahrensnachtrag für eine ausdrücklich erlaubte Wiederaufnahme')
     parser.add_argument('--regular-operation', action='store_true', help='Freigegebene Regelbetriebs-Redetoleranz im neuen Rekord ausweisen')
     args = parser.parse_args()
-    if not math.isfinite(args.budget_cap) or args.budget_cap < 0:
+    try:
+        budget_cap = openrouter.amount(args.budget_cap)
+    except openrouter.OpenRouterError:
+        parser.error("--budget-cap muss endlich und nicht negativ sein")
+    args.budget_cap = budget_cap if args.regular_operation else float(budget_cap)
+    if not args.regular_operation and not math.isfinite(args.budget_cap):
         parser.error("--budget-cap muss endlich und nicht negativ sein")
     if args.observe_costs and not args.live_council:
         parser.error('--observe-costs benötigt --live-council')

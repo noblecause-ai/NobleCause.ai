@@ -6,10 +6,10 @@ from pathlib import Path
 import openrouter
 import prompts
 from ballot_status import CONTRACT
-from cost_bounds import Budget, InputBounds
+from cost_bounds import Budget, InputBounds, InsufficientBudget
 from council_state import VERSION, Events, atomic_write, chair_for, digest, encoded, process_lock, validate_record
 from envtools import load_env, require_keys
-from live_debate import CHAIR_SYSTEM, FINAL_TASK, SPEECH_TASK, SUMMARY_TASK, chair_response_format, conduct
+from live_debate import CHAIR_SYSTEM, FINAL_TASK, SPEECH_TASK, SUMMARY_TASK, chair_response_format, conduct, session_budget
 
 
 def revalidate_saved_call(directory, spec, step, reason, *, delayed_generation=None):
@@ -101,8 +101,10 @@ class Calls:
             if (key.get('limit_reset') is not None or key.get('limit') is None
                     or openrouter.amount(key['limit_remaining']) <= 0):
                 raise openrouter.OpenRouterError('Finanziertes, nicht zurückgesetztes Key-Limit erforderlich')
-            if not self.budget.observe and openrouter.amount(key['limit_remaining']) < openrouter.worst_case_usd(spec, limit, tokens) + reserve:
-                raise openrouter.OpenRouterError('Key-Limit deckt Aufruf und Abschlussreserve nicht')
+            if not self.budget.observe:
+                available = min(openrouter.amount(key['limit_remaining']), openrouter.account_credit_remaining())
+                if available < openrouter.worst_case_usd(spec, limit, tokens) + reserve:
+                    raise InsufficientBudget('Verfügbares Guthaben deckt Aufruf und Abschlussreserve nicht')
             self.events.once('waiting-' + step, 'waiting', phase, model=spec['model'],
                              role='chair' if step.startswith(('chair-', 'summary')) else 'member',
                              data={'cost_mode':'observe' if self.budget.observe else 'bounded', 'input_bound': tokens,
@@ -224,7 +226,8 @@ def run(root, config, args):
     output = root / 'sessions' if public else (Path(args.output_dir) if args.output_dir else root / '.review/live-sessions')
     output = output.resolve() / args.session_id
     speech_amendment = None
-    if getattr(args, 'regular_operation', False):
+    regular = getattr(args, 'regular_operation', False)
+    if regular:
         from regular_operation import configuration
         policy = configuration(config)['speech_policy']
         speech_amendment = {**policy, 'sha256':digest(policy), 'path':'speech-policy.json'}
@@ -249,6 +252,8 @@ def run(root, config, args):
         today = json.loads((output/'run-input.json').read_text())['date']
     context, research_bytes, research_info, number, history_bytes = dossier_context(root, config, args.dossier_json, today)
     observe = getattr(args, 'observe_costs', False)
+    if regular and observe:
+        raise ValueError('Reguläre Ratssitzung benötigt ein begrenztes Budget mit Abschlussreserve')
     bounds = InputBounds(cfg.get('input_bounds', {}), root)
     if not observe:
         for spec in cfg['models']:
@@ -257,17 +262,27 @@ def run(root, config, args):
     if fx <= 0:
         raise ValueError('Positiver Wechselkurs erforderlich')
     budget = Budget(openrouter.amount(args.budget_cap) / fx, bounds, observe=observe)
-    load_env(root / 'gremium', root)
-    require_keys('OPENROUTER_API_KEY')
-    openrouter.preflight(cfg['models'])
     with process_lock(root):
         schedule = json.loads((root / 'schedule.json').read_text())
         if public and (schedule.get('regular_operation') or {}).get('session_hold'):
             raise RuntimeError('Ratssitzungen bleiben bis zur Tarif- und Budgetfreigabe gesperrt')
         chair, index = chair_for(config, schedule)
+        if regular:
+            quote = session_budget(cfg['models'], chair, cfg['output_limits'], bounds)
+            if budget.cap < quote['total_usd']:
+                raise InsufficientBudget('Sitzungsbudget deckt die vollständige Sitzung nicht')
+        load_env(root / 'gremium', root)
+        require_keys('OPENROUTER_API_KEY')
+        openrouter.preflight(cfg['models'], input_bounds=bounds if not observe else None)
+        if regular:
+            from openrouter_scout import key_state
+            available = min(openrouter.amount(key_state()['limit_remaining']), openrouter.account_credit_remaining())
+            if available < quote['total_usd']:
+                raise InsufficientBudget('Verfügbares Guthaben deckt die vollständige Sitzung nicht')
         moderation_format = chair_response_format([m['model'] for m in cfg['models']])
         openrouter.preflight([{**chair, 'response_format':moderation_format,
-            'openrouter':{**chair['openrouter'], 'reasoning_effort':chair['chair_reasoning_effort']}}])
+            'openrouter':{**chair['openrouter'], 'reasoning_effort':chair['chair_reasoning_effort']}}],
+            input_bounds=bounds if not observe else None)
         descriptor = {'id':args.session_id, 'question':args.question, 'title':args.title, 'date':today,
                       'chair':{'model':chair['model'],'rotation_index':index}, 'config':cfg,
                       'research':research_info, 'budget_cap_eur':str(args.budget_cap), 'fx':str(fx),

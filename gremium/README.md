@@ -16,7 +16,16 @@ Die GitHub-Workflows `wart.yml` und `session.yml` verwenden gemeinsam
 prüft lokal nur den Zeitplan; ein Actions-Dispatch mit `check_only` prüft zusätzlich
 OpenRouter und den SSH-Publisher, ohne Inferenz. Bezahlte automatische Läufe
 reservieren ihren GitHub-Laufversuch vorab im Repository. Der Modus
-`--observe-costs` ist freigegeben; das vorhandene OpenRouter-Key-Limit bleibt.
+`--observe-costs` gilt für die Wochenrecherche. Reguläre Ratssitzungen brauchen
+geprüfte Eingabegrenzen und Guthaben für den vollständigen Ablauf. Vor jedem
+Debattenaufruf sichert der Budgetwächter die fünf Schlussvoten und die
+Zusammenfassung. Das OpenRouter-Key-Limit bleibt der externe Ausgabenrahmen.
+Die unter `live_council.input_bounds` hinterlegten Nachweise müssen die
+abgerechneten Eingabetokens einschließlich Anbieter- und Gateway-Rahmung auf
+der festgelegten Route begrenzen. Groks Nachweis muss zusätzlich für die
+verwendeten Ausgabelimits zeigen, dass diese die abgerechneten Denktokens
+einschließen. Ein früherer [Abrechnungsbeleg](../commissions/2026-09-21/raw/order-spacexai-generation.json)
+zeigt eine Überschreitung des angeforderten Limits.
 
 Der Exa-Entdeckungs-Scout braucht das Actions-Secret `EXA_API_KEY` eines
 Exa-Starter-Kontos. Er führt je Lauf höchstens sechs Lite-Suchen mit je drei
