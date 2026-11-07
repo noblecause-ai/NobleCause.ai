@@ -130,6 +130,7 @@ def test_session_preflight_exposes_funding_gate_without_inference(root, config, 
 
 
 def test_due_session_without_proof_is_held_before_reservation(root, config):
+    config['live_council']['input_bounds'] = {}
     reschedule(root, next_session='2026-09-21T12:00:00Z')
     with pytest.raises(operation.MissingBound):
         operation.plan(root, config, 'session')

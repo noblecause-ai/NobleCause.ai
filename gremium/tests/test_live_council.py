@@ -481,13 +481,17 @@ def test_weekly_native_refusal_is_preserved_not_a_false_decision(tmp_path,monkey
     assert path.read_bytes()==raw
 
 
-@pytest.mark.parametrize('observe',[False,True])
-def test_complete_transport_resume_after_paid_reply_without_double_charge(tmp_path,monkeypatch,observe):
+@pytest.mark.parametrize('mode',['bounded','observe','operational'])
+def test_complete_transport_resume_after_paid_reply_without_double_charge(tmp_path,monkeypatch,mode):
+    observe = mode == 'observe'
     real_calls=live_session.Calls
     cfg,args=setup_run(tmp_path,monkeypatch)
     args.observe_costs=observe
     if observe:
         cfg['live_council']['input_bounds']={}
+    elif mode == 'operational':
+        cfg['live_council']['input_bounds'] = json.loads((ROOT/'gremium/config.json').read_text())['live_council']['input_bounds']
+        args.regular_operation = True
     monkeypatch.setattr(live_session,'Calls',real_calls)
     monkeypatch.setattr(openrouter,'endpoint_preflight',lambda spec, **kw: metadata(spec))
     generator=FakeCalls(); generations={}; posted=[]; counters={}
@@ -547,7 +551,7 @@ def test_complete_transport_resume_after_paid_reply_without_double_charge(tmp_pa
     costs=json.loads((tmp_path/'runs/test/costs-live.json').read_text())
     assert sum(t['calls'] for t in costs['totals_by_model'])==31
     assert costs['total_usd']==str(openrouter.amount('.002')*31)
-    assert record['cost_mode']==('observe' if observe else 'bounded')
+    assert record['cost_mode']==mode
     moderation=[c for c in costs['totals_by_model_role'] if c['role']=='moderation']
     assert len(moderation)==1 and moderation[0]['calls']==10
     assert sum(c['calls'] for c in costs['totals_by_model_role'])==31

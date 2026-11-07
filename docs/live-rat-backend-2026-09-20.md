@@ -1,5 +1,11 @@
 # Live-Rat 0.6 — Backend-Abnahme, 20.09.2026
 
+**B4-Nachtrag vom 07.11.2026.** Der Steward hat eigene konservative
+Betriebsgrenzen mit Sicherheitsaufschlägen und akzeptiertem Abrechnungsrisiko
+beauftragt. Die aktuelle Umsetzung und Kalibrierung stehen in der
+[Betriebsdokumentation](../gremium/README.md). Die folgenden Anforderungen an
+Anbieternachweise dokumentieren den früheren Abnahmestand.
+
 **Nachfolgender Steward-Entscheid:** Der erste bezahlte Pilot ist inzwischen
 mit [Kostenbeobachtung ohne Eingabegrenze](live-rat-kostenbeobachtung-2026-09-20.md)
 beauftragt. Die unten genannte B4-Sperre beschreibt den ursprünglichen

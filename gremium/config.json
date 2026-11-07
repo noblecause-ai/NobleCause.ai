@@ -293,7 +293,58 @@
 			"summary": 4096,
 			"weekly": 4096
 		},
-		"input_bounds": {},
+		"input_bounds": {
+			"anthropic/claude-fable-5.1": {
+				"basis": "operational_limits",
+				"endpoint": "anthropic",
+				"quantization": "unknown",
+				"risk_accepted": true,
+				"review_reference": "Steward-Freigabe 2026-11-07, eigene B4-Betriebsgrenzen mit akzeptiertem Restrisiko",
+				"max_request_bytes": 150000,
+				"input_tokens": 60000,
+				"output_margin_percent": 0
+			},
+			"openai/gpt-6-astra": {
+				"basis": "operational_limits",
+				"endpoint": "azure/us",
+				"quantization": "unknown",
+				"risk_accepted": true,
+				"review_reference": "Steward-Freigabe 2026-11-07, eigene B4-Betriebsgrenzen mit akzeptiertem Restrisiko",
+				"max_request_bytes": 150000,
+				"input_tokens": 33000,
+				"output_margin_percent": 0
+			},
+			"x-ai/grok-4.6": {
+				"basis": "operational_limits",
+				"endpoint": "xai/zdr",
+				"quantization": "unknown",
+				"risk_accepted": true,
+				"review_reference": "Steward-Freigabe 2026-11-07, eigene B4-Betriebsgrenzen mit akzeptiertem Restrisiko",
+				"max_request_bytes": 150000,
+				"input_tokens": 33000,
+				"output_margin_percent": 50
+			},
+			"moonshotai/kimi-k3": {
+				"basis": "operational_limits",
+				"endpoint": "inference-net/fp4",
+				"quantization": "fp4",
+				"risk_accepted": true,
+				"review_reference": "Steward-Freigabe 2026-11-07, eigene B4-Betriebsgrenzen mit akzeptiertem Restrisiko",
+				"max_request_bytes": 150000,
+				"input_tokens": 40000,
+				"output_margin_percent": 0
+			},
+			"z-ai/glm-5.3": {
+				"basis": "operational_limits",
+				"endpoint": "baidu/fp8",
+				"quantization": "fp8",
+				"risk_accepted": true,
+				"review_reference": "Steward-Freigabe 2026-11-07, eigene B4-Betriebsgrenzen mit akzeptiertem Restrisiko",
+				"max_request_bytes": 150000,
+				"input_tokens": 36000,
+				"output_margin_percent": 0
+			}
+		},
 		"context_projection": "compact_evidence_v1"
 	},
 	"regular_operation": {

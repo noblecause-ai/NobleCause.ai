@@ -62,6 +62,7 @@ class Calls:
         if step.startswith('chair-') and spec.get('chair_reasoning_effort'):
             spec = {**spec, 'openrouter':{**spec['openrouter'], 'reasoning_effort':spec['chair_reasoning_effort']}}
         request = openrouter.request_for(spec, system, user, limit)
+        billed_output_limit = None if self.budget.observe else self.budget.bounds.output_tokens(spec, limit)
         stem = f'{step}-{spec["family"]}'
         paths = {k: self.directory / f'{stem}-{k}.json' for k in ('request', 'response', 'generation', 'endpoint', 'result')}
         if paths['request'].exists():
@@ -89,6 +90,9 @@ class Calls:
             endpoint = json.loads(paths['endpoint'].read_text())
             text, usage = openrouter.validate_response(spec, openrouter.decode(paths['response'].read_bytes()),
                                                       openrouter.decode(generation_path.read_bytes()), endpoint.get('canonical_model'))
+            if self.budget.mode == 'operational':
+                openrouter.validate_usage_limits(spec, usage, limit, self.budget.bounds.tokens(spec, request),
+                                                billed_output_limit)
             usage['provenance']['raw_artifact'] = 'raw/' + paths['response'].name
             usage['provenance']['generation_artifact'] = 'raw/' + generation_path.name
             if usage != {k:v for k,v in recorded.items() if k != 'outcome'}:
@@ -103,20 +107,24 @@ class Calls:
                 raise openrouter.OpenRouterError('Finanziertes, nicht zurückgesetztes Key-Limit erforderlich')
             if not self.budget.observe:
                 available = min(openrouter.amount(key['limit_remaining']), openrouter.account_credit_remaining())
-                if available < openrouter.worst_case_usd(spec, limit, tokens) + reserve:
+                if available < self.budget.bounds.ceiling(spec, limit) + reserve:
                     raise InsufficientBudget('Verfügbares Guthaben deckt Aufruf und Abschlussreserve nicht')
+            waiting_data = {'cost_mode':self.budget.mode, 'input_bound':tokens,
+                            'closure_reserve_usd':None if self.budget.observe else str(reserve),
+                            'spent_usd':str(self.budget.spent)}
+            if self.budget.mode == 'operational':
+                waiting_data['billed_output_limit'] = billed_output_limit
             self.events.once('waiting-' + step, 'waiting', phase, model=spec['model'],
                              role='chair' if step.startswith(('chair-', 'summary')) else 'member',
-                             data={'cost_mode':'observe' if self.budget.observe else 'bounded', 'input_bound': tokens,
-                                   'closure_reserve_usd':None if self.budget.observe else str(reserve),
-                                   'spent_usd': str(self.budget.spent)})
+                             data=waiting_data)
             # Includes a heartbeat failure and a reused waiting event on resume.
             # A failed public feed must stop before the next paid inference.
             self.events.publish()
             try:
                 text, usage = openrouter.call(spec, system, user, limit, self.directory, step,
                     spent_eur=self.budget.spent * self.fx, cap_eur=(self.budget.cap - reserve) * self.fx,
-                    fx=self.fx, input_bound=tokens, observe_costs=self.budget.observe)
+                    fx=self.fx, input_bound=tokens, observe_costs=self.budget.observe,
+                    billed_output_limit=billed_output_limit)
             except openrouter.OpenRouterError as exc:
                 if exc.usage is not None:
                     self.account(spec, step, {**exc.usage, 'outcome':exc.outcome})
@@ -286,7 +294,7 @@ def run(root, config, args):
         descriptor = {'id':args.session_id, 'question':args.question, 'title':args.title, 'date':today,
                       'chair':{'model':chair['model'],'rotation_index':index}, 'config':cfg,
                       'research':research_info, 'budget_cap_eur':str(args.budget_cap), 'fx':str(fx),
-                      'cost_mode':'observe' if observe else 'bounded',
+                      'cost_mode':budget.mode,
                       'ballot_contract':CONTRACT,
                       'manifest_sha256':digest((root/'manifest.md').read_bytes()),
                       'sources_sha256':digest((root/'gremium/sources.md').read_bytes()),
@@ -405,7 +413,8 @@ def weekly_decision(spec, system, user, raw_dir, config, spent_eur, cap_eur, roo
     try:
         text, usage = openrouter.call(spec, system, user, limit, raw_dir, 'chair-weekly',
             spent_eur=spent_eur, cap_eur=cap_eur, fx=config['fx_rate_usd_eur'], input_bound=tokens,
-            observe_costs=observe_costs)
+            observe_costs=observe_costs,
+            billed_output_limit=None if observe_costs else bound.output_tokens(spec, limit))
     except openrouter.OpenRouterError:
         artifact = Path(raw_dir) / f'chair-weekly-{spec["family"]}-response.json'
         if artifact.exists():

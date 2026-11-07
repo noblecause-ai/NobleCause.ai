@@ -131,6 +131,7 @@ def main():
             sys.exit('\n'.join(errors))
         if budget:
             funded = min(openrouter.amount(key['limit_remaining']), credit) >= budget['total_usd']
+            print(f"OpenRouter-Konto: {credit} Credits verfügbar.")
             print(f"Sitzung {budget['total_usd']} Credits einschließlich {budget['closure_usd']} Abschlussreserve.")
             if not funded:
                 print('::warning::Verfügbares Guthaben deckt die vollständige Sitzung nicht. Keine Reservierung.')

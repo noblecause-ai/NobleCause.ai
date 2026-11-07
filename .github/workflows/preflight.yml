@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: '30 5 * * *'
   workflow_dispatch:
+    inputs:
+      session_budget:
+        description: 'Vollständiges Sitzungsbudget prüfen, ohne Modellaufrufe'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -36,9 +41,12 @@ jobs:
         continue-on-error: true
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CHECK_SESSION_BUDGET: ${{ inputs.session_budget }}
         run: |
           set -o pipefail
-          python3 gremium/preflight.py 2>&1 | tee run.log
+          ARGS=()
+          if [ "$CHECK_SESSION_BUDGET" = 'true' ]; then ARGS+=(--session-budget); fi
+          python3 gremium/preflight.py "${ARGS[@]}" 2>&1 | tee run.log
 
       - name: Tatsächlichen Anschlussstatus festhalten
         if: always()

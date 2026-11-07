@@ -17,15 +17,46 @@ prüft lokal nur den Zeitplan; ein Actions-Dispatch mit `check_only` prüft zus�
 OpenRouter und den SSH-Publisher, ohne Inferenz. Bezahlte automatische Läufe
 reservieren ihren GitHub-Laufversuch vorab im Repository. Der Modus
 `--observe-costs` gilt für die Wochenrecherche. Reguläre Ratssitzungen brauchen
-geprüfte Eingabegrenzen und Guthaben für den vollständigen Ablauf. Vor jedem
-Debattenaufruf sichert der Budgetwächter die fünf Schlussvoten und die
-Zusammenfassung. Das OpenRouter-Key-Limit bleibt der externe Ausgabenrahmen.
-Die unter `live_council.input_bounds` hinterlegten Nachweise müssen die
-abgerechneten Eingabetokens einschließlich Anbieter- und Gateway-Rahmung auf
-der festgelegten Route begrenzen. Groks Nachweis muss zusätzlich für die
-verwendeten Ausgabelimits zeigen, dass diese die abgerechneten Denktokens
-einschließen. Ein früherer [Abrechnungsbeleg](../commissions/2026-09-21/raw/order-spacexai-generation.json)
-zeigt eine Überschreitung des angeforderten Limits.
+konfigurierte Eingabebudgets und Guthaben für den vollständigen Ablauf. Vor jedem
+Debattenaufruf reserviert der Budgetwächter Mittel für die fünf Schlussvoten und
+die Zusammenfassung. Das OpenRouter-Key-Limit bleibt der externe Ausgabenrahmen.
+Die unter `live_council.input_bounds` hinterlegten Betriebsgrenzen sind seit
+der Steward-Freigabe vom 07.11.2026 eigene empirische Budgetansätze mit
+ausdrücklich akzeptiertem Restrisiko der Anbieterabrechnung. Der Modus wird
+im Sitzungsrekord und den Warteereignissen als `operational` ausgewiesen.
+Der Sitzungshaushalt und die Abschlussreserve enthalten die Sicherheitsaufschläge.
+
+Die Kalibrierung verwendet die 62 bestätigten Aufrufe der
+[ersten Live-Sitzung](../sessions/2026-09-21-live/costs-live.json) und der
+[Oktober-Sitzung](../sessions/2026-10-21-regular/costs-live.json).
+Das Eingabebudget liegt 50 Prozent über dem jeweiligen Spitzenverbrauch,
+auf volle 1.000 Tokens aufgerundet.
+
+| Modell | Gemessene maximale Eingabe | Eingabebudget je Aufruf |
+| --- | ---: | ---: |
+| Fable 5.1 | 39.986 | 60.000 |
+| Astra | 21.710 | 33.000 |
+| Grok 4.6 | 21.485 | 33.000 |
+| Kimi K3 | 26.550 | 40.000 |
+| GLM-5.3 | 23.894 | 36.000 |
+
+Jeder vollständig serialisierte Request ist lokal auf 150.000 UTF-8-Bytes
+begrenzt. Der größte archivierte Request hatte 91.541 Bytes. Die Prüfung
+erfolgt vor der Zahlung. Groks Ausgabebudget enthält zusätzlich 50 Prozent
+für abgerechnete Tokens einschließlich Reasoning. Die angeforderten Rollenlimits
+von 4.096 beziehungsweise 16.384 bleiben damit bei Abrechnungsbudgets von
+6.144 beziehungsweise 24.576 Tokens. Eine vollständige Antwort innerhalb dieses
+Budgets wird mitsamt der beobachteten Überschreitung protokolliert.
+Der frühere [Grok-Beleg](../commissions/2026-09-21/raw/order-spacexai-generation.json)
+enthält 3.467 abgerechnete Tokens bei 3.000 angeforderten.
+
+Das Programm stoppt weitere Aufrufe bei Überschreitung der konfigurierten
+Eingabe-, Ausgabe- oder Kostenbudgets und bewahrt bestätigte Abrechnungen auf.
+Eine Überschreitung durch den bereits ausgeführten Anbieteraufruf kann das
+geplante Sitzungsbudget und die Abschlussreserve belasten. Diese Unsicherheit
+ist Teil der Freigabe. Tarifprüfung, Key-Limit und Kontoguthaben werden weiterhin
+vor jedem bezahlten Schritt geprüft. Die gesonderte Ratssperre bleibt in
+`schedule.json` bis zur ausdrücklichen Sitzungsfreigabe aktiv.
 
 Der Exa-Entdeckungs-Scout braucht das Actions-Secret `EXA_API_KEY` eines
 Exa-Starter-Kontos. Er führt je Lauf höchstens sechs Lite-Suchen mit je drei

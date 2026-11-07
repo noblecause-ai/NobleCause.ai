@@ -1,8 +1,7 @@
-"""Evidence-backed input envelopes. No guessed tokenizer or context fallback.
+"""Reviewed provider envelopes and Steward-approved operational budgets.
 
-Policies are trusted, reviewed configuration, not model output. No production
-policy is shipped. The separately authorized observe mode logs billed costs
-without an input envelope or a closure reserve; it never invents a bound.
+Operational limits are empirical allowances with accepted provider billing risk.
+Every request is checked locally and every confirmed bill is checked afterward.
 """
 import json
 from pathlib import Path
@@ -29,9 +28,17 @@ class InputBounds:
             raise MissingBound('B4: kein belegter Input-Bound für ' + spec['model'])
         if (rule.get('endpoint') != spec['openrouter']['endpoint']
                 or rule.get('quantization') != spec['openrouter']['quantization']
-                or rule.get('basis') != 'reviewed_provider_envelope'
                 or not rule.get('review_reference')):
             raise MissingBound('B4: Input-Bound nicht an Anbieter/Präzision/Review gebunden')
+        if rule.get('basis') == 'operational_limits':
+            if (rule.get('risk_accepted') is not True
+                    or not integer(rule.get('max_request_bytes'))
+                    or not integer(rule.get('input_tokens'))):
+                raise MissingBound('B4: freigegebene Betriebsgrenzen mit Sicherheitsaufschlag erforderlich')
+            integer(rule.get('output_margin_percent'))
+            return rule
+        if rule.get('basis') != 'reviewed_provider_envelope':
+            raise MissingBound('B4: unbekannte Budgetgrundlage')
         evidence = (self.root / rule['evidence_path']).resolve()
         if not evidence.is_relative_to(self.root) or not evidence.is_file() or digest(evidence.read_bytes()) != rule['evidence_sha256']:
             raise MissingBound('B4: Input-Bound-Beleg fehlt oder wurde geändert')
@@ -53,17 +60,24 @@ class InputBounds:
     def tokens(self, spec, request):
         rule = self.policy(spec)
         if len(json.dumps(request, ensure_ascii=False).encode()) > rule['max_request_bytes']:
-            raise MissingBound('B4: konkreter Request überschreitet belegte Eingabehülle')
+            raise MissingBound('B4: konkreter Request überschreitet konfigurierte Eingabehülle')
         return rule['input_tokens']
 
     def ceiling(self, spec, max_tokens):
         rule = self.policy(spec)
         # Grok previously billed past max_tokens on this route, including reasoning.
-        if spec['model'] == MODELS['spacexai']:
+        if spec['model'] == MODELS['spacexai'] and rule['basis'] == 'reviewed_provider_envelope':
             limit = min(max_tokens, spec['openrouter']['max_output_tokens'])
             if limit not in rule.get('verified_billed_output_limits', []):
                 raise MissingBound('B4: Groks Ausgabegrenze einschließlich Reasoning nicht belegt')
-        return worst_case_usd(spec, max_tokens, rule['input_tokens'])
+        return worst_case_usd(spec, max_tokens, rule['input_tokens'],
+                              billed_output_limit=self.output_tokens(spec, max_tokens))
+
+    def output_tokens(self, spec, max_tokens):
+        rule = self.policy(spec)
+        requested = min(integer(max_tokens), spec['openrouter']['max_output_tokens'])
+        margin = rule['output_margin_percent'] if rule['basis'] == 'operational_limits' else 0
+        return requested + (requested * margin + 99) // 100
 
 
 class Budget:
@@ -72,6 +86,9 @@ class Budget:
         if not self.cap:
             raise ValueError('Positives Sitzungsbudget erforderlich')
         self.bounds, self.spent, self.observe = bounds, amount(0), observe
+        self.mode = 'observe' if observe else 'bounded'
+        if not observe and any(p.get('basis') == 'operational_limits' for p in bounds.policies.values()):
+            self.mode = 'operational'
 
     def check(self, spec, request, limit, remaining):
         """Reserve the current call AND every required remaining closure call."""
@@ -80,7 +97,7 @@ class Budget:
                 raise InsufficientBudget('Abgerechnetes Testbudget erreicht; kein Folgeaufruf')
             return None, amount(0)
         tokens = self.bounds.tokens(spec, request)
-        required = worst_case_usd(spec, limit, tokens)
+        required = self.bounds.ceiling(spec, limit)
         reserve = sum((self.bounds.ceiling(s, n) for s, n in remaining), amount(0))
         if self.spent + required + reserve > self.cap:
             raise InsufficientBudget('Budget reicht nicht für nächsten Aufruf und Abschlussreserve')

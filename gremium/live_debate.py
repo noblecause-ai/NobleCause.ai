@@ -102,7 +102,7 @@ def closure_calls(models, chair, limits):
 
 
 def session_budget(models, chair, limits, bounds):
-    """Quote the full agenda at the reviewed limits, including its protected closure."""
+    """Quote the full agenda at the configured allowances, including its closure."""
     initial = sum(bounds.ceiling(m, limits['initial']) for m in models)
     closure = sum(bounds.ceiling(m, n) for m, n in closure_calls(models, chair, limits))
     debate = CONTRIBUTIONS_PER_MEMBER * (

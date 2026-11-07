@@ -201,9 +201,9 @@ def endpoint_preflight(spec, *, input_bound=None):
     if input_bound is not None:
         prompt_max = ep.get('max_prompt_tokens')
         if prompt_max is not None and input_bound > integer(prompt_max):
-            raise OpenRouterError('Proven input envelope exceeds endpoint input limit')
+            raise OpenRouterError('Configured input allowance exceeds endpoint input limit')
         if any(input_bound >= integer(tier.get('min_prompt_tokens')) for tier in (prices.get('overrides') or [])):
-            raise OpenRouterError('Proven input envelope reaches an unbudgeted long-context tariff')
+            raise OpenRouterError('Configured input allowance reaches an unbudgeted long-context tariff')
         # Anthropic cache writes are opt-in and this text-only route sets no breakpoint.
         auto_write = prices.get('input_cache_write', 0) if spec['family'] != 'anthropic' else 0
         if (max(amount(auto_write), amount(prices.get('input_cache_read', 0))) * 1_000_000 > bounded_input_rate(spec)
@@ -263,23 +263,26 @@ def bounded_input_rate(spec):
     return rate * Decimal('1.25') if spec['model'] == MODELS['openai'] else rate
 
 
-def worst_case_usd(spec, max_tokens, input_bound=None):
+def worst_case_usd(spec, max_tokens, input_bound=None, *, billed_output_limit=None):
     cfg = contract(spec)
-    # Reserve the FULL advertised context: no guessed local tokenizer or char/token
-    # estimate can silently under-reserve. This is deliberately conservative.
-    # max_price rejects expensive long-context tiers instead of widening the cap.
+    # The caller supplies its reviewed provider envelope or operational allowance.
+    # Legacy callers retain their full-context reservation.
     tokens = cfg['context_length'] if input_bound is None else integer(input_bound)
     output = min(max_tokens, cfg['max_output_tokens'])
+    if billed_output_limit is not None:
+        if integer(billed_output_limit) < output:
+            raise OpenRouterError('Billed output allowance is below the requested limit')
+        output = billed_output_limit
     if input_bound is not None and tokens + output > cfg['context_length']:
-        raise OpenRouterError('Input and output bounds exceed context contract')
+        raise OpenRouterError('Input and output allowances exceed context contract')
     rate = bounded_input_rate(spec) if input_bound is not None else amount(cfg['max_price']['prompt'])
     return (Decimal(tokens) * rate + Decimal(output) * amount(cfg['max_price']['completion'])) / 1_000_000
 
 
-def reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound=None):
+def reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound=None, *, billed_output_limit=None):
     if amount(fx) <= 0:
         raise OpenRouterError('Positive exchange rate required')
-    required = worst_case_usd(spec, max_tokens, input_bound) * amount(fx)
+    required = worst_case_usd(spec, max_tokens, input_bound, billed_output_limit=billed_output_limit) * amount(fx)
     if amount(spent_eur) + required > amount(cap_eur):
         raise OpenRouterError('Budget insufficient for worst-case next call; no request sent')
 
@@ -377,16 +380,29 @@ def validate_response(spec, response, generation, canonical_model=None):
     return text, confirmed
 
 
-def call(spec, system, user, max_tokens, raw_dir, tag, *, spent_eur, cap_eur, fx, input_bound=None, observe_costs=False):
+def validate_usage_limits(spec, usage, max_tokens, input_bound, billed_output_limit, *, observe_costs=False):
+    requested = min(max_tokens, spec['openrouter']['max_output_tokens'])
+    output = requested if billed_output_limit is None else billed_output_limit
+    if (input_bound is not None and usage['input_tokens'] > input_bound
+            or not observe_costs and usage['output_tokens'] > output):
+        raise OpenRouterError('Billed tokens exceeded configured allowance; stop', usage=usage)
+    if usage['output_tokens'] > requested:
+        usage['provenance']['output_limit_observation'] = {'requested': max_tokens, 'billed': usage['output_tokens']}
+    if not observe_costs and amount(usage['billed_usd']) > worst_case_usd(
+            spec, max_tokens, input_bound, billed_output_limit=billed_output_limit):
+        raise OpenRouterError('Billed cost exceeded reserved bound; stop', usage=usage)
+
+
+def call(spec, system, user, max_tokens, raw_dir, tag, *, spent_eur, cap_eur, fx, input_bound=None, observe_costs=False, billed_output_limit=None):
     # Before request artefact creation: contract, budget and endpoint check.
     request = request_for(spec, system, user, max_tokens)
     if observe_costs:
-        if input_bound is not None or amount(fx) <= 0:
+        if input_bound is not None or billed_output_limit is not None or amount(fx) <= 0:
             raise OpenRouterError('Kostenbeobachtung verlangt einen ausdrücklich unbegrenzten Input')
         if amount(spent_eur) >= amount(cap_eur):
             raise OpenRouterError('Abgerechnetes Testbudget erreicht; kein Folgeaufruf')
     else:
-        reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound)
+        reserve(spec, max_tokens, spent_eur, cap_eur, fx, input_bound, billed_output_limit=billed_output_limit)
     endpoint = endpoint_preflight(spec) if input_bound is None else endpoint_preflight(spec, input_bound=input_bound)
     stem = f'{tag}-{spec["family"]}'
     paths = {k: raw_dir / f'{stem}-{k}.json' for k in ('request', 'response', 'generation', 'endpoint', 'result')}
@@ -424,12 +440,7 @@ def call(spec, system, user, max_tokens, raw_dir, tag, *, spent_eur, cap_eur, fx
                 break
         save('generation', generation_raw)
         text, usage = validate_response(spec, response, decode(generation_raw), endpoint.get('canonical_model'))
-        if (input_bound is not None and usage['input_tokens'] > input_bound) or (not observe_costs and usage['output_tokens'] > min(max_tokens, spec['openrouter']['max_output_tokens'])):
-            raise OpenRouterError('Billed tokens exceeded proven bound; stop', usage=usage)
-        if observe_costs and usage['output_tokens'] > min(max_tokens, spec['openrouter']['max_output_tokens']):
-            usage['provenance']['output_limit_observation'] = {'requested': max_tokens, 'billed': usage['output_tokens']}
-        if not observe_costs and amount(usage['billed_usd']) > worst_case_usd(spec, max_tokens, input_bound):
-            raise OpenRouterError('Billed cost exceeded reserved bound; stop', usage=usage)
+        validate_usage_limits(spec, usage, max_tokens, input_bound, billed_output_limit, observe_costs=observe_costs)
         usage['provenance']['raw_artifact'] = 'raw/' + paths['response'].name
         usage['provenance']['generation_artifact'] = 'raw/' + paths['generation'].name
         save('result', json.dumps({'outcome': 'valid', **usage}, ensure_ascii=False, default=float).encode())
