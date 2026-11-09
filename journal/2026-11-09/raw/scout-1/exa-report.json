@@ -1,0 +1,190 @@
+{
+  "report": {
+    "findings": [
+      {
+        "pillar": "A",
+        "evidence_type": "RCT/Longitudinalstudie",
+        "topic": "Luminos Fund: Grundlegende Lesefähigkeiten",
+        "counterevidence": "Keine spezifischen Gegenbelege im Text.",
+        "uncertainty": "Hohe Validität durch über 30 unabhängige Evaluationen und RCT in Liberia sowie Längsschnittstudien in Äthiopien.",
+        "source_language": "en",
+        "source": "https://luminosfund.org/our-impact/",
+        "source_date": "2026-07-15",
+        "event_date": null,
+        "summary": "# Our Impact The Luminos program is the only foundational learning program found to have high impact on children’s learning while maintaining high cost-effectiveness.",
+        "evidence_excerpt": "# Our Impact The Luminos program is the only foundational learning program found to have high impact on children’s learning while maintaining high cost-effectiveness."
+      },
+      {
+        "pillar": "A",
+        "evidence_type": "Implementierungsstudie",
+        "topic": "Umsetzungsengpässe bei Bildungswissenschaftlichen Interventionen (AVE)",
+        "counterevidence": "Obwohl die Randomisierte Kontrollstudie (RCT) positive Effekte zeigte, brach die tatsächliche classroom delivery von 83 % auf 37 % zusammen, als das Programm nationwide implementiert wurde.",
+        "uncertainty": "Das Potential der Intervention ist hoch, aber die praktische Umsetzbarkeit (Delivery fidelity) stellt ein kritisches Eng-pass dar, das Aufmerksamkeit verdient.",
+        "source_language": "en",
+        "source": "https://africaevidencenetwork.org/evidence-leads-to-policy/2026/09/17/",
+        "source_date": "2026-09-17",
+        "event_date": null,
+        "summary": "world. When it transitioned from a randomised trial to nationwide implementation, actual classroom delivery collapsed from 83% to 37%. The country’s Ministry of Education",
+        "evidence_excerpt": "world. When it transitioned from a randomised trial to nationwide implementation, actual classroom delivery collapsed from 83% to 37%. The country’s Ministry of Education"
+      },
+      {
+        "pillar": "C",
+        "evidence_type": "Kommissionsbericht (The Lancet)",
+        "topic": "Existenziale Risiken durch KI und nukleare Konflikte",
+        "counterevidence": "Die Wahrscheinlichkeit wird als niedrig eingestuft, doch werden die Bedrohungen wegen ihres Potentials zum Aussterben als konsequential bezeichnet.",
+        "uncertainty": "Langfristige Prognosen zur KI-Entwicklung und deren Wechselwirkung mit biologischen Risiken unterliegen großen Unsicherheiten.",
+        "source_language": "en",
+        "source": "https://www.independent.co.uk/news/health/ai-nuclear-human-extinction-research-b3064781.html",
+        "source_date": "2026-10-11",
+        "event_date": null,
+        "summary": "threats with extinction potential include “nuclear conflict with nuclear famine and the malicious use of AI, including bioweapons development.” Although it said the likelihood",
+        "evidence_excerpt": "threats with extinction potential include “nuclear conflict with nuclear famine and the malicious use of AI, including bioweapons development.” Although it said the likelihood"
+      },
+      {
+        "pillar": "D",
+        "evidence_type": "Implementierungs-Evaluation",
+        "topic": "Vorbereitung auf Notfälle in dezentralen Impflagern (Ukraine)",
+        "counterevidence": "Es wurden wiederkehrende Lücken in Alarmsystemen, Backup-Speicherung und Transportkapazitäten offenbart.",
+        "uncertainty": "Die Intervention war erfolgreich in der Identifizierung dieser Engpässe und Verbesserung der technischen Bereitschaft, aber die nachhaltige Lösung der Infrastrukturlücken bleibt eine Herausforderung.",
+        "source_language": "en",
+        "source": "https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2026.1751398/full",
+        "source_date": "2026-02-16",
+        "event_date": null,
+        "summary": "outages, and transport incidents. Implementation experience: Between July and November 2025, simulation exercises were conducted in 18 oblasts, revealing recurring gaps in alert systems,",
+        "evidence_excerpt": "outages, and transport incidents. Implementation experience: Between July and November 2025, simulation exercises were conducted in 18 oblasts, revealing recurring gaps in alert systems,"
+      }
+    ],
+    "gaps": {
+      "A": null,
+      "B": "Für diese Säule enthält die Fundliste keinen belegten Fund.",
+      "C": null,
+      "D": null
+    },
+    "delta_assessment": "Die Fundliste enthält 4 Funde in den Säulen A, C, D. Ohne belegten Fund in dieser Liste: B.",
+    "search_queries": [
+      "Primary impact evaluation of an overlooked intervention for child development, education access or long-term institutional capacity in low-resource settings",
+      "Primary study of a cost-effective intervention reducing severe present suffering, disease burden or pain in underserved communities and its delivery bottlenecks",
+      "Primary research or technical evaluation of a practical intervention reducing human extinction or global catastrophic risk from engineered pandemics, AI or nuclear war",
+      "Field evaluation of an overlooked basic service, assistive product, sanitation or essential medical supply in a low-resource setting with implementation outcomes",
+      "Evaluación independiente de intervención social en América Latina o África: resultados nulos, efectos adversos, obstáculos de implementación o coste real",
+      "Étude de terrain ou rapport technique original sur une défaillance sous-estimée de biosécurité ou de services essentiels et une intervention testée"
+    ],
+    "rejected_findings": []
+  },
+  "usage": {
+    "input_tokens": 7203,
+    "output_tokens": 645,
+    "billed_usd": "0.000156741",
+    "research_provenance": {
+      "transport": "openrouter_api",
+      "generation_id": "gen-1794234950-hCEsMUAW3OiJHu2P7qR7",
+      "requested_model": "qwen/qwen3.6-35b-a3b",
+      "reported_model": "qwen/qwen3.6-35b-a3b",
+      "generation_model": "qwen/qwen3.6-35b-a3b-20260415",
+      "provider": "PrimeIntellect",
+      "endpoint": "primeintellect/fp8",
+      "finish_reason": "stop",
+      "native_finish_reason": "stop",
+      "cost_basis": "billed",
+      "billed_usd": "0.000156741",
+      "search_engine_requested": "exa",
+      "search_engine_reported": "exa",
+      "search_queries_source": "exa_request_log",
+      "query_log_complete": true,
+      "api_search_queries": [
+        "Primary impact evaluation of an overlooked intervention for child development, education access or long-term institutional capacity in low-resource settings",
+        "Primary study of a cost-effective intervention reducing severe present suffering, disease burden or pain in underserved communities and its delivery bottlenecks",
+        "Primary research or technical evaluation of a practical intervention reducing human extinction or global catastrophic risk from engineered pandemics, AI or nuclear war",
+        "Field evaluation of an overlooked basic service, assistive product, sanitation or essential medical supply in a low-resource setting with implementation outcomes",
+        "Evaluación independiente de intervención social en América Latina o África: resultados nulos, efectos adversos, obstáculos de implementación o coste real",
+        "Étude de terrain ou rapport technique original sur une défaillance sous-estimée de biosécurité ou de services essentiels et une intervention testée"
+      ],
+      "web_search_requests": 6,
+      "citations": [
+        {
+          "url": "https://doi.org/10.1257/app.20240364",
+          "title": "From Access to Achievement: The Primary School-Age Impacts of an At-Scale Preschool Construction Program in Highly Deprived Communities"
+        },
+        {
+          "url": "https://luminosfund.org/our-impact/",
+          "title": "Our Impact - Luminos Fund"
+        },
+        {
+          "url": "https://www.brookings.edu/mothers-and-father-groups-and-parent-and-teacher-mentors-for-girls/",
+          "title": "Mothers and fathers groups and parent and teacher mentors for girls | Brookings"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13434084/",
+          "title": "Developing a Symptom Toolkit for Adult Lymphoma Patients Receiving Chemotherapy in Malawi"
+        },
+        {
+          "url": "https://scholars.duke.edu/publication/1917313",
+          "title": "Scholars@Duke publication: Cost-effectiveness analysis of a virtually administered pain coping skills training intervention in women with breast cancer in underserved areas."
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13424511/",
+          "title": "Building bridges to care: A co-created community palliative care package for resource-limited settings"
+        },
+        {
+          "url": "https://doi.org/10.1093/9780198945239.003.0058",
+          "title": "A Primer on Global Catastrophic Risk (GCR)"
+        },
+        {
+          "url": "https://warontherocks.com/how-to-defend-against-ai-designed-viruses/",
+          "title": "How to Defend Against AI-Designed Viruses"
+        },
+        {
+          "url": "https://www.independent.co.uk/news/health/ai-nuclear-human-extinction-research-b3064781.html",
+          "title": "AI and nuclear war threaten human extinction by 2100, report warns | The Independent"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13378426/",
+          "title": "Implementing a WASH Package Within Prevention of Vertical Transmission of HIV Programming in Lilongwe, Malawi: A Program Evaluation"
+        },
+        {
+          "url": "https://policy-practice.oxfam.org/resources/were-listening-an-evaluation-of-user-centred-community-engagement-in-emergency-620617/",
+          "title": "We're Listening: An evaluation of user-centred community engagement in emergency sanitation - Oxfam Policy & Practice"
+        },
+        {
+          "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13532005/",
+          "title": "Long-term usage, condition, and cultural acceptability of the BALatrine project: findings from a subsidised sanitation improvement intervention in rural Central Java, Indonesia"
+        },
+        {
+          "url": "https://www.worldbank.org/en/results/2026/02/09/nourishing-the-future-impact-and-lessons-from-ecuador-s-bono-1000-d-as-program",
+          "title": "Nourishing the Future: Impact and Lessons from Ecuador's Bono 1000 Días Program"
+        },
+        {
+          "url": "https://doi.org/10.1093/wber/lhag007",
+          "title": "Workfare Programs and Their Delivery System: Effectiveness of Construyendo Perú"
+        },
+        {
+          "url": "https://africaevidencenetwork.org/evidence-leads-to-policy/2026/09/17/",
+          "title": "When evidence leads to policy, but implementation falls short – Africa Evidence Network"
+        },
+        {
+          "url": "https://www.frontiersin.org/journals/public-health/articles/10.3389/fpubh.2026.1751398/full",
+          "title": "Frontiers | Improving emergency preparedness of subnational vaccine stores in Ukraine: co-creation and implementation of on-site functional simulation exercises"
+        },
+        {
+          "url": "https://eahp.eu/gpi_submission/implementing-an-aseptic-process-simulation-for-operator-requalification-in-a-hospital-compounding-unit/",
+          "title": "EAHP — European Association of Hospital Pharmacists"
+        },
+        {
+          "url": "https://doi.org/10.1016/j.jobb.2026.03.003",
+          "title": "Integrated assessment of biosafety, biosecurity and cyber-biosecurity in clinical microbiology laboratories in Lubumbashi, Democratic Republic of the Congo"
+        }
+      ],
+      "warnings": [
+        "Exa-Suchprotokoll vollständig. Auswertung anhand indexierter Quellenausschnitte."
+      ],
+      "started_at": "2026-11-09T14:35:50.404003+00:00",
+      "finished_at": "2026-11-09T14:36:06.059238+00:00",
+      "response_artifact": "openrouter-response.json",
+      "generation_artifact": "openrouter-generation-2.json",
+      "exa_billed_usd": "0.024",
+      "exa_artifact": "exa-evidence.json"
+    },
+    "exa_billed_usd": "0.024",
+    "web_search_requests": 6
+  }
+}

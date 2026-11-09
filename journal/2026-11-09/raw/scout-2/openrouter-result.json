@@ -1,0 +1,124 @@
+{
+  "outcome": "end_turn",
+  "input_tokens": 964,
+  "output_tokens": 2053,
+  "billed_usd": "0.03969",
+  "research_provenance": {
+    "transport": "openrouter_api",
+    "generation_id": "gen-1794234967-33oq37HbPRzq7L5NiYgS",
+    "requested_model": "perplexity/sonar-pro",
+    "reported_model": "perplexity/sonar-pro",
+    "generation_model": "perplexity/sonar-pro",
+    "provider": "Perplexity",
+    "endpoint": "perplexity",
+    "finish_reason": "stop",
+    "native_finish_reason": "stop",
+    "cost_basis": "billed",
+    "billed_usd": "0.03969",
+    "search_engine_requested": "intrinsic",
+    "search_engine_reported": null,
+    "search_queries_source": "model_self_report",
+    "query_log_complete": false,
+    "api_search_queries": null,
+    "web_search_requests": null,
+    "citations": [
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-3t85fd",
+        "title": "RBR-3t85fd Effects of a care program for risk factors for falls in a ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-3fzgrq2/1",
+        "title": "RBR-3fzgrq2 — Evaluation of an educational program for Primary Health Care users with Type 2 Diabetes Mellitus | ReBEC",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/mds/pt-br/noticias-e-conteudos/Noticias/2024/representantes-mundiais-endossam-alianca-global-contra-a-fome-e-a-pobreza/SPIACBSocialprotectionandthewayforwardtoeliminatepoverty.pdf/@@download/file",
+        "title": "Social protection and the way forward",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-106989ym",
+        "title": "RBR-106989ym — Positive Psychology programme for health promotion | ReBEC",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-2kwfsk",
+        "title": "The Pelotas Trial of Parenting Interventions for Aggression",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-9n5jbw/3",
+        "title": "RBR-9n5jbw Aging of the immune system, Frailty and ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://bvsms.saude.gov.br/bvs/publicacoes/cd10_02b.pdf",
+        "title": "AVALIACAO DO PROGRAMA BOLSA ALI.PDF",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://ensaiosclinicos.gov.br/rg/RBR-9sp5hx",
+        "title": "RBR-9sp5hx Program at school: Healthy Living, Happy Heart",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/mds/pt-br/noticias-e-conteudos/Noticias/2025/cop30-lideres-de-xx-paises-lancam-declaracao-que-une-acao-climatica-a-erradicacao-da-fome-e-da-pobreza/copy2_of_COP30BelemDeclarationonHungerPovertyandHumanCenteredClimateAction1.pdf/@@download/file",
+        "title": "Belém Declaration.pdf",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/g20/pt-br/trilhas/trilha-de-financas/financas-saude/5-g20-who-policy-note-on-social-determinants-of-health.pdf/@@download/file",
+        "title": "[PDF] POLICY NOTE G20/World Health Organization Policy ... - Portal Gov.br",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://bvsms.saude.gov.br/bvs/periodicos/mundo_saude_artigos/intervention_extreme_health.pdf",
+        "title": "Intervention logics in global and international poverty ...",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.saude.sp.gov.br/resources/cve-centro-de-vigilancia-epidemiologica/areas-de-vigilancia/doencas-cronicas-nao-transmissiveis/observatorio-promocao-a-saude/doc/publicacao_oms_05_01.pdf",
+        "title": "untitled",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.ceped.pr.gov.br/sites/ceped/arquivos_restritos/files/documento/2025-08/v_congreso_srala2021_v4.pdf",
+        "title": "Agosto, 2025",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://www.gov.br/planejamento/pt-br/assuntos/planejamento/plano-plurianual/arquivos/relatorios-planejamento-nacional/ingles-18122024-agenda-transversal-criancas-e-adolescentes-ppa-2024-27_eng-vf.pdf/@@display-file/file",
+        "title": "Agenda_Transversal_Criancas_e_Adolescentes_PPA_2024_27.indd 1",
+        "start_index": 0,
+        "end_index": 0
+      },
+      {
+        "url": "https://periodicos.fundaj.gov.br/CIC/article/download/2672/1820/6670",
+        "title": "La equidad de género en los sistemas de cuidados ante el ...",
+        "start_index": 0,
+        "end_index": 0
+      }
+    ],
+    "warnings": [
+      "Kein vollständiges Suchprotokoll; Suchanfragen im Modelltext sind Selbstauskunft."
+    ],
+    "started_at": "2026-11-09T14:36:07.006660+00:00",
+    "finished_at": "2026-11-09T14:36:37.029287+00:00",
+    "response_artifact": "openrouter-response.json",
+    "generation_artifact": "openrouter-generation-2.json"
+  }
+}

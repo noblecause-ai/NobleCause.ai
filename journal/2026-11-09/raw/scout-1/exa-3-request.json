@@ -1,0 +1,17 @@
+{
+  "query": "Primary research or technical evaluation of a practical intervention reducing human extinction or global catastrophic risk from engineered pandemics, AI or nuclear war",
+  "type": "lite",
+  "numResults": 3,
+  "excludeDomains": [
+    "noblecause.ai",
+    "*.noblecause.ai",
+    "github.com/noblecause-ai",
+    "raw.githubusercontent.com/noblecause-ai",
+    "noblecause-ai.github.io"
+  ],
+  "startPublishedDate": "2026-07-12T00:00:00Z",
+  "endPublishedDate": "2026-11-10T00:00:00Z",
+  "contents": {
+    "highlights": true
+  }
+}

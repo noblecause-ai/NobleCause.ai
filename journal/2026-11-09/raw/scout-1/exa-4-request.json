@@ -1,0 +1,17 @@
+{
+  "query": "Field evaluation of an overlooked basic service, assistive product, sanitation or essential medical supply in a low-resource setting with implementation outcomes",
+  "type": "lite",
+  "numResults": 3,
+  "excludeDomains": [
+    "noblecause.ai",
+    "*.noblecause.ai",
+    "github.com/noblecause-ai",
+    "raw.githubusercontent.com/noblecause-ai",
+    "noblecause-ai.github.io"
+  ],
+  "startPublishedDate": "2026-07-12T00:00:00Z",
+  "endPublishedDate": "2026-11-10T00:00:00Z",
+  "contents": {
+    "highlights": true
+  }
+}
