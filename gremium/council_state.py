@@ -67,6 +67,11 @@ def require_session_open(schedule):
         )
 
 
+def require_research_open(schedule):
+    if (schedule.get('regular_operation') or {}).get('research_hold'):
+        raise RuntimeError('Bezahlte Wochenrecherche ist bis zur Freigabe des Stewards pausiert.')
+
+
 def chair_for(config, schedule):
     settings = config['live_council']
     if tuple(settings['rotation']) != ORDER:

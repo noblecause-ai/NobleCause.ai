@@ -21,6 +21,7 @@ ROOT = HERE.parent
 
 import prompts  # noqa: E402
 import openrouter_scout  # noqa: E402
+from council_state import require_research_open  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
 from scout_context import blind_research, historical_comparison  # noqa: E402
 from process_config import (  # noqa: E402
@@ -591,12 +592,15 @@ def _main():
     if cap <= 0:
         parser.error("--budget-cap muss positiv sein")
 
-    load_env(HERE, ROOT)
     config = json.loads((HERE / "config.json").read_text())
+    live_council = feature_enabled(config, 'live_council')
+    schedule_path = ROOT / 'schedule.json'
+    schedule = json.loads(schedule_path.read_text()) if live_council or schedule_path.exists() else {}
+    require_research_open(schedule)
+    load_env(HERE, ROOT)
     try:
         scouts = configured_scouts(config)
-        schedule_snapshot = json.loads((ROOT / 'schedule.json').read_text()) if feature_enabled(config, 'live_council') else None
-        wart_cfg = configured_wart(config, schedule_snapshot)
+        wart_cfg = configured_wart(config, schedule if live_council else None)
     except ValueError as exc:
         sys.exit(f"Abbruch: {exc}")
     try:

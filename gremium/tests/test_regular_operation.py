@@ -79,6 +79,43 @@ def test_council_tariff_hold_does_not_block_weekly_research(root, config):
         operation.reserve(root, {'kind': 'session', 'due': '2026-09-21T06:00:00Z'})
 
 
+def test_research_hold_prevents_reservation_and_execution(root, config, monkeypatch):
+    hold = {'reason': 'held_by_steward'}
+    due = '2026-09-21T06:00:00Z'
+    reschedule(root, next_research=due, regular_operation={'research_hold': hold})
+    schedule_path = root / 'schedule.json'
+    before = schedule_path.read_bytes()
+    assert operation.inspect_plan(root, config, 'research') == {
+        'kind': 'research', 'ready': False, 'status': 'held', 'research_hold': hold,
+    }
+    assert operation.plan(root, config, 'session', NOW)['ready'] is False
+    with pytest.raises(RuntimeError, match='Wochenrecherche.*pausiert'):
+        operation.plan(root, config, 'research', NOW, reserved=True)
+    with pytest.raises(RuntimeError, match='gesperrt'):
+        operation.reserve(root, {'kind': 'research', 'due': due})
+    assert schedule_path.read_bytes() == before
+    reschedule(root, regular_operation={'session_hold': hold})
+    assert operation.plan(root, config, 'research', NOW)['due'] == due
+
+
+@pytest.mark.parametrize('live_council', [True, False])
+def test_direct_weekly_research_stops_before_api_setup(root, config, monkeypatch, live_council):
+    import run_wart
+
+    reschedule(root, regular_operation={'research_hold': {'reason': 'held_by_steward'}})
+    config['features']['live_council']['enabled'] = live_council
+    here = root / 'gremium'
+    here.mkdir()
+    (here / 'config.json').write_text(json.dumps(config))
+    monkeypatch.setattr(run_wart, 'ROOT', root)
+    monkeypatch.setattr(run_wart, 'HERE', here)
+    monkeypatch.setattr(sys, 'argv', ['run_wart.py'])
+    monkeypatch.setattr(run_wart, 'load_env', lambda *args: pytest.fail('Held research reached API setup'))
+    with pytest.raises(RuntimeError, match='Wochenrecherche.*pausiert'):
+        run_wart.main()
+    assert not list((root / 'journal').iterdir())
+
+
 def test_due_session_reuses_current_dossier_and_stable_id(root,config):
     dossier(root, config)
     config['live_council']['input_bounds'] = synthetic_policies(root)

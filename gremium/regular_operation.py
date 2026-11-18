@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from council_state import atomic_write, chair_for, encoded, require_session_open
+from council_state import atomic_write, chair_for, encoded, require_research_open, require_session_open
 from cost_bounds import InputBounds, InsufficientBudget, MissingBound
 from process_config import configured_scouts, feature_enabled
 
@@ -58,6 +58,8 @@ def plan(root, config, kind, now=None, *, reserved=False):
     state = schedule.get('regular_operation') or {}
     if kind == 'session':
         require_session_open(schedule)
+    else:
+        require_research_open(schedule)
     blocked = state.get('blocked')
     if blocked:
         raise RuntimeError('Regelbetrieb nach unvollständigem Lauf angehalten; Belege und Betriebsalarm prüfen')
@@ -117,8 +119,9 @@ def inspect_plan(root, config, kind):
     if state.get('blocked') or state.get('inflight'):
         return {'kind': kind, 'ready': False, 'status': 'held',
                 'blocked': state.get('blocked'), 'inflight': state.get('inflight')}
-    if kind == 'session' and state.get('session_hold'):
-        return {'kind': kind, 'ready': False, 'status': 'held', 'session_hold': state['session_hold']}
+    hold = f'{kind}_hold'
+    if state.get(hold):
+        return {'kind': kind, 'ready': False, 'status': 'held', hold: state[hold]}
     try:
         return plan(root, config, kind)
     except MissingBound as exc:
@@ -130,7 +133,7 @@ def reserve(root, task):
     schedule = json.loads(path.read_text())
     state = schedule.setdefault('regular_operation', {})
     if (state.get('inflight') or state.get('blocked')
-            or (task['kind'] == 'session' and state.get('session_hold'))):
+            or state.get(f"{task['kind']}_hold")):
         raise RuntimeError('Regelbetrieb bereits reserviert oder gesperrt')
     state['inflight'] = {'owner':owner(), 'kind':task['kind'], 'due':task['due']}
     atomic_write(path, encoded(schedule))
@@ -204,6 +207,8 @@ def main(argv=None):
                 stream.write('## Sitzungsbudget noch nicht belegt\n\n' + task['budget_hold'] + '\n')
             elif task.get('session_hold'):
                 stream.write('## Ratssitzungen pausiert\n\nDie nächste Sitzung wartet auf Freigabe.\n')
+            elif task.get('research_hold'):
+                stream.write('## Bezahlte Wochenrecherche pausiert\n\nDer nächste Wochenlauf wartet auf Freigabe.\n')
             else:
                 stream.write('## Regelbetrieb weiterhin angehalten\n\n'
                              'Die bestehende Laufreservierung oder Betriebssperre bleibt aktiv. '

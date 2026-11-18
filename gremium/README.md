@@ -72,6 +72,10 @@ Wochenzeitplan und die separate Ratssperre stehen in `schedule.json`.
 im Regelbetrieb und bei direktem Aufruf, auch für private Läufe. Zur
 Wiederaufnahme sind die ausdrückliche Freigabe des Stewards und die Tarif-
 und Budgetprüfung erforderlich.
+Eine getrennte `regular_operation.research_hold` hält die bezahlte
+Wochenrecherche sowohl automatisch als auch bei direktem Start an. Der fällige
+Termin bleibt gespeichert. Wird nur diese Sperre nach Freigabe entfernt, kann
+die nächste Fälligkeitsprüfung die Recherche nachholen.
 
 Die folgenden Abschnitte dokumentieren weiterhin die historischen Batch-Verfahren.
 
