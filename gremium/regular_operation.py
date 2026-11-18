@@ -14,7 +14,7 @@ import shutil
 import subprocess
 import sys
 
-from council_state import atomic_write, chair_for, encoded
+from council_state import atomic_write, chair_for, encoded, require_session_open
 from cost_bounds import InputBounds, InsufficientBudget, MissingBound
 from process_config import configured_scouts, feature_enabled
 
@@ -56,8 +56,8 @@ def plan(root, config, kind, now=None, *, reserved=False):
     configuration(config)
     schedule = json.loads((root/'schedule.json').read_text())
     state = schedule.get('regular_operation') or {}
-    if kind == 'session' and state.get('session_hold'):
-        raise RuntimeError('Ratssitzungen bleiben bis zur Tarif- und Budgetfreigabe gesperrt')
+    if kind == 'session':
+        require_session_open(schedule)
     blocked = state.get('blocked')
     if blocked:
         raise RuntimeError('Regelbetrieb nach unvollständigem Lauf angehalten; Belege und Betriebsalarm prüfen')
@@ -202,6 +202,8 @@ def main(argv=None):
         with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as stream:
             if task.get('budget_hold'):
                 stream.write('## Sitzungsbudget noch nicht belegt\n\n' + task['budget_hold'] + '\n')
+            elif task.get('session_hold'):
+                stream.write('## Ratssitzungen pausiert\n\nDie nächste Sitzung wartet auf Freigabe.\n')
             else:
                 stream.write('## Regelbetrieb weiterhin angehalten\n\n'
                              'Die bestehende Laufreservierung oder Betriebssperre bleibt aktiv. '

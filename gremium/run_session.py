@@ -28,6 +28,7 @@ ROOT = HERE.parent
 import prompts  # noqa: E402
 import organizations  # noqa: E402
 from ballot_status import check_contract, read_decision  # noqa: E402
+from council_state import require_session_open  # noqa: E402
 from envtools import load_env, require_keys  # noqa: E402
 from scout_context import blind_research, historical_comparison  # noqa: E402
 from process_config import (  # noqa: E402
@@ -1019,6 +1020,9 @@ def main():
         else:
             print(f"Live-Rat-Pilot {result['id']}: {result['status']}; keine Rekordübernahme oder Rotation")
         return
+    schedule_path = ROOT / 'schedule.json'
+    if schedule_path.exists():
+        require_session_open(json.loads(schedule_path.read_text()))
     if feature_enabled(config, 'live_council'):
         parser.error('0.6-Backend derzeit über --live-council und --dossier-json starten; Frontend/Rollout noch offen')
     routed = openrouter.validate_roster(config["models"])

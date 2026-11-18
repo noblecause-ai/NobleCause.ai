@@ -67,9 +67,11 @@ leitet Säulenlücken und die Zusammenfassung aus der Fundliste ab.
 
 Die [Abnahme](https://github.com/noblecause-ai/NobleCause.ai/actions/runs/42306793824)
 hat die Auswertung mit dem archivierten Exa-Quellenpaket geprüft. Der
-Wochenzeitplan und die separate Ratssperre stehen in `schedule.json`. Für
-öffentliche Sitzungen gilt `regular_operation.session_hold` bis zur
-Tarif- und Budgetfreigabe.
+Wochenzeitplan und die separate Ratssperre stehen in `schedule.json`.
+`regular_operation.session_hold` sperrt Sitzungsstarts und Wiederaufnahmen
+im Regelbetrieb und bei direktem Aufruf, auch für private Läufe. Zur
+Wiederaufnahme sind die ausdrückliche Freigabe des Stewards und die Tarif-
+und Budgetprüfung erforderlich.
 
 Die folgenden Abschnitte dokumentieren weiterhin die historischen Batch-Verfahren.
 

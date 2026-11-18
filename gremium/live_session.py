@@ -7,7 +7,10 @@ import openrouter
 import prompts
 from ballot_status import CONTRACT
 from cost_bounds import Budget, InputBounds, InsufficientBudget
-from council_state import VERSION, Events, atomic_write, chair_for, digest, encoded, process_lock, validate_record
+from council_state import (
+    VERSION, Events, atomic_write, chair_for, digest, encoded, process_lock,
+    require_session_open, validate_record,
+)
 from envtools import load_env, require_keys
 from live_debate import CHAIR_SYSTEM, FINAL_TASK, SPEECH_TASK, SUMMARY_TASK, chair_response_format, conduct, session_budget
 
@@ -255,10 +258,6 @@ def run(root, config, args):
         speech_amendment = {**amendment, 'sha256':digest(payload), 'path':path.name}
     if not public and any(output.is_relative_to(root / p) for p in ('sessions','journal','commissions','site')):
         raise ValueError('Backend-Pilot schreibt zunächst außerhalb veröffentlichter Rekorde')
-    today = datetime.date.today().isoformat()
-    if output.exists() and args.resume and (output/'run-input.json').exists():
-        today = json.loads((output/'run-input.json').read_text())['date']
-    context, research_bytes, research_info, number, history_bytes = dossier_context(root, config, args.dossier_json, today)
     observe = getattr(args, 'observe_costs', False)
     if regular and observe:
         raise ValueError('Reguläre Ratssitzung benötigt ein begrenztes Budget mit Abschlussreserve')
@@ -272,8 +271,13 @@ def run(root, config, args):
     budget = Budget(openrouter.amount(args.budget_cap) / fx, bounds, observe=observe)
     with process_lock(root):
         schedule = json.loads((root / 'schedule.json').read_text())
-        if public and (schedule.get('regular_operation') or {}).get('session_hold'):
-            raise RuntimeError('Ratssitzungen bleiben bis zur Tarif- und Budgetfreigabe gesperrt')
+        require_session_open(schedule)
+        today = datetime.date.today().isoformat()
+        if output.exists() and args.resume and (output/'run-input.json').exists():
+            today = json.loads((output/'run-input.json').read_text())['date']
+        context, research_bytes, research_info, number, history_bytes = dossier_context(
+            root, config, args.dossier_json, today,
+        )
         chair, index = chair_for(config, schedule)
         if regular:
             quote = session_budget(cfg['models'], chair, cfg['output_limits'], bounds)

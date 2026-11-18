@@ -59,6 +59,14 @@ def process_lock(root):
             fcntl.flock(stream, fcntl.LOCK_UN)
 
 
+def require_session_open(schedule):
+    if (schedule.get('regular_operation') or {}).get('session_hold'):
+        raise RuntimeError(
+            'Ratssitzungen sind pausiert. Die Wiederaufnahme braucht die Freigabe des Stewards '
+            'sowie eine Tarif- und Budgetfreigabe.'
+        )
+
+
 def chair_for(config, schedule):
     settings = config['live_council']
     if tuple(settings['rotation']) != ORDER:

@@ -343,18 +343,41 @@ def setup_run(tmp_path,monkeypatch):
     return cfg,args
 
 
-def test_public_session_cannot_bypass_tariff_hold(tmp_path, monkeypatch):
+@pytest.mark.parametrize('public_session', [True, False])
+@pytest.mark.parametrize('resume', [True, False])
+def test_live_session_cannot_bypass_hold(tmp_path, monkeypatch, public_session, resume):
     cfg, args = setup_run(tmp_path, monkeypatch)
     path = tmp_path / 'schedule.json'
     schedule = json.loads(path.read_text())
     schedule['regular_operation']['session_hold'] = {'reason': 'pending_tariff_and_budget'}
     path.write_text(json.dumps(schedule))
-    args.public_session = True
-    args.output_dir = None
-    args.live_feed_dir = tmp_path / 'feed'
+    args.public_session = public_session
+    args.resume = resume
+    if public_session:
+        args.output_dir = None
+        args.live_feed_dir = tmp_path / 'feed'
+    Path(args.dossier_json).unlink()
+    monkeypatch.setattr(live_session, 'load_env', lambda *a: pytest.fail('Paused session reached API setup'))
     with pytest.raises(RuntimeError, match='Tarif- und Budgetfreigabe'):
         live_session.run(tmp_path, cfg, args)
     assert not list((tmp_path / 'sessions').iterdir())
+    assert not (tmp_path / 'runs').exists()
+
+
+def test_legacy_session_stops_before_api_setup(tmp_path, monkeypatch):
+    cfg, _ = setup_run(tmp_path, monkeypatch)
+    path = tmp_path / 'schedule.json'
+    schedule = json.loads(path.read_text())
+    schedule['regular_operation']['session_hold'] = {'reason': 'held_by_steward'}
+    path.write_text(json.dumps(schedule))
+    cfg['features']['live_council']['enabled'] = False
+    (tmp_path / 'gremium/config.json').write_text(json.dumps(cfg))
+    monkeypatch.setattr(run_session, 'ROOT', tmp_path)
+    monkeypatch.setattr(run_session, 'HERE', tmp_path / 'gremium')
+    monkeypatch.setattr(run_session.sys, 'argv', ['run_session.py', '--question', 'Frage', '--title', 'Test'])
+    monkeypatch.setattr(run_session, 'load_env', lambda *a: pytest.fail('Paused session reached API setup'))
+    with pytest.raises(RuntimeError, match='Ratssitzungen sind pausiert'):
+        run_session.main()
 
 
 def test_full_backend_record_byte_equality_rotation_and_resume(tmp_path,monkeypatch):

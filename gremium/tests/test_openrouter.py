@@ -321,8 +321,11 @@ def synthetic_run(tmp_path,monkeypatch,invalid_phase=None):
     cfg['features']['live_council']['enabled']=False
     cfg['features']['three_scouts']['enabled']=False
     here=tmp_path/'gremium';here.mkdir();(here/'config.json').write_text(json.dumps(cfg))
-    for name in ['manifest.md','organizations.json','schedule.json']:
+    for name in ['manifest.md','organizations.json']:
         (tmp_path/name).write_bytes((ROOT/name).read_bytes())
+    schedule = json.loads((ROOT / 'schedule.json').read_text())
+    (schedule.get('regular_operation') or {}).pop('session_hold', None)
+    (tmp_path / 'schedule.json').write_text(json.dumps(schedule))
     (here/'sources.md').write_text('Synthetic evidence')
     (tmp_path/'sessions').mkdir()
     monkeypatch.setattr(run_session,'ROOT',tmp_path);monkeypatch.setattr(run_session,'HERE',here)
