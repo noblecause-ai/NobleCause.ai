@@ -159,6 +159,7 @@
 			<h2 id="count-title">{t.council.countTitle}</h2>
 			{#if liveFeed}<p class="count-intro">{liveCopy[lang].session(home.currentSession.number)} · {formatDate(home.currentSession.date, t.lang)}</p>{/if}
 			<p class="count-intro">{t.council.countIntro} {t.council.countAreaCue}</p>
+            {#if recordLang}<p class="record-note">{t.common.recordNote}</p>{/if}
 			<!-- Fokus-Auswahl als CSS-Radiogruppe: der Klick auf ein Emblem aktualisiert
 			     NUR den Trichter (Maschinenergebnis), kein Sprung — kein Fragment, kein
 			     Scroll. Jedes Radio liegt IN seinem Label und füllt es unsichtbar (bleibt

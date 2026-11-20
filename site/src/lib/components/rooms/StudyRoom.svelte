@@ -138,6 +138,15 @@
 	</StageHero>
 
 	<main>
+        <section class="room-section" aria-label={lang === 'en' ? 'AMF case study' : 'Geprüfter AMF-Fall'}>
+            {#if home.schedule?.sessionHeld}
+                <p>{lang === 'en' ? 'Council meetings are paused.' : 'Die Ratsberatungen sind pausiert.'}</p>
+            {/if}
+            {#if home.schedule?.researchHeld}
+                <p>{lang === 'en' ? 'Automated research is paused.' : 'Die automatische Recherche ist pausiert.'}</p>
+            {/if}
+            <p><a href="/fall/amf/">{lang === 'en' ? 'Malaria protection through AMF · Explore the case in German' : 'Malariaschutz durch AMF · Empfehlung, Ratspositionen und Belege verstehen'}</a></p>
+        </section>
 		<!-- Die Tafel trägt die Antwort — pragerendert, No-JS liest sie am Eingang. -->
 		<ResultBoard {home} {t} />
 

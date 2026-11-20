@@ -1,0 +1,155 @@
+{
+  "organizationId": "against-malaria-foundation",
+  "evidenceDate": "18. November 2026",
+  "linkCheckDate": "19. November 2026",
+  "sessionId": "2026-10-21-regular",
+  "cards": [
+    {
+      "id": "empfehlung",
+      "title": "Warum GiveWell AMF empfiehlt",
+      "kind": "Evaluator-Bewertung",
+      "claim": "GiveWell führt die Against Malaria Foundation unter seinen Top Charities. Es bewertet den Malariaschutz durch insektizidbehandelte Netze als wirksam und berücksichtigt Kosten, Umsetzung und andere Geldgeber.",
+      "limit": "Die Wirkungsschätzung enthält Modelle und Annahmen. GiveWell benennt selbst Unsicherheiten bei Monitoring und Kosten anderer Beteiligter. Ein Durchschnittswert ersetzt keine Kostenprüfung für eine einzelne Kampagne.",
+      "publisher": "GiveWell",
+      "period": "Top-Charities-Übersicht Oktober 2026; ausführliche AMF-Bewertung Dezember 2023",
+      "retrieved": "19. November 2026",
+      "locator": "Top Charities, Nets to prevent malaria; AMF-Bericht, Summary und Main reservations",
+      "sources": [
+        {
+          "label": "Aktuelle Empfehlung",
+          "url": "https://www.givewell.org/charities/top-charities"
+        },
+        {
+          "label": "Bewertung und Einschränkungen",
+          "url": "https://www.givewell.org/charities/amf"
+        }
+      ]
+    },
+    {
+      "id": "monitoring",
+      "title": "Was in Ituri tatsächlich erhoben wurde",
+      "kind": "Organisationsbericht über Erhebungen",
+      "claim": "Für die Ituri-Kampagne 2023/24 veröffentlicht AMF Nachkontrollen durch Caritas Congo Asbl. Nach neun Monaten meldet der Bericht 90,2 % vorhandene und 87,1 % brauchbare Netze. Nach 27 Monaten sind es 24,2 % und 17,2 %.",
+      "limit": "Nutzung umfasst Netze beliebiger Herkunft im befragten Haushalt. Stichprobenumfang und Messzeitpunkte unterscheiden sich. Die Erhebung allein belegt weder eine Zahl verhinderter Todesfälle noch die Ursache des Rückgangs.",
+      "publisher": "Against Malaria Foundation; Erhebung durch Caritas Congo Asbl",
+      "period": "Kampagne Dezember 2023 bis Januar 2024; Nachkontrollen 2024, 2025 und 2026",
+      "retrieved": "18. November 2026",
+      "locator": "Ituri 2023, PDM-9 bis PDM-27, PDF-Seiten 1–4",
+      "sources": [
+        {
+          "label": "Ituri-Bericht als PDF",
+          "url": "https://www.againstmalaria.com/images/00/37/37558.pdf"
+        }
+      ],
+      "presenceDefinition": "„Vorhanden“ ist der Anteil der laut befragten Haushalten ursprünglich erhaltenen AMF-Netze, die noch im Haushalt hängen oder gelagert sind.",
+      "conditionDefinition": "„Brauchbar“ ist der Anteil der erhaltenen AMF-Netze in gutem oder akzeptablem Zustand. Vermisste Netze sind aus dieser Bezugsgröße ausgeschlossen, als zerrissen entsorgte Netze bleiben enthalten."
+    },
+    {
+      "id": "bedarf",
+      "title": "Globaler Bedarf und ein konkreter Einsatz",
+      "kind": "Organisations-Selbstauskunft",
+      "claim": "AMF zeigte beim geprüften Abruf am 18. November eine globale Finanzierungslücke von 298 Mio. USD und darin eine unmittelbare Lücke von 122,72 Mio. USD. Die Detailtabelle führt drei Ituri-2027-Netztranchen bereits unter vertraglich gebundenen Mitteln.",
+      "limit": "Die Anzeige wird laufend aktualisiert. Einzelpreise und Beträge der Ituri-Tranchen sind zurückgehalten. Die zusätzlich finanzierungssuchenden Programme sind anonymisiert. Aus diesem Stand lässt sich kein noch offener Ituri-Betrag ableiten.",
+      "publisher": "Against Malaria Foundation",
+      "period": "Momentaufnahme vom 18. November 2026",
+      "retrieved": "18. November 2026",
+      "locator": "Overall Funding Gap; Immediate Funding Gap; Committed (under contract), Ituri 2027; W/H-Erklärung",
+      "sources": [
+        {
+          "label": "AMFs Finanzierungslücke",
+          "url": "https://www.againstmalaria.com/AMFFundingGap.aspx"
+        }
+      ]
+    },
+    {
+      "id": "kosten",
+      "title": "Ein Modellwert für Ituri",
+      "kind": "Evaluator-Modell",
+      "claim": "Im GiveWell-Modell stehen 4,85 USD je verteiltem insektizidbehandeltem Netz in der Ituri-Spalte. Die Spalte unterstellt 100 % PBO-Netze, die einen zusätzlichen Wirkstoffverstärker enthalten.",
+      "limit": "Das ist ein Modellinput. Die zugrunde liegende Kostenanalyse ist unveröffentlicht. Ob Wert und Netztyp zur geplanten Phase 2/2 in Ituri 2027 passen, bleibt im geprüften Material offen. Der relevante Tabelleninhalt ist gegenüber dem Abruf vom 8. November gleich.",
+      "publisher": "GiveWell; öffentliches Google-Arbeitsblatt",
+      "period": "Im Oktober-Addendum 2026 verlinktes Modell; kampagnenspezifische Gültigkeit offen",
+      "retrieved": "18. November 2026",
+      "locator": "Blatt Inputs, L2–L3 (DRC, Ituri), L16 (Kosten), L89 (PBO-Anteil), AF16 (Analysehinweis)",
+      "sources": [
+        {
+          "label": "GiveWell-Modell öffnen",
+          "url": "https://docs.google.com/spreadsheets/d/1v3WuUPQEY9WULeL-CZVqylCv80GZ6TyDtIGpVB4Hofg/edit?gid=1266854728"
+        }
+      ]
+    },
+    {
+      "id": "foerderplan",
+      "title": "Was für 2027 angekündigt ist",
+      "kind": "Organisations-Selbstauskunft über einen Plan",
+      "claim": "AMF kündigte am 10. Oktober 2026 eine vereinbarte Finanzierung von 96 Mio. Netzen für die DRC 2027–2029 an. Für Ituri nennt der Plan rund 4,4 Mio. Netze im Jahr 2027. AMF nennt den Global Fund als Mitfinanzierer eines Teils der Nichtnetzkosten.",
+      "limit": "Eine vereinbarte Finanzierung und eine geplante Verteilung belegen noch kein abgeschlossenes Ergebnis. Die Ankündigung beziffert weder den offenen Ituri-Anteil noch die aktuellen Kosten einer zusätzlich finanzierbaren Leistung.",
+      "publisher": "Against Malaria Foundation, Rob Mather",
+      "period": "Ankündigung 10. Oktober 2026; Planung 2027–2029",
+      "retrieved": "18. November 2026",
+      "locator": "Summary; Provinzliste 2027; Key elements of our agreement",
+      "sources": [
+        {
+          "label": "AMF-Programmankündigung",
+          "url": "https://www.againstmalaria.com/Newsitem.aspx?NewsItem=AMF-agrees-to-fund-96-million-nets-for-distribution-in-the-Democratic-Republic-of-Congo-DRC-in-2027-to-2029"
+        }
+      ]
+    },
+    {
+      "id": "kostenstand",
+      "title": "Warum eine alte Kostenspanne entfällt",
+      "kind": "Änderungsvermerk eines Evaluators",
+      "claim": "Ein Addendum vom Oktober 2026 erklärt die Kostenwirksamkeitsfiguren des zuletzt im April 2024 aktualisierten allgemeinen ITN-Berichts für durch eine neuere Analyse ersetzt.",
+      "limit": "Die früher genannte Spanne von 18–26 USD je zusätzlich unter einem Netz schlafendem Kind unter fünf Jahren bleibt historisch. Sie betraf eine begrenzte Länderauswahl und ist kein aktueller Entscheidungswert.",
+      "publisher": "GiveWell",
+      "period": "Bericht April 2024; Addendum Oktober 2026",
+      "retrieved": "8. November 2026",
+      "locator": "Addendum; ältere Berechnung zu zusätzlich erreichten Kindern unter fünf Jahren",
+      "sources": [
+        {
+          "label": "Bericht mit Addendum",
+          "url": "https://www.givewell.org/international/technical/programs/insecticide-treated-nets#Addendum"
+        }
+      ]
+    },
+    {
+      "id": "fonds",
+      "title": "Wer beim Fonds die Zuweisung übernimmt",
+      "kind": "Veröffentlichte Fondsregeln",
+      "claim": "GiveWell vergibt Mittel des Top Charities Fund nach seiner jeweils aktuellen Recherche an ausgewählte Fördermöglichkeiten in globaler Gesundheit und Entwicklung. Es berücksichtigt dabei verbleibende Lücken, zusätzliche Förderpläne und Kostenwirksamkeit.",
+      "limit": "Die konkrete Zuweisung übernimmt GiveWell. Eine Spende an diesen Fonds ist keine Festlegung auf AMF oder Ituri. Auch die Zuweisung beruht auf Bewertungen und Annahmen.",
+      "publisher": "GiveWell",
+      "period": "Fondsregeln, zuletzt aktualisiert September 2026",
+      "retrieved": "19. November 2026",
+      "locator": "How we make grant decisions; What you can expect if you donate",
+      "sources": [
+        {
+          "label": "Top Charities Fund und Regeln",
+          "url": "https://www.givewell.org/top-charities-fund"
+        }
+      ]
+    }
+  ],
+  "positions": {
+    "anthropic/claude-fable-5.1": {
+      "heading": "Dokumentation als Freigabebedingung",
+      "summary": "Fable hält an einer bedingten AMF-Empfehlung fest. Die datierte GiveWell-Bewertung und die Zuordnung zum Träger sollen vor einer Freigabe dokumentiert sein."
+    },
+    "openai/gpt-6-astra": {
+      "heading": "Erst die Wirkungskette prüfen",
+      "summary": "Astra ändert sein Votum zur Enthaltung. Die organisationsbezogene Kostenwirksamkeit sei in dieser Sitzung noch nicht hinreichend nachvollziehbar ausgewiesen."
+    },
+    "x-ai/grok-4.6": {
+      "heading": "Ein Vorbehalt ersetzt keinen Beleg",
+      "summary": "Grok schließt sich der Enthaltung an. Ein zitierter Bericht genüge im damaligen Prüfstand noch nicht als geprüfte Verbindung von Träger, Wirkung und Kosten."
+    },
+    "moonshotai/kimi-k3": {
+      "heading": "Denselben Maßstab anwenden",
+      "summary": "Kimi zieht seine bedingte Empfehlung zurück. Auch bei AMF müsse die organisationsbezogene Begründung in dieser Sitzung an den Originalen geprüft sein."
+    },
+    "z-ai/glm-5.3": {
+      "heading": "Bewertung trägt eine bedingte Empfehlung",
+      "summary": "GLM hält die bekannte GiveWell-Bewertung für eine Grundlage. Die Bestätigung am Original und eine verbleibende Lücke macht es ausdrücklich zur Freigabebedingung."
+    }
+  }
+}

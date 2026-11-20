@@ -264,7 +264,7 @@ test('The Council (/ratssaal/) trägt Zählwerk, Voten, Revisionen in der Marke,
 	// aktuelle Sitzung eine Organisationsänderung zwischen Erst- und Schlussvotum
 	// trägt. Gibt es keine, darf auch kein <del>-Erstvotum erscheinen.
 	if (DATA.revisions.length) {
-		assert.ok(html.includes('Vorbehalt ▸') || html.includes('changedMark'), 'Council: Revisionsmarke fehlt');
+		assert.ok(html.includes('Vorbehalt ▸') || html.includes('cf-changed'), 'Council: Revisionsmarke fehlt');
 		for (const rev of DATA.revisions) {
 			assert.ok(html.includes(`>${rev.fromName}</del>`), `Council fehlt Revision-Erstvotum: ${rev.fromName}`);
 		}

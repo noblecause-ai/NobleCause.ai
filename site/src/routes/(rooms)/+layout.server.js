@@ -69,7 +69,11 @@ export function load() {
 				convene: last.convene ?? null,
 				refusal: last.kind === 'refusal'
 			},
-			schedule: { nextSession: schedule?.next_session ?? null }
+			schedule: {
+                nextSession: schedule?.next_session ?? null,
+                sessionHeld: Boolean(schedule?.regular_operation?.session_hold),
+                researchHeld: Boolean(schedule?.regular_operation?.research_hold)
+            }
 		}
 	};
 }
