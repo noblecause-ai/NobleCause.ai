@@ -52,6 +52,9 @@ unerwartetem Zustand wird gestoppt und berichtet, nicht geraten.
   niemals selbst.
 - Rekordtext bleibt in der Originalsprache. Die englische Site übersetzt keine
   Sitzungsprosa, Voten oder Korrekturhinweise maschinell.
+  Ausnahme: Der Steward hat am 22.11.2026 für die AMF-Fallansicht ausdrücklich
+  gekennzeichnete englische Leseübersetzungen freigegeben. Die deutschen
+  Originale bleiben dort abrufbar; die kanonischen Rekorddateien bleiben unverändert.
 - Fehlende Zulieferungen dürfen keinen stillen Ersatzinhalt erzeugen.
   Technische Fehler bleiben laut; explizite Modell-Verweigerungen werden als
   solche geführt.

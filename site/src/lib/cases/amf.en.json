@@ -1,0 +1,141 @@
+{
+  "evidenceDate": "18 November 2026",
+  "linkCheckDate": "19 November 2026",
+  "cards": [
+    {
+      "id": "empfehlung",
+      "title": "Why GiveWell recommends AMF",
+      "kind": "Evaluator assessment",
+      "claim": "GiveWell lists the Against Malaria Foundation among its Top Charities. It assesses malaria prevention using insecticide-treated nets as effective and considers costs, implementation and other funders.",
+      "limit": "The impact estimate includes models and assumptions. GiveWell itself identifies uncertainties about monitoring and the costs borne by other participants. An average does not replace a cost assessment for an individual campaign.",
+      "publisher": "GiveWell",
+      "period": "Top Charities overview, October 2026; detailed AMF assessment, December 2023",
+      "retrieved": "19 November 2026",
+      "locator": "Top Charities, Nets to prevent malaria; AMF report, Summary and Main reservations",
+      "sourceLabels": [
+        "Current recommendation",
+        "Assessment and limitations"
+      ]
+    },
+    {
+      "id": "monitoring",
+      "title": "What was actually measured in Ituri",
+      "kind": "Organisational report on surveys",
+      "claim": "AMF publishes follow-up surveys by Caritas Congo Asbl for the Ituri 2023/24 campaign. After nine months, the report records 90.2% of nets as present and 87.1% as serviceable. After 27 months, the figures are 24.2% and 17.2%.",
+      "limit": "Usage includes nets from any source in the surveyed household. Sample sizes and measurement dates differ. The survey alone establishes neither the number of deaths prevented nor the cause of the decline.",
+      "publisher": "Against Malaria Foundation; surveys by Caritas Congo Asbl",
+      "period": "Campaign from December 2023 to January 2024; follow-up surveys in 2024, 2025 and 2026",
+      "retrieved": "18 November 2026",
+      "locator": "Ituri 2023, PDM-9 to PDM-27, PDF pages 1–4",
+      "sourceLabels": [
+        "Ituri report as PDF"
+      ],
+      "presenceDefinition": "“Present” means the proportion of AMF nets originally received, as reported by surveyed households, that are still hanging or stored in the household.",
+      "conditionDefinition": "“Serviceable” means the proportion of received AMF nets in good or acceptable condition. Missing nets are excluded from this denominator; nets discarded because they were torn remain included."
+    },
+    {
+      "id": "bedarf",
+      "title": "Global funding needs and a specific campaign",
+      "kind": "Organisation self-report",
+      "claim": "When checked on 18 November, AMF displayed a global funding gap of USD 298 million, including an immediate gap of USD 122.72 million. Its detailed table lists three Ituri 2027 net tranches under funds already committed by contract.",
+      "limit": "The display is updated continuously. Unit prices and amounts for the Ituri tranches are withheld. Programmes still seeking additional funding are anonymised. This snapshot does not establish an outstanding amount for Ituri.",
+      "publisher": "Against Malaria Foundation",
+      "period": "Snapshot of 18 November 2026",
+      "retrieved": "18 November 2026",
+      "locator": "Overall Funding Gap; Immediate Funding Gap; Committed (under contract), Ituri 2027; W/H explanation",
+      "sourceLabels": [
+        "AMF funding gap"
+      ]
+    },
+    {
+      "id": "kosten",
+      "title": "A model input for Ituri",
+      "kind": "Evaluator model",
+      "claim": "The Ituri column of GiveWell’s model lists USD 4.85 per insecticide-treated net distributed. The column assumes 100% PBO nets, which contain an additional insecticide synergist.",
+      "limit": "This is a model input. The underlying cost analysis is unpublished. Whether the value and net type apply to the planned phase 2/2 in Ituri in 2027 remains unresolved in the checked material. The relevant spreadsheet content is unchanged from the 8 November retrieval.",
+      "publisher": "GiveWell; public Google spreadsheet",
+      "period": "Model linked in the October 2026 addendum; applicability to the specific campaign unresolved",
+      "retrieved": "18 November 2026",
+      "locator": "Inputs sheet, L2–L3 (DRC, Ituri), L16 (cost), L89 (PBO share), AF16 (analysis note)",
+      "sourceLabels": [
+        "Open the GiveWell model"
+      ]
+    },
+    {
+      "id": "foerderplan",
+      "title": "What is announced for 2027",
+      "kind": "Organisation self-report about a plan",
+      "claim": "On 10 October 2026, AMF announced an agreement to fund 96 million nets for the DRC in 2027–2029. The plan lists around 4.4 million nets for Ituri in 2027. AMF names the Global Fund as a co-funder of part of the non-net costs.",
+      "limit": "Agreed funding and a planned distribution do not establish a completed outcome. The announcement quantifies neither the outstanding Ituri share nor the current costs of an additional activity that could be funded.",
+      "publisher": "Against Malaria Foundation, Rob Mather",
+      "period": "Announcement of 10 October 2026; plans for 2027–2029",
+      "retrieved": "18 November 2026",
+      "locator": "Summary; 2027 province list; Key elements of our agreement",
+      "sourceLabels": [
+        "AMF programme announcement"
+      ]
+    },
+    {
+      "id": "kostenstand",
+      "title": "Why an older cost range is no longer used",
+      "kind": "Evaluator revision note",
+      "claim": "An October 2026 addendum states that the cost-effectiveness figures in the general ITN report, last updated in April 2024, have been superseded by a newer analysis.",
+      "limit": "The previously cited range of USD 18–26 per additional child under five sleeping under a net remains historical. It covered a limited set of countries and is not a current basis for a decision.",
+      "publisher": "GiveWell",
+      "period": "Report of April 2024; addendum of October 2026",
+      "retrieved": "8 November 2026",
+      "locator": "Addendum; older calculation for additional children under five reached",
+      "sourceLabels": [
+        "Report with addendum"
+      ]
+    },
+    {
+      "id": "fonds",
+      "title": "Who makes allocations through the fund",
+      "kind": "Published fund rules",
+      "claim": "GiveWell allocates Top Charities Fund donations to selected funding opportunities in global health and development based on its current research. It considers remaining gaps, additional funding plans and cost-effectiveness.",
+      "limit": "GiveWell makes the specific allocation. A donation to this fund is not an earmark for AMF or Ituri. Its allocations also rest on assessments and assumptions.",
+      "publisher": "GiveWell",
+      "period": "Fund rules, last updated September 2026",
+      "retrieved": "19 November 2026",
+      "locator": "How we make grant decisions; What you can expect if you donate",
+      "sourceLabels": [
+        "Top Charities Fund and rules"
+      ]
+    }
+  ],
+  "positions": {
+    "anthropic/claude-fable-5.1": {
+      "heading": "Documentation as a condition for release",
+      "summary": "Fable maintains a conditional recommendation of AMF. The dated GiveWell assessment and attribution to the implementing organisation should be documented before funds are released.",
+      "reason": "Release only after (1) recorded documentation of the dated GiveWell assessment of AMF, including cost assumptions and an organisation-specific account of how the intervention produces its effects, plus confirmation that AMF implements the referenced distribution; (2) evidence of a current distribution gap not covered by the USD 276 million grant or other funders; (3) a costed distribution plan with monitoring of use and durability; (4) dual-active-ingredient nets (chlorfenapyr–pyrethroid) only where local resistance is documented and the additional costs are justified. If condition 1 fails, the vote becomes an abstention.",
+      "originalReasonSha256": "58582bbd4769b4cfdb924f0b5f29c96b4ceb3392cb52fc4b97fd35837a22024e"
+    },
+    "openai/gpt-6-astra": {
+      "heading": "Check how the organisation produces impact first",
+      "summary": "Astra changes its vote to abstention. The organisation-specific cost-effectiveness had not been documented clearly enough in this session.",
+      "reason": "Change from the initial vote, in line with event 47: the documented assessment does not establish the organisation-specific cost-effectiveness of additional funding for AMF clearly enough. The unverified DRC grant report does not close this gap in the reasoning. AMF remains the first candidate for further review; a documented GiveWell assessment identifying the funded activity, recipient, cost assumptions and how the intervention produces its effects could support a conditional recommendation. Remaining funding needs, replacement funding, resistance and durability would then need to be checked.",
+      "originalReasonSha256": "aa3497bc24c64b2462fbd3739d5f5ca78f2b6caa0e78cd5d9c1f8384a4f58fbb"
+    },
+    "x-ai/grok-4.6": {
+      "heading": "A reservation does not replace evidence",
+      "summary": "Grok joins the abstentions. Under the assessment at the time, citing a report was not enough to establish the connection between the implementing organisation, impact and costs.",
+      "reason": "Under the shared standard, the organisation-specific account of how the intervention produces its effects has not been opened and checked here (GiveWell’s AMF assessment, the remaining gap after the DRC grant, resistance and durability). A reservation must not replace this reasoning. AMF remains the first candidate for further review.",
+      "originalReasonSha256": "2d1c9f8e19ed8fe7a9dfc74ba8d6099767f846f7d92698cad9c37477ecee5164"
+    },
+    "moonshotai/kimi-k3": {
+      "heading": "Apply the same standard",
+      "summary": "Kimi withdraws its conditional recommendation. For AMF too, the organisation-specific reasoning must be checked against original sources during this session.",
+      "reason": "AMF’s organisation-specific account of how the intervention produces its effects (attribution to the implementing organisation, marginal costs and the remaining funding gap) was not checked against original sources in this session; under event 47, this concerns the reasoning itself, not just a condition for release. AMF remains the first candidate for further review: document the GiveWell assessment with its date, funded activity and cost assumptions.",
+      "originalReasonSha256": "546e110f87668291d491d4b70f8b45f564271bfb4ea7caf6e9de1e8f488e346f"
+    },
+    "z-ai/glm-5.3": {
+      "heading": "The assessment supports a conditional recommendation",
+      "summary": "GLM considers the known GiveWell assessment a basis for a recommendation. Confirmation against the original and a remaining gap are explicit conditions for release.",
+      "reason": "Release funds only after documented confirmation of the current GiveWell assessment of AMF (funded activity, cost assumptions, room for more funding); then only for an evidenced funding gap not covered by the USD 276 million grant; dual-active-ingredient nets only where local resistance is supported by evidence; monitoring of use and degradation is mandatory. If checking the original does not confirm the basis for AMF, the recommendation becomes an abstention.",
+      "originalReasonSha256": "07591720be205b3bcfa448058895b6e278f3d0bc325d28ce2127c7569f74cf7a"
+    }
+  },
+  "questionTranslation": "For each NobleCause pillar, which intervention and implementing organisation offers the strongest justified recommendation for additional funding based on the current evidence available, and which uncertainties or counterevidence could change that recommendation?",
+  "originalQuestionSha256": "896a0a0e4fde431b9827b34b94beda5e844aed916933b1d6a0be2b6476179dcc"
+}

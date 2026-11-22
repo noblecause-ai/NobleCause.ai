@@ -1,37 +1,50 @@
 <script>
 	import StageHero from '$lib/components/rooms/StageHero.svelte';
+	import enUi from '$lib/cases/amf-ui.en.json';
+	import { amfPaths } from '$lib/cases/amf-paths.js';
 
-	let { caseData, room = 'study' } = $props();
-	const rooms = {
-		study: { name: 'The Study', action: 'Den Fall verstehen', path: '/fall/amf/', scene: 'antechamber', lead: '' },
-		council: { name: 'The Council', action: 'Die Stimmen lesen', path: '/fall/amf/rat/', scene: 'hall', lead: 'Fünf dokumentierte Positionen vom 21. Oktober 2026.' },
-		archive: { name: 'The Archive', action: 'Die Belege prüfen', path: '/fall/amf/belege/', scene: 'archive', lead: 'Von der Aussage zum Original.' }
+	let { caseData, room = 'study', lang = 'de' } = $props();
+	const t = (text) => {
+		if (lang === 'de') return text;
+		if (!Object.hasOwn(enUi, text)) throw new Error('Missing AMF UI translation: ' + text);
+		return enUi[text];
 	};
+	let rooms = $derived({
+		study: { name: 'The Study', action: t('Den Fall verstehen'), path: amfPaths.study[lang], scene: 'antechamber', lead: '' },
+		council: { name: 'The Council', action: t('Die Stimmen lesen'), path: amfPaths.council[lang], scene: 'hall', lead: t('Fünf dokumentierte Positionen vom 21. Oktober 2026.') },
+		archive: { name: 'The Archive', action: t('Die Belege prüfen'), path: amfPaths.archive[lang], scene: 'archive', lead: t('Von der Aussage zum Original.') }
+	});
 	let current = $derived(rooms[room]);
-	const evidence = (id) => '/fall/amf/belege/#beleg-' + id;
-	const verdict = (vote) => vote.decision === 'abstain' ? 'Enthaltung' : 'Bedingte Empfehlung';
+	const evidence = (id) => amfPaths.archive[lang] + '#beleg-' + id;
+	let homePath = $derived(lang === 'en' ? '/en/' : '/');
+	let councilPath = $derived(lang === 'en' ? '/en/council/' : '/ratssaal/');
+	const verdict = (vote) => vote.decision === 'abstain' ? t('Enthaltung') : t('Bedingte Empfehlung');
 </script>
 
 <svelte:head>
 	<title>AMF · {current.name} · NobleCause.ai</title>
-	<meta name="description" content="Malariaschutz durch die Against Malaria Foundation. Eine datierte Empfehlung, fünf historische Ratspositionen und die geprüften Belege zu Wirkung, Kosten und Zusatzbedarf." />
+	<meta name="description" content={t("Malariaschutz durch die Against Malaria Foundation. Eine datierte Empfehlung, fünf historische Ratspositionen und die geprüften Belege zu Wirkung, Kosten und Zusatzbedarf.")} />
 	<link rel="canonical" href={'https://noblecause.ai' + current.path} />
+	<link rel="alternate" hreflang="de" href={'https://noblecause.ai' + amfPaths[room].de} />
+	<link rel="alternate" hreflang="en" href={'https://noblecause.ai' + amfPaths[room].en} />
+	<link rel="alternate" hreflang="x-default" href={'https://noblecause.ai' + amfPaths[room].de} />
 </svelte:head>
 
-<div class="case-page" class:council={room === 'council'}>
-	<a class="skip" href="#fallinhalt">Zum Inhalt</a>
+<div class="case-page" lang={lang} class:council={room === 'council'}>
+	<a class="skip" href="#fallinhalt">{t("Zum Inhalt")}</a>
 	<header class="case-bar">
-		<a class="brand" href="/">NobleCause.ai</a>
-		<span>AMF · Fallansicht</span>
-		<a class="back" href="/ratssaal/">Zum Ratsraum</a>
+		<a class="brand" href={homePath}>NobleCause.ai</a>
+		<span>{t("AMF · Fallansicht")}</span>
+		<nav class="case-language" aria-label={t("Sprache")}><a href={amfPaths[room].de} lang="de" hreflang="de" aria-current={lang === "de" ? "page" : undefined}>DE</a><a href={amfPaths[room].en} lang="en" hreflang="en" aria-current={lang === "en" ? "page" : undefined}>EN</a></nav>
+		<a class="back" href={councilPath}>{t("Zum Ratsraum")}</a>
 	</header>
 
 	<StageHero
 		scene={'/media/scenes/' + current.scene + '-display.avif'}
 		sceneMobile={'/media/scenes/' + current.scene + '-portrait-display.avif'}
 		sceneMobile800={'/media/scenes/' + current.scene + '-portrait-800.avif'}
-		title="Malariaschutz mit AMF"
-		pitch="Against Malaria Foundation finanziert Moskitonetze zum Schutz vor Malaria."
+		title={t("Malariaschutz mit AMF")}
+		pitch={t("Against Malaria Foundation finanziert Moskitonetze zum Schutz vor Malaria.")}
 		roomWord={room === 'study' ? '' : current.name}
 		roomLead={current.lead}
 		bgPos="center top"
@@ -49,7 +62,7 @@
 	</StageHero>
 
 	<div class="case-content">
-		<nav class="room-nav" aria-label="AMF-Rundgang">
+		<nav class="room-nav" aria-label={t("AMF-Rundgang")}>
 			{#each Object.entries(rooms) as [key, entry]}
 				<a href={entry.path} aria-current={room === key ? 'page' : undefined}>
 					<strong>{entry.name}</strong><span>{entry.action}</span>
@@ -60,55 +73,56 @@
 		<div class="case-main" id="fallinhalt" tabindex="-1">
 			{#if room === 'study'}
 				<section class="opening" aria-labelledby="leitfrage">
-					<p class="dateline">Belege geprüft am {caseData.evidenceDate}</p>
-					<h2 id="leitfrage">AMF wird empfohlen.<br />Was trägt die Empfehlung?</h2>
+					<p class="dateline">{t("Belege geprüft am")} {caseData.evidenceDate}</p>
+					<h2 id="leitfrage">{t("AMF wird empfohlen.")}<br />{t("Was trägt die Empfehlung?")}</h2>
 				</section>
 				<div class="two-levels">
 					<section class="finding supported" aria-labelledby="wirkung">
-						<p class="eyebrow">Intervention und Organisation</p>
-						<h3 id="wirkung">Eine begründete Empfehlung</h3>
+						<p class="eyebrow">{t("Intervention und Organisation")}</p>
+						<h3 id="wirkung">{t("Eine begründete Empfehlung")}</h3>
 						<ul class="key-points">
-							<li><strong>Empfohlen:</strong> GiveWell zählt AMF zu seinen Top Charities.</li>
-							<li><strong>Basis:</strong> Studien zu Netzen, Kostenmodelle und Umsetzung.</li>
-							<li><strong>Grenzen:</strong> Qualität der Nachkontrollen; Annahmen zu anderen Geldgebern.</li>
+							<li><strong>{t("Empfohlen:")}</strong> {t("GiveWell zählt AMF zu seinen Top Charities.")}</li>
+							<li><strong>{t("Basis:")}</strong> {t("Studien zu Netzen, Kostenmodelle und Umsetzung.")}</li>
+							<li><strong>{t("Grenzen:")}</strong> {t("Qualität der Nachkontrollen; Annahmen zu anderen Geldgebern.")}</li>
 						</ul>
-						<a class="text-link" href={evidence('empfehlung')}>Empfehlung und Einschränkungen prüfen</a>
+						<a class="text-link" href={evidence('empfehlung')}>{t("Empfehlung und Einschränkungen prüfen")}</a>
 					</section>
 					<section class="finding uncertain" aria-labelledby="zusatz">
-						<p class="eyebrow">Untersuchter Einsatz · Ituri 2027</p>
-						<h3 id="zusatz">Die zusätzliche Zuweisung bleibt offen</h3>
+						<p class="eyebrow">{t("Untersuchter Einsatz · Ituri 2027")}</p>
+						<h3 id="zusatz">{t("Die zusätzliche Zuweisung bleibt offen")}</h3>
 						<ul class="key-points">
-							<li><strong>Global:</strong> AMF meldet weiteren Finanzierungsbedarf.</li>
-							<li><strong>Belegt:</strong> Für Ituri 2027 sind bereits Mittel gebunden.</li>
-							<li><strong>Offen für 2027:</strong> Zusätzlicher Betrag und passende aktuelle Kosten.</li>
+							<li><strong>{t("Global:")}</strong> {t("AMF meldet weiteren Finanzierungsbedarf.")}</li>
+							<li><strong>{t("Belegt:")}</strong> {t("Für Ituri 2027 sind bereits Mittel gebunden.")}</li>
+							<li><strong>{t("Offen für 2027:")}</strong> {t("Zusätzlicher Betrag und passende aktuelle Kosten.")}</li>
 						</ul>
-						<a class="text-link" href={evidence('bedarf')}>Bedarf und gebundene Mittel prüfen</a>
+						<a class="text-link" href={evidence('bedarf')}>{t("Bedarf und gebundene Mittel prüfen")}</a>
 					</section>
 				</div>
 				<section class="path-panel">
-					<div><p class="eyebrow">Eine Frage, unterschiedliche Maßstäbe</p><h2>Wann reicht ein Beleg für ein Urteil?</h2>
-					<div class="vote-summary" role="group" aria-label="AMF-Schlussvotum zu Säule B">
+					<div><p class="eyebrow">{t("Eine Frage, unterschiedliche Maßstäbe")}</p><h2>{t("Wann reicht ein Beleg für ein Urteil?")}</h2>
+					<div class="vote-summary" role="group" aria-label={t("AMF-Schlussvotum zu Säule B")}>
 						<span class="ballot-dots" aria-hidden="true">{#each caseData.voices as voice (voice.model)}<span class="ballot-dot" class:abstain={voice.vote.decision === 'abstain'}></span>{/each}</span>
-						<span class="vote-counts"><strong>2× Bedingt Ja</strong><span class="separator"> · </span><span>3× Enthaltung</span></span>
-						<time datetime="2026-10-21">Sitzung 21.10.2026</time>
+						<span class="vote-counts"><strong>{t("2× Bedingt Ja")}</strong><span class="separator"> · </span><span>{t("3× Enthaltung")}</span></span>
+						<time datetime="2026-10-21">{t("Sitzung 21.10.2026")}</time>
 					</div>
-					<p class="vote-explanation">Der Nutzen zusätzlichen Geldes blieb im Dossier unklar.</p></div>
-					<a class="button" href="/fall/amf/rat/">Die fünf Positionen öffnen</a>
+					<p class="vote-explanation">{t("Der Nutzen zusätzlichen Geldes blieb im Dossier unklar.")}</p></div>
+					<a class="button" href={amfPaths.council[lang]}>{t("Die fünf Positionen öffnen")}</a>
 				</section>
 				<section class="observation">
-					<p class="eyebrow">Später geprüfter Befund · November 2026</p>
-					<h2>Eine Nachkontrolle zeigt auch den Rückgang</h2>
-					<p>Im Ituri-Bericht zur Kampagne 2023/24 sank der Anteil brauchbarer Netze von <strong>87,1 % nach 9 Monaten</strong> auf <strong>17,2 % nach 27 Monaten</strong>.</p>
-					<p class="small">Nachkontrollen 2024–2026. Vermisste Netze sind ausgenommen; zerrissen entsorgte zählen mit.</p>
-					<a class="text-link" href={evidence('monitoring')}>Messwerte und ihre Grenzen lesen</a>
+					<p class="eyebrow">{t("Später geprüfter Befund · November 2026")}</p>
+					<h2>{t("Eine Nachkontrolle zeigt auch den Rückgang")}</h2>
+					<p>{t("Im Ituri-Bericht zur Kampagne 2023/24 sank der Anteil brauchbarer Netze von")} <strong>{t("87,1 % nach 9 Monaten")}</strong> {t("auf")} <strong>{t("17,2 % nach 27 Monaten")}</strong>.</p>
+					<p class="small">{t("Nachkontrollen 2024–2026. Vermisste Netze sind ausgenommen; zerrissen entsorgte zählen mit.")}</p>
+					<a class="text-link" href={evidence('monitoring')}>{t("Messwerte und ihre Grenzen lesen")}</a>
 				</section>
 			{:else if room === 'council'}
 				<section class="opening">
-					<p class="dateline">Historische Beratung · 21. Oktober 2026</p>
-					<h2>Zwei bedingte Empfehlungen.<br />Drei Enthaltungen.</h2>
-					<p class="intro">Der Dissens betraf, welche Begründung vor einer Empfehlung bereits geprüft sein muss.</p>
-					<p class="temporal">Die November-Belege wurden erst später nachrecherchiert. Die hier gezeigten Stimmen beziehen sich auf das damalige Dossier.</p>
-					<details class="question"><summary>Die damalige Frage im Wortlaut</summary><p>{caseData.session.question}</p></details>
+					<p class="dateline">{t("Historische Beratung · 21. Oktober 2026")}</p>
+					<h2>{t("Zwei bedingte Empfehlungen.")}<br />{t("Drei Enthaltungen.")}</h2>
+					<p class="intro">{t("Der Dissens betraf, welche Begründung vor einer Empfehlung bereits geprüft sein muss.")}</p>
+					<p class="temporal">{t("Die November-Belege wurden erst später nachrecherchiert. Die hier gezeigten Stimmen beziehen sich auf das damalige Dossier.")}</p>
+					<details class="question"><summary>{t("Die damalige Frage im Wortlaut")}</summary><p>{lang === "en" ? caseData.session.questionTranslation : caseData.session.question}</p>{#if lang === "en"}<details class="original-record"><summary>German original question</summary><p lang="de">{caseData.session.question}</p></details>{/if}</details>
+					{#if lang === "en"}<p class="translation-note">English translations of the German record by Codex nc 2 (GPT-6). The original question and statements remain available below.</p>{/if}
 				</section>
 				<div class="voices">
 					{#each caseData.voices as voice, i (voice.model)}
@@ -120,26 +134,27 @@
 							</summary>
 							<div class="voice-body">
 								<p>{voice.summary}</p>
-								<p class="attribution">Schlussvotum zu Säule B · Originalwortlaut des Modells</p>
-								<blockquote>{voice.reason}</blockquote>
-								<p class="initial">Erstvotum <strong>{verdict(voice.initialVote)}</strong> · Schlussvotum <strong>{verdict(voice.vote)}</strong></p>
-								<a href={voice.protocolHref}>Begründung, Diskussion und damalige Quellen im Protokoll</a>
+								<p class="attribution">{lang === "en" ? "Final vote on pillar B · English translation" : t("Schlussvotum zu Säule B · Originalwortlaut des Modells")}</p>
+								<blockquote>{lang === "en" ? voice.reasonTranslation : voice.reason}</blockquote>
+								{#if lang === "en"}<details class="original-record"><summary>German original</summary><blockquote lang="de">{voice.reason}</blockquote></details>{/if}
+								<p class="initial">{t("Erstvotum")} <strong>{verdict(voice.initialVote)}</strong> {t("· Schlussvotum")} <strong>{verdict(voice.vote)}</strong></p>
+								<a href={voice.protocolHref}>{t("Begründung, Diskussion und damalige Quellen im Protokoll")}</a>
 							</div>
 						</details>
 					{/each}
 				</div>
 				<section class="editorial">
-					<p class="eyebrow">Redaktionelle Einordnung · Belegstand 18. November</p>
-					<h2>Was die Nachrecherche ergänzt</h2>
-					<p>Ein konkreter Monitoringbericht ist hinzugekommen. Die Kostentabelle lässt sich der Ituri-Spalte zuordnen. Der für Ituri 2027 noch offene Zusatzbetrag und die dort aktuell geltenden Kosten bleiben im geprüften Material ungeklärt.</p>
-					<p>Die Modellkarten wurden von Qwen3.8-27B erzeugt und durch Codex nc 2 (GPT-6) am Original geprüft. Vier von acht Karten brauchten Korrekturen, darunter eine Länderzuordnung und vertauschte Prozentwerte.</p>
-					<div class="link-row"><a href={evidence('monitoring')}>Erhobene Ergebnisse</a><a href={evidence('kosten')}>Modellierte Kosten</a><a href={evidence('bedarf')}>Finanzierung</a></div>
+					<p class="eyebrow">{t("Redaktionelle Einordnung · Belegstand 18. November")}</p>
+					<h2>{t("Was die Nachrecherche ergänzt")}</h2>
+					<p>{t("Ein konkreter Monitoringbericht ist hinzugekommen. Die Kostentabelle lässt sich der Ituri-Spalte zuordnen. Der für Ituri 2027 noch offene Zusatzbetrag und die dort aktuell geltenden Kosten bleiben im geprüften Material ungeklärt.")}</p>
+					<p>{t("Die Modellkarten wurden von Qwen3.8-27B erzeugt und durch Codex nc 2 (GPT-6) am Original geprüft. Vier von acht Karten brauchten Korrekturen, darunter eine Länderzuordnung und vertauschte Prozentwerte.")}</p>
+					<div class="link-row"><a href={evidence('monitoring')}>{t("Erhobene Ergebnisse")}</a><a href={evidence('kosten')}>{t("Modellierte Kosten")}</a><a href={evidence('bedarf')}>{t("Finanzierung")}</a></div>
 				</section>
 			{:else}
 				<section class="opening">
-					<p class="dateline">Belegstand {caseData.evidenceDate} · Links geprüft am {caseData.linkCheckDate}</p>
-					<h2>Jede Aussage hat einen Ursprung.</h2>
-					<p class="intro">Erhebungsbericht, Modell und Selbstauskunft beantworten unterschiedliche Fragen. Die Karten zeigen den Stand und die Grenzen jeder Aussage.</p>
+					<p class="dateline">{t("Belegstand")} {caseData.evidenceDate} {t("· Links geprüft am")} {caseData.linkCheckDate}</p>
+					<h2>{t("Jede Aussage hat einen Ursprung.")}</h2>
+					<p class="intro">{t("Erhebungsbericht, Modell und Selbstauskunft beantworten unterschiedliche Fragen. Die Karten zeigen den Stand und die Grenzen jeder Aussage.")}</p>
 				</section>
 				<div class="evidence-grid">
 					{#each caseData.cards as card (card.id)}
@@ -147,42 +162,48 @@
 							<p class="eyebrow">{card.kind}</p><h3>{card.title}</h3>
 							<p>{card.claim}</p>
 							{#if card.id === 'monitoring'}
-								<div class="table-scroll"><table><caption>Ituri 2023/24 · Angaben des AMF-Berichts</caption><thead><tr><th>Nach</th><th>Vorhanden</th><th>Brauchbar</th></tr></thead><tbody><tr><th>9 Monate</th><td>90,2 %</td><td>87,1 %</td></tr><tr><th>18 Monate</th><td>61,0 %</td><td>52,5 %</td></tr><tr><th>27 Monate</th><td>24,2 %</td><td>17,2 %</td></tr></tbody></table></div>
+								<div class="table-scroll"><table><caption>{t("Ituri 2023/24 · Angaben des AMF-Berichts")}</caption><thead><tr><th>{t("Nach")}</th><th>{t("Vorhanden")}</th><th>{t("Brauchbar")}</th></tr></thead><tbody><tr><th>{t("9 Monate")}</th><td>{t("90,2 %")}</td><td>{t("87,1 %")}</td></tr><tr><th>{t("18 Monate")}</th><td>{t("61,0 %")}</td><td>{t("52,5 %")}</td></tr><tr><th>{t("27 Monate")}</th><td>{t("24,2 %")}</td><td>{t("17,2 %")}</td></tr></tbody></table></div>
 								<p class="small">{card.presenceDefinition}</p>
 								<p class="small">{card.conditionDefinition}</p>
-								<p class="small">16.829, 18.747 und 18.913 befragte Haushalte von jeweils 20.622 vorgesehenen. Nachkontrollen 2024–2026.</p>
+								<p class="small">{t("16.829, 18.747 und 18.913 befragte Haushalte von jeweils 20.622 vorgesehenen. Nachkontrollen 2024–2026.")}</p>
 							{/if}
 							<p class="limit">{card.limit}</p>
-							<dl><dt>Herausgeber</dt><dd>{card.publisher}</dd><dt>Bezugsstand</dt><dd>{card.period}</dd><dt>Abgerufen</dt><dd>{card.retrieved}</dd><dt>Fundstelle</dt><dd>{card.locator}</dd></dl>
+							<dl><dt>{t("Herausgeber")}</dt><dd>{card.publisher}</dd><dt>{t("Bezugsstand")}</dt><dd>{card.period}</dd><dt>{t("Abgerufen")}</dt><dd>{card.retrieved}</dd><dt>{t("Fundstelle")}</dt><dd>{card.locator}</dd></dl>
 							<div class="source-links">{#each card.sources as source}<a href={source.url} rel="external">{source.label}</a>{/each}</div>
 						</article>
 					{/each}
 				</div>
-				<p class="review-note">Die November-Karten wurden durch lokale Modellrecherche mit Qwen3.8-27B vorbereitet und von Codex nc 2 (GPT-6) am Original gegengeprüft. Die Links führen zu den Herausgebern, deren Seiten sich weiterentwickeln können. Zwei GiveWell-Grantseiten waren beim Nachrecherchelauf blockiert.</p>
+				<p class="review-note">{t("Die November-Karten wurden durch lokale Modellrecherche mit Qwen3.8-27B vorbereitet und von Codex nc 2 (GPT-6) am Original gegengeprüft. Die Links führen zu den Herausgebern, deren Seiten sich weiterentwickeln können. Zwei GiveWell-Grantseiten waren beim Nachrecherchelauf blockiert.")}</p>
 			{/if}
 
 			<section class="next-step" aria-labelledby="weiter">
-				<h2 id="weiter">Mit dieser Einordnung weitergehen</h2>
+				<h2 id="weiter">{t("Mit dieser Einordnung weitergehen")}</h2>
 				<div class="donation-paths">
-					<div><h3>Direkt bei AMF</h3><p>Allgemeine Spende an AMF, ohne feste Zusage für Ituri 2027.</p><a class="button secondary" href={caseData.organization.donation_url} rel="external">AMF-Spendenseite öffnen</a></div>
-					<div><h3>Zuweisung durch GiveWell</h3><p>GiveWell verteilt Fondsmittel flexibel nach aktuellem Forschungsstand.</p><a class="button secondary" href="https://www.givewell.org/top-charities-fund" rel="external">Top Charities Fund ansehen</a></div>
+					<div><h3>{t("Direkt bei AMF")}</h3><p>{t("Allgemeine Spende an AMF, ohne feste Zusage für Ituri 2027.")}</p><a class="button secondary" href={caseData.organization.donation_url} rel="external">{t("AMF-Spendenseite öffnen")}</a></div>
+					<div><h3>{t("Zuweisung durch GiveWell")}</h3><p>{t("GiveWell verteilt Fondsmittel flexibel nach aktuellem Forschungsstand.")}</p><a class="button secondary" href="https://www.givewell.org/top-charities-fund" rel="external">{t("Top Charities Fund ansehen")}</a></div>
 				</div>
 			</section>
 		</div>
 		<footer class="case-footer">
-			<p>{#if caseData.paused}Ratsberatung und automatische Recherche sind pausiert.{/if} Diese Fallansicht dokumentiert den geprüften Stand.</p>
-			<nav aria-label="Weitere Inhalte"><a href="/">NobleCause</a><a href="/sitzungen/2026-10-21-regular/">Originalsitzung</a><a href="/manifest/">Manifest</a><a href="/impressum/">Impressum</a></nav>
+			<p>{#if caseData.paused}{t("Ratsberatung und automatische Recherche sind pausiert.")}{/if} {t("Diese Fallansicht dokumentiert den geprüften Stand.")}</p>
+			<nav aria-label={t("Weitere Inhalte")}><a href={homePath}>NobleCause</a><a href="/sitzungen/2026-10-21-regular/">{t("Originalsitzung")}</a><a href="/manifest/">{t("Manifest")}</a><a href="/impressum/">{t("Impressum")}</a></nav>
 		</footer>
 	</div>
 </div>
 
 <style>
 	.case-page { position: relative; isolation: isolate; }
-	.case-bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 1.5rem; padding: 1rem 3vw; background: rgba(5,9,11,.8); border-bottom: 1px solid #74603b; font: .85rem system-ui, sans-serif; }
+	.case-bar { position: relative; z-index: 2; display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; padding: 1rem 3vw; background: rgba(5,9,11,.8); border-bottom: 1px solid #74603b; font: .85rem system-ui, sans-serif; }
 	.case-bar a { color: #ebd7ad; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
 	.case-bar .brand { font-family: Georgia, serif; font-size: 1.2rem; letter-spacing: .02em; }
 	.case-bar span { color: #b3b8b2; }
 	.case-bar .back { margin-left: auto; }
+	.case-language { display: flex; gap: .2rem; margin-left: auto; }
+	.case-language a { min-width: 44px; justify-content: center; border: 1px solid #74603b; }
+	.case-language [aria-current="page"] { background: #263236; border-color: #dcbb79; }
+	.original-record { margin-top: 1rem; }
+	.original-record summary { cursor: pointer; color: #d3c29d; padding: .5rem 0; }
+	.translation-note { color: #bdc9c7; font-size: .9rem; }
 	.skip { position: absolute; top: -100px; left: 1rem; z-index: 10; background: #111b1f; padding: 1rem; }
 	.skip:focus { top: 1rem; }
 	.case-page :global(.room-hero) { min-height: 25rem; }
@@ -244,12 +265,13 @@
 	.question summary { cursor: pointer; color: #d3c29d; padding: .5rem 0; }
 	.voices { display: grid; gap: .85rem; }
 	.voice { background: #111d20; border: 1px solid #5e573e; }
-	.voice summary { display: grid; grid-template-columns: 4.8rem 1fr auto; gap: 1rem; align-items: center; padding: 1.1rem 1.3rem; cursor: pointer; list-style: none; }
-	.voice summary::-webkit-details-marker { display: none; }
-	.voice summary img { width: 4.8rem; height: 4.8rem; object-fit: contain; border-radius: 50%; }
+	.voice > summary { display: grid; grid-template-columns: 4.8rem 1fr auto; gap: 1rem; align-items: center; padding: 1.1rem 1.3rem; cursor: pointer; list-style: none; }
+	.voice > summary::-webkit-details-marker { display: none; }
+	.voice > summary img { width: 4.8rem; height: 4.8rem; object-fit: contain; border-radius: 50%; }
 	.voice-title strong { display: block; color: #eddbb7; font-size: 1.2rem; font-weight: 400; }
 	.voice-title span { display: block; font: .85rem/1.5 system-ui,sans-serif; color: #bfbda9; }
 	.voice:not([open]) .voice-title span::after { content: ' · öffnen'; color: #dec48d; }
+	.case-page[lang='en'] .voice:not([open]) .voice-title span::after { content: ' · open'; }
 	.vote { display: inline-block; max-width: 11rem; font: .85rem/1.4 system-ui,sans-serif; color: #eac780; border-bottom: 1px solid #8e7343; padding-bottom: .2rem; }
 	.vote.abstain { color: #b2c7cf; border-color: #496875; }
 	.voice[open] { border-color: #b18c50; background: #18282c; }
@@ -293,8 +315,8 @@
 		.room-nav span { font-size: .8rem; }
 		.two-levels, .donation-paths { grid-template-columns: 1fr; }
 		.path-panel { display: block; }
-		.voice summary { grid-template-columns: 3.7rem 1fr; gap: .55rem .8rem; padding: 1rem; }
-		.voice summary img { width: 3.7rem; height: 3.7rem; grid-row: span 2; }
+		.voice > summary { grid-template-columns: 3.7rem 1fr; gap: .55rem .8rem; padding: 1rem; }
+		.voice > summary img { width: 3.7rem; height: 3.7rem; grid-row: span 2; }
 		.voice-title strong { font-size: 1.1rem; }
 		.vote { grid-column: 2; max-width: none; width: fit-content; }
 		.voice-body { padding: 0 1rem 1rem; }
@@ -302,6 +324,8 @@
 		dl { grid-template-columns: 1fr; gap: .15rem; }
 		dd { margin-bottom: .6rem; }
 		th, td { padding: .5rem .25rem; }
+		th { font: 600 .82rem/1.4 system-ui, sans-serif; letter-spacing: 0; text-transform: none; }
+		.case-page[lang='en'] th { font-size: .75rem; white-space: nowrap; overflow-wrap: normal; }
 	}
 	@media (max-width: 420px) {
 		.case-main { padding: 1.25rem 1rem; }

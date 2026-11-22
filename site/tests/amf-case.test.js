@@ -75,11 +75,76 @@ test('Die Veröffentlichungskandidaten enthalten die Korrekturen und keine priva
 	}
 });
 
-test('Der reguläre Einstieg kennzeichnet die Pause und den deutschsprachigen Fall', () => {
+test('Der reguläre Einstieg kennzeichnet die Pause und verlinkt den Fall in seiner Sprache', () => {
     const german = read('index.html');
     const english = read('en/index.html');
     assert.ok(german.includes('Die Ratsberatungen sind pausiert.'));
     assert.ok(german.includes('Die automatische Recherche ist pausiert.'));
     assert.ok(english.includes('Council meetings are paused.'));
-    assert.ok(english.includes('Explore the case in German'));
+    assert.ok(english.includes('href="/en/case/amf/"'));
+    assert.ok(english.includes('Explore the case'));
+    assert.ok(!english.includes('Explore the case in German'));
+});
+
+
+const englishCase = getAmfCase('en');
+const englishPages = ['en/case/amf/index.html', 'en/case/amf/council/index.html', 'en/case/amf/evidence/index.html'];
+
+test('EN übersetzt alle sieben Belegkarten ohne Quellenwechsel und erhält die Monitoring-Grundmengen', () => {
+	const html = read(englishPages[2]);
+	assert.equal(englishCase.cards.length, 7);
+	for (const original of caseData.cards) {
+		const card = englishCase.cards.find((entry) => entry.id === original.id);
+		assert.deepEqual(card.sources.map((source) => source.url), original.sources.map((source) => source.url));
+		for (const field of ['title', 'kind', 'claim', 'limit', 'publisher', 'period', 'retrieved', 'locator']) {
+			assert.ok(card[field]);
+			assert.ok(html.includes(escapeHtml(card[field])), card.id + ' lacks English ' + field);
+		}
+	}
+	for (const value of ['90.2%', '87.1%', '61.0%', '52.5%', '24.2%', '17.2%']) assert.ok(html.includes(value));
+	assert.ok(html.includes('Missing nets are excluded from this denominator'));
+	assert.ok(html.includes('nets discarded because they were torn remain included'));
+	assert.ok(html.includes('as reported by surveyed households'));
+	assert.ok(html.includes('USD 4.85'));
+	assert.ok(html.includes('Evaluator model'));
+	assert.ok(html.includes('Organisation self-report'));
+});
+
+test('EN kennzeichnet alle fünf historischen Übersetzungen und bewahrt Originalgründe und Stimmen', () => {
+	const html = read(englishPages[1]);
+	assert.equal(englishCase.voices.length, 5);
+	assert.equal((html.match(/>German original</g) || []).length, 5);
+	assert.equal((html.match(/Final vote on pillar B · English translation/g) || []).length, 5);
+	assert.ok(html.includes('English translations of the German record by Codex nc 2 (GPT-6).'));
+	assert.ok(html.includes(escapeHtml(englishCase.session.questionTranslation)));
+	assert.ok(html.includes(escapeHtml(caseData.session.question)));
+	for (const voice of englishCase.voices) {
+		const original = caseData.voices.find((entry) => entry.model === voice.model);
+		assert.deepEqual(voice.vote, original.vote);
+		assert.deepEqual(voice.initialVote, original.initialVote);
+		assert.equal(voice.reason, original.reason);
+		assert.ok(voice.reasonTranslation && voice.reasonTranslation !== voice.reason);
+		assert.ok(html.includes(escapeHtml(voice.reasonTranslation)));
+		assert.ok(html.includes(escapeHtml(original.reason)));
+		assert.ok(html.includes(voice.protocolHref));
+	}
+	assert.deepEqual(englishCase.session.result, caseData.session.result);
+});
+
+test('Alle sechs Fallrouten haben passende Dokumentsprache und gegenseitige Sprachverweise', () => {
+	for (const [index, page] of pages.entries()) {
+		for (const [lang, file] of [['de', page], ['en', englishPages[index]]]) {
+			const html = read(file);
+			const route = '/' + file.replace('index.html', '');
+			assert.ok(html.includes('<html lang="' + lang + '"'));
+			assert.ok(html.includes('rel="canonical" href="https://noblecause.ai' + route + '"'));
+			for (const [targetLang, targetFile] of [['de', page], ['en', englishPages[index]]]) {
+				const target = '/' + targetFile.replace('index.html', '');
+				assert.ok(html.includes('hreflang="' + targetLang + '" href="https://noblecause.ai' + target + '"'));
+				assert.ok(html.includes('href="' + target + '" lang="' + targetLang + '"'));
+			}
+			assert.doesNotMatch(html, /<meta[^>]+name="robots"[^>]+noindex/);
+			assert.doesNotMatch(html, /\/Users\/|OPENROUTER_API_KEY|sk-or-v1-/);
+		}
+	}
 });

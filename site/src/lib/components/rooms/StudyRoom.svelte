@@ -145,7 +145,7 @@
             {#if home.schedule?.researchHeld}
                 <p>{lang === 'en' ? 'Automated research is paused.' : 'Die automatische Recherche ist pausiert.'}</p>
             {/if}
-            <p><a href="/fall/amf/">{lang === 'en' ? 'Malaria protection through AMF · Explore the case in German' : 'Malariaschutz durch AMF · Empfehlung, Ratspositionen und Belege verstehen'}</a></p>
+            <p><a href={lang === 'en' ? '/en/case/amf/' : '/fall/amf/'}>{lang === 'en' ? 'Malaria protection through AMF · Explore the case' : 'Malariaschutz durch AMF · Empfehlung, Ratspositionen und Belege verstehen'}</a></p>
         </section>
 		<!-- Die Tafel trägt die Antwort — pragerendert, No-JS liest sie am Eingang. -->
 		<ResultBoard {home} {t} />

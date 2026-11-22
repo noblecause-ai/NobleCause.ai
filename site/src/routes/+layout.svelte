@@ -1,5 +1,11 @@
 <script>
+	import { page } from '$app/state';
+	import { langOfPath } from '$lib/i18n/index.js';
+
 	let { children } = $props();
+	$effect(() => {
+		document.documentElement.lang = langOfPath(page.url.pathname);
+	});
 </script>
 
 <div class="page">
