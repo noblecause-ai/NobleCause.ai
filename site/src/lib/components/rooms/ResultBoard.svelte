@@ -7,12 +7,13 @@
 	// neu gezählt); Spendenlinks kommen registry-aufgelöst aus den Daten.
 	// Kreide-Duktus für Bereich/Titel, klare Type für Organisation + Spendenlink.
 	import { formatDate } from '$lib/format.js';
-	let { home, t, emphasizeCount = false } = $props();
+	let { home, t, emphasizeCount = false, inline = false } = $props();
 </script>
 
 <section
 	class="result-board"
 	class:emphasize-count={emphasizeCount}
+	class:inline
 	id="antwort"
 	aria-labelledby="result-board-title"
 >
@@ -245,4 +246,17 @@
 			transform: translateY(10px);
 		}
 	}
+
+	/* The Study opts into a reading block; other rooms keep their fixed board. */
+	.result-board.inline { position: static; width: 100%; margin: 0; padding: 0; font-size: 1rem; background: none; text-shadow: none; view-transition-name: none; opacity: 1 !important; animation: none !important; }
+	.inline h2 { margin: 0; padding: 0; border: 0; font-size: 1.6rem; font-weight: 400; text-transform: none; letter-spacing: 0; }
+	.inline .board-session { margin: .6rem 0 1.2rem; font-size: .875rem; color: #c3cfca; }
+	.inline ol { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+	.inline li { padding: 1rem; border: 1px solid #435458; background: #15242a; grid-template-columns: 2.6rem minmax(0, 1fr); column-gap: .8rem; }
+	.inline li img { width: 2.6rem; height: 2.6rem; }
+	.inline .board-area { font-size: .85rem; line-height: 1.6; }
+	.inline strong { font-size: 1.05rem; }
+	.inline .board-count { font-size: .9em; }
+	.inline .board-donate { font-size: .95rem; }
+	@media (max-width: 600px) { .inline ol { grid-template-columns: 1fr; } }
 </style>

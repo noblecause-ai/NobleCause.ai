@@ -79,6 +79,8 @@ const currentData = () => {
 		consensus,
 		revisions,
 		lastResearch,
+		schedule,
+		sessionCount: sessions.length,
 		plain: session.plain ?? null,
 		dossier: session.wart_dossier ?? null,
 		dossierRefusal: session.wart_dossier_refusal ?? null,
@@ -95,6 +97,86 @@ const consensusOrgNames = DATA.consensus.map((r) => DATA.nameOf(r));
 const consensusDonations = [
 	...new Set(DATA.consensus.map((r) => DATA.orgById.get(r.organization_id)?.donation_url).filter(Boolean))
 ];
+
+const escapeText = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+
+test('Startseiten: AMF-Showcase und Status verwenden den tatsächlichen Quellen- und Sitzungsbestand', () => {
+	const amf = readJson(path.join(SITE, 'src/lib/cases/amf.json'));
+	const original = readJson(path.join(ROOT, 'sessions', amf.sessionId, 'session.json'));
+	const held = DATA.schedule.regular_operation;
+	for (const [rel, language, casePath] of [[PAGES.study, 'de', '/fall/amf/'], [PAGES.studyEn, 'en', '/en/case/amf/']]) {
+		const html = readBuilt(rel);
+		assert.ok(html, `${rel}: Build fehlt`);
+		const showcase = html.match(/<section class="case-showcase[\s\S]*?<\/section>/)?.[0];
+		assert.ok(showcase?.includes(`href="${casePath}"`), `${rel}: direkter AMF-Einstieg fehlt`);
+		assert.equal((showcase.match(/<li[\s>]/g) ?? []).length, 3);
+		assert.ok(showcase.includes(language === 'de'
+			? `${original.participants.length} dokumentierte Modellpositionen`
+			: `Compare ${original.participants.length} documented model positions`));
+		assert.ok(showcase.includes(language === 'de'
+			? `${amf.cards.length} datierte Belegkarten`
+			: `Check ${amf.cards.length} dated evidence cards`));
+		const status = html.match(/<aside class="operation-status[\s\S]*?<\/aside>/)?.[0];
+		assert.ok(status?.includes(language === 'de' ? `Alle ${DATA.sessionCount} Sitzungsprotokolle` : `All ${DATA.sessionCount} session records`));
+		assert.ok(status.includes(`v${DATA.session.procedure_version}`));
+		if (held.session_hold && held.research_hold) {
+			assert.ok(status.includes(language === 'de' ? 'Aktive Rats- und Rechercheläufe sind derzeit pausiert.' : 'Automated council and research runs are currently paused.'));
+		}
+		if (held.research_hold) assert.ok(!html.includes(language === 'de' ? 'Der Scout läuft jeden Montagmorgen' : 'The Scout runs every Monday morning'));
+		assert.ok(html.indexOf('class="case-showcase') < html.indexOf('class="result-board'));
+		assert.doesNotMatch(html, /\/Users\/|OPENROUTER_API_KEY|sk-or-v1-|mirhamed@yahoo|packet-enriched\.json/);
+	}
+});
+
+test('Startseiten: ein kompakter Ergebnisblock erhält die publizierten Werte ohne doppelte Antwortliste', () => {
+	for (const [rel, english] of [[PAGES.study, false], [PAGES.studyEn, true]]) {
+		const html = readBuilt(rel);
+		const board = html.match(/<section class="result-board[^>]*>[\s\S]*?<\/section>/)?.[0];
+		assert.ok(board?.includes('inline'), `${rel}: Tafel muss im Lesefluss stehen`);
+		assert.equal((board.match(/<li[\s>]/g) ?? []).length, DATA.session.recommendations.length);
+		assert.ok(!html.includes('answer-lines'), `${rel}: doppelte Antwortliste`);
+		assert.ok(!html.includes('door-gallery'), `${rel}: alte dunkle Türkarten`);
+		for (const rec of DATA.session.recommendations.filter((r) => !r.has_consensus && r.votes_abstained)) {
+			const text = english ? `${rec.votes_abstained} abstentions · no recommendation` : `${rec.votes_abstained} Enthaltungen · keine Empfehlung`;
+			const expected = DATA.session.recommendations.filter((r) => !r.has_consensus && r.votes_abstained === rec.votes_abstained).length;
+			assert.equal(html.split(text).length - 1, expected, `${rel}: abweichende oder doppelte Enthaltungsanzeige`);
+		}
+		assert.ok(html.includes(`/sitzungen/${DATA.session.id}/`));
+	}
+});
+
+test('Startseiten: Dossiers sind geschlossen, Originalfrage und Kontext bleiben vollständig erhalten', () => {
+	for (const rel of [PAGES.study, PAGES.studyEn]) {
+		const html = readBuilt(rel);
+		const dossier = html.match(/<details class="dossier session-dossiers[^>]*>[\s\S]*?<\/details>/)?.[0];
+		assert.ok(dossier, `${rel}: Dossier fehlt`);
+		assert.doesNotMatch(dossier.split('>')[0], /\sopen(?:\s|=|$)/, `${rel}: Dossier standardmäßig geöffnet`);
+		assert.ok(dossier.includes(escapeText(DATA.session.question)), `${rel}: Originalfrage verändert`);
+		const question = DATA.plain?.question ?? DATA.session.summary;
+		if (question) assert.ok(dossier.includes(escapeText(question)), `${rel}: Kontext gekürzt oder verändert`);
+		for (const query of DATA.dossier?.search_queries ?? []) assert.ok(dossier.includes(escapeText(query)));
+		if (rel === PAGES.studyEn) assert.match(dossier, /<blockquote[^>]*lang="de"/);
+	}
+});
+
+test('Startseiten: alle internen Linkziele und Fragmente im statischen Build sind aufgelöst', () => {
+	for (const rel of [PAGES.study, PAGES.studyEn]) {
+		const html = readBuilt(rel);
+		const base = new URL(rel.replace(/index\.html$/, ''), 'https://noblecause.ai/');
+		for (const match of html.matchAll(/href="([^"]+)"/g)) {
+			const url = new URL(match[1].replaceAll('&amp;', '&'), base);
+			if (url.origin !== base.origin) continue;
+			const target = decodeURIComponent(url.pathname).replace(/^\//, '');
+			const file = target.endsWith('/') || !target ? `${target}index.html` : target;
+			const contents = readBuilt(file);
+			assert.ok(contents !== null, `${rel}: Linkziel fehlt: ${url.pathname}`);
+			if (url.hash) {
+				const fragment = decodeURIComponent(url.hash.slice(1));
+				assert.ok(contents.includes(`id="${fragment}"`) || contents.includes(`name="${fragment}"`), `${rel}: Fragment fehlt: ${url.pathname}${url.hash}`);
+			}
+		}
+	}
+});
 
 test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege', (context) => {
 	const html = readBuilt(PAGES.study);
@@ -118,11 +200,11 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		(LIVE ? 'Fünf Modelle erstellen ihre Erstvoten unabhängig; danach werden alle gemeinsam offengelegt.' : 'Drei Modelle antworten getrennt — jedes Votum öffentlich.'),
 		(LIVE ? 'Mindestens drei der fünf Stimmen ergeben eine gemeinsame Empfehlung.' : 'Ein einfaches Programm zählt nur die Nennungen.'),
 		(LIVE ? 'Gespräch, Voten, Quellen und Kosten bleiben öffentlich zugänglich.' : 'Der Wart veröffentlicht alles — Empfehlungen, Uneinigkeit, Kosten.'),
-		'Die Empfehlungen dieser Sitzung', // answerTitle
+		'Geprüfte Fallstudie: Malariaschutz durch AMF',
 		// Dossiers (§3.4): Kennzeichnungs-Ausklapp + Wortlaut-Beleg (stabil).
 		'Dossiers',
 		'Die Frage dieser Sitzung', // questionTitle (questionText liegt immer vor)
-		'Die Frage im Wortlaut ▸',
+		'Die Frage im Wortlaut',
 		'<blockquote',
 		'/ratssaal/', // Tür zu The Council
 		'/archiv/', // Tür zu The Archive
@@ -168,7 +250,7 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 	// Research-Ausklapp NUR, wenn die aktuelle Sitzung ein Dossier mit Suchanfragen
 	// bereitstellt. Bei wart_dossier_refusal keine erfundenen Scout-Suchanfragen.
 	if (DATA.dossier?.search_queries?.length) {
-		assert.ok(html.includes('Suchanfragen des Spähers ▸'), 'Scout-Suchanfragen-Ausklapp fehlt');
+		assert.ok(html.includes('Suchanfragen des Spähers'), 'Scout-Suchanfragen-Ausklapp fehlt');
 		assert.ok(html.includes(DATA.dossier.search_queries[0]), 'erste Scout-Suchanfrage fehlt');
 		assert.ok(html.includes('#wart-dossier'), 'Dossier-Verweis fehlt');
 	} else {
@@ -207,10 +289,10 @@ test('The Study (/) trägt Einstieg, Mechanismus, Legenden, Akteure und Belege',
 		!html.includes('>Gegenstand der Sitzung'),
 		'Fallback Protokoll-Kontext trotz vorhandener plain.question noch sichtbar'
 	);
-	// Das Board steht im Dokument VOR der Lese-Fassung — die Antwort begrüßt den Eingang.
+	// Der geprüfte Fall begrüßt den Eingang; das historische Ergebnis bleibt danach.
 	assert.ok(
-		html.indexOf('Die Antwort der letzten Sitzung') < html.indexOf('Die Empfehlungen dieser Sitzung'),
-		'Antwort-Board steht nicht mehr vor der Lese-Fassung'
+		html.indexOf('Geprüfte Fallstudie: Malariaschutz durch AMF') < html.indexOf('Die Antwort der letzten Sitzung'),
+		'AMF-Showcase muss vor dem historischen Ergebnis stehen'
 	);
 });
 
@@ -342,10 +424,10 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 		(LIVE ? 'Three Scouts independently research evidence, counterevidence and funding gaps.' : 'The Scout gathers studies, cost-effectiveness and funding gaps.'),
 		(LIVE ? 'Five models prepare their initial votes independently; all are then revealed together.' : 'Three models answer separately — every vote public.'),
 		(LIVE ? 'The conversation, votes, sources and costs remain publicly available.' : 'The Warden publishes everything — recommendations, disagreement, costs.'),
-		"This session's recommendations",
+		'Reviewed Case Study: Malaria protection with AMF',
 		'Dossiers',
 		"This session's question",
-		'The question verbatim ▸',
+		'The question verbatim',
 		'<blockquote',
 		'/en/council/', // Tür zu The Council (EN)
 		'/en/archive/', // Tür zu The Archive (EN)
@@ -393,9 +475,9 @@ test('The Study (/en/) zeigt englische Chrome — Rekordfrage bleibt deutsch mit
 	);
 	// Research-Ausklapp nur bei vorhandenem Dossier mit Suchanfragen.
 	if (DATA.dossier?.search_queries?.length) {
-		assert.ok(html.includes("The Scout's search queries ▸"), "Scout's search queries toggle missing");
+		assert.ok(html.includes("The Scout’s search queries"), "Scout's search queries toggle missing");
 	} else {
-		assert.ok(!html.includes("The Scout's search queries"), 'Scout search queries without dossier data');
+		assert.ok(!html.includes("The Scout’s search queries"), 'Scout search queries without dossier data');
 	}
 	if (DATA.dossierRefusal) {
 		requireAll(html, 'The Study EN dossier refusal', [
@@ -651,7 +733,6 @@ test('Embleme, Szenen und Tür-Bilder sind referenziert und im Deploy enthalten'
 		'process/process-reconsider-display.avif',
 		'process/process-count-display.avif',
 		'process/process-publish-display.avif',
-		'doors/door-study-archive-display.avif',
 		'doors/door-council-archive-display.avif',
 		'scenes/antechamber-display.avif',
 		'scenes/antechamber-portrait-display.avif',

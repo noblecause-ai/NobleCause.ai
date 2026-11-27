@@ -7,6 +7,7 @@ import {
 	getSchedule,
 	md
 } from '$lib/server/content.js';
+import { getAmfCase } from '$lib/server/amf.js';
 import { buildHomepageViewModel } from '$lib/server/homepage.js';
 
 // Ein einziger Load für alle drei Räume — derselbe verifizierte Aufruf wie bisher
@@ -15,6 +16,7 @@ export function load() {
 	const session = getLatestSession();
 	if (!session) return { home: null };
 	const registry = getOrganizations();
+	const caseStudy = getAmfCase();
 	const home = buildHomepageViewModel({
 		session,
 		sessions: getAllSessions(),
@@ -51,6 +53,7 @@ export function load() {
 		),
 		home: {
 			...home,
+			caseStudy: { positions: caseStudy.voices.length, evidenceCards: caseStudy.cards.length },
 			// dissent/correction werden als Markdown gerendert (Wortlaut unverändert).
 			// text_en wird BEWUSST NICHT gerendert: der Rekord (inkl. Korrekturhinweise)
 			// bleibt deutsch (Konvention en.js:5, Test erzwingt sie). text_en hält den

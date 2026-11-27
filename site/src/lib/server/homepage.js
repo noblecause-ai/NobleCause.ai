@@ -166,6 +166,7 @@ export function buildHomepageViewModel({ session, sessions, registry, models = n
 	const plainEn = session.plain_en ?? plain;
 	return {
 		openRouter: hasOpenRouter(session),
+		sessionCount: sessions.length,
 		currentSession: {
 			procedureVersion: session.procedure_version ?? null,
 			id: session.id,

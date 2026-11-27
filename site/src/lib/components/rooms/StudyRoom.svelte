@@ -1,19 +1,10 @@
 <script>
-	// The Study: Ergebnis-Tafel (eigenständiges Schiefer-Panel, ab 1200 px fix —
-	// siehe ResultBoard.svelte), Klartext-Antwort, Dossiers mit sichtbarem
-	// Klartext-Kontext + Zitat-Beleg, Türen. Der Prozess läuft nur noch über
-	// die Röhre (StageTube) — die FlowRail ist mit der Titelbereich-Neuordnung
-	// entfallen; der Kopf ist der stabile, auf allen Räumen identische Block.
-	// Sprache kommt als Prop; Texte aus locales[lang]. Teilnehmerzahl und Familien
-	// kommen aus den Daten (modelTracks) — nichts davon steht fest in der Copy.
-	// Publizierte Rekordtexte (Sitzungs-Kontext, Frage, Suchanfragen) bleiben
-	// deutsch; im EN-Modus kennzeichnet sie common.recordNote. Die Tafel zeigt
-	// die vier Empfehlungen aus home.recommendations — gelesen, niemals neu
-	// gezählt; Spendenlinks kommen registry-aufgelöst aus den Daten.
-	import Door from './Door.svelte';
+	// Website-only reading layer. Votes and record wording are rendered from the
+	// existing server view model; the current record remains unchanged.
 	import ResultBoard from './ResultBoard.svelte';
 	import StageHero from './StageHero.svelte';
 	import StageTube from './StageTube.svelte';
+	import { studyCopy } from '$lib/i18n/study.js';
 	import StudyActors from './StudyActors.svelte';
 	import { localeForProcedure, roomPaths } from '$lib/i18n/index.js';
 	import { formatDate } from '$lib/format.js';
@@ -23,6 +14,7 @@
 	let { home, lang = 'de' } = $props();
 
 	let t = $derived(localeForProcedure(lang, home?.currentSession?.procedureVersion));
+	let copy = $derived(studyCopy[lang]);
 	let tracks = $derived(home?.modelTracks ?? []);
 	let participantCount = $derived(tracks.length);
 	// Rekordtexte (Frage, Suchanfragen, Rats-Wortlaut) sind deutsch — im
@@ -36,6 +28,7 @@
 	// Klartext der Frage: plain.question, sonst ohne Prozesshinweis der
 	// kuratierte Protokoll-Kontext (session.summary).
 	let questionText = $derived(plain?.question ?? home?.questionSummary ?? null);
+	let hasVoteDetails = $derived(home.recommendations.some((rec) => rec.hasConsensus || rec.votes.length > 0));
 	// Die große Tür im Plate führt in den Council — Daten wie bei der Tür-Karte.
 	let councilDoor = $derived(t.study.doors.find((door) => door.label === 'The Council'));
 
@@ -61,6 +54,8 @@
 </svelte:head>
 
 {#if home}
+<div class="study-page" lang={lang}>
+	<a class="study-skip" href="#study-content">{copy.skip}</a>
 	<StageHero
 		scene="/media/scenes/antechamber-display.avif"
 		sceneMobile="/media/scenes/antechamber-portrait-display.avif"
@@ -127,7 +122,7 @@
 					     Absolutes Datum server-gerendert (No-JS vollständig); der Termin
 					     lebt im Rhythmus, nicht in schedule.json. -->
 					<p>
-						{t.study.rhythm}{#if home?.lastResearch?.date}{' '}{t.study.lastCheck(
+						{#if !home.schedule?.researchHeld}{t.study.rhythm}{' '}{/if}{#if home?.lastResearch?.date}{' '}{t.study.lastCheck(
 								formatDate(home.lastResearch.date, t.lang)
 							)}{/if}{' '}{t.study.manifestLead}
 						<a href="/manifest/">{t.study.manifestLink}</a>
@@ -137,144 +132,105 @@
 		{/snippet}
 	</StageHero>
 
-	<main>
-        <section class="room-section" aria-label={lang === 'en' ? 'AMF case study' : 'Geprüfter AMF-Fall'}>
-            {#if home.schedule?.sessionHeld}
-                <p>{lang === 'en' ? 'Council meetings are paused.' : 'Die Ratsberatungen sind pausiert.'}</p>
-            {/if}
-            {#if home.schedule?.researchHeld}
-                <p>{lang === 'en' ? 'Automated research is paused.' : 'Die automatische Recherche ist pausiert.'}</p>
-            {/if}
-            <p><a href={lang === 'en' ? '/en/case/amf/' : '/fall/amf/'}>{lang === 'en' ? 'Malaria protection through AMF · Explore the case' : 'Malariaschutz durch AMF · Empfehlung, Ratspositionen und Belege verstehen'}</a></p>
-        </section>
-		<!-- Die Tafel trägt die Antwort — pragerendert, No-JS liest sie am Eingang. -->
-		<ResultBoard {home} {t} />
 
-		<!-- §3.3 Klartext-Antwort dieser Sitzung: vier Zeilen, gleiche Embleme
-		     und Reihenfolge wie die Tafel. Liegt die Klartext-Schicht (plain)
-		     vor, trägt jede Zeile die publizierte Klartext-Zeile WORTGLEICH
-		     (sie enthält bereits Bereich, Organisation und Warum — das
-		     Frontend setzt sie nie selbst zusammen) und der Rats-Wortlaut
-		     rückt hinter die Kennzeichnungs-Summary; bis dahin steht die
-		     Rekord-Schicht ohne zusätzlichen Prozesshinweis sichtbar da —
-		     nie paraphrasiert. -->
-		<section class="room-section" aria-labelledby="answer-title">
-			<h2 id="answer-title">{t.study.answerTitle}</h2>
-			<ol class="answer-lines">
-				{#each home.recommendations as rec (rec.pillar)}
-					{@const why = plain?.recommendations?.[rec.pillar] ?? null}
-					<li>
-						<img src={t.pillars[rec.pillar]?.src} alt="" width="40" height="40" loading="lazy" />
-						<div class="answer-body">
-							<p class="klartext" lang={plainIsDe && why ? 'de' : undefined}>
-								{#if why && rec.hasConsensus}
-									{why}
-								{:else}
-									<span class="answer-area">{t.pillars[rec.pillar]?.label ?? rec.pillarName}</span>
-									<span aria-hidden="true">→</span>
-									{#if rec.hasConsensus}
-										<strong>{rec.organization.name}</strong>
-									{:else}
-										<strong>{rec.abstained ? t.council.abstentions(rec.abstained) : t.council.noConsensus}</strong>
-									{/if}
-								{/if}
-							</p>
-							{#if rec.hasConsensus && rec.organization.donationUrl}
-								<a class="answer-donate" href={rec.organization.donationUrl}>{t.common.donate}</a>
-							{/if}
-							{#if why && rec.hasConsensus}
-								<details class="answer-record">
-									<summary>{t.common.klartextNote}</summary>
-									<p lang={recordLang}>{rec.title} — {rec.count} {t.common.ofWord} {rec.total}</p>
-									{#each rec.reservations as reservation (reservation.model)}
-										<p class="answer-reservation" lang={recordLang}>
-											{reservation.model}: {reservation.reservation}
-										</p>
-									{/each}
-									{#if t.common.recordNote}
-										<small class="record-note">{t.common.recordNote}</small>
-									{/if}
-								</details>
-							{:else if rec.hasConsensus}
-								<p class="answer-verbatim" lang={recordLang}>{rec.title}</p>
-								{#if t.common.recordNote}
-									<small class="record-note">{t.common.recordNote}</small>
-								{/if}
-							{:else}
-								<ul class="answer-votes" lang={recordLang}>
-									{#each rec.votes as vote (vote.model)}
-										<li>
-											{vote.model}: {vote.organization.name}
-											{#if vote.organization.donationUrl}
-												<a href={vote.organization.donationUrl}>{t.common.donate}</a>
-											{/if}
-										</li>
-									{/each}
-								</ul>
-								{#if t.common.recordNote}
-									<small class="record-note">{t.common.recordNote}</small>
-								{/if}
-							{/if}
-						</div>
-					</li>
-				{/each}
-			</ol>
+	<main class="study-content" id="study-content" tabindex="-1">
+		<section class="case-showcase" aria-labelledby="amf-showcase-title">
+			<div>
+				<p class="eyebrow">{copy.caseEyebrow}</p>
+				<h2 id="amf-showcase-title">{copy.caseTitle}</h2>
+				<ul class="case-points">
+					<li>{copy.caseRecommendation}</li>
+					<li>{copy.casePositions(home.caseStudy.positions)}</li>
+					<li>{copy.caseEvidence(home.caseStudy.evidenceCards)}</li>
+				</ul>
+				<a class="primary-link" href={lang === 'en' ? '/en/case/amf/' : '/fall/amf/'}>{copy.openCase}</a>
+			</div>
+			<aside class="case-reading" aria-label={copy.caseRouteLabel}>
+				<p>{copy.casePrompt}</p>
+				<span>The Study <span aria-hidden="true">·</span> The Council <span aria-hidden="true">·</span> The Archive</span>
+			</aside>
 		</section>
 
-		<section class="room-section" aria-labelledby="dossiers-title">
-			<h2 id="dossiers-title">{t.study.dossiersTitle}</h2>
-			{#if questionText}
-				<!-- §3.4: sichtbar zuerst die Frage dieser Sitzung in Klartext
-				     (plain.question; Fallback: kuratierter Protokoll-Kontext aus den
-				     Daten — wörtlich durchgereicht, keine Frontend-Paraphrase). -->
-				<div class="question-context">
-					<h3>{t.study.questionTitle}</h3>
-					<p lang={plain?.question ? (plainIsDe ? 'de' : undefined) : recordLang}>{questionText}</p>
-					{#if t.common.recordNote && (plainIsDe || !plain?.question)}
-						<small class="record-note">{t.common.recordNote}</small>
-					{/if}
-				</div>
-			{/if}
-			<details class="dossier">
-				<summary>{t.study.questionKlartextNote}</summary>
-				<blockquote class="question" lang={recordLang}>
-					<p>{home.currentSession.question}</p>
-				</blockquote>
-				{#if t.common.recordNote}
-					<small class="record-note">{t.common.recordNote}</small>
-				{/if}
-				<a href="/sitzungen/{home.currentSession.id}/">{t.study.readProtocol}</a>
-			</details>
-			{#if home.wartDossier?.search_queries?.length}
-				<details class="dossier">
-					<summary>{t.study.researchSummary}</summary>
-					<p class="research-note">{t.study.researchNote}</p>
-					<ul class="scout-queries" lang={recordLang}>
-						{#each home.wartDossier.search_queries as query (query)}
-							<li><code>{query}</code></li>
-						{/each}
-					</ul>
-					<a href="/sitzungen/{home.currentSession.id}/#wart-dossier">{t.study.dossierLink}</a>
-				</details>
-			{/if}
-			{#if home.wartDossierRefusal}
-				<aside class="dossier-refusal" aria-labelledby="dossier-refusal-title">
-					<h3 id="dossier-refusal-title">{t.study.dossierRefusalTitle}</h3>
-					<p>{t.study.dossierRefusalText}</p>
-					<a href="/sitzungen/{home.currentSession.id}/#wart-dossier-refusal">{t.study.readProtocol}</a>
-				</aside>
-			{/if}
-		</section>
+		<aside class="operation-status" aria-label={copy.statusLabel}>
+			<p class="status-heading">{copy.pilot}{#if home.currentSession.procedureVersion}{' '}v{home.currentSession.procedureVersion}{/if}</p>
+			<p>{#if home.schedule?.sessionHeld && home.schedule?.researchHeld}{copy.bothPaused}{:else if home.schedule?.sessionHeld}{copy.councilPaused}{:else if home.schedule?.researchHeld}{copy.researchPaused}{:else}{copy.notPaused}{/if} {copy.openRecords(home.sessionCount)}</p>
+		</aside>
 
-		<section class="room-section" aria-labelledby="doors-title">
-			<h2 id="doors-title">{t.common.doorsTitle}</h2>
-			<div class="door-gallery">
-				{#each t.study.doors as door (door.href)}
-					<Door {door} />
+		<section class="study-section architecture" aria-labelledby="architecture-title">
+			<p class="eyebrow">{copy.methodEyebrow}</p>
+			<h2 id="architecture-title">{copy.architectureTitle}</h2>
+			<div class="method-grid">
+				{#each copy.methods as method}
+					<article>
+						<h3>{method.title}</h3>
+						<p>{method.body}</p>
+						<a href={method.href}>{method.link}</a>
+					</article>
 				{/each}
 			</div>
 		</section>
+
+		<section class="study-section session-section" aria-label={copy.lastSessionLabel}>
+			<ResultBoard {home} {t} inline />
+			<p class="session-link"><a href="/sitzungen/{home.currentSession.id}/">{copy.readSession}</a>{#if t.common.recordNote} <span class="record-note">{t.common.recordNote}</span>{/if}</p>
+			{#if hasVoteDetails}
+				<details class="dossier vote-details">
+					<summary>{copy.voteDetails}</summary>
+					{#each home.recommendations as rec (rec.pillar)}
+						{@const why = plain?.recommendations?.[rec.pillar] ?? null}
+						{#if rec.hasConsensus || rec.votes.length}
+							<h3>{t.pillars[rec.pillar]?.label ?? rec.pillarName}</h3>
+							{#if rec.hasConsensus}
+								{#if why}<p lang={plainIsDe ? 'de' : undefined}>{why}</p>{/if}
+								<p lang={recordLang}>{rec.title} — {rec.count} {t.common.ofWord} {rec.total}</p>
+								{#each rec.reservations as reservation (reservation.model)}
+									<p lang={recordLang}>{reservation.model}: {reservation.reservation}</p>
+								{/each}
+							{:else}
+								<ul lang={recordLang}>{#each rec.votes as vote (vote.model)}<li>{vote.model}: {vote.organization.name}{#if vote.organization.donationUrl} <a href={vote.organization.donationUrl}>{t.common.donate}</a>{/if}</li>{/each}</ul>
+							{/if}
+						{/if}
+					{/each}
+					{#if t.common.recordNote}<p class="record-note">{t.common.recordNote}</p>{/if}
+				</details>
+			{/if}
+			<details class="dossier session-dossiers">
+				<summary>{copy.dossiersSummary}</summary>
+				<div class="dossier-content">
+					{#if questionText}
+						<h3>{t.study.questionTitle}</h3>
+						<p lang={plain?.question ? (plainIsDe ? 'de' : undefined) : recordLang}>{questionText}</p>
+					{/if}
+					<h3>{copy.verbatimQuestion}</h3>
+					<blockquote class="question" lang={recordLang}><p>{home.currentSession.question}</p></blockquote>
+					{#if t.common.recordNote}<p class="record-note">{t.common.recordNote}</p>{/if}
+					{#if home.wartDossier?.search_queries?.length}
+						<h3>{copy.searchQueries}</h3>
+						<p>{t.study.researchNote}</p>
+						<ul class="scout-queries" lang={recordLang}>{#each home.wartDossier.search_queries as query (query)}<li><code>{query}</code></li>{/each}</ul>
+						<a href="/sitzungen/{home.currentSession.id}/#wart-dossier">{t.study.dossierLink}</a>
+					{/if}
+					{#if home.wartDossierRefusal}
+						<aside class="dossier-refusal" aria-labelledby="dossier-refusal-title">
+							<h3 id="dossier-refusal-title">{t.study.dossierRefusalTitle}</h3>
+							<p>{t.study.dossierRefusalText}</p>
+							<a href="/sitzungen/{home.currentSession.id}/#wart-dossier-refusal">{t.study.readProtocol}</a>
+						</aside>
+					{/if}
+				</div>
+			</details>
+		</section>
+
+		<nav class="study-section onward" aria-labelledby="onward-title">
+			<h2 id="onward-title">{copy.onwardTitle}</h2>
+			<div class="navigation-grid">
+				{#each copy.navigation as link}
+					<a href={link.href}><strong>{link.title}</strong><span>{link.description}</span></a>
+				{/each}
+			</div>
+		</nav>
 	</main>
+</div>
 {/if}
 
 <style>
@@ -456,193 +412,61 @@
 		}
 	}
 
-	/* ---- Klartext-Antwort (§3.3) --------------------------------------------
-	   Vier Zeilen mit denselben Emblemen wie die Tafel; der Warum-Satz kommt
-	   aus plain.*, die Rekord-Schicht (Titel im Wortlaut) sichtbar als
-	   Fallback bzw. hinter der Kennzeichnungs-Summary. */
-	.answer-lines {
-		margin: 0;
-		padding: 0;
-		list-style: none;
-		display: grid;
+	.study-skip { position: fixed; left: 1rem; top: -8rem; z-index: 6; padding: .7rem 1rem; background: #ead3a0; color: #101719; }
+	.study-skip:focus { top: 1rem; }
+	.study-content { position: relative; width: min(67rem, calc(100% - 2rem)); margin: 0 auto; padding: 2.5rem 2.5rem 3rem; background: #0b1417 !important; border-inline: 1px solid #52452e; }
+	.study-content :is(h2, h3) { margin: 0; padding: 0; border: 0; color: #ead8ae; font-weight: 400; }
+	.study-content h2 { font-size: clamp(1.65rem, 3vw, 2.2rem); line-height: 1.2; }
+	.study-content h3 { font-size: 1.25rem; }
+	.study-content p { margin: .8rem 0; }
+	.study-content a { color: #e8c582; text-underline-offset: .2em; }
+	.study-content a:focus-visible, .study-content summary:focus-visible { outline: 2px solid #f4d597; outline-offset: 5px; }
+	.study-content .eyebrow { margin: 0 0 .65rem; color: #b4c7c8; font: 600 .85rem/1.5 system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+	.case-showcase { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 2rem; padding: 2rem; border: 1px solid #b89557; background: linear-gradient(120deg, #202b2b, #111e22); box-shadow: 0 1rem 2.5rem #0004; }
+	.case-points { padding-left: 1.1rem; margin: 1.2rem 0 1.4rem; display: grid; gap: .45rem; color: #e2dccd; }
+	.case-points li::marker { color: #d7b477; }
+	.study-content .primary-link { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: .6rem 1.1rem; border: 1px solid #e1bf7d; background: #dfbd7c; color: #10191b; font: 600 1rem/1.4 system-ui, sans-serif; text-decoration: none; }
+	.study-content .primary-link:hover { background: #f0d49b; }
+	.case-reading { display: flex; flex-direction: column; justify-content: center; border-left: 1px solid #a58a57; padding-left: 1.5rem; }
+	.case-reading p { color: #ebd7b3; font-size: 1.5rem; line-height: 1.4; }
+	.case-reading > span { color: #b8cacc; font: .875rem/1.7 system-ui, sans-serif; }
+	.operation-status { margin-top: 1.25rem; padding: 1rem 1.25rem; border: 1px solid #4d666b; background: #142126; color: #cbd9d9; font: .95rem/1.65 system-ui, sans-serif; }
+	.operation-status .status-heading { margin: 0 0 .3rem; color: #e9d4a7; font-weight: 600; }
+	.operation-status p:last-child { margin: 0; }
+	.study-section { margin-top: 2.75rem; }
+	.method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+	.method-grid article { min-width: 0; padding: 1.25rem; border: 1px solid #495556; background: #142024; display: flex; flex-direction: column; }
+	.method-grid p { color: #cbd1c9; font-size: 1rem; line-height: 1.7; }
+	.method-grid a { margin-top: auto; padding-top: .5rem; font: .9rem/1.5 system-ui, sans-serif; }
+	.session-section { padding: 1.5rem; border: 1px solid #68583c; background: #111c20; }
+	.session-link { font-size: .95rem; }
+	.session-link .record-note { display: block; margin-top: .25rem; }
+	.record-note { color: #bdc7c4; font-size: .875rem; }
+	.dossier { border-top: 1px solid #546162; margin-top: .9rem; }
+	.dossier summary { cursor: pointer; padding: .85rem 0; min-height: 48px; color: #e9cc92; font-size: 1.05rem; }
+	.dossier-content { padding-bottom: .5rem; }
+	.dossier h3 { margin-top: 1.3rem; }
+	.dossier-content > h3:first-child { margin-top: .3rem; }
+	.question { margin: 1rem 0; padding: 0 0 0 1rem; border-left: 2px solid #ba9b61; }
+	.dossier p, .dossier li { color: #d0d7d1; }
+	.dossier code { font-size: .875rem; overflow-wrap: anywhere; }
+	.dossier-refusal { border-left: 2px solid #9fbac2; padding-left: 1rem; }
+	.navigation-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.4rem; }
+	.navigation-grid a { display: grid; gap: .35rem; padding: 1.25rem; border: 1px solid #786440; background: #1b282b; text-decoration: none; }
+	.navigation-grid a:hover { background: #27373a; border-color: #dfbd7c; }
+	.navigation-grid strong { color: #f0d7a5; font-size: 1.3rem; font-weight: 400; }
+	.navigation-grid span { color: #ced8d5; font: .95rem/1.6 system-ui, sans-serif; }
+	@media (max-width: 900px) {
+		.study-content { padding: 1.5rem; }
+		.case-showcase { gap: 1.5rem; padding: 1.5rem; }
+		.method-grid { grid-template-columns: 1fr; }
 	}
-	.answer-lines > li {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 0.8rem;
-		align-items: start;
-		padding: 0.7rem 0;
-	}
-	.answer-lines > li + li {
-		border-top: 1px solid rgba(166, 123, 61, 0.3);
-	}
-	.answer-lines img {
-		width: 2.2rem;
-		height: 2.2rem;
-		border: 1px solid rgba(190, 139, 58, 0.65);
-		border-radius: 50%;
-		background: #080b0c;
-		object-fit: cover;
-	}
-	.klartext {
-		margin: 0;
-		color: #e2d8c0;
-		font-size: 1rem;
-		line-height: 1.45;
-	}
-	.klartext strong {
-		color: #f0e6cd;
-	}
-	.answer-area {
-		color: #c9ab6e;
-		font: 600 0.66rem ui-sans-serif, system-ui;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-	}
-	.answer-donate {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		color: #e6b45c;
-		font-size: 0.9rem;
-	}
-	.answer-verbatim {
-		margin: 0.1rem 0 0;
-		color: #a9997d;
-		font-size: 0.85rem;
-		line-height: 1.45;
-	}
-	.answer-record summary {
-		cursor: pointer;
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		color: #9e927f;
-		font-size: 0.78rem;
-	}
-	.answer-record summary:hover {
-		color: #c4b89e;
-	}
-	.answer-record summary:focus-visible {
-		outline: 2px solid #d7aa55;
-		outline-offset: 3px;
-	}
-	.answer-record p {
-		margin: 0.1rem 0 0.35rem;
-		color: #c7bca7;
-		font-size: 0.88rem;
-	}
-	.answer-reservation {
-		color: #a9997d !important;
-		font-size: 0.82rem !important;
-	}
-	.answer-votes {
-		margin: 0.15rem 0 0;
-		padding-left: 1.2rem;
-		color: #c7bca7;
-		font-size: 0.88rem;
-		display: grid;
-		gap: 0.3rem;
-	}
-	.answer-votes a {
-		color: #e6b45c;
-	}
-	/* ---- Frage-Kontext ------------------------------------------------------
-	   Sichtbarer Klartext-Einstieg ins Dossier (kuratierter Protokolltext aus
-	   den Daten); der wörtliche Wortlaut folgt als Zitat-Beleg hinter Ausklapp. */
-	.question-context {
-		margin-bottom: 1rem;
-	}
-	.question-context h3 {
-		margin: 0 0 0.3rem;
-		color: #c9ab6e;
-		font: 600 0.66rem ui-sans-serif, system-ui;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-	}
-	.question-context p {
-		margin: 0 0 0.2rem;
-		max-width: 46rem;
-		color: #e2d8c0;
-		font-size: 1rem;
-	}
-
-	/* ---- Dossiers ---------------------------------------------------------
-	   Rohe Rekord-Details hinter Ausklapp — eingeklappt im Erstkontakt,
-	   ohne JS und per Tastatur voll bedienbar. */
-	.dossier {
-		border-top: 1px solid rgba(166, 123, 61, 0.4);
-		padding: 0.35rem 0 0.9rem;
-	}
-	.dossier summary {
-		cursor: pointer;
-		min-height: 44px;
-		display: flex;
-		align-items: center;
-		color: #e7c881;
-		font-size: 0.98rem;
-	}
-	.dossier summary:hover {
-		color: #f2d9a0;
-	}
-	.dossier summary:focus-visible {
-		outline: 2px solid #d7aa55;
-		outline-offset: 3px;
-	}
-	.question {
-		margin: 0.3rem 0 0.6rem;
-		padding-left: 0.9rem;
-		border-left: 3px solid rgba(197, 145, 60, 0.55);
-		font-style: italic;
-	}
-	.question p {
-		margin: 0;
-		font-size: 1rem;
-	}
-	.record-note {
-		display: block;
-		margin: -0.2rem 0 0.4rem;
-		color: #9e927f;
-		font-size: 0.72rem;
-		font-style: italic;
-	}
-	.research-note {
-		margin: 0.2rem 0 0.6rem;
-		color: #a9997d;
-		font-size: 0.85rem;
-	}
-	.scout-queries {
-		margin: 0 0 0.8rem;
-		padding-left: 1.2rem;
-		display: grid;
-		gap: 0.3rem;
-	}
-	.scout-queries code {
-		font-size: 0.8rem;
-		overflow-wrap: break-word;
-	}
-	a {
-		color: #e6b45c;
-	}
-	.dossier > a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-	}
-	.dossier-refusal {
-		margin-top: 0.4rem;
-		padding: 0.8rem 1rem;
-		border-left: 3px solid #8bb7ca;
-		background: rgba(63, 96, 110, 0.12);
-	}
-	.dossier-refusal h3 {
-		margin: 0 0 0.3rem;
-		color: #a9cad7;
-		font-size: 0.95rem;
-	}
-	.dossier-refusal p {
-		margin: 0 0 0.35rem;
-		color: #c7bca7;
-		font-size: 0.88rem;
+	@media (max-width: 600px) {
+		.study-content { width: calc(100% - 1rem); padding: 1.5rem .75rem 2rem; }
+		.case-showcase { grid-template-columns: 1fr; padding: 1.25rem; gap: 1.4rem; }
+		.case-reading { padding: 1rem 0 0; border-left: 0; border-top: 1px solid #a58a57; }
+		.case-reading p { font-size: 1.25rem; margin-top: 0; }
+		.session-section { padding: 1rem; }
+		.navigation-grid { grid-template-columns: 1fr; }
 	}
 </style>

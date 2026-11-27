@@ -84,3 +84,12 @@ test('ausdrückliche Enthaltung bleibt vom Organisationsregister und den Empfehl
  assert.equal(row.final.decision,'abstain');
  assert.equal(row.changed,true);
 });
+
+
+test('Sitzungszahl kommt aus den geladenen Records und nicht aus der letzten Sitzungsnummer', () => {
+	const sparse = [session('2026-07'), session('2026-07c')];
+	const home = buildHomepageViewModel({ session: sparse[1], sessions: sparse, registry });
+	assert.equal(home.sessionCount, 2);
+	assert.equal(home.currentSession.number, 3);
+	assert.equal(home.archive.length, home.sessionCount);
+});

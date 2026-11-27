@@ -78,11 +78,12 @@ test('Die Veröffentlichungskandidaten enthalten die Korrekturen und keine priva
 test('Der reguläre Einstieg kennzeichnet die Pause und verlinkt den Fall in seiner Sprache', () => {
     const german = read('index.html');
     const english = read('en/index.html');
-    assert.ok(german.includes('Die Ratsberatungen sind pausiert.'));
-    assert.ok(german.includes('Die automatische Recherche ist pausiert.'));
-    assert.ok(english.includes('Council meetings are paused.'));
+    assert.ok(german.includes('Aktive Rats- und Rechercheläufe sind derzeit pausiert.'));
+    assert.ok(english.includes('Automated council and research runs are currently paused.'));
+    assert.ok(german.includes('href="/fall/amf/"'));
     assert.ok(english.includes('href="/en/case/amf/"'));
-    assert.ok(english.includes('Explore the case'));
+    assert.ok(english.includes('Open the AMF case study'));
+    assert.ok(english.includes('Reviewed Case Study: Malaria protection with AMF'));
     assert.ok(!english.includes('Explore the case in German'));
 });
 
